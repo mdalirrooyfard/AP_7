@@ -1,32 +1,36 @@
 package Model;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.util.ArrayList;
 
 public class Block {
     private ArrayList<Item> items = new ArrayList();
+    private String itemKind;
     private int numberOfItems = 0;
     private int numberOfPersons = 0;
-    private int level = 3;
+    private int level = 1;
     private  int blockId = 0;
 
-    public Block(){
+    public Block(String kind){
         blockId++;
+        itemKind = kind;
     }
 
-    public int getBlockId()
-    {
-        return blockId;
+    public  int removeCost(){
+        int cost = (int)Math.pow(500 , level);
+        return cost;
     }
 
-    public  void remove(){
-
+    public int upgrade(){
+        this.level++;
+        int cost = -500;
+        return cost;
     }
 
-    public void upgrade(){
-
+    public void addItem(){
+        Item item = new Item(blockId , itemKind);
+        items.add(item);
     }
 
-    public void addPerson(int number){
-        numberOfPersons += number;
-    }
 }
