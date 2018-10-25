@@ -13,7 +13,8 @@ public class Block {
         blockId++;
     }
 
-    public int getBlockId(){
+    public int getBlockId()
+    {
         return blockId;
     }
 
