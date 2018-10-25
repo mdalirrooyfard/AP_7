@@ -4,8 +4,8 @@ public class Defense extends Item
 {
     int level , numberOfEmployee , blockId , unitId;
     double powerLevel;
-    final int UPGRADE_COST = -10000;
-    final int ADD_COST = -5000;
+    final int UPGRADE_COST = -5000;
+    final int ADD_COST = -10000;
     final int REMOVE_COST = 10000;
 
     public int getBlockId()

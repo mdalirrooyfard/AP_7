@@ -1,6 +1,6 @@
 package Model;
 
-public abstract class Item {
+public  class Item {
     private  int unitId = 0 ;
     private int blockId ;
     protected int bazaarLevel = 0 ;
