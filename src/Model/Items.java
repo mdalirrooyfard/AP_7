@@ -1,4 +1,9 @@
 package Model;
 
-public enum Items {
+public enum Items
+{
+    HOME,
+    ARMY,
+    DEFENSE,
+    BAZAAR;
 }

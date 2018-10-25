@@ -1,6 +1,6 @@
 package Model;
 
-public class Home extends Item implements Instructions
+public class Home extends Item
 {
     private boolean[][] units = new boolean[6][4];
     private int numberOfFloors , numberOfUnitsPerFloor , blockId , unitId;
