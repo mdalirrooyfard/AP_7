@@ -1,6 +1,6 @@
 package Model;
 
-public class Defense
+public class Defense extends Item
 {
     int level , numberOfEmployee , blockId , unitId;
     double powerLevel;
