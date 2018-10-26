@@ -1,34 +1,37 @@
 package Model;
 
 public abstract class Item {
-    private  int unitId = 0 ;
-    private int blockId ;
-    protected int bazaarLevel = 0 ;
-    private String kind ;
-        public  int getUnitId(){
-        return unitId;
+    protected long cost ;
+    protected int id ;
+    public int getId() {
+        return id;
     }
 
-    public Item(){}
-
-    public Item(int id , String kind){
-            blockId = id ;
-            this.kind = kind ;
+    public void setId(int id) {
+        this.id = id;
     }
 
+    private int level;
 
-    public int getBlockId(){
-        return blockId ;
+    public Long getCost() {
+        return cost;
     }
 
-    public int getFinalCost(int cost){
-            return cost ;
+    public void setCost(Long cost) {
+        this.cost = cost;
     }
 
-    public int getBazaarLevel(){
-          return bazaarLevel;
+    public int getLevel() {
+        return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public abstract void update();
+    public abstract void remove(int id);
+    public abstract double calculateScore();
 
 
 
