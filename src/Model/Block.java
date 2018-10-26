@@ -2,8 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 
-public class Block {
-    private ArrayList<Item> items = new ArrayList();
+public class Block extends Item{
     private String itemKind;
     private int numberOfItems = 0;
     private int numberOfPersons = 0;
@@ -24,11 +23,6 @@ public class Block {
         this.level++;
         int cost = -500;
         return cost;
-    }
-
-    public void addItem(){
-        Item item = new Item(blockId , itemKind);
-        items.add(item);
     }
 
 }
