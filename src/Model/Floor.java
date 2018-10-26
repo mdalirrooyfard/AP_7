@@ -1,4 +1,5 @@
 package Model;
 
-public class Floor {
+public class Floor
+{
 }
