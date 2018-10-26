@@ -1,6 +1,7 @@
 package Model;
 
 public class person {
+    private double satisfaction = 0;
     private int numberOfDays;
     private boolean employee = false;
 
@@ -17,5 +18,4 @@ public class person {
     public void startWorking(){
         this.employee = true;
     }
-
 }

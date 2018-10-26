@@ -2,7 +2,7 @@ package Model;
 import java.util.ArrayList;
 
  public class User {
-    private ArrayList<Block> blocks = new ArrayList();
+    private ArrayList<Block> blocks = new ArrayList<>();
     private int numberOfBlocks = 0;
     private String kind;
     private int fund = 30000;
