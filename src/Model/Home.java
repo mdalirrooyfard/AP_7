@@ -1,67 +1,109 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Home extends Item
 {
-    private boolean[][] units = new boolean[6][4];
-    private int numberOfFloors , numberOfUnitsPerFloor , blockId , unitId;
+    private int numberOfFloors , numberOfUnit , blockId;
+    private ArrayList<Floor> floors = new ArrayList<>();
+    private final int scoreConst = 10;
+
+    public Home(int numberOfFloors, int numberOfUnit)
+    {
+        this.numberOfFloors = numberOfFloors;
+        this.numberOfUnit = numberOfUnit;
+        for (int i = 0; i < numberOfFloors; i++)
+            floors.add(new Floor(numberOfUnit));
+    }
 
     public int getBlockId()
     {
         return blockId;
     }
-    public int getUnitId()
+
+    public int getNumberOfUnit()
     {
-        return unitId;
+        return numberOfUnit;
     }
-    public int getNumberOfFloors()
+
+    public void getNumberOfFloor()
     {
-        return numberOfFloors;
+        this.numberOfUnit = numberOfFloors;
     }
-    public int getNumberOfUnitsPerFloor()
-    {
-        return numberOfUnitsPerFloor;
+
+    public ArrayList<Floor> getFloors() {
+        return floors;
     }
-    public void setBlockId( int blockId )
-    {
-        this.blockId = blockId;
+
+    public void increaseFloor(int x) {
+        this.numberOfFloors += x;
+        for (int i = 0; i < x; i++) {
+            this.floors.add(new Floor(numberOfUnit));
+        }
     }
-    public void setUnitId( int unitId )
-    {
-        this.unitId = unitId;
+
+    public void increaseUnit(int x) {
+        this.numberOfUnit += x;
+        for (Floor floor : floors) {
+            floor.increaseUnit(x);
+        }
     }
-    public Home upgrade()
+
+    @Override
+    public void update()
     {
-        numberOfUnitsPerFloor++;
+        floors.add(new Floor(numberOfUnit));
         numberOfFloors++;
-        for( int i = 0 ; i < numberOfFloors ; i++ )
-            for( int j = 0 ;  j < numberOfUnitsPerFloor ; j++ )
-                units[i][j] = true;
-        return this;
     }
-    public int upgradeCost()
+
+    @Override
+    public void remove(int id)
     {
-        return  -( numberOfUnitsPerFloor * numberOfFloors - ( numberOfUnitsPerFloor - 1 ) * ( numberOfFloors - 1 ) ) * 50 - 300;
+
     }
-    public Home add( int numberOfFloors , int numberOfUnitsPerFloor , int blockId , int unitId )
+
+    @Override
+    public double calculateScore()
     {
-        this.numberOfFloors = numberOfFloors;
-        this.numberOfUnitsPerFloor = numberOfUnitsPerFloor;
-        this.unitId = unitId;
-        this.blockId = blockId;
-        for( int i = 0 ; i < numberOfFloors ; i++ )
-            for( int j = 0 ; j < numberOfUnitsPerFloor ; j++ )
-                units[i][j] = true;
-        return this;
+        double personScore = calculatePersonScore();
+        double unitScore = calculateUnitScore();
+        double floorScore = calculateFloorScore();
+        double homeScore = personScore * 3 + unitScore * 2 + floorScore + score;
+        return homeScore + floorScore + unitScore + personScore;
     }
-    public int addCost( int numberOfFloors , int numberOfUnitsPerFloor )
-    {
-        return -( numberOfFloors * 100 + numberOfFloors * 300 + 700 );
+
+    private double calculatePersonScore(){
+        double sum = 0;
+        for (Floor floor: floors){
+            for (Unit unit: floor.getUnits())
+                sum += unit.getPersonList().size() * unit.getPersonList().get(0).getSatisfactory();
+        }
+        return sum;
     }
-    public double scoreOfHome( int level )
-    {
-        double person = 1;
-        if( level != 0 )
-            person = 1 + 0.2 * level;
-         return ( 10 + 3 * numberOfFloors + 5 * numberOfUnitsPerFloor * numberOfFloors + 30 * person * numberOfFloors * numberOfUnitsPerFloor );
+
+    private double calculateUnitScore() {
+        double sum = 0;
+        for (Floor floor: floors){
+            for (Unit unit: floor.getUnits())
+                sum += unit.calculateScore();
+        }
+        return sum;
+    }
+
+    private double calculateFloorScore(){
+        double sum = 0;
+        for (Floor floor: floors){
+            sum += floor.calculateScore();
+        }
+        return sum;
+    }
+
+    public ArrayList<person> getPeople() {
+        ArrayList<person> people = new ArrayList<>();
+        for (Floor floor : floors)
+            for (Unit unit : floor.getUnits())
+                for (person person : unit.getPersonList())
+                    people.add(person);
+        return people;
     }
 }

@@ -1,4 +1,5 @@
 package Model;
 
-public class Unit {
+public class Unit
+{
 }
