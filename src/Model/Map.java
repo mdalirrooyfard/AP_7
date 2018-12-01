@@ -1,6 +1,5 @@
 package Model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Map
@@ -39,7 +38,7 @@ public class Map
     public void updateCells(ArrayList<Entity> stuffs )
     {
         for( Entity e : stuffs )
-            cells[(int)Math.round(e.getX())][(int)Math.round(e.getY())].add(e);
+            cells[(int)Math.round(e.getY())][(int)Math.round(e.getX())].add(e);
     }
 
     public int cellStatus( int x , int y )
