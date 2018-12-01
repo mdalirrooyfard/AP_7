@@ -2,6 +2,7 @@ package Model;
 
 import Model.Animals.Domestic.*;
 import Model.Animals.*;
+import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 
 import java.util.ArrayList;
@@ -31,15 +32,23 @@ public class Cell
     {
         stuffs.clear();
     }
-    public int status()
+    public boolean[] status()
     {
-        for( Entity e : stuffs )
-            if( e instanceof Dog )
-                return 1;
-        for( Entity e : stuffs )
-            if( e instanceof Item || e instanceof Domestic )
-                return 2;
-        return 0;
+        boolean[] stuffs = new boolean[5];
+        for( Entity e : this.stuffs )
+        {
+            if( e instanceof Wild )
+                stuffs[0] = true;
+            else if( e instanceof Item )
+                stuffs[1] = true;
+            else if( e instanceof Domestic )
+                stuffs[2] = true;
+            else if( e instanceof Grass )
+                stuffs[3] = true;
+            else if( e instanceof Dog )
+                stuffs[4] = true;
+        }
+        return stuffs;
     }
 
 }
