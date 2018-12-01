@@ -41,7 +41,7 @@ public class Map
             cells[(int)Math.round(e.getY())][(int)Math.round(e.getX())].add(e);
     }
 
-    public int cellStatus( int x , int y )
+    public boolean[] cellStatus( int x , int y )
     {
         return cells[x][y].status();
     }
