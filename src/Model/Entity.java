@@ -29,5 +29,7 @@ public class Entity {
         this.level = level;
     }
 
-
+    public void upgrade (){
+        this.setLevel(2);
+    }
 }

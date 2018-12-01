@@ -1,4 +1,6 @@
 package Model.Transportation;
 
-public class Transportations {
+import Model.Entity;
+
+public class Transportations extends Entity {
 }

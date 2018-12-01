@@ -7,4 +7,9 @@ public class Cat extends Animal {
         super(x , y);
         this.map = map ;
     }
+    @Override
+    public void upgrade (){
+        super.upgrade();
+        //TODO complete
+    }
 }

@@ -1,4 +1,4 @@
 package Model.Transportation;
 
-public class Helicopter {
+public class Helicopter extends Transportations{
 }

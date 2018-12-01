@@ -26,7 +26,7 @@ public abstract class Domestic extends Animal {
 
     }
 
-    public abstract Item produce();
+    //public abstract Item produce();
 
     public Domestic(double x, double y){
         super(x , y);
