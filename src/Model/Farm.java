@@ -84,6 +84,35 @@ public class Farm {
         stuffs.add(cat);
     }
 
+    public void upgrade(String entityName){
+        switch (entityName){
+            case "cat":{
+                for (Entity entity : stuffs)
+                    if (entity instanceof Cat)
+                        entity.upgrade();
+                break;
+            }
+            case "well":{
+                well.upgrade();
+                break;
+            }
+            case "truck":{
+                truck.upgrade();
+                break;
+            }
+            case "helicopter":{
+                helicopter.upgrade();
+                break;
+            }
+            case "warehouse":{
+                wareHouse.upgrade();
+                break;
+            }
+            default:{ //workshops
+                //TODO
+            }
+        }
+    }
 
 
 
