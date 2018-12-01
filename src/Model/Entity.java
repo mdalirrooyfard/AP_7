@@ -1,9 +1,9 @@
 package Model;
 
 public class Entity {
-    double x;
-    double y;
-    int level;
+    private double x;
+    private double y;
+    private int level;
 
     public double getX() {
         return x;
