@@ -1,4 +1,7 @@
 package Model.Animals;
 
-public class Hen {
+import Model.Map;
+
+public class Hen extends Domestic{
+
 }

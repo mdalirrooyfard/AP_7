@@ -1,4 +1,4 @@
 package Model.Animals;
 
-public class Sheep {
+public class Sheep extends Domestic {
 }
