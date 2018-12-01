@@ -1,4 +1,6 @@
 package Model.Animals;
 
-public class Animal {
+import Model.Entity;
+
+public class Animal extends Entity {
 }

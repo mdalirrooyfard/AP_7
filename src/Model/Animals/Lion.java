@@ -1,4 +1,4 @@
 package Model.Animals;
 
-public class Lion {
+public class Lion extends Wild {
 }
