@@ -1,4 +1,6 @@
 package Model.Items;
+import Model.Entity;
 
-public class Item {
+public class Item extends Entity
+{
 }

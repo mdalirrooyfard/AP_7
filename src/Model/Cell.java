@@ -1,5 +1,9 @@
 package Model;
 
+import Model.Animals.Domestic;
+import Model.Animals.Wild;
+import Model.Items.Item;
+
 import java.util.ArrayList;
 
 public class Cell
@@ -10,7 +14,6 @@ public class Cell
     {
         this.stuffs = stuffs;
     }
-
     public ArrayList<Entity> getStuffs()
     {
         return stuffs;
@@ -22,6 +25,20 @@ public class Cell
     public void remove(Entity stuff)
     {
         stuffs.remove(stuff);
+    }
+    public void clear()
+    {
+        stuffs.clear();
+    }
+    public int status()
+    {
+        for( Entity e : stuffs )
+            if( e instanceof Wild )
+                return 1;
+        for( Entity e : stuffs )
+            if( e instanceof Item || e instanceof Domestic )
+                return 2;
+        return 0;
     }
 
 }
