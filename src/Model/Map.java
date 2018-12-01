@@ -47,6 +47,24 @@ public class Map
         return cells[x][y].status();
     }
 
+    public DIRECTION findNearestItem( int x , int y )
+    {
 
+    }
+
+    public DIRECTION findNearestGrass( int x , int y )
+    {
+        return DIRECTION.NONE;
+    }
+
+    public DIRECTION findNearestWild( int x , int y )
+    {
+        return DIRECTION.NONE;
+    }
+
+    public DIRECTION findNearestDomestic( int x , int y )
+    {
+        return DIRECTION.NONE;
+    }
 
 }
