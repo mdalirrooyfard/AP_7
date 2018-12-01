@@ -3,7 +3,7 @@ package Model;
 public class Entity {
     protected double x;
     protected double y;
-    protected int level;
+    protected int level = 1;
 
     public double getX() {
         return x;
