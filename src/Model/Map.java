@@ -49,7 +49,7 @@ public class Map
 
     public DIRECTION findNearestItem( int x , int y )
     {
-
+        return DIRECTION.NONE;
     }
 
     public DIRECTION findNearestGrass( int x , int y )
