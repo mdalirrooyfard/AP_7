@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Animals.Cat;
+import Model.Animals.Dog;
 import Model.Animals.Domestic.Cow;
 import Model.Animals.Domestic.Hen;
 import Model.Animals.Domestic.Sheep;
@@ -7,6 +9,7 @@ import Model.Transportation.Helicopter;
 import Model.Transportation.Truck;
 
 import java.util.ArrayList;
+
 
 public class Farm {
     private Map map;
@@ -70,6 +73,19 @@ public class Farm {
                 stuffs.add(new Grass(centerX + 1, centerY + 1)); //down right
         }
     }
+
+    public void addDog(){
+        Dog dog = new Dog(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
+        stuffs.add(dog);
+    }
+
+    public void addCat(){
+        Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
+        stuffs.add(cat);
+    }
+
+
+
 
 
 }
