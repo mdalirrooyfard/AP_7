@@ -2,6 +2,7 @@ package Model;
 
 public class Constants
 {
+    /* VOLUME */
     private final int EGG_VOLUME = 1;
     private final int WOOL_VOLUME = 5;
     private final int MILK_VOLUME = 10;
@@ -14,9 +15,22 @@ public class Constants
     private final int FLOUR_VOLUME = 1;
     private final int ADORNMENT_VOLUME = 4;
     private final int PLUMRE_VOLUME = 2;
-    private final int CAGED_BROWN_BEAR_VOLUME = 20;
-    private final int CAGED_LION_VOLUME = 20;
+    private final int CAGED_WILD_VOLUME = 20;
+    private final int HORN_VOLUME = 6;
+    private final int PLUME_VOLUME = 2;
+    private final int SOUR_CREAM_VOLUME = 8;
+    private final int CURD_VOLUME = 6;
+    private final int CHEESE_VOLUME = 5;
+    private final int COLORED_PLUME_VOLUME = 2;
+    private final int BRIGHT_HORN_VOLUME = 5;
+    private final int INTERMEDIATE_VOLUME = 4;
+    private final int SOUVENIR_VOLUME = 3;
+    private final int CHEESE_FERMENT_VOLUME = 2;
+    private final int VARNISH_VOLUME = 2;
+    private final int MEGA_PIE_VOLUME = 20;
+    private final int SPRUCE_WILD_VOLUME = 25;
 
+    /* BUY COST */
     private final int EGG_BUY_COST = 20;
     private final int WOOL_BUY_COST = 200;
     private final int MILK_BUY_COST = 2000;
@@ -29,7 +43,24 @@ public class Constants
     private final int FLOUR_BUY_COST = 20;
     private final int CAGED_BROWN_BEAR_BUY_COST = 100;
     private final int CAGED_LION_BUY_COST = 150;
+    private final int HORN_BUY_COST = 2000;
+    private final int PLUME_BUY_COST = 200;
+    private final int SOUR_CREAM_BUY_COST = 3000;
+    private final int CURD_BUY_COST = 4000;
+    private final int CHEESE_COST = 5000;
+    private final int COLORED_PLUME_BUY_COST = 300;
+    private final int BRIGHT_HORN_BUY_COST = 3000;
+    private final int INTERMEDIATE_BUY_COST = 4000;
+    private final int SOUVENIR_BUY_COST = 5000;
+    private final int CHEESE_FERMENT_BUY_COST = 25;
+    private final int VARNISH_BUY_COST = 25;
+    private final int MEGA_PIE_BUY_COST = 20000;
+    private final int SPRUCE_WILD_BUY_COST = 2500;
+    private final int CAGED_GRIZZLY_BUY_COST = 80;
+    private final int CAGED_JAGUAR_BUY_COST = 200;
+    private final int CAGED_WHITE_BEAR_BUY_COST = 100;
 
+    /* SALE COST */
     private final int EGG_SALE_COST = 10;
     private final int WOOL_SALE_COST = 100;
     private final int MILK_SALE_COST = 1000;
@@ -43,27 +74,21 @@ public class Constants
     private final int ADORNMENT_SALE_COST = 300;
     private final int CAGED_BROWN_BEAR_SALE_COST = 100;
     private final int CAGED_LION_SALE_COST = 150;
+    private final int HORN_SALE_COST = 1000;
+    private final int PLUME_SALE_COST = 100;
+    private final int SOUR_CREAM_SALE_COST = 1500;
+    private final int CURD_SALE_COST = 2000;
+    private final int CHEESE_SALE_COST = 2500;
+    private final int COLORED_PLUME_SALE_COST = 150;
+    private final int BRIGHT_HORN_SALE_COST = 1500;
+    private final int INTERMEDIATE_SALE_COST = 2000;
+    private final int SOUVENIR_SALE_COST = 2500;
+    private final int CHEESE_FERMENT_SALE_COST = 15;
+    private final int VARNISH_SALE_COST = 15;
+    private final int MEGA_PIE_SALE_COST = 10000;
+    private final int SPRUCE_WILD_SALE_COST = 7000;
+    private final int CAGED_GRIZZLY_SALE_COST = 80;
+    private final int CAGED_JAGUAR_SALE_COST = 200;
+    private final int CAGED_WHITE_BEAR_SALE_COST = 100;
 
-    /*
-    <Horn DepotSize="6" BuyCost="2000" SaleCost="1000"/>
-    <Plume DepotSize="2" BuyCost="200" SaleCost="100"/>
-    <SourCream DepotSize="8" BuyCost="3000" SaleCost="1500"/>
-    <Curd DepotSize="6" BuyCost="4000" SaleCost="2000"/>
-    <Cheese DepotSize="5" BuyCost="5000" SaleCost="2500"/>
-    <ColoredPlume DepotSize="2" BuyCost="300" SaleCost="150"/>
-    <BrightHorn DepotSize="5" BuyCost="3000" SaleCost="1500"/>
-    <Intermediate DepotSize="4" BuyCost="4000" SaleCost="2000"/>
-    <Souvenir DepotSize="3" BuyCost="5000" SaleCost="2500"/>
-    <CheeseFerment DepotSize="2" BuyCost="25" SaleCost="15"/>
-    <Varnish DepotSize="2.5" BuyCost="25" SaleCost="15"/>
-    <MegaPie DepotSize="20" BuyCost="20000" SaleCost="10000"/>
-    <SpruceGrizzly DepotSize="25" BuyCost="2500" SaleCost="7000"/>
-    <SpruceLion DepotSize="25" BuyCost="2500" SaleCost="7000"/>
-    <SpruceBrownBear DepotSize="25" BuyCost="2500" SaleCost="7000"/>
-    <SpruceJaguar DepotSize="25" BuyCost="2500" SaleCost="7000"/>
-    <SpruceWhiteBear DepotSize="25" BuyCost="2500" SaleCost="7000"/>
-    <CagedGrizzly DepotSize="20" BuyCost="80" SaleCost="80"/>
-    <CagedJaguar DepotSize="20" BuyCost="200" SaleCost="200"/>
-    <CagedWhiteBear DepotSize="20" BuyCost="100" SaleCost="100"/>
-    */
 }
