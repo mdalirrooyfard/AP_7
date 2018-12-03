@@ -31,6 +31,9 @@ public class Constants
     private final int SPRUCE_WILD_VOLUME = 25;
 
     /* BUY COST */
+    private final int HEN_BUY_COST = 100;
+    private final int SHEEP_BUY_COST = 1000;
+    private final int COW_BUY_COST = 100;
     private final int EGG_BUY_COST = 20;
     private final int WOOL_BUY_COST = 200;
     private final int MILK_BUY_COST = 2000;
@@ -61,6 +64,9 @@ public class Constants
     private final int CAGED_WHITE_BEAR_BUY_COST = 100;
 
     /* SALE COST */
+    private final int HEN_SELL_COST = 50;
+    private final int SHEEP_SELL_COST = 500;
+    private final int COW_SELL_COST = 5000;
     private final int EGG_SALE_COST = 10;
     private final int WOOL_SALE_COST = 100;
     private final int MILK_SALE_COST = 1000;
@@ -90,5 +96,4 @@ public class Constants
     private final int CAGED_GRIZZLY_SALE_COST = 80;
     private final int CAGED_JAGUAR_SALE_COST = 200;
     private final int CAGED_WHITE_BEAR_SALE_COST = 100;
-
 }
