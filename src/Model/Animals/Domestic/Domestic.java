@@ -4,6 +4,8 @@ import Model.Animals.Animal;
 import Model.DIRECTION;
 import Model.Items.Item;
 
+import static Model.Constants.FULL_SATIETY;
+
 public abstract class Domestic extends Animal {
     private int satiety ;
 
@@ -20,7 +22,7 @@ public abstract class Domestic extends Animal {
     }
 
     public void eat () {
-
+        this.satiety = FULL_SATIETY;
     }
 
     public void move(){
