@@ -121,6 +121,7 @@ public class Farm {
         int currentY = (int) Math.round(y);
         ArrayList<Entity> cellItems = map.getCells()[currentX][currentY].getStuffs();
         ArrayList<Entity> cellRemainItems = new ArrayList<>();
+        boolean isEveryThingPickedUp = true;
         for (Entity entity : cellItems){
             if (entity instanceof Item || (entity instanceof Wild && ((Wild) entity).isInCage()))
                 if (entity.getVolume() <= wareHouse.getVolume()){
@@ -129,10 +130,28 @@ public class Farm {
                 }
                 else{
                     cellRemainItems.add(entity);
+                    isEveryThingPickedUp = false;
                 }
+            else
+                cellRemainItems.add(entity);
         }
-        return cellRemainItems.isEmpty();
+        map.getCells()[currentX][currentY].update(cellRemainItems);
+        return isEveryThingPickedUp;
     }
+
+    public boolean putCage(double x, double y){
+        int currentX = (int) Math.round(x);
+        int currentY = (int) Math.round(y);
+        if (!map.getCells()[currentX][currentY].status()[0])
+            return false;
+        ArrayList<Entity> cellItems = map.getCells()[currentX][currentY].getStuffs();
+        for (Entity entity : cellItems)
+            if (entity instanceof Wild)
+                ((Wild) entity).setInCage(true);
+        return true;
+    }
+
+
 
 
 
