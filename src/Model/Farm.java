@@ -26,10 +26,10 @@ public class Farm {
     private int money;
     //TODO goals
 
-    public Farm(int length, int width){
+    Farm(int length, int width){
         mapLength = length;
         mapWidth = width;
-        //TODO new map
+        map = new Map(length, width);
     }
 
     public int makeRandomXAndY(int dim){
@@ -52,7 +52,10 @@ public class Farm {
         stuffs.add(sheep);
     }
 
-    public void plantGrass(double x, double y){
+    public boolean plantGrass(double x, double y){
+        if (well.getCurrentVolume() == 0)
+            return false;
+        well.setCurrentVolume(well.getCurrentVolume() - 1);
         int centerX = (int) Math.round(x);
         int centerY = (int) Math.round(y);
         stuffs.add(new Grass(centerX, centerY));
@@ -74,6 +77,7 @@ public class Farm {
             if (centerY + 1 <= mapLength - 1)
                 stuffs.add(new Grass(centerX + 1, centerY + 1)); //down right
         }
+        return true;
     }
 
     public void addDog(){
@@ -149,6 +153,15 @@ public class Farm {
             if (entity instanceof Wild)
                 ((Wild) entity).setInCage(true);
         return true;
+    }
+
+    public boolean fullWell(){
+        if (well.getCost() <= money){
+            money -= well.getCost();
+            well.setCurrentVolume(well.getVolume());
+            return true;
+        }
+        return false;
     }
 
 
