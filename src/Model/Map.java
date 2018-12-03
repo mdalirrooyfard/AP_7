@@ -238,11 +238,6 @@ public class Map
         return DIRECTION.NONE;
     }
 
-    public DIRECTION findNearestDomestic( int x , int y )
-    {
-        return DIRECTION.NONE;
-    }
-
     public boolean isThereItem()
     {
         for( Cell[] c : cells )
