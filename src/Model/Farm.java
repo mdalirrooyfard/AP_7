@@ -5,6 +5,8 @@ import Model.Animals.Dog;
 import Model.Animals.Domestic.Cow;
 import Model.Animals.Domestic.Hen;
 import Model.Animals.Domestic.Sheep;
+import Model.Animals.Wild.Wild;
+import Model.Items.Item;
 import Model.Transportation.Helicopter;
 import Model.Transportation.Truck;
 
@@ -51,8 +53,8 @@ public class Farm {
     }
 
     public void plantGrass(double x, double y){
-        int centerX = (int) x;
-        int centerY = (int) y;
+        int centerX = (int) Math.round(x);
+        int centerY = (int) Math.round(y);
         stuffs.add(new Grass(centerX, centerY));
         if (centerX - 1 >= 0){
             stuffs.add(new Grass(centerX - 1, centerY));   //left
@@ -112,6 +114,24 @@ public class Farm {
                 //TODO
             }
         }
+    }
+
+    public boolean pickUp(double x, double y){
+        int currentX = (int) Math.round(x);
+        int currentY = (int) Math.round(y);
+        ArrayList<Entity> cellItems = map.getCells()[currentX][currentY].getStuffs();
+        ArrayList<Entity> cellRemainItems = new ArrayList<>();
+        for (Entity entity : cellItems){
+            if (entity instanceof Item || (entity instanceof Wild && ((Wild) entity).isInCage()))
+                if (entity.getVolume() <= wareHouse.getVolume()){
+                    wareHouse.setVolume(wareHouse.getVolume() - entity.getVolume());
+                    stuffs.remove(entity);
+                }
+                else{
+                    cellRemainItems.add(entity);
+                }
+        }
+        return cellRemainItems.isEmpty();
     }
 
 

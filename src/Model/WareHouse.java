@@ -1,15 +1,20 @@
 package Model;
 
+
+import java.util.ArrayList;
+
 public class WareHouse extends Entity{
-    private int volume ;
+    private ArrayList<Entity> collectedEntities = new ArrayList<>();
 
-    public int getVolume() {
-        return volume;
+    public ArrayList<Entity> getCollectedEntities() {
+        return collectedEntities;
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+    public void add(Entity entity){
+        collectedEntities.add(entity);
     }
+
+
 
     public WareHouse (){
     }
