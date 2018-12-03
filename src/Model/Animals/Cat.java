@@ -22,27 +22,7 @@ public class Cat extends Animal {
 
         else {
             DIRECTION direction = map.findNearestItem((int)this.x , (int)this.y);
-            switch (direction){
-                case UP:{
-                    this.y -- ;
-                    break;
-                }
-                case DOWN:{
-                    this.y ++ ;
-                    break;
-                }
-                case RIGHT:{
-                    this.x ++ ;
-                    break;
-                }
-                case LEFT:{
-                    this.x -- ;
-                    break;
-                }
-                default:{
-                    break;
-                }
-            }
+            super.smartMove(direction);
         }
     }
 }
