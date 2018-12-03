@@ -1,5 +1,7 @@
 package Model;
 
+import static Model.Constants.WELL_CAPACITY;
+
 public class Well extends Entity{
     private int currentVolume;
     public int getCurrentVolume() {
@@ -8,6 +10,14 @@ public class Well extends Entity{
 
     public void setCurrentVolume(int currentVolume) {
         this.currentVolume = currentVolume;
+    }
+
+    public void decrease (int amount){
+        currentVolume -= amount ;
+    }
+
+    public void full (){
+        currentVolume = WELL_CAPACITY ;
     }
     @Override
     public void upgrade(){

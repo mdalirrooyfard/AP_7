@@ -3,6 +3,7 @@ package Model;
 public class Constants
 {
     public static final int FULL_SATIETY = 8;
+    public static final int WELL_CAPACITY = 6;
     /* VOLUME */
     public static final int EGG_VOLUME = 1;
     public static final int WOOL_VOLUME = 5;
