@@ -57,7 +57,7 @@ public class Map
             while( !isItemFound )
             {
                 level++;
-                Outter:
+                Out:
                 for( int i = level ; i > -1 ; i-- )
                 {
                     if( y - i > -1 && x - level + i > -1 )
@@ -67,8 +67,8 @@ public class Map
                             {
                                 isItemFound = true;
                                 Item_x = x - level + i;
-                                Item_y = y -i;
-                                break Outter;
+                                Item_y = y - i;
+                                break Out;
                             }
                         }
                     if( y - i > -1 && x + level - i < width )
@@ -78,8 +78,8 @@ public class Map
                             {
                                 isItemFound = true;
                                 Item_x = x + level - i;
-                                Item_y = y -i;
-                                break Outter;
+                                Item_y = y - i;
+                                break Out;
                             }
                         }
                     if( y + i < length && x - level + i > -1 )
@@ -89,8 +89,8 @@ public class Map
                             {
                                 isItemFound = true;
                                 Item_x = x - level + i;
-                                Item_y = y -i;
-                                break Outter;
+                                Item_y = y + i;
+                                break Out;
                             }
                         }
                     if( y + i < length && x + level - i < width )
@@ -99,27 +99,78 @@ public class Map
                             if( e instanceof Item )
                             {
                                 isItemFound = true;
-                                Item_x = x - level + i;
-                                Item_y = y -i;
-                                break Outter;
+                                Item_x = x + level - i;
+                                Item_y = y + i;
+                                break Out;
                             }
                         }
                 }
             }
-            if( Item_y < y )
-                return DIRECTION.UP;
-            else if( Item_y > y )
-                return DIRECTION.DOWN;
-            else if( Item_x < x )
-                return DIRECTION.LEFT;
-            else
-                return DIRECTION.RIGHT;
+            getDirection( x, y , Item_x , Item_y );
         }
         return DIRECTION.NONE;
     }
 
     public DIRECTION findNearestGrass( int x , int y )
     {
+        if( isThereGrass() )
+        {
+            boolean isGrassFound = false;
+            int level = 0 , Grass_x = -1 , Grass_y = -1;
+            while( !isGrassFound )
+            {
+                level++;
+                Out:
+                for( int i = level ; i > -1 ; i-- )
+                {
+                    if( y - i > -1 && x - level + i > -1 )
+                        for( Entity e : cells[y - i][x - level + i].getStuffs() )
+                        {
+                            if( e instanceof Grass )
+                            {
+                                isGrassFound = true;
+                                Grass_x = x - level + i;
+                                Grass_y = y - i;
+                                break Out;
+                            }
+                        }
+                    if( y - i > -1 && x + level - i < width )
+                        for( Entity e : cells[y - i][x + level - i].getStuffs() )
+                        {
+                            if( e instanceof Grass )
+                            {
+                                isGrassFound = true;
+                                Grass_x = x + level - i;
+                                Grass_y = y - i;
+                                break Out;
+                            }
+                        }
+                    if( y + i < length && x - level + i > -1 )
+                        for( Entity e : cells[y + i][x - level + i].getStuffs() )
+                        {
+                            if( e instanceof Grass )
+                            {
+                                isGrassFound = true;
+                                Grass_x = x - level + i;
+                                Grass_y = y + i;
+                                break Out;
+                            }
+                        }
+                    if( y + i < length && x + level - i < width )
+                        for( Entity e : cells[y + i][x + level - i].getStuffs() )
+                        {
+                            if( e instanceof Grass )
+                            {
+                                isGrassFound = true;
+                                Grass_x = x + level - i;
+                                Grass_y = y + i;
+                                break Out;
+                            }
+                        }
+                }
+            }
+            getDirection( x, y , Grass_x , Grass_y );
+        }
         return DIRECTION.NONE;
     }
 
@@ -143,4 +194,25 @@ public class Map
         return false;
     }
 
+    public boolean isThereGrass()
+    {
+        for( Cell[] c : cells )
+            for( Cell cell : c )
+                for( Entity e : cell.getStuffs() )
+                    if( e instanceof Grass )
+                        return true;
+        return false;
+    }
+
+    public DIRECTION getDirection( int startX , int startY , int destinationX , int destinationY )
+    {
+        if( destinationY < startY )
+            return DIRECTION.UP;
+        else if( destinationY > startY )
+            return DIRECTION.DOWN;
+        else if( destinationX < startX )
+            return DIRECTION.LEFT;
+        else
+            return DIRECTION.RIGHT;
+    }
 }
