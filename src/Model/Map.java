@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Items.*;
+
 import java.util.ArrayList;
 
 public class Map
@@ -48,6 +50,71 @@ public class Map
 
     public DIRECTION findNearestItem( int x , int y )
     {
+        if( isThereItem() )
+        {
+            boolean isItemFound = false;
+            int level = 0 , Item_x = -1 , Item_y = -1;
+            while( !isItemFound )
+            {
+                level++;
+                Outter:
+                for( int i = level ; i > -1 ; i-- )
+                {
+                    if( y - i > -1 && x - level + i > -1 )
+                        for( Entity e : cells[y - i][x - level + i].getStuffs() )
+                        {
+                            if( e instanceof Item )
+                            {
+                                isItemFound = true;
+                                Item_x = x - level + i;
+                                Item_y = y -i;
+                                break Outter;
+                            }
+                        }
+                    if( y - i > -1 && x + level - i < width )
+                        for( Entity e : cells[y - i][x + level - i].getStuffs() )
+                        {
+                            if( e instanceof Item )
+                            {
+                                isItemFound = true;
+                                Item_x = x + level - i;
+                                Item_y = y -i;
+                                break Outter;
+                            }
+                        }
+                    if( y + i < length && x - level + i > -1 )
+                        for( Entity e : cells[y + i][x - level + i].getStuffs() )
+                        {
+                            if( e instanceof Item )
+                            {
+                                isItemFound = true;
+                                Item_x = x - level + i;
+                                Item_y = y -i;
+                                break Outter;
+                            }
+                        }
+                    if( y + i < length && x + level - i < width )
+                        for( Entity e : cells[y + i][x + level - i].getStuffs() )
+                        {
+                            if( e instanceof Item )
+                            {
+                                isItemFound = true;
+                                Item_x = x - level + i;
+                                Item_y = y -i;
+                                break Outter;
+                            }
+                        }
+                }
+            }
+            if( Item_y < y )
+                return DIRECTION.UP;
+            else if( Item_y > y )
+                return DIRECTION.DOWN;
+            else if( Item_x < x )
+                return DIRECTION.LEFT;
+            else
+                return DIRECTION.RIGHT;
+        }
         return DIRECTION.NONE;
     }
 
@@ -64,6 +131,16 @@ public class Map
     public DIRECTION findNearestDomestic( int x , int y )
     {
         return DIRECTION.NONE;
+    }
+
+    public boolean isThereItem()
+    {
+        for( Cell[] c : cells )
+            for( Cell cell : c )
+                for( Entity e : cell.getStuffs() )
+                    if( e instanceof Item )
+                        return true;
+        return false;
     }
 
 }
