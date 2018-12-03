@@ -20,4 +20,6 @@ public abstract class Wild extends Animal {
     public void move() {
         super.move();
     }
+
+    //TODO collision
 }

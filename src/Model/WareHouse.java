@@ -10,11 +10,7 @@ public class WareHouse extends Entity{
         return collectedEntities;
     }
 
-    public void add(Entity entity){
-        collectedEntities.add(entity);
-    }
-
-
+    public void add(Entity entity){ collectedEntities.add(entity); }
 
     public WareHouse (){
     }
