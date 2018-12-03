@@ -96,4 +96,6 @@ public class Constants
     public static final int CAGED_GRIZZLY_SALE_COST = 80;
     public static final int CAGED_JAGUAR_SALE_COST = 200;
     public static final int CAGED_WHITE_BEAR_SALE_COST = 100;
+    public static final int MAX_DOMESTIC_SATIETY = 8;
+    public static final int LEAST_DOMESTIC_SATIETY = 4;
 }

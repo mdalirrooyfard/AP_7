@@ -125,7 +125,7 @@ public class Farm {
     public boolean pickUp(double x, double y){
         int currentX = (int) Math.round(x);
         int currentY = (int) Math.round(y);
-        ArrayList<Entity> cellItems = map.getCells()[currentX][currentY].getStuffs();
+        ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
         ArrayList<Entity> cellRemainItems = new ArrayList<>();
         boolean isEveryThingPickedUp = true;
         for (Entity entity : cellItems){
@@ -141,16 +141,16 @@ public class Farm {
             else
                 cellRemainItems.add(entity);
         }
-        map.getCells()[currentX][currentY].update(cellRemainItems);
+        map.getCells()[currentY][currentX].update(cellRemainItems);
         return isEveryThingPickedUp;
     }
 
     public boolean putCage(double x, double y){
         int currentX = (int) Math.round(x);
         int currentY = (int) Math.round(y);
-        if (!map.getCells()[currentX][currentY].status()[0])
+        if (!map.getCells()[currentY][currentX].status()[0])
             return false;
-        ArrayList<Entity> cellItems = map.getCells()[currentX][currentY].getStuffs();
+        ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
         for (Entity entity : cellItems)
             if (entity instanceof Wild)
                 ((Wild) entity).setInCage(true);
@@ -158,8 +158,8 @@ public class Farm {
     }
 
     public boolean fullWell(){
-        if (well.getCost() <= money){
-            money -= well.getCost();
+        if (well.getBuyCost() <= money){
+            money -= well.getBuyCost();
             well.setCurrentVolume(well.getVolume());
             return true;
         }
@@ -205,6 +205,7 @@ public class Farm {
             if (entity instanceof Item || entity instanceof Domestic)
                 stuffs.remove(entity);
     }
+
 
 
 }
