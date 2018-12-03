@@ -50,5 +50,9 @@ public class Cell
         }
         return stuffs;
     }
-
+    public void update( ArrayList<Entity> stuffs )
+    {
+        this.stuffs.clear();
+        this.stuffs = stuffs;
+    }
 }
