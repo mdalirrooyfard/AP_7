@@ -16,5 +16,8 @@ public abstract class Wild extends Animal {
         super(x , y);
     }
 
-
+    @Override
+    public void move() {
+        super.move();
+    }
 }
