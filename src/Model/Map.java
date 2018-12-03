@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Items.*;
+import Model.Animals.Wild.*;
 
 import java.util.ArrayList;
 
@@ -176,6 +177,64 @@ public class Map
 
     public DIRECTION findNearestWild( int x , int y )
     {
+        if( isThereWild() )
+        {
+            boolean isWildFound = false;
+            int level = 0 , Wild_x = -1 , Wild_y = -1;
+            while( !isWildFound )
+            {
+                level++;
+                Out:
+                for( int i = level ; i > -1 ; i-- )
+                {
+                    if( y - i > -1 && x - level + i > -1 )
+                        for( Entity e : cells[y - i][x - level + i].getStuffs() )
+                        {
+                            if( e instanceof Wild )
+                            {
+                                isWildFound = true;
+                                Wild_x = x - level + i;
+                                Wild_y = y - i;
+                                break Out;
+                            }
+                        }
+                    if( y - i > -1 && x + level - i < width )
+                        for( Entity e : cells[y - i][x + level - i].getStuffs() )
+                        {
+                            if( e instanceof Wild )
+                            {
+                                isWildFound = true;
+                                Wild_x = x + level - i;
+                                Wild_y = y - i;
+                                break Out;
+                            }
+                        }
+                    if( y + i < length && x - level + i > -1 )
+                        for( Entity e : cells[y + i][x - level + i].getStuffs() )
+                        {
+                            if( e instanceof Wild )
+                            {
+                                isWildFound = true;
+                                Wild_x = x - level + i;
+                                Wild_y = y + i;
+                                break Out;
+                            }
+                        }
+                    if( y + i < length && x + level - i < width )
+                        for( Entity e : cells[y + i][x + level - i].getStuffs() )
+                        {
+                            if( e instanceof Wild )
+                            {
+                                isWildFound = true;
+                                Wild_x = x + level - i;
+                                Wild_y = y + i;
+                                break Out;
+                            }
+                        }
+                }
+            }
+            getDirection( x, y , Wild_x , Wild_y );
+        }
         return DIRECTION.NONE;
     }
 
@@ -200,6 +259,16 @@ public class Map
             for( Cell cell : c )
                 for( Entity e : cell.getStuffs() )
                     if( e instanceof Grass )
+                        return true;
+        return false;
+    }
+
+    public boolean isThereWild()
+    {
+        for( Cell[] c : cells )
+            for( Cell cell : c )
+                for( Entity e : cell.getStuffs() )
+                    if( e instanceof Wild )
                         return true;
         return false;
     }
