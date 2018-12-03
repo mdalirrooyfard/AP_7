@@ -10,7 +10,7 @@ public class Dog extends Animal {
     }
     @Override
     public void move(){
-        if(this.level == 1 || (this.level == 2 && !map.isThereWild())){
+        if(!map.isThereWild()){
             super.move();
         }
 
