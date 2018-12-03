@@ -1,6 +1,7 @@
 package Model.Animals.Domestic;
 
 import Model.Animals.Animal;
+import Model.DIRECTION;
 import Model.Items.Item;
 
 public abstract class Domestic extends Animal {
@@ -23,7 +24,13 @@ public abstract class Domestic extends Animal {
     }
 
     public void move(){
-
+        if(this.satiety >= 4){
+            super.move();
+        }
+        else {
+            DIRECTION direction = map.findNearestGrass((int)this.x , (int)this.y);
+            super.smartMove(direction);
+        }
     }
 
     //public abstract Item produce();
