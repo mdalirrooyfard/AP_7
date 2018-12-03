@@ -1,5 +1,6 @@
 package Model.Animals;
 
+import Model.DIRECTION;
 import Model.Entity;
 import Model.Map;
 
@@ -53,6 +54,30 @@ public abstract class Animal extends Entity {
             }
             else{
                 this.x -- ;
+            }
+        }
+    }
+
+    public void smartMove (DIRECTION direction){
+        switch (direction){
+            case UP:{
+                this.y -- ;
+                break;
+            }
+            case DOWN:{
+                this.y ++ ;
+                break;
+            }
+            case RIGHT:{
+                this.x ++ ;
+                break;
+            }
+            case LEFT:{
+                this.x -- ;
+                break;
+            }
+            default:{
+                break;
             }
         }
     }
