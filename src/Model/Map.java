@@ -51,7 +51,7 @@ public class Map
 
     public DIRECTION findNearestItem( int x , int y )
     {
-        if( isThereItem() )
+        if( isThereItem() && !cellStatus(x,y)[1] )
         {
             boolean isItemFound = false;
             int level = 0 , Item_x = -1 , Item_y = -1;
@@ -114,7 +114,7 @@ public class Map
 
     public DIRECTION findNearestGrass( int x , int y )
     {
-        if( isThereGrass() )
+        if( isThereGrass() && !cellStatus(x,y)[3] )
         {
             boolean isGrassFound = false;
             int level = 0 , Grass_x = -1 , Grass_y = -1;
@@ -177,7 +177,7 @@ public class Map
 
     public DIRECTION findNearestWild( int x , int y )
     {
-        if( isThereWild() )
+        if( isThereWild() && !cellStatus(x,y)[0] )
         {
             boolean isWildFound = false;
             int level = 0 , Wild_x = -1 , Wild_y = -1;
