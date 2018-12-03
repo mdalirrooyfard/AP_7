@@ -5,18 +5,8 @@ public class Entity {
     protected double y;
     protected int level = 1;
     private int volume ;
-    private int cost;
-
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
-
-
+    private int buyCost;
+    private int sellCost;
 
     public int getVolume() {
         return volume;
@@ -52,5 +42,21 @@ public class Entity {
 
     public void upgrade (){
         this.setLevel(2);
+    }
+
+    public int getSellCost() {
+        return sellCost;
+    }
+
+    public void setSellCost(int sellCost) {
+        this.sellCost = sellCost;
+    }
+
+    public int getBuyCost() {
+        return buyCost;
+    }
+
+    public void setBuyCost(int buyCost) {
+        this.buyCost = buyCost;
     }
 }
