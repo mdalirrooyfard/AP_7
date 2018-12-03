@@ -3,6 +3,7 @@ package Model;
 import Model.Animals.Cat;
 import Model.Animals.Dog;
 import Model.Animals.Domestic.Cow;
+import Model.Animals.Domestic.Domestic;
 import Model.Animals.Domestic.Hen;
 import Model.Animals.Domestic.Sheep;
 import Model.Animals.Wild.Wild;
@@ -30,6 +31,7 @@ public class Farm {
         mapLength = length;
         mapWidth = width;
         map = new Map(length, width);
+        time = 0;
     }
 
     public int makeRandomXAndY(int dim){
@@ -164,9 +166,45 @@ public class Farm {
         return false;
     }
 
+    public void increaseMoney(int amount){
+        money += amount;
+    }
 
+    public void decreaseMoney(int amount){
+        money -= amount;
+    }
 
+    public int getMoney(){
+        return money;
+    }
 
+    public void checkCollision(){
+        if (!map.isThereWild())
+            return;
+        for (int i = 0; i < mapLength; i++)
+            for (int j = 0; j < mapWidth; j++){
+                Cell cell = map.getCells()[i][j];
+                if (cell.status()[0]) //has wild animal
+                    if (cell.status()[4]) //has dog
+                        killDogAndWild(i, j);
+                    else if (cell.status()[1] || cell.status()[2])
+                        killDomesticAndItems(i, j);
+            }
+    }
+
+    public void killDogAndWild(int y, int x){
+        ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
+        for (Entity entity : entities)
+            if (entity instanceof Dog || entity instanceof Wild)
+                stuffs.remove(entity);
+    }
+
+    public void killDomesticAndItems(int y, int x){
+        ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
+        for (Entity entity : entities)
+            if (entity instanceof Item || entity instanceof Domestic)
+                stuffs.remove(entity);
+    }
 
 
 }
