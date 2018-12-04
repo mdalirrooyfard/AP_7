@@ -6,12 +6,15 @@ import Model.Animals.Domestic.Cow;
 import Model.Animals.Domestic.Domestic;
 import Model.Animals.Domestic.Hen;
 import Model.Animals.Domestic.Sheep;
+import Model.Animals.Wild.Bear;
+import Model.Animals.Wild.Lion;
 import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 import Model.Transportation.Helicopter;
 import Model.Transportation.Truck;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class Farm {
@@ -25,13 +28,14 @@ public class Farm {
     private WareHouse wareHouse = new WareHouse();
     private Well well = new Well();
     private int money;
+    private double shootWildAnimalTime;
     //TODO goals
 
     Farm(int length, int width){
         mapLength = length;
         mapWidth = width;
         map = new Map(length, width);
-        time = 0;
+        time = 0.0;
     }
 
     public int makeRandomXAndY(int dim){
@@ -206,6 +210,30 @@ public class Farm {
                 stuffs.remove(entity);
     }
 
+    public void turn(){
+        time = time + 1;
+        //TODO eating and moves and decrease satiety
+        //TODO cat collects
+        checkCollision();
+        if (time - (int)time == 0.0 && (int)time % 10 == 0) {   //wild animals come
+            shootWildAnimal();
+            shootWildAnimalTime = time ;
+        }
+        if ((int)(time - shootWildAnimalTime) == 5) //if there as any wild animal will leave
+            stuffs.removeIf((Entity entity) -> entity instanceof Wild);
+        //TODO checkWorkshops
+        //TODO check transportation
+        map.clearCells();
+        map.updateCells(stuffs);
+    }
 
-
+    public void shootWildAnimal(){
+        for (int i = 0; i < 2; i++){
+            double random = Math.random();
+            if ((int)(random * 100) % 2 == 0)
+                stuffs.add(new Bear(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength)));
+            else
+                stuffs.add(new Lion(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength)));
+        }
+    }
 }
