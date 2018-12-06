@@ -36,6 +36,8 @@ public class Constants
     public static final int HEN_BUY_COST = 100;
     public static final int SHEEP_BUY_COST = 1000;
     public static final int COW_BUY_COST = 100;
+    public static final int DOG_BUY_COST = 2600;
+    public static final int CAT_BUY_COST = 2500;
     public static final int EGG_BUY_COST = 20;
     public static final int WOOL_BUY_COST = 200;
     public static final int MILK_BUY_COST = 2000;
