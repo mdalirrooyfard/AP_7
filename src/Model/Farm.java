@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Animals.Animal;
 import Model.Animals.Cat;
 import Model.Animals.Dog;
 import Model.Animals.Domestic.Cow;
@@ -12,6 +13,7 @@ import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 import Model.Transportation.Helicopter;
 import Model.Transportation.Truck;
+import com.sun.xml.internal.ws.server.EndpointAwareTube;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -232,8 +234,39 @@ public class Farm {
 
     public void turn(){
         time = time + 1;
-        //TODO eating and moves and decrease satiety
-        //TODO cat collects
+        Iterator<Entity> iterator = stuffs.iterator();
+        while (iterator.hasNext()){
+            Entity entity = iterator.next();
+            boolean doMove = true;
+            if (entity instanceof Domestic){
+                if (((Domestic) entity).getSatiety() == 0) {
+                    iterator.remove();
+                    continue;
+                }
+                else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                    doMove = !checkEatingGrass(entity.getY(), entity.getX());
+                    if (!doMove)
+                        ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
+                }
+            }
+            else if (entity instanceof Cat)
+                doMove = !catCollect(entity.getY(), entity.getX());
+            if (entity instanceof Animal && doMove){
+                ((Animal) entity).move();
+                if (entity instanceof Domestic)
+                    ((Domestic) entity).decreaseSatiety(1);
+            }
+        }
+        if (map.isThereGrass() && map.isThereItem()) {
+            iterator = stuffs.iterator();
+            while (iterator.hasNext()) {
+                Entity entity = iterator.next();
+                if (entity instanceof Grass && ((Grass) entity).isEaten())
+                    iterator.remove();
+                else if (entity instanceof Item && ((Item) entity).isTakenByCat())
+                    iterator.remove();
+            }
+        }
         checkCollision();
         if (time - (int)time == 0.0 && (int)time % 10 == 0) {   //wild animals come
             shootWildAnimal();
@@ -257,14 +290,31 @@ public class Farm {
         }
     }
 
-    public boolean checkEatingGrass(int y, int x){
-        ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
+    public boolean checkEatingGrass(double y, double x){
+        int X = (int)Math.round(x);
+        int Y = (int)Math.round(y);
+        ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Grass){
-                stuffs.remove(entity);
+            if (entity instanceof Grass && !((Grass) entity).isEaten()){
+                ((Grass) entity).setEaten(true);
                 return true;
             }
         return false;
+    }
+
+    public boolean catCollect(double y, double x){
+        int X = (int)Math.round(x);
+        int Y = (int)Math.round(y);
+        boolean result = false;
+        ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
+        for (Entity entity : entities)
+            if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume()){
+                wareHouse.setCurrentVolume(wareHouse.getVolume() - entity.getVolume());
+                ((Item) entity).setTakenByCat(true);
+                wareHouse.add(entity);
+                result = true;
+            }
+        return result;
     }
 
 }

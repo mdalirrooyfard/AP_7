@@ -7,6 +7,7 @@ public class Well extends Entity{
 
     public Well(){
         this.setVolume(WELL_CAPACITY);
+        this.setCurrentVolume(WELL_CAPACITY);
     }
 
     public int getCurrentVolume() {
