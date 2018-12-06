@@ -13,9 +13,9 @@ import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 import Model.Transportation.Helicopter;
 import Model.Transportation.Truck;
-import com.sun.xml.internal.ws.server.EndpointAwareTube;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 
@@ -30,7 +30,9 @@ public class Farm {
     private WareHouse wareHouse = new WareHouse();
     private Well well = new Well();
     private int money;
-    private double shootWildAnimalTime;
+    private double shootWildAnimalTime = -1;
+    private HashMap<String, Integer> goals = new HashMap<>();
+    private HashMap<String, Integer> achievements = new HashMap<>();
     //TODO goals
 
     Farm(int length, int width){
@@ -121,6 +123,7 @@ public class Farm {
     public void upgrade(String entityName){
         switch (entityName){
             case "cat":{
+                //todo cat count + check money
                 for (Entity entity : stuffs)
                     if (entity instanceof Cat)
                         entity.upgrade();
@@ -234,39 +237,8 @@ public class Farm {
 
     public void turn(){
         time = time + 1;
-        Iterator<Entity> iterator = stuffs.iterator();
-        while (iterator.hasNext()){
-            Entity entity = iterator.next();
-            boolean doMove = true;
-            if (entity instanceof Domestic){
-                if (((Domestic) entity).getSatiety() == 0) {
-                    iterator.remove();
-                    continue;
-                }
-                else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
-                    doMove = !checkEatingGrass(entity.getY(), entity.getX());
-                    if (!doMove)
-                        ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
-                }
-            }
-            else if (entity instanceof Cat)
-                doMove = !catCollect(entity.getY(), entity.getX());
-            if (entity instanceof Animal && doMove){
-                ((Animal) entity).move();
-                if (entity instanceof Domestic)
-                    ((Domestic) entity).decreaseSatiety(1);
-            }
-        }
-        if (map.isThereGrass() && map.isThereItem()) {
-            iterator = stuffs.iterator();
-            while (iterator.hasNext()) {
-                Entity entity = iterator.next();
-                if (entity instanceof Grass && ((Grass) entity).isEaten())
-                    iterator.remove();
-                else if (entity instanceof Item && ((Item) entity).isTakenByCat())
-                    iterator.remove();
-            }
-        }
+        checkMoves();
+        removeGrassAndItem();
         checkCollision();
         if (time - (int)time == 0.0 && (int)time % 10 == 0) {   //wild animals come
             shootWildAnimal();
@@ -317,4 +289,42 @@ public class Farm {
         return result;
     }
 
+    public void checkMoves(){
+        Iterator<Entity> iterator = stuffs.iterator();
+        while (iterator.hasNext()){
+            Entity entity = iterator.next();
+            boolean doMove = true;
+            if (entity instanceof Domestic){
+                if (((Domestic) entity).getSatiety() == 0) {
+                    iterator.remove();
+                    continue;
+                }
+                else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                    doMove = !checkEatingGrass(entity.getY(), entity.getX());
+                    if (!doMove)
+                        ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
+                }
+            }
+            else if (entity instanceof Cat)
+                doMove = !catCollect(entity.getY(), entity.getX());
+            if (entity instanceof Animal && doMove){
+                ((Animal) entity).move();
+                if (entity instanceof Domestic)
+                    ((Domestic) entity).decreaseSatiety(1);
+            }
+        }
+    }
+
+    public void removeGrassAndItem(){
+        if (map.isThereGrass() && map.isThereItem()) {
+            Iterator<Entity> iterator = stuffs.iterator();
+            while (iterator.hasNext()) {
+                Entity entity = iterator.next();
+                if (entity instanceof Grass && ((Grass) entity).isEaten())
+                    iterator.remove();
+                else if (entity instanceof Item && ((Item) entity).isTakenByCat())
+                    iterator.remove();
+            }
+        }
+    }
 }
