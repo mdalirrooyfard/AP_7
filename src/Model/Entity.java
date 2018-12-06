@@ -41,7 +41,7 @@ public class Entity {
     }
 
     public void upgrade (){
-        this.setLevel(2);
+        this.level ++;
     }
 
     public int getSellCost() {
