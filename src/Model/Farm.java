@@ -257,5 +257,14 @@ public class Farm {
         }
     }
 
+    public boolean checkEatingGrass(int y, int x){
+        ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
+        for (Entity entity : entities)
+            if (entity instanceof Grass){
+                stuffs.remove(entity);
+                return true;
+            }
+        return false;
+    }
 
 }
