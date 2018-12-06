@@ -3,10 +3,13 @@ package Model.Animals;
 import Model.DIRECTION;
 import Model.Map;
 
+import static Model.Constants.CAT_BUY_COST;
+
 public class Cat extends Animal {
     public Cat (double x, double y , Map map){
         super(x , y);
         this.map = map ;
+        this.setBuyCost(CAT_BUY_COST);
     }
     @Override
     public void upgrade (){

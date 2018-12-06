@@ -5,6 +5,8 @@ public class Constants
     public static final int FULL_SATIETY = 8;
     public static final int WELL_CAPACITY = 14;
     public static final int WAREHOUSE_VOLUME = 100;
+    public static final int WELL_BASE_MONEY = 200;
+
     /* VOLUME */
     public static final int EGG_VOLUME = 1;
     public static final int WOOL_VOLUME = 5;

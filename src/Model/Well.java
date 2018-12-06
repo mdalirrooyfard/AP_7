@@ -1,5 +1,6 @@
 package Model;
 
+import static Model.Constants.WELL_BASE_MONEY;
 import static Model.Constants.WELL_CAPACITY;
 
 public class Well extends Entity{
@@ -8,6 +9,7 @@ public class Well extends Entity{
     public Well(){
         this.setVolume(WELL_CAPACITY);
         this.setCurrentVolume(WELL_CAPACITY);
+        this.setBuyCost(WELL_BASE_MONEY);
     }
 
     public int getCurrentVolume() {
@@ -28,6 +30,7 @@ public class Well extends Entity{
     @Override
     public void upgrade(){
         super.upgrade();
-        //TODO complete
+        this.setVolume( this.getVolume() * 2 );
+        this.setBuyCost( this.getBuyCost() * 2 );
     }
 }
