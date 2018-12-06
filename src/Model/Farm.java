@@ -303,6 +303,7 @@ public class Farm {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX());
                     if (!doMove)
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
+                    //todo make item
                 }
             }
             else if (entity instanceof Cat)
