@@ -14,11 +14,6 @@ public class Cat extends Animal {
         this.setBuyCost(CAT_BUY_COST);
         this.setUpgradeCost(Constants.CAT_BASE_UPGRADE_COST);
     }
-    @Override
-    public void upgrade (){
-        super.upgrade();
-        this.setUpgradeCost(this.getUpgradeCost() + 50);
-    }
 
     @Override
     public void move() {
