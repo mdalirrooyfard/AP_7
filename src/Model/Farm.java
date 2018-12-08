@@ -46,7 +46,7 @@ public class Farm {
         double temp = Math.random() * dim;
         return (int)temp;
     }
-
+    //todo add to achievements
     public boolean addHen(){
         if (Constants.HEN_BUY_COST > money)
             return false;
@@ -180,9 +180,32 @@ public class Farm {
         if (!map.getCells()[currentY][currentX].status()[0])
             return false;
         ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
-        for (Entity entity : cellItems)
-            if (entity instanceof Wild)
-                ((Wild) entity).setInCage(true);
+        Iterator<Entity>  iterator = cellItems.iterator();
+        int numberOfBears = 0;
+        int numberOfLions = 0;
+        while (iterator.hasNext()){
+            Entity entity = iterator.next();
+            if (entity instanceof Bear){
+                iterator.remove();
+                stuffs.remove(entity);
+                numberOfBears ++;
+            }
+            else if (entity instanceof Lion){
+                iterator.remove();
+                stuffs.remove(entity);
+                numberOfLions++;
+            }
+        }
+        for (int i = 0; i < numberOfBears; i++){
+            Item item = new Item(currentX, currentY, "cagedBear");
+            stuffs.add(item);
+            cellItems.add(item);
+        }
+        for (int i = 0; i < numberOfLions; i++){
+            Item item = new Item(currentX, currentY, "cagedLion");
+            stuffs.add(item);
+            cellItems.add(item);
+        }
         return true;
     }
 
