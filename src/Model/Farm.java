@@ -46,13 +46,14 @@ public class Farm {
         double temp = Math.random() * dim;
         return (int)temp;
     }
-    //todo add to achievements
+
     public boolean addHen(){
         if (Constants.HEN_BUY_COST > money)
             return false;
         Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(hen.getBuyCost());
         stuffs.add(hen);
+        updateAchievement("hen");
         return true;
     }
 
@@ -62,6 +63,7 @@ public class Farm {
         Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(cow.getBuyCost());
         stuffs.add(cow);
+        updateAchievement("cow");
         return true;
     }
 
@@ -71,6 +73,7 @@ public class Farm {
         Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(sheep.getBuyCost());
         stuffs.add(sheep);
+        updateAchievement("sheep");
         return true;
     }
 
@@ -108,6 +111,7 @@ public class Farm {
         Dog dog = new Dog(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(dog.getBuyCost());
         stuffs.add(dog);
+        updateAchievement("dog");
         return true;
     }
 
@@ -117,6 +121,7 @@ public class Farm {
         Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(cat.getBuyCost());
         stuffs.add(cat);
+        updateAchievement("cat");
         return true;
     }
 
