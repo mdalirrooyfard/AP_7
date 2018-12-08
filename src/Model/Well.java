@@ -34,6 +34,7 @@ public class Well extends Entity{
     public void upgrade(){
         super.upgrade();
         this.setVolume( this.getVolume() * 2 );
+        this.full();
         this.setBuyCost( this.getBuyCost() * 2 );
         this.setUpgradeCost(this.getUpgradeCost() + 50);
     }

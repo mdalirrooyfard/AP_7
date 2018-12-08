@@ -9,7 +9,7 @@ public class Map
 {
     private int length , width;
     private Cell[][] cells;
-    Map( int length , int width )
+    public Map( int length , int width )
     {
         this.length = length;
         this.width = length;

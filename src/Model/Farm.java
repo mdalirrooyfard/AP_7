@@ -36,7 +36,7 @@ public class Farm {
     private boolean areCatsUpgraded = false;
     //TODO goals
 
-    Farm(int length, int width){
+    public Farm(int length, int width){
         mapLength = length;
         mapWidth = width;
         map = new Map(length, width);
@@ -238,7 +238,7 @@ public class Farm {
     public boolean fullWell(){
         if (well.getBuyCost() <= money){
             money -= well.getBuyCost();
-            well.setCurrentVolume(well.getVolume());
+            well.full();
             return true;
         }
         return false;
@@ -332,7 +332,7 @@ public class Farm {
         boolean result = false;
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume()){
+            if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume() && !((Item) entity).isTakenByCat()){
                 wareHouse.setCurrentVolume(wareHouse.getVolume() - entity.getVolume());
                 ((Item) entity).setTakenByCat(true);
                 wareHouse.add(entity);
@@ -417,4 +417,8 @@ public class Farm {
                 count ++;
         return count;
     }
+
+    public void clearFromHelicopter(){}
+
+    public void clearFromTruck(){}
 }
