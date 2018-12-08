@@ -265,7 +265,7 @@ public class Farm {
                 stuffs.remove(entity);
     }
 
-    public void turn(){
+    public boolean turn(){
         time = time + 1;
         checkMoves();
         removeGrassAndItem();
@@ -282,6 +282,7 @@ public class Farm {
         //TODO check transportation
         map.clearCells();
         map.updateCells(stuffs);
+        return isLevelFinished();
     }
 
     public void shootWildAnimal(){
@@ -381,5 +382,12 @@ public class Farm {
     public void updateAchievement(String kind){
         if (achievements.containsKey(kind))
             achievements.replace(kind, achievements.get(kind) + 1);
+    }
+
+    public boolean isLevelFinished(){
+        for (String s : goals.keySet())
+            if (achievements.get(s) < goals.get(s))
+                return false;
+        return true;
     }
 }
