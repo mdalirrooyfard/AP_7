@@ -21,9 +21,11 @@ public class Item extends Entity {
         isTakenByCat = takenByCat;
     }
 
-    public Item(double x , double  y , String kind){
+    public Item(double x , double  y , String kind , int sellCost , int buyCost){
         this.x = x ;
         this.y = y ;
         this.kind = kind ;
+        this.setSellCost(sellCost);
+        this.setBuyCost(buyCost);
     }
 }
