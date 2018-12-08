@@ -421,4 +421,20 @@ public class Farm {
     public void clearFromHelicopter(){}
 
     public void clearFromTruck(){}
+
+    public void addToTruck(Item item, int count){}
+
+    public void addToHellicopter(Item item , int cout){}
+
+    public void goTransportation(boolean vehicle){
+        if(vehicle){
+            truck.setCurrentTime(truck.getWorkingTime());
+            truck.setMoving(true);
+        }
+        else {
+            helicopter.setCurrentTime(helicopter.getWorkingTime());
+            helicopter.setMoving(true);
+        }
+
+    }
 }

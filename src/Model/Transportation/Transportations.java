@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Transportations extends Entity {
     private ArrayList<Item> items = new ArrayList<>();
+    private boolean isMoving = false ;
     private int workingTime ;
     private int currentTime ;
     private int upgradeCost;
@@ -48,5 +49,13 @@ public class Transportations extends Entity {
 
     public void setUpgradeCost(int upgradeCost) {
         this.upgradeCost = upgradeCost;
+    }
+
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
     }
 }
