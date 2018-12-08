@@ -9,6 +9,8 @@ public class Constants
     public static final int WELL_BASE_UPGRADE_COST = 100;
     public static final int WAREHOUSE_BASE_UPGRADE_COST = 100;
     public static final int CAT_BASE_UPGRADE_COST = 100;
+    public static final int HELICOPTER_WORKING_TIME = 100 ;
+    public static final int TRUCK_WORKING_TIME = 100 ;
 
     /* VOLUME */
     public static final int EGG_VOLUME = 1;

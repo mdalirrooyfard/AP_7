@@ -4,9 +4,9 @@ public class Entity {
     protected double x;
     protected double y;
     protected int level = 1;
-    private int volume ;
-    private int buyCost;
-    private int sellCost;
+    protected int volume ;
+    protected int buyCost;
+    protected int sellCost;
 
     public int getVolume() {
         return volume;
