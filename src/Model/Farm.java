@@ -324,9 +324,15 @@ public class Farm {
                 }
                 else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX());
-                    if (!doMove)
+                    if (!doMove) {
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
-                    //todo make item
+                        if (entity instanceof Hen)
+                            stuffs.add(new Item(entity.getX(), entity.getY(), "egg"));
+                        else if (entity instanceof Cow)
+                            stuffs.add(new Item(entity.getX(), entity.getY(), "milk"));
+                        else
+                            stuffs.add(new Item(entity.getX(), entity.getY(), "wool"));
+                    }
                 }
             }
             else if (entity instanceof Cat)
