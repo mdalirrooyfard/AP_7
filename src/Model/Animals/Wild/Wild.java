@@ -21,5 +21,4 @@ public abstract class Wild extends Animal {
         super.move();
     }
 
-    //TODO collision
 }

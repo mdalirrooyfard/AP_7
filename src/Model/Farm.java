@@ -33,6 +33,7 @@ public class Farm {
     private int shootWildAnimalTime = -1;
     private HashMap<String, Integer> goals = new HashMap<>();
     private HashMap<String, Integer> achievements = new HashMap<>();
+    private boolean areCatsUpgraded = false;
     //TODO goals
 
     Farm(int length, int width){
@@ -125,35 +126,53 @@ public class Farm {
         return true;
     }
 
-    public void upgrade(String entityName){
+    public boolean upgrade(String entityName){
         switch (entityName){
             case "cat":{
-                //todo cat count + check money
+                if (areCatsUpgraded)
+                    return true;
+                if (money < catCount() * Constants.CAT_BASE_UPGRADE_COST)
+                    return false;
                 for (Entity entity : stuffs)
                     if (entity instanceof Cat)
                         entity.upgrade();
+                decreaseMoney(catCount() * Constants.CAT_BASE_UPGRADE_COST);
+                areCatsUpgraded = true;
                 break;
             }
             case "well":{
+                if (money < well.getUpgradeCost())
+                    return false;
                 well.upgrade();
+                decreaseMoney(well.getUpgradeCost());
                 break;
             }
             case "truck":{
+                if (money < truck.getUpgradeCost())
+                    return false;
                 truck.upgrade();
+                decreaseMoney(truck.getUpgradeCost());
                 break;
             }
             case "helicopter":{
+                if (money < helicopter.getUpgradeCost())
+                    return false;
                 helicopter.upgrade();
+                decreaseMoney(helicopter.getUpgradeCost());
                 break;
             }
             case "warehouse":{
+                if (money < wareHouse.getUpgradeCost())
+                    return false;
                 wareHouse.upgrade();
+                decreaseMoney(wareHouse.getUpgradeCost());
                 break;
             }
             default:{ //workshops
-                //TODO
+                //TODO upgrade workshops
             }
         }
+        return true;
     }
 
     public boolean pickUp(double x, double y){
@@ -389,5 +408,13 @@ public class Farm {
             if (achievements.get(s) < goals.get(s))
                 return false;
         return true;
+    }
+
+    public int catCount(){
+        int count = 0;
+        for (Entity entity : stuffs)
+            if (entity instanceof Cat)
+                count ++;
+        return count;
     }
 }
