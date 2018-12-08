@@ -418,13 +418,13 @@ public class Farm {
         return count;
     }
 
-    public void clearFromHelicopter(){}
+    public void clearFromHelicopter(){} //todo by Fereshteh :)
 
-    public void clearFromTruck(){}
+    public void clearFromTruck(){}//todo by Fereshteh :)
 
-    public void addToTruck(Item item, int count){}
+    public void addToTruck(Item item, int count){}//todo by Fereshteh :)
 
-    public void addToHellicopter(Item item , int cout){}
+    public void addToHellicopter(Item item , int cout){}//todo by Fereshteh :)
 
     public void goTransportation(boolean vehicle){
         if(vehicle){
@@ -437,4 +437,13 @@ public class Farm {
         }
 
     }
+
+    public String printLevel(){
+        String string = goals.toString();
+        string = string.replace("{","");
+        string = string.replace("}","");
+        string = string.replace(", ","\n");
+        return string;
+    }
+
 }
