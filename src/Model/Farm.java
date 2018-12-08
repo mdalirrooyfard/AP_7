@@ -24,13 +24,13 @@ public class Farm {
     private int mapLength;
     private int mapWidth;
     private ArrayList<Entity> stuffs = new ArrayList<>();
-    private double time;
+    private int time;
     private Helicopter helicopter = new Helicopter();
     private Truck truck = new Truck();
     private WareHouse wareHouse = new WareHouse();
     private Well well = new Well();
     private int money;
-    private double shootWildAnimalTime = -1;
+    private int shootWildAnimalTime = -1;
     private HashMap<String, Integer> goals = new HashMap<>();
     private HashMap<String, Integer> achievements = new HashMap<>();
     //TODO goals
@@ -39,7 +39,7 @@ public class Farm {
         mapLength = length;
         mapWidth = width;
         map = new Map(length, width);
-        time = 0.0;
+        time = 0;
     }
 
     public int makeRandomXAndY(int dim){
@@ -197,12 +197,14 @@ public class Farm {
             }
         }
         for (int i = 0; i < numberOfBears; i++){
-            Item item = new Item(currentX, currentY, "cagedBear");
+            Item item = new Item(currentX, currentY, "cagedBear",
+                    Constants.CAGED_BROWN_BEAR_SALE_COST, Constants.CAGED_BROWN_BEAR_BUY_COST);
             stuffs.add(item);
             cellItems.add(item);
         }
         for (int i = 0; i < numberOfLions; i++){
-            Item item = new Item(currentX, currentY, "cagedLion");
+            Item item = new Item(currentX, currentY, "cagedLion",
+                    Constants.CAGED_LION_SALE_COST, Constants.CAGED_LION_BUY_COST);
             stuffs.add(item);
             cellItems.add(item);
         }
@@ -263,12 +265,14 @@ public class Farm {
         checkMoves();
         removeGrassAndItem();
         checkCollision();
-        if (time - (int)time == 0.0 && (int)time % 10 == 0) {   //wild animals come
+        if (time % 10 == 0) {   //wild animals come
             shootWildAnimal();
             shootWildAnimalTime = time ;
         }
-        if ((int)(time - shootWildAnimalTime) == 5) //if there as any wild animal will leave
+        if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
             stuffs.removeIf((Entity entity) -> entity instanceof Wild);
+            shootWildAnimalTime = -1;
+        }
         //TODO checkWorkshops
         //TODO check transportation
         map.clearCells();
@@ -326,12 +330,23 @@ public class Farm {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX());
                     if (!doMove) {
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
-                        if (entity instanceof Hen)
-                            stuffs.add(new Item(entity.getX(), entity.getY(), "egg"));
-                        else if (entity instanceof Cow)
-                            stuffs.add(new Item(entity.getX(), entity.getY(), "milk"));
-                        else
-                            stuffs.add(new Item(entity.getX(), entity.getY(), "wool"));
+                        Item item;
+                        if (entity instanceof Hen) {
+                            item = new Item(entity.getX(), entity.getY(), "egg",
+                                    Constants.EGG_SALE_COST, Constants.EGG_BUY_COST);
+                            stuffs.add(item);
+                        }
+                        else if (entity instanceof Cow) {
+                            item = new Item(entity.getX(), entity.getY(), "milk",
+                                    Constants.MILK_SALE_COST, Constants.MILK_BUY_COST);
+                            stuffs.add(item);
+                        }
+                        else {
+                            item = new Item(entity.getX(), entity.getY(), "wool",
+                                    Constants.WOOL_SALE_COST, Constants.WOOL_BUY_COST);
+                            stuffs.add(item);
+                        }
+                        updateAchievement(item.getKind());
                     }
                 }
             }
@@ -356,5 +371,10 @@ public class Farm {
                     iterator.remove();
             }
         }
+    }
+
+    public void updateAchievement(String kind){
+        if (achievements.containsKey(kind))
+            achievements.replace(kind, achievements.get(kind) + 1);
     }
 }
