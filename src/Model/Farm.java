@@ -446,4 +446,15 @@ public class Farm {
         return string;
     }
 
+    public String printInfo(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("money : ").append(money).append("\n");
+        stringBuilder.append("time : ").append(time);
+        for (String s : goals.keySet()){
+            stringBuilder.append("\n").append(s).append(" : ").append(achievements.get(s));
+            stringBuilder.append(" of ").append(goals.get(s));
+        }
+        return stringBuilder.toString();
+    }
+
 }
