@@ -457,4 +457,12 @@ public class Farm {
         return stringBuilder.toString();
     }
 
+    public String printWell(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("volume : ").append(well.getVolume()).append("\n");
+        stringBuilder.append("current water : ").append(well.getCurrentVolume()).append("\n");
+        stringBuilder.append("cost : ").append(well.getBuyCost()).append("\n");
+        stringBuilder.append("upgrade cost : ").append(well.getUpgradeCost());
+        return stringBuilder.toString();
+    }
 }
