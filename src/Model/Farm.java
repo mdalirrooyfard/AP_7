@@ -465,4 +465,15 @@ public class Farm {
         stringBuilder.append("upgrade cost : ").append(well.getUpgradeCost());
         return stringBuilder.toString();
     }
+
+    public String printWareHouse(){
+        String string = wareHouse.getCollectedEntities().toString();
+        string = string.replace("{","");
+        string = string.replace("}","");
+        string = string.replace(", ","\n");
+        string += "\nvolume : " + wareHouse.getVolume() + "\n";
+        string += "current volume : " + wareHouse.getCurrentVolume() + "\n";
+        string += "upgrade cost : " + wareHouse.getUpgradeCost();
+        return string;
+    }
 }
