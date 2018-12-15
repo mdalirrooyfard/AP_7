@@ -1,12 +1,14 @@
 package Model;
 
 
+import Model.Items.Item;
+
 import java.util.ArrayList;
 
 public class WareHouse extends Entity{
     private int upgradeCost;
 
-    private ArrayList<Entity> collectedEntities = new ArrayList<>();
+    private ArrayList<Item> collectedItems = new ArrayList<>();
     private int currentVolume ;
 
     public WareHouse (){
@@ -15,6 +17,13 @@ public class WareHouse extends Entity{
         this.setUpgradeCost(Constants.WAREHOUSE_BASE_UPGRADE_COST);
     }
 
+    public void decreaseCurrentVolume(int amount){
+        this.currentVolume -= amount;
+    }
+
+    public void increaseCurrentVolume(int amount){
+        this.currentVolume += amount;
+    }
     public int getCurrentVolume() {
         return currentVolume;
     }
@@ -24,11 +33,11 @@ public class WareHouse extends Entity{
     }
 
 
-    public ArrayList<Entity> getCollectedEntities() {
-        return collectedEntities;
+    public ArrayList<Item> getCollectedItems() {
+        return collectedItems;
     }
 
-    public void add(Entity entity){ collectedEntities.add(entity); }
+    public void add(Item item){ collectedItems.add(item); }
 
     public void setUpgradeCost(int upgradeCost) {
         this.upgradeCost = upgradeCost;

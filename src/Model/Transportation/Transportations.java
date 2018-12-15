@@ -12,6 +12,24 @@ public class Transportations extends Entity {
     private int currentTime ;
     private int upgradeCost;
 
+    public int getCurrentVolume() {
+        return currentVolume;
+    }
+
+    public void setCurrentVolume(int currentVolume) {
+        this.currentVolume = currentVolume;
+    }
+
+    public void decreaseCurrentVolume(int amount){
+        this.currentVolume -= amount;
+    }
+
+    public void increaseCurrentVolume(int amount){
+        this.currentVolume += amount;
+    }
+
+    private int currentVolume;
+
     public int getWorkingTime() {
         return workingTime;
     }

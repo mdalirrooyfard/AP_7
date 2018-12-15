@@ -182,9 +182,9 @@ public class Farm {
         ArrayList<Entity> cellRemainItems = new ArrayList<>();
         boolean isEveryThingPickedUp = true;
         for (Entity entity : cellItems){
-            if (entity instanceof Item || (entity instanceof Wild && ((Wild) entity).isInCage()))
-                if (entity.getVolume() <= wareHouse.getVolume()){
-                    wareHouse.setVolume(wareHouse.getVolume() - entity.getVolume());
+            if (entity instanceof Item)
+                if (entity.getVolume() <= wareHouse.getCurrentVolume()){
+                    wareHouse.decreaseCurrentVolume(entity.getVolume());
                     stuffs.remove(entity);
                 }
                 else{
@@ -333,9 +333,9 @@ public class Farm {
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume() && !((Item) entity).isTakenByCat()){
-                wareHouse.setCurrentVolume(wareHouse.getVolume() - entity.getVolume());
+                wareHouse.decreaseCurrentVolume(entity.getVolume());
                 ((Item) entity).setTakenByCat(true);
-                wareHouse.add(entity);
+                wareHouse.add((Item)entity);
                 result = true;
             }
         return result;
@@ -422,9 +422,28 @@ public class Farm {
 
     public void clearFromTruck(){}//todo by Fereshteh :)
 
-    public void addToTruck(Item item, int count){}//todo by Fereshteh :)
+    public int addToTruck(String itemName, int count){
+        int result = 0;
+        Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
+        while (iterator.hasNext() && result < count){
+            Item item = iterator.next();
+            if (item.getKind().equals(itemName)){
+                if (item.getVolume() <= truck.getCurrentVolume()){
+                    truck.decreaseCurrentVolume(item.getVolume());
+                    wareHouse.increaseCurrentVolume(item.getVolume());
+                    iterator.remove();
+                    result ++;
+                }
+                else
+                    return result;
+            }
+        }
+        return result;
+    }
 
-    public void addToHellicopter(Item item , int cout){}//todo by Fereshteh :)
+    public void addToHellicopter(Item item , int count){
+
+    }
 
     public void goTransportation(boolean vehicle){
         if(vehicle){
@@ -467,7 +486,7 @@ public class Farm {
     }
 
     public String printWareHouse(){
-        String string = wareHouse.getCollectedEntities().toString();
+        String string = wareHouse.getCollectedItems().toString();
         string = string.replace("{","");
         string = string.replace("}","");
         string = string.replace(", ","\n");
@@ -476,4 +495,6 @@ public class Farm {
         string += "upgrade cost : " + wareHouse.getUpgradeCost();
         return string;
     }
+
+
 }
