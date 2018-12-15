@@ -15,6 +15,11 @@ public class Constants
     public static final int HELICOPTER_BASE_UPGRADE_COST = 100;
 
     /* VOLUME */
+    public static final int SOUVENIR_VOLUME = 3;
+    public static final int FABRIC_VOLUME = 6;
+    public static final int SEWING_VOLUME = 3;
+    public static final int FLOURYCAKE_VOLUME = 6 ;
+    public static final int DRIEDEGGS_VOLUME = 4;
     public static final int EGG_VOLUME = 1;
     public static final int WOOL_VOLUME = 5;
     public static final int MILK_VOLUME = 10;
@@ -36,13 +41,16 @@ public class Constants
     public static final int COLORED_PLUME_VOLUME = 2;
     public static final int BRIGHT_HORN_VOLUME = 5;
     public static final int INTERMEDIATE_VOLUME = 4;
-    public static final int SOUVENIR_VOLUME = 3;
     public static final int CHEESE_FERMENT_VOLUME = 2;
     public static final int VARNISH_VOLUME = 2;
     public static final int MEGA_PIE_VOLUME = 20;
     public static final int SPRUCE_WILD_VOLUME = 25;
 
     /* BUY COST */
+    public static final int FABRIC_BUY_COST = 400;
+    public static final int SEWING_BUY_COST = 300;
+    public static final int FLOURYCAKE_BUY_COST = 400;
+    public  static final int DRIEDEGGS_BUY_COST = 100;
     public static final int HEN_BUY_COST = 100;
     public static final int SHEEP_BUY_COST = 1000;
     public static final int COW_BUY_COST = 100;
@@ -76,8 +84,12 @@ public class Constants
     public static final int CAGED_GRIZZLY_BUY_COST = 80;
     public static final int CAGED_JAGUAR_BUY_COST = 200;
     public static final int CAGED_WHITE_BEAR_BUY_COST = 100;
-
+    public static final int ADORNMENT_BUY_COST = 400;
     /* SALE COST */
+    public static final int FABRIC_SALE_COST = 300;
+    public static final int SEWING_SALE_COST = 150;
+    public static final int FLOURYCAKE_SALE_COST = 200;
+    public static final int DRIEDEGGS_SELL_COST = 50;
     public static final int HEN_SELL_COST = 50;
     public static final int SHEEP_SELL_COST = 500;
     public static final int COW_SELL_COST = 5000;

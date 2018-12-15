@@ -221,14 +221,12 @@ public class Farm {
             }
         }
         for (int i = 0; i < numberOfBears; i++){
-            Item item = new Item(currentX, currentY, "cagedBear",
-                    Constants.CAGED_BROWN_BEAR_SALE_COST, Constants.CAGED_BROWN_BEAR_BUY_COST);
+            Item item = new Item(currentX, currentY, "cagedBrownBear");
             stuffs.add(item);
             cellItems.add(item);
         }
         for (int i = 0; i < numberOfLions; i++){
-            Item item = new Item(currentX, currentY, "cagedLion",
-                    Constants.CAGED_LION_SALE_COST, Constants.CAGED_LION_BUY_COST);
+            Item item = new Item(currentX, currentY, "cagedLion");
             stuffs.add(item);
             cellItems.add(item);
         }
@@ -357,18 +355,15 @@ public class Farm {
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
                         Item item;
                         if (entity instanceof Hen) {
-                            item = new Item(entity.getX(), entity.getY(), "egg",
-                                    Constants.EGG_SALE_COST, Constants.EGG_BUY_COST);
+                            item = new Item(entity.getX(), entity.getY(), "egg");
                             stuffs.add(item);
                         }
                         else if (entity instanceof Cow) {
-                            item = new Item(entity.getX(), entity.getY(), "milk",
-                                    Constants.MILK_SALE_COST, Constants.MILK_BUY_COST);
+                            item = new Item(entity.getX(), entity.getY(), "milk");
                             stuffs.add(item);
                         }
                         else {
-                            item = new Item(entity.getX(), entity.getY(), "wool",
-                                    Constants.WOOL_SALE_COST, Constants.WOOL_BUY_COST);
+                            item = new Item(entity.getX(), entity.getY(), "wool");
                             stuffs.add(item);
                         }
                         updateAchievement(item.getKind());
@@ -441,7 +436,7 @@ public class Farm {
         return result;
     }
 
-    public void addToHellicopter(Item item , int count){
+    public void addToHellicopter(String itemName , int count){
 
     }
 
