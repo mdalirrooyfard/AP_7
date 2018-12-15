@@ -436,8 +436,19 @@ public class Farm {
         return result;
     }
 
-    public void addToHellicopter(String itemName , int count){
-
+    public int addToHellicopter(String itemName , int count){
+        int result = 0;
+        for (int i = 0; i < count ; i++) {
+            Item item = new Item(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), itemName);
+            if (item.getVolume() <= helicopter.getCurrentVolume()){
+                helicopter.decreaseCurrentVolume(item.getVolume());
+                helicopter.add(item);
+                result ++;
+            }
+            else
+                return result;
+        }
+        return result;
     }
 
     public void goTransportation(boolean vehicle){

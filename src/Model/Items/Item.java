@@ -26,7 +26,7 @@ public class Item extends Entity {
         this.x = x ;
         this.y = y ;
         this.kind = kind ;
-        //todo set buy cost and sell cost and volume
+        setCostsAndVolume(kind);
     }
 
     public void setCostsAndVolume(String kind){
