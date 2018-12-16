@@ -296,7 +296,7 @@ public class Farm {
             shootWildAnimalTime = -1;
         }
         //TODO checkWorkshops
-        //TODO check transportation
+        //TODO check transportation and time handling for clear and...
         map.clearCells();
         map.updateCells(stuffs);
         return isLevelFinished();
@@ -413,6 +413,7 @@ public class Farm {
         return count;
     }
 
+    //transportation methods
     public void clearFromHelicopter(){
         helicopter.setMoving(false);
         Iterator<Item> iterator = helicopter.getItems().iterator();
@@ -478,6 +479,22 @@ public class Farm {
 
     }
 
+    public void checkTransportaion(){
+        if (truck.isMoving()){
+            if (truck.getCurrentTime() > 0)
+                truck.decreaseCurrentTime(1);
+            else
+                clearFromTruck();
+        }
+        if (helicopter.isMoving()){
+            if (helicopter.getCurrentTime() > 0)
+                helicopter.decreaseCurrentTime(1);
+            else
+                clearFromHelicopter();
+        }
+    }
+
+    //print methods
     public String printLevel(){
         String string = goals.toString();
         string = string.replace("{","");
