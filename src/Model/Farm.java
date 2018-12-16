@@ -422,7 +422,12 @@ public class Farm {
         }
     }
 
-    public void clearFromTruck(){}//todo by Fereshteh :)
+    public void clearFromTruck(){
+        truck.setMoving(false);
+        truck.getItems().clear();
+        increaseMoney(truck.getSpentMoney());
+        truck.setSpentMoney(0);
+    }
 
     public int addToTruck(String itemName, int count){
         int result = 0;
