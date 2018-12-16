@@ -413,7 +413,9 @@ public class Farm {
         return count;
     }
 
-    public void clearFromHelicopter(){} //todo by Fereshteh :)
+    public void clearFromHelicopter(){
+
+    } //todo by Fereshteh :)
 
     public void clearFromTruck(){}//todo by Fereshteh :)
 
@@ -425,6 +427,7 @@ public class Farm {
             if (item.getKind().equals(itemName)){
                 if (item.getVolume() <= truck.getCurrentVolume()){
                     truck.decreaseCurrentVolume(item.getVolume());
+                    truck.increaseSpentMoney(item.getSellCost());
                     wareHouse.increaseCurrentVolume(item.getVolume());
                     iterator.remove();
                     result ++;
@@ -440,7 +443,9 @@ public class Farm {
         int result = 0;
         for (int i = 0; i < count ; i++) {
             Item item = new Item(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), itemName);
-            if (item.getVolume() <= helicopter.getCurrentVolume()){
+            if (item.getVolume() <= helicopter.getCurrentVolume()
+                    && item.getBuyCost() <= money){
+                decreaseMoney(item.getBuyCost());
                 helicopter.decreaseCurrentVolume(item.getVolume());
                 helicopter.add(item);
                 result ++;
