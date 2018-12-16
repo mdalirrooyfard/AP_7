@@ -12,6 +12,11 @@ public class Transportations extends Entity {
     private int currentTime ;
     private int upgradeCost;
 
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+
     public int getCurrentVolume() {
         return currentVolume;
     }

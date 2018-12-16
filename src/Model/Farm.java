@@ -414,8 +414,13 @@ public class Farm {
     }
 
     public void clearFromHelicopter(){
-
-    } //todo by Fereshteh :)
+        helicopter.setMoving(false);
+        Iterator<Item> iterator = helicopter.getItems().iterator();
+        while(iterator.hasNext()){
+            stuffs.add(iterator.next());
+            iterator.remove();
+        }
+    }
 
     public void clearFromTruck(){}//todo by Fereshteh :)
 
