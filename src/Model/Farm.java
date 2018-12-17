@@ -576,6 +576,7 @@ public class Farm {
                 workshop = w;
                 break;
             }
+        //todo get items from warehouse
         workshop.setCurrentTime(workshop.getWorkingTime());
         workshop.setWorking(true);
     }
@@ -586,11 +587,15 @@ public class Farm {
                 if (w.getCurrentTime() > 0)
                     w.currentTimeDecrease(1);
                 else
-                    endWorkShop(w.getWorkShopName());
+                    endWorkShop(w);
     }
 
-    public void endWorkShop(String name){
-
+    public void endWorkShop(Workshop workshop){
+        workshop.setWorking(false);
+        for (int i = 0; i < workshop.getCount() ; i++) {
+            Item item = new Item(workshop.getItem_x(), workshop.getItem_y(), workshop.getOutput());
+            stuffs.add(item);
+        }
     }
 
 }

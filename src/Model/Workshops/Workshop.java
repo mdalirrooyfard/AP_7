@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Workshop extends Entity {
     protected int item_x;
     protected int item_y;
+    protected int count;
     protected ArrayList<String> inputs;
     protected String output;
     protected int workingTime = 1000;
@@ -15,6 +16,13 @@ public class Workshop extends Entity {
     protected String workShopName;
     //todo item places in each workshop
     //todo workshop places
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
     public void upgrade (){
         super.upgrade();
         workingTime = (int)(workingTime * 0.8);
