@@ -5,19 +5,38 @@ import Model.Entity;
 import java.util.ArrayList;
 
 public class Workshop extends Entity {
+    protected int item_x;
+    protected int item_y;
     protected ArrayList<String> inputs;
     protected String output;
     protected int workingTime = 1000;
     protected int currentTime;
     protected boolean isWorking;
     protected String workShopName;
-
+    //todo item places in each workshop
+    //todo workshop places
     public void upgrade (){
         super.upgrade();
         workingTime = (int)(workingTime * 0.8);
     }
     public void currentTimeDecrease(int amount){
         currentTime -= amount;
+    }
+
+    public void setItem_x(int item_x) {
+        this.item_x = item_x;
+    }
+
+    public int getItem_x() {
+        return item_x;
+    }
+
+    public void setItem_y(int item_y) {
+        this.item_y = item_y;
+    }
+
+    public int getItem_y() {
+        return item_y;
     }
 
     public ArrayList<String> getInputs() {
