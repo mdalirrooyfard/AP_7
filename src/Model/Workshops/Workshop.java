@@ -2,11 +2,14 @@ package Model.Workshops;
 
 import Model.Entity;
 
+import java.util.ArrayList;
+
 public class Workshop extends Entity {
+    protected ArrayList<String> inputs;
+    protected String output;
     protected int workingTime = 1000;
     protected int currentTime;
     protected boolean isWorking;
-    protected boolean isActive = false;
     protected String workShopName;
 
     public void upgrade (){
@@ -15,13 +18,6 @@ public class Workshop extends Entity {
     }
     public void currentTimeDecrease(int amount){
         currentTime -= amount;
-    }
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     public boolean isWorking() {
