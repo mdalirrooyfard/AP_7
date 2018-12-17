@@ -1,4 +1,4 @@
 package Model.Workshops;
 
-public class SewingFactory {
+public class SewingFactory extends Workshop{
 }

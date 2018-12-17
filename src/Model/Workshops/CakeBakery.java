@@ -1,4 +1,4 @@
 package Model.Workshops;
 
-public class CakeBakery {
+public class CakeBakery extends Workshop{
 }

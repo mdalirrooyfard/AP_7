@@ -1,4 +1,4 @@
 package Model.Workshops;
 
-public class Spinnery {
+public class Spinnery extends Workshop{
 }

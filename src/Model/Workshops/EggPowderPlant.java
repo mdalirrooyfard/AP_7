@@ -1,4 +1,4 @@
 package Model.Workshops;
 
-public class EggPowderPlant {
+public class EggPowderPlant extends Workshop{
 }

@@ -1,4 +1,4 @@
 package Model.Workshops;
 
-public class CustomFactory {
+public class CustomFactory extends Workshop{
 }
