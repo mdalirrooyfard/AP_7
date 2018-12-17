@@ -576,9 +576,27 @@ public class Farm {
                 workshop = w;
                 break;
             }
-        //todo get items from warehouse
+        workshop.setCount(0);
+        for (int i = 0; i < workshop.getLevel(); i++) {
+            for (String s : workshop.getInputs()){
+                //todo
+                           }
+        }
         workshop.setCurrentTime(workshop.getWorkingTime());
         workshop.setWorking(true);
+    }
+
+    public int availableInputCount(ArrayList<String> inputs, int initial){
+        int min = initial;
+        for (String s : inputs){
+            int count = 0;
+            for (Item item : wareHouse.getCollectedItems())
+                if (item.getKind().equals(s))
+                    count++;
+            if (count < min)
+                min = count;
+        }
+        return min;
     }
 
     public void checkWorkShops(){
