@@ -20,6 +20,14 @@ public class Workshop extends Entity {
         currentTime -= amount;
     }
 
+    public ArrayList<String> getInputs() {
+        return inputs;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
     public boolean isWorking() {
         return isWorking;
     }
