@@ -581,7 +581,12 @@ public class Farm {
     }
 
     public void checkWorkShops(){
-
+        for (Workshop w : workshops)
+            if (w.isWorking())
+                if (w.getCurrentTime() > 0)
+                    w.currentTimeDecrease(1);
+                else
+                    endWorkShop(w.getWorkShopName());
     }
 
     public void endWorkShop(String name){
