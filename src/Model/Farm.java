@@ -13,6 +13,7 @@ import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 import Model.Transportation.Helicopter;
 import Model.Transportation.Truck;
+import Model.Workshops.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class Farm {
     private HashMap<String, Integer> goals = new HashMap<>();
     private HashMap<String, Integer> achievements = new HashMap<>();
     private boolean areCatsUpgraded = false;
+    private ArrayList<Workshop> workshops = new ArrayList<>();
     //TODO goals
 
     public Farm(int length, int width){
@@ -533,6 +535,35 @@ public class Farm {
         string += "upgrade cost : " + wareHouse.getUpgradeCost();
         return string;
     }
+
+    //workShops
+    public void makeWorkShops(ArrayList<String> activeWorkShops){
+        CakeBakery cakeBakery = new CakeBakery();
+        if (activeWorkShops.contains(cakeBakery.getWorkShopName()))
+            activeWorkShops.add(cakeBakery.getWorkShopName());
+
+        CookieBakery cookieBakery = new CookieBakery();
+        if (activeWorkShops.contains(cookieBakery.getWorkShopName()))
+            activeWorkShops.add(cookieBakery.getWorkShopName());
+
+        EggPowderPlant eggPowderPlant = new EggPowderPlant();
+        if (activeWorkShops.contains(eggPowderPlant.getWorkShopName()))
+            activeWorkShops.add(eggPowderPlant.getWorkShopName());
+
+        SewingFactory sewingFactory = new SewingFactory();
+        if (activeWorkShops.contains(sewingFactory.getWorkShopName()))
+            activeWorkShops.add(sewingFactory.getWorkShopName());
+
+        Spinnery spinnery = new Spinnery();
+        if (activeWorkShops.contains(spinnery.getWorkShopName()))
+            activeWorkShops.add(spinnery.getWorkShopName());
+
+        WeavingBakery weavingBakery = new WeavingBakery();
+        if (activeWorkShops.contains(weavingBakery.getWorkShopName()))
+            activeWorkShops.add(weavingBakery.getWorkShopName());
+
+    }
+
 
 
 }
