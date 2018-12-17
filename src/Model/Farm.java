@@ -576,14 +576,22 @@ public class Farm {
                 workshop = w;
                 break;
             }
-        workshop.setCount(0);
-        for (int i = 0; i < workshop.getLevel(); i++) {
-            for (String s : workshop.getInputs()){
-                //todo
-                           }
+        workshop.setCount(availableInputCount(workshop.getInputs(), workshop.getLevel()));
+        if (workshop.getCount() > 0) {
+            for (String s : workshop.getInputs()) {
+                Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
+                int count = 0;
+                while (iterator.hasNext() && count < workshop.getCount()){
+                    Item item = iterator.next();
+                    if (item.getKind().equals(s)){
+                        iterator.remove();
+                        count ++ ;
+                    }
+                }
+            }
+            workshop.setCurrentTime(workshop.getWorkingTime());
+            workshop.setWorking(true);
         }
-        workshop.setCurrentTime(workshop.getWorkingTime());
-        workshop.setWorking(true);
     }
 
     public int availableInputCount(ArrayList<String> inputs, int initial){
