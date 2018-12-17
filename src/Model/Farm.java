@@ -540,30 +540,45 @@ public class Farm {
     public void makeWorkShops(ArrayList<String> activeWorkShops){
         CakeBakery cakeBakery = new CakeBakery();
         if (activeWorkShops.contains(cakeBakery.getWorkShopName()))
-            activeWorkShops.add(cakeBakery.getWorkShopName());
+            workshops.add(cakeBakery);
 
         CookieBakery cookieBakery = new CookieBakery();
         if (activeWorkShops.contains(cookieBakery.getWorkShopName()))
-            activeWorkShops.add(cookieBakery.getWorkShopName());
+            workshops.add(cookieBakery);
 
         EggPowderPlant eggPowderPlant = new EggPowderPlant();
         if (activeWorkShops.contains(eggPowderPlant.getWorkShopName()))
-            activeWorkShops.add(eggPowderPlant.getWorkShopName());
+            workshops.add(eggPowderPlant);
 
         SewingFactory sewingFactory = new SewingFactory();
         if (activeWorkShops.contains(sewingFactory.getWorkShopName()))
-            activeWorkShops.add(sewingFactory.getWorkShopName());
+            workshops.add(sewingFactory);
 
         Spinnery spinnery = new Spinnery();
         if (activeWorkShops.contains(spinnery.getWorkShopName()))
-            activeWorkShops.add(spinnery.getWorkShopName());
+            workshops.add(spinnery);
 
         WeavingBakery weavingBakery = new WeavingBakery();
         if (activeWorkShops.contains(weavingBakery.getWorkShopName()))
-            activeWorkShops.add(weavingBakery.getWorkShopName());
+            workshops.add(weavingBakery);
 
     }
 
+    public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output){
+        CustomFactory customFactory = new CustomFactory(name, inputs, output);
+        workshops.add(customFactory);
+    }
 
+    public void startWorkShop(String name){
+
+    }
+
+    public void checkWorkShops(){
+
+    }
+
+    public void endWorkShop(String name){
+
+    }
 
 }
