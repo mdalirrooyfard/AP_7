@@ -50,7 +50,7 @@ public class Constants
     public static final int FABRIC_BUY_COST = 400;
     public static final int SEWING_BUY_COST = 300;
     public static final int FLOURYCAKE_BUY_COST = 400;
-    public  static final int DRIEDEGGS_BUY_COST = 100;
+    public static final int DRIEDEGGS_BUY_COST = 100;
     public static final int HEN_BUY_COST = 100;
     public static final int SHEEP_BUY_COST = 1000;
     public static final int COW_BUY_COST = 100;

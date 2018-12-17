@@ -570,7 +570,14 @@ public class Farm {
     }
 
     public void startWorkShop(String name){
-
+        Workshop workshop = null;
+        for (Workshop w : workshops)
+            if (w.getWorkShopName().equals(name)){
+                workshop = w;
+                break;
+            }
+        workshop.setCurrentTime(workshop.getWorkingTime());
+        workshop.setWorking(true);
     }
 
     public void checkWorkShops(){
