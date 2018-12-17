@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class WeavingBakery extends Workshop{
     public WeavingBakery(){
         this.workShopName = "weavingBakery";
+        //todo input output
     }
 
 
