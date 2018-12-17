@@ -3,11 +3,11 @@ package Model.Workshops;
 import Model.Entity;
 
 public class Workshop extends Entity {
-    private int workingTime;
-    private int currentTime;
-    private boolean isWorking;
-    private boolean isActive = false;
-    private String workShopName;
+    protected int workingTime = 1000;
+    protected int currentTime;
+    protected boolean isWorking;
+    protected boolean isActive = false;
+    protected String workShopName;
 
     public void upgrade (){
         super.upgrade();
@@ -46,5 +46,9 @@ public class Workshop extends Entity {
 
     public void setWorkingTime(int workingTime) {
         this.workingTime = workingTime;
+    }
+
+    public String getWorkShopName() {
+        return workShopName;
     }
 }
