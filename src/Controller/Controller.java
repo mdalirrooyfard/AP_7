@@ -9,7 +9,127 @@ public class Controller {
     String[] command ;
     public void commandHandler()
     {
-
+        this.command = view.getCommand().toLowerCase().split(" ");
+        switch (this.command[0])
+        {
+            case "buy":
+                if( command.length == 2 )
+                    buyHandler(command[1]);
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "pickup":
+                if( command.length == 3 )
+                    pickUpHandler(Double.parseDouble(command[1]),Double.parseDouble(command[2]));
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "cage":
+                if( command.length == 3 )
+                    cageHandler(Double.parseDouble(command[1]),Double.parseDouble(command[2]));
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "plant":
+                if( command.length == 3 )
+                    plantHandler(Double.parseDouble(command[1]),Double.parseDouble(command[2]));
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "well":
+                if( command.length == 1 )
+                    wellHandler();
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "start":
+                if( command.length == 2 )
+                    startWorkShopHandler(command[1]);
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "upgrade":
+                if( command.length == 2 )
+                    upgradeHandler(command[1]);
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "load":
+                if( command.length == 3 )
+                {
+                    if( command[1].equals("custom") )
+                        loadHandler(command[2]);
+                    else if( command[1].equals("game") )
+                        loadGameHandler(command[2]);
+                    else
+                        view.printError("Format of command is wrong!");
+                }
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "run":
+                if( command.length == 2 )
+                    runHandler(command[1]);
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "save":
+                if( command.length == 3 )
+                {
+                    if( command[1].equals("game") )
+                        saveGameHandler(command[2]);
+                    else
+                        view.printError("Format of command is wrong!");
+                }
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "print":
+                if( command.length == 2 )
+                    printHandler(command[1]);
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "turn":
+                if( command.length == 2 )
+                    turnHandler(Integer.parseInt(command[1]));
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            case "truck":
+            case "helicopter":
+                if( command.length > 1 )
+                {
+                    switch (command[1])
+                    {
+                        case "add":
+                            if( command.length == 4 )
+                                addToTransportationHandler(command[0],command[2],Integer.parseInt(command[3]));
+                            else
+                                view.printError("Format of command is wrong!");
+                            break;
+                        case "clear":
+                            if( command.length == 2 )
+                                clearFromTransportationHandler(command[0]);
+                            else
+                                view.printError("Format of command is wrong!");
+                            break;
+                        case "go":
+                            if( command.length == 2 )
+                                goHandler(command[0]);
+                            else
+                                view.printError("Format of command is wrong!");
+                            break;
+                        default:
+                            view.printError("Format of command is wrong!");
+                    }
+                }
+                else
+                    view.printError("Format of command is wrong!");
+                break;
+            default:
+                view.printError("Format of command is wrong!");
+        }
     }
 
     public void buyHandler(String animalName)
