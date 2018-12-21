@@ -91,9 +91,15 @@ public class Controller {
 
     public void printHandler(String what){}
 
-    public void addToTransportationHandler(boolean vehicle , String name , int count){}
+    public void addToTransportationHandler(String  vehicle , String name , int count)
+    {
+        if (vehicle.equals("helicopter"))
+            farm.addToHellicopter(name,count);
+        else if(vehicle.equals("truck"))
+            farm.addToTruck(name,count);
+    }
 
-    public void clearToTransportationHandler(boolean vehicle){}
+    public void clearFromTransportationHandler(boolean vehicle){}
 
     public void goHandler(boolean vehicle){}
 
