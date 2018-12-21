@@ -89,7 +89,10 @@ public class Controller {
 
     public void saveGameHandler(String path){}
 
-    public void printHandler(String what){}
+    public void printHandler(String what)
+    {
+
+    }
 
     public void addToTransportationHandler(String  vehicle , String name , int count)
     {

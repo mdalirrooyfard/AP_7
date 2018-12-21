@@ -15,4 +15,8 @@ public class View
     {
         System.out.println("Level is finished.  Congratulations! :) ");
     }
+    public void printInfo(String info)
+    {
+        System.out.println(info);
+    }
 }
