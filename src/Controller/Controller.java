@@ -39,14 +39,15 @@ public class Controller {
         }
     }
 
-    public void pickUp(double x , double y)
+    public void pickUpHandler(double x , double y)
     {
-
+        if(!farm.pickUp(x,y))
+            view.printError("Warehouse is full! :'(");
     }
 
     public void cage(double x , double y){}
 
-    public void plant(double x , double y)
+    public void plantHandler(double x , double y)
     {
         if(!farm.plantGrass(x,y))
             view.printError("Not Enough Money! :'( ");
@@ -54,7 +55,10 @@ public class Controller {
 
     public void well(){}
 
-    public void upgrade(String entityName){}
+    public void upgrade(String entityName)
+    {
+
+    }
 
     public void turnHandler(int n){}
 
