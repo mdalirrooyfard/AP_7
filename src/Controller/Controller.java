@@ -94,9 +94,17 @@ public class Controller {
     public void addToTransportationHandler(String  vehicle , String name , int count)
     {
         if (vehicle.equals("helicopter"))
-            farm.addToHellicopter(name,count);
+        {
+            int c = farm.addToHellicopter(name,count);
+            if( c < count )
+                view.printError("More than helicopter capacity! "+Integer.toString(c)+" is added.");
+        }
         else if(vehicle.equals("truck"))
-            farm.addToTruck(name,count);
+        {
+            int c = farm.addToTruck(name,count);
+            if( c < count )
+                view.printError("More than helicopter capacity! "+Integer.toString(c)+" is added.");
+        }
     }
 
     public void clearFromTransportationHandler(String vehicle)
