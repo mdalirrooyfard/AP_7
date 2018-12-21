@@ -55,9 +55,10 @@ public class Controller {
 
     public void well(){}
 
-    public void upgrade(String entityName)
+    public void upgradeHandler(String entityName)
     {
-
+        if( !farm.upgrade(entityName) )
+            view.printError("Not Enough Money! :'( ");
     }
 
     public void turnHandler(int n){}
