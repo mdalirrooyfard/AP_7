@@ -39,11 +39,18 @@ public class Controller {
         }
     }
 
-    public void pickUp(double x , double y){}
+    public void pickUp(double x , double y)
+    {
+
+    }
 
     public void cage(double x , double y){}
 
-    public void plant(double x , double y){}
+    public void plant(double x , double y)
+    {
+        if(!farm.plantGrass(x,y))
+            view.printError("Not Enough Money! :'( ");
+    }
 
     public void well(){}
 
