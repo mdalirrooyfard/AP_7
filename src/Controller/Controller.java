@@ -6,10 +6,38 @@ import View.View;
 public class Controller {
     View view = new View();
     Farm farm ;
-    String command ;
-    public void commandHandler(){}
+    String[] command ;
+    public void commandHandler()
+    {
 
-    public void buyHandler(String animalName){}
+    }
+
+    public void buyHandler(String animalName)
+    {
+        switch (animalName)
+        {
+            case "sheep":
+                if (!farm.addSheep())
+                    view.printError("Not Enough Money! :'( ");
+                break;
+            case "cow":
+                if (!farm.addCow())
+                    view.printError("Not Enough Money! :'( ");
+                break;
+            case "hen":
+                if (!farm.addHen())
+                    view.printError("Not Enough Money! :'( ");
+                break;
+            case "cat":
+                if (!farm.addCat())
+                    view.printError("Not Enough Money! :'( ");
+                break;
+            case "dog":
+                if (!farm.addDog())
+                    view.printError("Not Enough Money! :'( ");
+                break;
+        }
+    }
 
     public void pickUp(double x , double y){}
 

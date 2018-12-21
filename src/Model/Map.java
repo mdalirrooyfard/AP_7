@@ -46,7 +46,7 @@ public class Map
 
     public boolean[] cellStatus( int x , int y )
     {
-        return cells[x][y].status();
+        return cells[y][x].status();
     }
 
     public DIRECTION findNearestItem( int x , int y )
