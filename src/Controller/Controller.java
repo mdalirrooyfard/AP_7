@@ -45,7 +45,11 @@ public class Controller {
             view.printError("Warehouse is full! :'(");
     }
 
-    public void cage(double x , double y){}
+    public void cageHandler(double x , double y)
+    {
+        if(!farm.putCage(x,y))
+            view.printError("No wild animal is here!");
+    }
 
     public void plantHandler(double x , double y)
     {
