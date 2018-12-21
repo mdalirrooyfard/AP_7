@@ -69,7 +69,15 @@ public class Controller {
             view.printError("Not Enough Money! :'( ");
     }
 
-    public void turnHandler(int n){}
+    public void turnHandler(int n)
+    {
+        boolean isLevelFinished = false;
+        for (int i = 0 ; i < n && !isLevelFinished ; i++)
+            if(farm.turn())
+                isLevelFinished = true;
+        if (isLevelFinished)
+            view.levelIsFinished();
+    }
 
     public void loadHandler(String path){}
 
