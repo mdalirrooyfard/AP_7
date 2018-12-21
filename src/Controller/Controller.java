@@ -99,7 +99,13 @@ public class Controller {
             farm.addToTruck(name,count);
     }
 
-    public void clearFromTransportationHandler(boolean vehicle){}
+    public void clearFromTransportationHandler(String vehicle)
+    {
+        if (vehicle.equals("helicopter"))
+            farm.clearFromHelicopter();
+        else if(vehicle.equals("truck"))
+            farm.clearFromTruck();
+    }
 
     public void goHandler(boolean vehicle){}
 
