@@ -57,7 +57,11 @@ public class Controller {
             view.printError("Not Enough Money! :'( ");
     }
 
-    public void well(){}
+    public void wellHandler()
+    {
+        if(!farm.fullWell())
+            view.printError("Not Enough Money! :'( ");
+    }
 
     public void upgradeHandler(String entityName)
     {
