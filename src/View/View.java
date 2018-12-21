@@ -11,4 +11,8 @@ public class View
     {
         System.out.println(error);
     }
+    public void levelIsFinished()
+    {
+        System.out.println("Level is finished.  Congratulations! :) ");
+    }
 }
