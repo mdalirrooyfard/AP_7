@@ -107,7 +107,10 @@ public class Controller {
             farm.clearFromTruck();
     }
 
-    public void goHandler(boolean vehicle){}
+    public void goHandler(String vehicle)
+    {
+        farm.goTransportation(vehicle.equals("truck"));
+    }
 
     public void startWorkShopHandler(String name){}
 
