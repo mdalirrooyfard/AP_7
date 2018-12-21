@@ -91,7 +91,21 @@ public class Controller {
 
     public void printHandler(String what)
     {
-
+        switch (what)
+        {
+            case "info":view.printInfo(farm.printInfo());break;
+            case "map"://TODO view.printInfo(farm.printMap());
+                break;
+            case "levels":view.printInfo(farm.printLevel());break;
+            case "warehouse":view.printInfo(farm.printWareHouse());break;
+            case "well":view.printInfo(farm.printWell());break;
+            case "workshops"://TODO view.printInfo(farm.printWorkshops());
+                break;
+            case "helicopter"://TODO view.printInfo(farm.printHelicopter());
+                break;
+            case "truck"://TODO view.printInfo(farm.printTruck());
+                break;
+        }
     }
 
     public void addToTransportationHandler(String  vehicle , String name , int count)
