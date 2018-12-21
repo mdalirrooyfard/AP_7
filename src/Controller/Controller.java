@@ -120,6 +120,9 @@ public class Controller {
         farm.goTransportation(vehicle.equals("truck"));
     }
 
-    public void startWorkShopHandler(String name){}
+    public void startWorkShopHandler(String name)
+    {
+        farm.startWorkShop(name);
+    }
 
 }
