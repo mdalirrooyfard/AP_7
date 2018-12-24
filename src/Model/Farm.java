@@ -44,6 +44,7 @@ public class Farm {
         mapWidth = width;
         map = new Map(length, width);
         time = 0;
+        money = 0;
     }
 
     public int makeRandomXAndY(int dim){
