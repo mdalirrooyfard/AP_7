@@ -316,7 +316,7 @@ public class Controller {
 
     }
 
-    public void saveHandler(String path)
+    public void saveGameHandler(String path)
     {
         Date date = new Date();
         try
@@ -337,8 +337,6 @@ public class Controller {
     }
 
     public void loadGameHandler(String path){}
-
-    public void saveGameHandler(String path){}
 
     public void printHandler(String what)
     {
