@@ -14,6 +14,7 @@ public class Workshop extends Entity {
     protected int currentTime;
     protected boolean isWorking;
     protected String workShopName;
+    protected int upgradeCost = 100;
     //todo item places in each workshop
     //todo workshop places
     public int getCount() {
@@ -26,6 +27,7 @@ public class Workshop extends Entity {
     public void upgrade (){
         super.upgrade();
         workingTime = (int)(workingTime * 0.8);
+        upgradeCost = (int)(upgradeCost * 1.5);
     }
     public void currentTimeDecrease(int amount){
         currentTime -= amount;
