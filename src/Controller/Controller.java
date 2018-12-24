@@ -336,7 +336,21 @@ public class Controller {
 
     }
 
-    public void loadGameHandler(String path){}
+    public void loadGameHandler(String path)
+    {
+        try
+        {
+            InputStream inputStream = new FileInputStream(path);
+            Scanner scanner = new Scanner(inputStream);
+            YaGson yaGson = new YaGson();
+            String savedFarm = scanner.nextLine();
+            farm = yaGson.fromJson(savedFarm,Farm.class);
+        }
+        catch ( IOException e )
+        {
+            view.printError("No directory is loaded!");
+        }
+    }
 
     public void printHandler(String what)
     {
