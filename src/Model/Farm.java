@@ -39,6 +39,10 @@ public class Farm {
     private ArrayList<Workshop> workshops = new ArrayList<>();
     //TODO goals
 
+    public HashMap<String, Integer> getGoals() {
+        return goals;
+    }
+
     public Farm(int length, int width){
         mapLength = length;
         mapWidth = width;
@@ -328,8 +332,8 @@ public class Farm {
             stuffs.removeIf((Entity entity) -> entity instanceof Wild);
             shootWildAnimalTime = -1;
         }
-        //TODO checkWorkshops
-        //TODO check transportation and time handling for clear and...
+        checkTransportaion();
+        checkWorkShops();
         map.clearCells();
         map.updateCells(stuffs);
         return isLevelFinished();

@@ -3,10 +3,16 @@ package Controller;
 import Model.Farm;
 import View.View;
 
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
 public class Controller {
-    View view = new View();
-    Farm farm ;
-    String[] command ;
+    private View view = new View();
+    private Farm farm ;
+    private String[] command ;
+    private String paths;
     public void commandHandler()
     {
         this.command = view.getCommand().toLowerCase().split(" ");
@@ -69,7 +75,7 @@ public class Controller {
                 break;
             case "run":
                 if( command.length == 2 )
-                    runHandler(command[1]);
+                    runHandler();
                 else
                     view.printError("Format of command is wrong!");
                 break;
@@ -137,23 +143,23 @@ public class Controller {
         switch (animalName)
         {
             case "sheep":
-                if (!farm.addSheep())
+                if (!farm.addSheep(true))
                     view.printError("Not Enough Money! :'( ");
                 break;
             case "cow":
-                if (!farm.addCow())
+                if (!farm.addCow(true))
                     view.printError("Not Enough Money! :'( ");
                 break;
             case "hen":
-                if (!farm.addHen())
+                if (!farm.addHen(true))
                     view.printError("Not Enough Money! :'( ");
                 break;
             case "cat":
-                if (!farm.addCat())
+                if (!farm.addCat(true))
                     view.printError("Not Enough Money! :'( ");
                 break;
             case "dog":
-                if (!farm.addDog())
+                if (!farm.addDog(true))
                     view.printError("Not Enough Money! :'( ");
                 break;
         }
@@ -199,9 +205,95 @@ public class Controller {
             view.levelIsFinished();
     }
 
-    public void loadHandler(String path){}
+    public void loadHandler(String path){
+        paths = path;
+    }
 
-    public void runHandler(String mapName){}
+    public void runHandler(){
+        mapHandler();
+        goalsHandler();
+        workShopHandler();
+    }
+
+    public void mapHandler(){
+        try {
+            InputStream inputStream = new FileInputStream(paths + "\\map.txt");
+            Scanner scanner = new Scanner(inputStream);
+            int length = 0;
+            while(scanner.hasNext()){
+                String string = scanner.next();
+                switch (string){
+                    case "length":{
+                        length = scanner.nextInt();
+                        break;
+                    }
+                    case "width":{
+                        farm = new Farm(length, scanner.nextInt());
+                        break;
+                    }
+                    case "money":{
+                        farm.increaseMoney(scanner.nextInt());
+                        break;
+                    }
+                    case "hen":{
+                        int count = scanner.nextInt();
+                        for (int i = 0; i < count; i++)
+                            farm.addHen(false);
+                        break;
+                    }
+                    case "cow":{
+                        int count = scanner.nextInt();
+                        for (int i = 0; i < count; i++)
+                            farm.addCow(false);
+                        break;
+                    }
+                    case "sheep":{
+                        int count = scanner.nextInt();
+                        for (int i = 0; i < count; i++)
+                            farm.addSheep(false);
+                        break;
+                    }
+                    case "cat":{
+                        int count = scanner.nextInt();
+                        for (int i = 0; i < count; i++)
+                            farm.addCat(false);
+                        break;
+                    }
+                    case "dog":{
+                        int count = scanner.nextInt();
+                        for (int i = 0; i < count; i++)
+                            farm.addDog(false);
+                        break;
+                    }
+                    default:{
+                    }
+                }
+
+            }
+        }
+        catch ( IOException e )
+        {
+            view.printError("No directory is loaded");
+        }
+    }
+
+    public void goalsHandler(){
+        try {
+            InputStream inputStream = new FileInputStream(paths+"\\goals.txt");
+            Scanner scanner = new Scanner(inputStream);
+            while (scanner.hasNext()){
+                String name = scanner.next();
+                int count = scanner.nextInt();
+                farm.getGoals().put(name, count);
+            }
+        } catch (FileNotFoundException e) {
+            view.printError("No directory is loaded");
+        }
+    }
+
+    public void workShopHandler(){
+
+    }
 
     public void saveHandler(String path){}
 
