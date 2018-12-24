@@ -51,31 +51,34 @@ public class Farm {
         return (int)temp;
     }
 
-    public boolean addHen(){
+    public boolean addHen(boolean isBought){
         if (Constants.HEN_BUY_COST > money)
             return false;
         Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
-        decreaseMoney(hen.getBuyCost());
+        if( isBought )
+            decreaseMoney(hen.getBuyCost());
         stuffs.add(hen);
         updateAchievement("hen");
         return true;
     }
 
-    public boolean addCow(){
+    public boolean addCow(boolean isBought){
         if (Constants.COW_BUY_COST > money)
             return false;
         Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
-        decreaseMoney(cow.getBuyCost());
+        if( isBought )
+            decreaseMoney(cow.getBuyCost());
         stuffs.add(cow);
         updateAchievement("cow");
         return true;
     }
 
-    public boolean addSheep(){
+    public boolean addSheep(boolean isBought){
         if (Constants.SHEEP_BUY_COST > money)
             return false;
         Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
-        decreaseMoney(sheep.getBuyCost());
+        if( isBought )
+            decreaseMoney(sheep.getBuyCost());
         stuffs.add(sheep);
         updateAchievement("sheep");
         return true;
