@@ -580,6 +580,23 @@ public class Farm {
         return stringBuilder.toString();
     }
 
+    public String printWorkshop(String workShopName){
+        Workshop workshop = null;
+        for(Workshop w : workshops)
+            if (w.getWorkShopName().equals(workShopName)) {
+                workshop = w;
+                break;
+            }
+        if (workshop == null)
+            return "This workShop is not included in this level!";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("inputs : ");
+        for (String input : workshop.getInputs())
+            stringBuilder.append(input).append(" ");
+        stringBuilder.append("\noutput : ").append(workshop.getOutput());
+        return stringBuilder.toString();
+    }
+
     //workShops
     public void makeWorkShops(ArrayList<String> activeWorkShops){
         CakeBakery cakeBakery = new CakeBakery();

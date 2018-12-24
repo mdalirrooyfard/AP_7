@@ -220,9 +220,9 @@ public class Controller {
             case "well":view.printInfo(farm.printWell());break;
             case "workshops"://TODO view.printInfo(farm.printWorkshops());
                 break;
-            case "helicopter"://TODO view.printInfo(farm.printHelicopter());
+            case "helicopter":view.printInfo(farm.printTransportation(false));
                 break;
-            case "truck"://TODO view.printInfo(farm.printTruck());
+            case "truck":view.printInfo(farm.printTransportation(true));
                 break;
         }
     }
