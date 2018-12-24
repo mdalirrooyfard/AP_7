@@ -6,6 +6,7 @@ import View.View;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Controller {
@@ -212,7 +213,7 @@ public class Controller {
     public void runHandler(){
         mapHandler();
         goalsHandler();
-        //workShopHandler();
+        workShopHandler();
     }
 
     public void mapHandler(){
@@ -291,7 +292,20 @@ public class Controller {
         }
     }
 
+    public void workShopHandler(){
+        try {
+            InputStream inputStream = new FileInputStream(paths+"\\workShops.txt");
+            Scanner scanner = new Scanner(inputStream);
+            ArrayList<String> workShops = new ArrayList<>();
+            while(scanner.hasNext()){
+                workShops.add(scanner.nextLine());
+            }
+            farm.makeWorkShops(workShops);
+        } catch (FileNotFoundException e) {
+            view.printError("No directory is loaded");
+        }
 
+    }
 
     public void saveHandler(String path){}
 
