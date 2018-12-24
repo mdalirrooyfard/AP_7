@@ -536,6 +536,23 @@ public class Farm {
         return string;
     }
 
+    public String printMap(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < mapLength; i++) {
+            for (int j = 0; j < mapWidth; j++){
+                boolean[] status = map.cellStatus(j, i);
+                for(boolean k : status)
+                    if (k)
+                        stringBuilder.append(1);
+                    else
+                        stringBuilder.append(0);
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
     //workShops
     public void makeWorkShops(ArrayList<String> activeWorkShops){
         CakeBakery cakeBakery = new CakeBakery();
