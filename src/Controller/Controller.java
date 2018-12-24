@@ -218,7 +218,7 @@ public class Controller {
             case "levels":view.printInfo(farm.printLevel());break;
             case "warehouse":view.printInfo(farm.printWareHouse());break;
             case "well":view.printInfo(farm.printWell());break;
-            case "workshops"://TODO view.printInfo(farm.printWorkshops());
+            case "workshops":view.printInfo(farm.printWorkshop(what));
                 break;
             case "helicopter":view.printInfo(farm.printTransportation(false));
                 break;
