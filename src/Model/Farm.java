@@ -52,33 +52,39 @@ public class Farm {
     }
 
     public boolean addHen(boolean isBought){
-        if (Constants.HEN_BUY_COST > money)
-            return false;
-        Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         if( isBought )
-            decreaseMoney(hen.getBuyCost());
+        {
+            if (Constants.HEN_BUY_COST > money)
+                return false;
+            decreaseMoney(Constants.HEN_BUY_COST);
+        }
+        Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(hen);
         updateAchievement("hen");
         return true;
     }
 
     public boolean addCow(boolean isBought){
-        if (Constants.COW_BUY_COST > money)
-            return false;
-        Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         if( isBought )
-            decreaseMoney(cow.getBuyCost());
+        {
+            if (Constants.COW_BUY_COST  > money)
+                return false;
+            decreaseMoney(Constants.COW_BUY_COST);
+        }
+        Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(cow);
         updateAchievement("cow");
         return true;
     }
 
     public boolean addSheep(boolean isBought){
-        if (Constants.SHEEP_BUY_COST > money)
-            return false;
-        Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         if( isBought )
-            decreaseMoney(sheep.getBuyCost());
+        {
+            if (Constants.SHEEP_BUY_COST  > money)
+                return false;
+            decreaseMoney(Constants.SHEEP_BUY_COST);
+        }
+        Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(sheep);
         updateAchievement("sheep");
         return true;
@@ -112,9 +118,13 @@ public class Farm {
         return true;
     }
 
-    public boolean addDog(){
-        if (Constants.DOG_BUY_COST > money)
-            return false;
+    public boolean addDog( boolean isBought ){
+        if( isBought )
+        {
+            if (Constants.DOG_BUY_COST > money)
+                return false;
+            decreaseMoney(Constants.DOG_BUY_COST);
+        }
         Dog dog = new Dog(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(dog.getBuyCost());
         stuffs.add(dog);
@@ -122,9 +132,13 @@ public class Farm {
         return true;
     }
 
-    public boolean addCat(){
-        if (Constants.COW_BUY_COST > money)
-            return false;
+    public boolean addCat( boolean isBought ){
+        if( isBought )
+        {
+            if (Constants.CAT_BUY_COST > money)
+                return false;
+            decreaseMoney(Constants.CAT_BUY_COST);
+        }
         Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         decreaseMoney(cat.getBuyCost());
         stuffs.add(cat);
