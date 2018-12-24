@@ -2,11 +2,14 @@ package Controller;
 
 import Model.Farm;
 import View.View;
+import com.gilecode.yagson.YaGson;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Formatter;
 import java.util.Scanner;
 
 public class Controller {
@@ -206,70 +209,66 @@ public class Controller {
             view.levelIsFinished();
     }
 
-    public void loadHandler(String path){
+    public void loadHandler(String path)
+    {
         paths = path;
     }
 
-    public void runHandler(){
+    public void runHandler()
+    {
         mapHandler();
         goalsHandler();
         workShopHandler();
     }
 
-    public void mapHandler(){
-        try {
+    public void mapHandler()
+    {
+        try
+        {
             InputStream inputStream = new FileInputStream(paths + "\\map.txt");
             Scanner scanner = new Scanner(inputStream);
             int length = 0;
-            while(scanner.hasNext()){
+            while(scanner.hasNext())
+            {
                 String string = scanner.next();
-                switch (string){
-                    case "length":{
+                switch (string)
+                {
+                    case "length":
                         length = scanner.nextInt();
                         break;
-                    }
-                    case "width":{
+                    case "width":
                         farm = new Farm(length, scanner.nextInt());
                         break;
-                    }
-                    case "money":{
+                    case "money":
                         farm.increaseMoney(scanner.nextInt());
                         break;
-                    }
-                    case "hen":{
+                    case "hen":
                         int count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
                             farm.addHen(false);
                         break;
-                    }
-                    case "cow":{
-                        int count = scanner.nextInt();
+                    case "cow":
+                        count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
                             farm.addCow(false);
                         break;
-                    }
-                    case "sheep":{
-                        int count = scanner.nextInt();
+                    case "sheep":
+                        count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
                             farm.addSheep(false);
                         break;
-                    }
-                    case "cat":{
-                        int count = scanner.nextInt();
+                    case "cat":
+                        count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
                             farm.addCat(false);
                         break;
-                    }
-                    case "dog":{
-                        int count = scanner.nextInt();
+                    case "dog":
+                        count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
                             farm.addDog(false);
                         break;
-                    }
-                    default:{
-                    }
+                    default:
                 }
-
             }
         }
         catch ( IOException e )
@@ -278,36 +277,64 @@ public class Controller {
         }
     }
 
-    public void goalsHandler(){
-        try {
+    public void goalsHandler()
+    {
+        try
+        {
             InputStream inputStream = new FileInputStream(paths+"\\goals.txt");
             Scanner scanner = new Scanner(inputStream);
-            while (scanner.hasNext()){
+            while (scanner.hasNext())
+            {
                 String name = scanner.next();
                 int count = scanner.nextInt();
                 farm.getGoals().put(name, count);
             }
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             view.printError("No directory is loaded");
         }
     }
 
-    public void workShopHandler(){
-        try {
+    public void workShopHandler()
+    {
+        try
+        {
             InputStream inputStream = new FileInputStream(paths+"\\workShops.txt");
             Scanner scanner = new Scanner(inputStream);
             ArrayList<String> workShops = new ArrayList<>();
-            while(scanner.hasNext()){
+            while(scanner.hasNext())
+            {
                 workShops.add(scanner.nextLine());
             }
             farm.makeWorkShops(workShops);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e)
+        {
             view.printError("No directory is loaded");
         }
 
     }
 
-    public void saveHandler(String path){}
+    public void saveHandler(String path)
+    {
+        Date date = new Date();
+        try
+        {
+            OutputStream outputStream = new FileOutputStream(path + "\\game" + Long.toString(date.getTime()) + ".txt");
+            Formatter formatter = new Formatter(outputStream);
+            YaGson yaGson = new YaGson();
+            String savedFarm = yaGson.toJson(farm);
+            formatter.format(savedFarm);
+            formatter.flush();
+            formatter.close();
+        }
+        catch ( IOException e )
+        {
+            view.printError("No directory is loaded!");
+        }
+
+    }
 
     public void loadGameHandler(String path){}
 
