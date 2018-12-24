@@ -37,7 +37,6 @@ public class Farm {
     private HashMap<String, Integer> achievements = new HashMap<>();
     private boolean areCatsUpgraded = false;
     private ArrayList<Workshop> workshops = new ArrayList<>();
-    //TODO goals
 
     public HashMap<String, Integer> getGoals() {
         return goals;
