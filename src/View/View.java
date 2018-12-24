@@ -1,8 +1,11 @@
 package View;
 
+import java.util.Scanner;
+
 public class View
 {
     String command;
+    Scanner scanner;
     public String getCommand()
     {
         return command;
@@ -18,5 +21,10 @@ public class View
     public void printInfo(String info)
     {
         System.out.println(info);
+    }
+    public void setCommand(Scanner scanner)
+    {
+        this.scanner = scanner;
+        command = scanner.nextLine();
     }
 }

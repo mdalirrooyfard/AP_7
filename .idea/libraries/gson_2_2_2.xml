@@ -2,8 +2,11 @@
   <library name="gson-2.2.2">
     <CLASSES>
       <root url="jar://E:/Programming/gson/gson-2.2.2.jar!/" />
+      <root url="jar://E:/Programming/gson/yagson-0.4.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
   </library>
 </component>
