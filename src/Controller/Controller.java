@@ -17,6 +17,17 @@ public class Controller {
     private Farm farm ;
     private String[] command ;
     private String paths;
+    private boolean isLevelFinished = false;
+
+    public void getCommand()
+    {
+        while(!isLevelFinished)
+        {
+            view.setCommand();
+            commandHandler();
+        }
+    }
+
     public void commandHandler()
     {
         this.command = view.getCommand().toLowerCase().split(" ");
@@ -201,7 +212,6 @@ public class Controller {
 
     public void turnHandler(int n)
     {
-        boolean isLevelFinished = false;
         for (int i = 0 ; i < n && !isLevelFinished ; i++)
             if(farm.turn())
                 isLevelFinished = true;
