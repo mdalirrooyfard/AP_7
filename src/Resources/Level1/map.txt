@@ -1,0 +1,6 @@
+length 40
+width 60
+money 1000
+hen 1
+sheep 1
+cow 1
