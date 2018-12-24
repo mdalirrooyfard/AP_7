@@ -214,8 +214,7 @@ public class Controller {
         switch (what)
         {
             case "info":view.printInfo(farm.printInfo());break;
-            case "map"://TODO view.printInfo(farm.printMap());
-                break;
+            case "map":view.printInfo(farm.printMap());break;
             case "levels":view.printInfo(farm.printLevel());break;
             case "warehouse":view.printInfo(farm.printWareHouse());break;
             case "well":view.printInfo(farm.printWell());break;

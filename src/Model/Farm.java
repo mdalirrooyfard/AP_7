@@ -12,6 +12,7 @@ import Model.Animals.Wild.Lion;
 import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 import Model.Transportation.Helicopter;
+import Model.Transportation.Transportations;
 import Model.Transportation.Truck;
 import Model.Workshops.*;
 
@@ -454,6 +455,7 @@ public class Farm {
                 if (item.getVolume() <= truck.getCurrentVolume()){
                     truck.decreaseCurrentVolume(item.getVolume());
                     truck.increaseSpentMoney(item.getSellCost());
+                    truck.add(item);
                     wareHouse.increaseCurrentVolume(item.getVolume());
                     iterator.remove();
                     result ++;
@@ -563,6 +565,18 @@ public class Farm {
             }
             stringBuilder.append("\n");
         }
+        return stringBuilder.toString();
+    }
+
+    public String printTransportation(boolean vehicle){
+        Transportations transportations;
+        if (vehicle)
+            transportations = truck;
+        else
+            transportations = helicopter;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Item item : transportations.getItems())
+            stringBuilder.append(item.getKind()).append(" ");
         return stringBuilder.toString();
     }
 
