@@ -212,7 +212,7 @@ public class Controller {
     public void runHandler(){
         mapHandler();
         goalsHandler();
-        workShopHandler();
+        //workShopHandler();
     }
 
     public void mapHandler(){
@@ -291,9 +291,7 @@ public class Controller {
         }
     }
 
-    public void workShopHandler(){
 
-    }
 
     public void saveHandler(String path){}
 
