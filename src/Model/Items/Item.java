@@ -226,6 +226,18 @@ public class Item extends Entity {
                 break;
             }
 
+            case "cookie":{
+                this.setVolume(Constants.COOKIE_VOLUME);
+                this.setBuyCost(Constants.COOKIE_COST);
+                this.setSellCost(Constants.COOKIE_SALE_COST);
+            }
+
+            case "eggPowder":{
+                this.setVolume(Constants.EGG_POWDER_VOLUME);
+                this.setBuyCost(Constants.EGG_POWDER_BUY_COST);
+                this.setSellCost(Constants.EGG_POWDER_SALE_COST);
+            }
+
             default:{       //spruce wild animal
                 this.setVolume(Constants.SPRUCE_WILD_VOLUME);
                 this.setBuyCost(Constants.SPRUCE_WILD_BUY_COST);
