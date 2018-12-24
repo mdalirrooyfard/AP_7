@@ -135,43 +135,56 @@ public class Farm {
                     return true;
                 if (money < catCount() * Constants.CAT_BASE_UPGRADE_COST)
                     return false;
+                decreaseMoney(catCount() * Constants.CAT_BASE_UPGRADE_COST);
                 for (Entity entity : stuffs)
                     if (entity instanceof Cat)
                         entity.upgrade();
-                decreaseMoney(catCount() * Constants.CAT_BASE_UPGRADE_COST);
                 areCatsUpgraded = true;
                 break;
             }
             case "well":{
                 if (money < well.getUpgradeCost())
                     return false;
-                well.upgrade();
                 decreaseMoney(well.getUpgradeCost());
+                well.upgrade();
                 break;
             }
             case "truck":{
                 if (money < truck.getUpgradeCost())
                     return false;
-                truck.upgrade();
                 decreaseMoney(truck.getUpgradeCost());
+                truck.upgrade();
                 break;
             }
             case "helicopter":{
                 if (money < helicopter.getUpgradeCost())
                     return false;
-                helicopter.upgrade();
                 decreaseMoney(helicopter.getUpgradeCost());
+                helicopter.upgrade();
                 break;
             }
             case "warehouse":{
                 if (money < wareHouse.getUpgradeCost())
                     return false;
-                wareHouse.upgrade();
                 decreaseMoney(wareHouse.getUpgradeCost());
+                wareHouse.upgrade();
                 break;
             }
             default:{ //workshops
-                //TODO upgrade workshops
+                Workshop workshop = null;
+                for (Workshop w : workshops){
+                    if (w.getWorkShopName().equals(entityName)) {
+                        workshop = w;
+                        break;
+                    }
+                }
+                if (workshop != null) {
+                    if (workshop.getUpgradeCost() > money)
+                        return false;
+                    decreaseMoney(workshop.getUpgradeCost());
+                    workshop.upgrade();
+                }
+
             }
         }
         return true;
