@@ -40,7 +40,7 @@ public class Controller {
     private void commandHandler() throws Exception
     {
         command = command.toLowerCase();
-        if( command.matches("buy sheep|cow|hen") )
+        if( command.matches("buy sheep|cow|hen|cat|dog") )
             buyHandler(command.substring(4));
         else if( command.matches("pickup [0-9]+ [0-9]+"))
             pickUpHandler(Double.parseDouble(command.substring(7,8)),Double.parseDouble(command.substring(9)));
@@ -79,55 +79,43 @@ public class Controller {
             throw new Exception("Wrong Command Format");
     }
 
-    public void buyHandler(String animalName)
+    private void buyHandler(String animalName) throws Exception
     {
+        boolean isBought = false;
         switch (animalName)
         {
-            case "sheep":
-                if (!farm.addSheep(true))
-                    view.printError("Not Enough Money! :'( ");
-                break;
-            case "cow":
-                if (!farm.addCow(true))
-                    view.printError("Not Enough Money! :'( ");
-                break;
-            case "hen":
-                if (!farm.addHen(true))
-                    view.printError("Not Enough Money! :'( ");
-                break;
-            case "cat":
-                if (!farm.addCat(true))
-                    view.printError("Not Enough Money! :'( ");
-                break;
-            case "dog":
-                if (!farm.addDog(true))
-                    view.printError("Not Enough Money! :'( ");
-                break;
+            case "sheep":isBought = farm.addSheep(true);break;
+            case "cow": isBought = farm.addCow(true);break;
+            case "hen": isBought = farm.addHen(true);break;
+            case "cat": isBought = farm.addCat(true);break;
+            case "dog": isBought = farm.addDog(true);break;
         }
+        if( !isBought )
+            throw new Exception("Not Enough Money! :'( ");
     }
 
-    public void pickUpHandler(double x , double y)
+    private void pickUpHandler(double x , double y) throws Exception
     {
         if(!farm.pickUp(x,y))
-            view.printError("Warehouse is full! :'(");
+            throw new Exception("Warehouse is full! :'(");
     }
 
-    public void cageHandler(double x , double y)
+    private void cageHandler(double x , double y) throws Exception
     {
         if(!farm.putCage(x,y))
-            view.printError("No wild animal is here!");
+            throw new Exception("No wild animal is here!");
     }
 
-    public void plantHandler(double x , double y)
+    private void plantHandler(double x , double y) throws Exception
     {
         if(!farm.plantGrass(x,y))
-            view.printError("Not Enough Money! :'( ");
+            throw new Exception("Not Enough Money! :'( ");
     }
 
-    public void wellHandler()
+    private void wellHandler() throws Exception
     {
         if(!farm.fullWell())
-            view.printError("Not Enough Money! :'( ");
+            throw new Exception("Not Enough Money! :'( ");
     }
 
     private void upgradeHandler(String entityName) throws Exception
@@ -168,18 +156,26 @@ public class Controller {
         }
     }
 
-    public void runHandler( String mapName )
-    {
-        mapHandler();
-        goalsHandler();
-        workShopHandler();
-    }
-
-    public void mapHandler()
+    private void runHandler( String mapName ) throws Exception
     {
         try
         {
-            InputStream inputStream = new FileInputStream(paths + "\\map.txt");
+            mapHandler(mapName);
+            goalsHandler();
+            workShopHandler();
+        }
+        catch ( Exception e )
+        {
+            throw new Exception("No such directory exists!");
+        }
+    }
+
+    private void mapHandler( String mapName ) throws Exception
+    {
+        InputStream inputStream = null;
+        try
+        {
+            inputStream = new FileInputStream(paths + "\\" + mapName + ".txt");
             Scanner scanner = new Scanner(inputStream);
             int length = 0;
             while(scanner.hasNext())
@@ -225,17 +221,23 @@ public class Controller {
                 }
             }
         }
-        catch ( IOException e )
+        catch ( FileNotFoundException e )
         {
-            view.printError("No directory is loaded");
+            throw e;
+        }
+        finally
+        {
+            if (inputStream != null)
+                inputStream.close();
         }
     }
 
-    public void goalsHandler()
+    private void goalsHandler() throws Exception
     {
+        InputStream inputStream = null;
         try
         {
-            InputStream inputStream = new FileInputStream(paths+"\\goals.txt");
+            inputStream = new FileInputStream(paths+"\\goals.txt");
             Scanner scanner = new Scanner(inputStream);
             while (scanner.hasNext())
             {
@@ -246,15 +248,21 @@ public class Controller {
         }
         catch (FileNotFoundException e)
         {
-            view.printError("No directory is loaded");
+            throw e;
+        }
+        finally
+        {
+            if (inputStream != null)
+                inputStream.close();
         }
     }
 
-    public void workShopHandler()
+    private void workShopHandler() throws Exception
     {
+        InputStream inputStream = null;
         try
         {
-            InputStream inputStream = new FileInputStream(paths+"\\workShops.txt");
+            inputStream = new FileInputStream(paths+"\\workShops.txt");
             Scanner scanner = new Scanner(inputStream);
             ArrayList<String> workShops = new ArrayList<>();
             while(scanner.hasNext())
@@ -265,12 +273,16 @@ public class Controller {
         }
         catch (FileNotFoundException e)
         {
-            view.printError("No directory is loaded");
+            throw e;
         }
-
+        finally
+        {
+            if (inputStream != null)
+                inputStream.close();
+        }
     }
 
-    public void saveGameHandler(String path)
+    private void saveGameHandler(String path) throws Exception
     {
         Date date = new Date();
         try
@@ -285,16 +297,17 @@ public class Controller {
         }
         catch ( IOException e )
         {
-            view.printError("No directory is loaded!");
+            throw new Exception("No such directory exists!");
         }
 
     }
 
-    public void loadGameHandler(String path)
+    private void loadGameHandler(String path) throws Exception
     {
+        InputStream inputStream = null;
         try
         {
-            InputStream inputStream = new FileInputStream(path);
+            inputStream = new FileInputStream(path);
             Scanner scanner = new Scanner(inputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
@@ -302,11 +315,16 @@ public class Controller {
         }
         catch ( IOException e )
         {
-            view.printError("No directory is loaded!");
+            throw new Exception("No such directory exsits!");
+        }
+        finally
+        {
+            if( inputStream != null )
+                inputStream.close();
         }
     }
 
-    public void printHandler(String what)
+    private void printHandler(String what)
     {
         switch (what)
         {
@@ -315,12 +333,9 @@ public class Controller {
             case "levels":view.printInfo(farm.printLevel());break;
             case "warehouse":view.printInfo(farm.printWareHouse());break;
             case "well":view.printInfo(farm.printWell());break;
-            case "workshops":view.printInfo(farm.printWorkshop(what));
-                break;
-            case "helicopter":view.printInfo(farm.printTransportation(false));
-                break;
-            case "truck":view.printInfo(farm.printTransportation(true));
-                break;
+            case "workshops":view.printInfo(farm.printWorkshop(what));break;
+            case "helicopter":view.printInfo(farm.printTransportation(false));break;
+            case "truck":view.printInfo(farm.printTransportation(true));break;
         }
     }
 
@@ -373,7 +388,7 @@ public class Controller {
         }
     }
 
-    public void startWorkShopHandler(String name)
+    private void startWorkShopHandler(String name)
     {
         farm.startWorkShop(name);
     }
