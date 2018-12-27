@@ -5,5 +5,6 @@ public class EggPowderPlant extends Workshop{
         this.workShopName = "eggPowderPlant";
         this.inputs.add("egg");
         this.output = "eggPowder";
+        upgradeCost = 100;
     }
 }

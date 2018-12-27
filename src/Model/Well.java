@@ -6,7 +6,6 @@ import static Model.Constants.WELL_CAPACITY;
 
 public class Well extends Entity{
     private int currentVolume;
-    private int upgradeCost;
 
     public Well(){
         this.setVolume(WELL_CAPACITY);
@@ -39,11 +38,5 @@ public class Well extends Entity{
         this.setUpgradeCost(this.getUpgradeCost() + 50);
     }
 
-    public int getUpgradeCost() {
-        return upgradeCost;
-    }
 
-    public void setUpgradeCost(int upgradeCost) {
-        this.upgradeCost = upgradeCost;
-    }
 }

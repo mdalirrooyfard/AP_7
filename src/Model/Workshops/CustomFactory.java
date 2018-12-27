@@ -7,5 +7,6 @@ public class CustomFactory extends Workshop{
         this.workShopName = name;
         this.output = output;
         this.inputs = inputs;
+        upgradeCost = 100;
     }
 }

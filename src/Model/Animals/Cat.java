@@ -7,7 +7,7 @@ import Model.Map;
 import static Model.Constants.CAT_BUY_COST;
 
 public class Cat extends Animal {
-    private int upgradeCost;
+
     public Cat (double x, double y , Map map){
         super(x , y);
         this.map = map ;
@@ -27,11 +27,4 @@ public class Cat extends Animal {
         }
     }
 
-    public int getUpgradeCost() {
-        return upgradeCost;
-    }
-
-    public void setUpgradeCost(int upgradeCost) {
-        this.upgradeCost = upgradeCost;
-    }
 }

@@ -6,7 +6,6 @@ import Model.Items.Item;
 import java.util.ArrayList;
 
 public class WareHouse extends Entity{
-    private int upgradeCost;
 
     private ArrayList<Item> collectedItems = new ArrayList<>();
     private int currentVolume ;
@@ -38,14 +37,6 @@ public class WareHouse extends Entity{
     }
 
     public void add(Item item){ collectedItems.add(item); }
-
-    public void setUpgradeCost(int upgradeCost) {
-        this.upgradeCost = upgradeCost;
-    }
-
-    public int getUpgradeCost() {
-        return upgradeCost;
-    }
 
     @Override
     public void upgrade() {

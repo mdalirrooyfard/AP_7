@@ -7,9 +7,17 @@ public class Entity {
     protected int volume ;
     protected int buyCost;
     protected int sellCost;
-
+    protected int upgradeCost;
     public int getVolume() {
         return volume;
+    }
+
+    public int getUpgradeCost() {
+        return upgradeCost;
+    }
+
+    public void setUpgradeCost(int upgradeCost) {
+        this.upgradeCost = upgradeCost;
     }
 
     public void setVolume(int volume) {

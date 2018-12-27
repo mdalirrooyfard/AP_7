@@ -6,5 +6,6 @@ public class SewingFactory extends Workshop{
         this.inputs.add("cloth");
         this.inputs.add("adornment");
         this.output = "carnivalDress";
+        upgradeCost = 100;
     }
 }
