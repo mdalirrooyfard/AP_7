@@ -388,9 +388,14 @@ public class Controller {
         }
     }
 
-    private void startWorkShopHandler(String name)
+    private void startWorkShopHandler(String name) throws Exception
     {
-        farm.startWorkShop(name);
+        if( farm.startWorkShop(name) == -2 )
+            throw new Exception("This workshop is working now!");
+        else if( farm.startWorkShop(name) == -1 )
+            throw new Exception("This workshop doesn't exist!");
+        else if( farm.startWorkShop(name) == 0 )
+            throw new Exception("Inputs of this workshop don't exist in warehouse");
     }
 
 }
