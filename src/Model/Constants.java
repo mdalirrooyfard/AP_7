@@ -13,6 +13,11 @@ public class Constants
     public static final int TRUCK_WORKING_TIME = 100 ;
     public static final int TRUCK_BASE_UPGRADE_COST = 100;
     public static final int HELICOPTER_BASE_UPGRADE_COST = 100;
+    public static final String[] ITEM_NAMES = {"souvenir","fabric","sewing","floury cake","dried egg","egg","wool",
+            "milk","egg powder","cookie","cake","string","cloth","carnival dress","flour","adornment","plume",
+            "caged lion", "caged brown bear","caged white bear","caged grizzly","caged jaguar","horn","sour cream","curd",
+            "cheese","colored plume","bright horn","intermediate","cheese ferment","varnish","mega pie","spruce lion",
+            "spruce brown bear","spruce white bear","spruce grizzly","spruce jaguar"};
 
     /* VOLUME */
     public static final int SOUVENIR_VOLUME = 3;
@@ -31,10 +36,9 @@ public class Constants
     public static final int CARNIVAL_DRESS_VOLUME = 8;
     public static final int FLOUR_VOLUME = 1;
     public static final int ADORNMENT_VOLUME = 4;
-    public static final int PLUMRE_VOLUME = 2;
+    public static final int PLUME_VOLUME = 2;
     public static final int CAGED_WILD_VOLUME = 20;
     public static final int HORN_VOLUME = 6;
-    public static final int PLUME_VOLUME = 2;
     public static final int SOUR_CREAM_VOLUME = 8;
     public static final int CURD_VOLUME = 6;
     public static final int CHEESE_VOLUME = 5;

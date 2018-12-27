@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Controller {
     private View view = new View();
     private Farm farm ;
-    private String[] command ;
+    private String command ;
     private String paths;
     private boolean isLevelFinished = false;
 
@@ -30,51 +30,35 @@ public class Controller {
 
     public void commandHandler()
     {
-        this.command = view.getCommand().toLowerCase().split(" ");
+        if( command.matches("buy sheep|cow|hen") )
+            buyHandler(command.substring(4));
+        else if( command.matches("pickup [0-9]+ [0-9]+"))
+            pickUpHandler(Double.parseDouble(command.substring(7,8)),Double.parseDouble(command.substring(9)));
+        else if ( command.matches("cage [0-9]+ [0-9]+"))
+            cageHandler(Double.parseDouble(command.substring(5,6)),Double.parseDouble(command.substring(7)));
+        else if( command.matches("plant [0-9]+ [0-9]+") )
+            plantHandler(Double.parseDouble(command.substring(6,7)),Double.parseDouble(command.substring(8)));
+        else if( command.matches("well") )
+            wellHandler();
+        else if( command.matches("start " +
+                "eggpowderplant|cakebaker|cookiebakery|customfactory|sweingfactory|spinnery|weavingfactory") )
+            startWorkShopHandler(command.substring(6));
+        else if( command.matches("upgrade " +
+                "eggpowderplant|cakebaker|cookiebakery|customfactory|sweingfactory|spinnery|weavingfactory|" +
+                "cat|well|truck|helicopter|warehouse"))
+            upgradeHandler(command.substring(7));
+        else if( command.startsWith("load game "))
+            loadGameHandler(command.substring(10));
+        else if( command.startsWith("save game "))
+            saveGameHandler(command.substring(10));
+        else if( command.startsWith("run ") )
+            runHandler(command.substring(4));
+        else if( command.matches("turn [0-9]+") )
+            turnHandler(Integer.parseInt(command.substring(5)));
+        else if( command.matches("truck|helicopter add [item_name] [count]") )
+
         switch (this.command[0])
         {
-            case "buy":
-                if( command.length == 2 )
-                    buyHandler(command[1]);
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "pickup":
-                if( command.length == 3 )
-                    pickUpHandler(Double.parseDouble(command[1]),Double.parseDouble(command[2]));
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "cage":
-                if( command.length == 3 )
-                    cageHandler(Double.parseDouble(command[1]),Double.parseDouble(command[2]));
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "plant":
-                if( command.length == 3 )
-                    plantHandler(Double.parseDouble(command[1]),Double.parseDouble(command[2]));
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "well":
-                if( command.length == 1 )
-                    wellHandler();
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "start":
-                if( command.length == 2 )
-                    startWorkShopHandler(command[1]);
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "upgrade":
-                if( command.length == 2 )
-                    upgradeHandler(command[1]);
-                else
-                    view.printError("Format of command is wrong!");
-                break;
             case "load":
                 if( command.length == 3 )
                 {
@@ -88,32 +72,9 @@ public class Controller {
                 else
                     view.printError("Format of command is wrong!");
                 break;
-            case "run":
-                if( command.length == 2 )
-                    runHandler();
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "save":
-                if( command.length == 3 )
-                {
-                    if( command[1].equals("game") )
-                        saveGameHandler(command[2]);
-                    else
-                        view.printError("Format of command is wrong!");
-                }
-                else
-                    view.printError("Format of command is wrong!");
-                break;
             case "print":
                 if( command.length == 2 )
                     printHandler(command[1]);
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "turn":
-                if( command.length == 2 )
-                    turnHandler(Integer.parseInt(command[1]));
                 else
                     view.printError("Format of command is wrong!");
                 break;
@@ -224,7 +185,7 @@ public class Controller {
         paths = path;
     }
 
-    public void runHandler()
+    public void runHandler( String mapName )
     {
         mapHandler();
         goalsHandler();
