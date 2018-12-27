@@ -443,23 +443,31 @@ public class Farm {
     }
 
     //transportation methods
-    public void clearFromHelicopter(){
+    public boolean clearFromHelicopter(){
+        if (helicopter.isMoving())
+            return false;
         helicopter.setMoving(false);
         Iterator<Item> iterator = helicopter.getItems().iterator();
         while(iterator.hasNext()){
             stuffs.add(iterator.next());
             iterator.remove();
         }
+        return true;
     }
 
-    public void clearFromTruck(){
+    public boolean clearFromTruck(){
+        if (truck.isMoving())
+            return false;
         truck.setMoving(false);
         truck.getItems().clear();
         increaseMoney(truck.getSpentMoney());
         truck.setSpentMoney(0);
+        return true;
     }
 
     public int addToTruck(String itemName, int count){
+        if (truck.isMoving())
+            return -1;
         int result = 0;
         Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
         while (iterator.hasNext() && result < count){
@@ -481,6 +489,8 @@ public class Farm {
     }
 
     public int addToHellicopter(String itemName , int count){
+        if (helicopter.isMoving())
+            return -1;
         int result = 0;
         for (int i = 0; i < count ; i++) {
             Item item = new Item(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), itemName);
@@ -497,16 +507,20 @@ public class Farm {
         return result;
     }
 
-    public void goTransportation(boolean vehicle){
+    public boolean goTransportation(boolean vehicle){
         if(vehicle){
+            if (truck.isMoving())
+                return false;
             truck.setCurrentTime(truck.getWorkingTime());
             truck.setMoving(true);
         }
         else {
+            if (helicopter.isMoving())
+                return false;
             helicopter.setCurrentTime(helicopter.getWorkingTime());
             helicopter.setMoving(true);
         }
-
+        return true;
     }
 
     public void checkTransportaion(){
@@ -643,13 +657,17 @@ public class Farm {
         workshops.add(customFactory);
     }
 
-    public void startWorkShop(String name){
+    public int startWorkShop(String name){
         Workshop workshop = null;
         for (Workshop w : workshops)
             if (w.getWorkShopName().equals(name)){
                 workshop = w;
                 break;
             }
+        if (workshop == null)
+            return -1;
+        if (workshop.isWorking())
+            return -2;
         workshop.setCount(availableInputCount(workshop.getInputs(), workshop.getLevel()));
         if (workshop.getCount() > 0) {
             for (String s : workshop.getInputs()) {
@@ -666,6 +684,7 @@ public class Farm {
             workshop.setCurrentTime(workshop.getWorkingTime());
             workshop.setWorking(true);
         }
+        return workshop.getCount();
     }
 
     public int availableInputCount(ArrayList<String> inputs, int initial){
