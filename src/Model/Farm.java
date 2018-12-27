@@ -150,47 +150,31 @@ public class Farm {
         return true;
     }
 
-    public boolean upgrade(String entityName){
+    public int upgrade(String entityName){
         switch (entityName){
             case "cat":{
                 if (areCatsUpgraded)
-                    return true;
+                    return 2;
                 if (money < catCount() * Constants.CAT_BASE_UPGRADE_COST)
-                    return false;
+                    return 1;
                 decreaseMoney(catCount() * Constants.CAT_BASE_UPGRADE_COST);
                 for (Entity entity : stuffs)
                     if (entity instanceof Cat)
                         entity.upgrade();
                 areCatsUpgraded = true;
-                break;
+                return 0;
             }
             case "well":{
-                if (money < well.getUpgradeCost())
-                    return false;
-                decreaseMoney(well.getUpgradeCost());
-                well.upgrade();
-                break;
+                return upgradeEntity(well);
             }
             case "truck":{
-                if (money < truck.getUpgradeCost())
-                    return false;
-                decreaseMoney(truck.getUpgradeCost());
-                truck.upgrade();
-                break;
+                return upgradeEntity(truck);
             }
             case "helicopter":{
-                if (money < helicopter.getUpgradeCost())
-                    return false;
-                decreaseMoney(helicopter.getUpgradeCost());
-                helicopter.upgrade();
-                break;
+                return upgradeEntity(helicopter);
             }
             case "warehouse":{
-                if (money < wareHouse.getUpgradeCost())
-                    return false;
-                decreaseMoney(wareHouse.getUpgradeCost());
-                wareHouse.upgrade();
-                break;
+                return upgradeEntity(wareHouse);
             }
             default:{ //workshops
                 Workshop workshop = null;
@@ -201,15 +185,23 @@ public class Farm {
                     }
                 }
                 if (workshop != null) {
-                    if (workshop.getUpgradeCost() > money)
-                        return false;
-                    decreaseMoney(workshop.getUpgradeCost());
-                    workshop.upgrade();
+                    return upgradeEntity(workshop);
                 }
+                else
+                    return 3;
 
             }
         }
-        return true;
+    }
+
+    public int upgradeEntity(Entity entity){
+        if (entity.getLevel() == 5)
+            return 2;
+        if (entity.getUpgradeCost() > money)
+            return 1;
+        decreaseMoney(entity.getUpgradeCost());
+        entity.upgrade();
+        return 0;
     }
 
     public boolean pickUp(double x, double y){
