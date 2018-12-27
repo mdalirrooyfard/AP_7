@@ -343,9 +343,15 @@ public class Controller {
                 throw new Exception("Helicopter is moving right now!");
     }
 
-    public void goHandler(String vehicle)
+    private void goHandler(boolean vehicle) throws Exception
     {
-        farm.goTransportation(vehicle.equals("truck"));
+        if( !farm.goTransportation(vehicle) )
+        {
+            if( vehicle )
+                throw new Exception("Truck is moving right now!");
+            else
+                throw new Exception("Helicopter is moving right now!");
+        }
     }
 
     public void startWorkShopHandler(String name)
