@@ -189,6 +189,18 @@ public class Controller {
                     case "width":
                         farm = new Farm(length, scanner.nextInt());
                         break;
+                    case "well":
+                        farm.makeWell(scanner.nextInt());
+                        break;
+                    case "wareHouse":
+                        farm.makeWareHouse(scanner.nextInt());
+                        break;
+                    case "truck":
+                        farm.makeTruck(scanner.nextInt());
+                        break;
+                    case "helicopter":
+                        farm.makeHelicopter(scanner.nextInt());
+                        break;
                     case "money":
                         farm.increaseMoney(scanner.nextInt());
                         break;
