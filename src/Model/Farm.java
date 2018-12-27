@@ -488,7 +488,7 @@ public class Farm {
         return result;
     }
 
-    public int addToHellicopter(String itemName , int count){
+    public int addToHelicopter(String itemName , int count){
         if (helicopter.isMoving())
             return -1;
         int result = 0;
@@ -523,7 +523,7 @@ public class Farm {
         return true;
     }
 
-    public void checkTransportaion(){
+    public void checkTransportation(){
         if (truck.isMoving()){
             if (truck.getCurrentTime() > 0)
                 truck.decreaseCurrentTime(1);

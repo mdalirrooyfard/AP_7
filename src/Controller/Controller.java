@@ -305,19 +305,29 @@ public class Controller {
         }
     }
 
-    public void addToTransportationHandler(String  vehicle , String name , int count)
+    private void addToTransportationHandler(boolean  vehicle , String name_count) throws Exception
     {
-        if (vehicle.equals("helicopter"))
-        {
-            int c = farm.addToHellicopter(name,count);
-            if( c < count )
-                view.printError("More than helicopter capacity! "+Integer.toString(c)+" is added.");
-        }
-        else if(vehicle.equals("truck"))
+        String[] tmp = name_count.split(" ");
+        int count = Integer.parseInt(tmp[tmp.length - 1]);
+        String name = "";
+        for( int  i = 0 ; i < tmp.length - 2 ; i++ )
+            name = name.concat(tmp[i] + " ");
+        name = name.concat(tmp[tmp.length - 2]);
+        if (vehicle)
         {
             int c = farm.addToTruck(name,count);
-            if( c < count )
-                view.printError("More than helicopter capacity! "+Integer.toString(c)+" is added.");
+            if( c == -1 )
+                throw new Exception("Truck is moving right now!");
+            else if( c < count )
+                throw new Exception("More than truck capacity!      "+Integer.toString(c)+" is added.");
+        }
+        else
+        {
+            int c = farm.addToHelicopter(name,count);
+            if( c == -1 )
+                throw new Exception("Helicopter is moving right now!");
+            else if( c < count )
+                throw new Exception("More than helicopter capacity!      "+Integer.toString(c)+" is added.");
         }
     }
 
