@@ -59,7 +59,7 @@ public class Farm {
     }
 
     public void makeTruck(int volume){
-
+        truck = new Truck(volume);
     }
 
     public void makeHelicopter(int volume){

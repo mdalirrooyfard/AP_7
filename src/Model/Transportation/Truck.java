@@ -4,7 +4,9 @@ import Model.Constants;
 
 public class Truck extends Transportations{
     private int spentMoney = 0;
-    public Truck(){
+    public Truck(int volume){
+        this.setVolume(volume);
+        this.setCurrentVolume(volume);
         this.setWorkingTime(Constants.TRUCK_WORKING_TIME);
         this.setUpgradeCost(Constants.TRUCK_BASE_UPGRADE_COST);
     }
