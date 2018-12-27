@@ -10,8 +10,8 @@ public class WareHouse extends Entity{
     private ArrayList<Item> collectedItems = new ArrayList<>();
     private int currentVolume ;
 
-    public WareHouse (){
-        this.setVolume(Constants.WAREHOUSE_VOLUME);
+    public WareHouse (int volume){
+        this.setVolume(volume);
         this.currentVolume = getVolume();
         this.setUpgradeCost(Constants.WAREHOUSE_BASE_UPGRADE_COST);
     }

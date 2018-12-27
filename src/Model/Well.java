@@ -7,9 +7,9 @@ import static Model.Constants.WELL_CAPACITY;
 public class Well extends Entity{
     private int currentVolume;
 
-    public Well(){
-        this.setVolume(WELL_CAPACITY);
-        this.setCurrentVolume(WELL_CAPACITY);
+    public Well(int volume){
+        this.setVolume(volume);
+        this.setCurrentVolume(volume);
         this.setBuyCost(WELL_BASE_MONEY);
         this.setUpgradeCost(WELL_BASE_UPGRADE_COST);
     }

@@ -27,10 +27,10 @@ public class Farm {
     private int mapWidth;
     private ArrayList<Entity> stuffs = new ArrayList<>();
     private int time;
-    private Helicopter helicopter = new Helicopter();
-    private Truck truck = new Truck();
-    private WareHouse wareHouse = new WareHouse();
-    private Well well = new Well();
+    private Helicopter helicopter;
+    private Truck truck;
+    private WareHouse wareHouse;
+    private Well well;
     private int money;
     private int shootWildAnimalTime = -1;
     private HashMap<String, Integer> goals = new HashMap<>();
@@ -48,6 +48,22 @@ public class Farm {
         map = new Map(length, width);
         time = 0;
         money = 0;
+    }
+
+    public void makeWell(int volume){
+        well = new Well(volume);
+    }
+
+    public void makeWareHouse(int volume){
+        wareHouse = new WareHouse(volume);
+    }
+
+    public void makeTruck(int volume){
+
+    }
+
+    public void makeHelicopter(int volume){
+
     }
 
     public int makeRandomXAndY(int dim){
@@ -645,10 +661,6 @@ public class Farm {
         Spinnery spinnery = new Spinnery();
         if (activeWorkShops.contains(spinnery.getWorkShopName()))
             workshops.add(spinnery);
-
-        WeavingFactory weavingFactory = new WeavingFactory();
-        if (activeWorkShops.contains(weavingFactory.getWorkShopName()))
-            workshops.add(weavingFactory);
 
     }
 
