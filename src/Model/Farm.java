@@ -63,7 +63,7 @@ public class Farm {
     }
 
     public void makeHelicopter(int volume){
-
+        helicopter = new Helicopter(volume);
     }
 
     public int makeRandomXAndY(int dim){
