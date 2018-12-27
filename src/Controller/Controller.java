@@ -129,10 +129,14 @@ public class Controller {
             view.printError("Not Enough Money! :'( ");
     }
 
-    public void upgradeHandler(String entityName)
+    private void upgradeHandler(String entityName) throws Exception
     {
-        if( !farm.upgrade(entityName) )
-            view.printError("Not Enough Money! :'( ");
+        if( farm.upgrade(entityName) == 1 )
+            throw new Exception("Not Enough Money! :'( ");
+        else if( farm.upgrade(entityName) == 2 )
+            throw new Exception(entityName+" is at maximum level!");
+        else if( farm.upgrade(entityName) == 3 )
+            throw new Exception(entityName+" doesn't exits");
     }
 
     public void turnHandler(int n)
