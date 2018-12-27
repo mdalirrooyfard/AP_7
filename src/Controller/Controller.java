@@ -24,12 +24,21 @@ public class Controller {
         while(!isLevelFinished)
         {
             view.setCommand();
-            commandHandler();
+            command = view.getCommand();
+            try
+            {
+                commandHandler();
+            }
+            catch ( Exception e )
+            {
+                view.printError(e.getMessage());
+            }
         }
     }
 
-    public void commandHandler()
+    private void commandHandler() throws Exception
     {
+        command = command.toLowerCase();
         if( command.matches("buy sheep|cow|hen") )
             buyHandler(command.substring(4));
         else if( command.matches("pickup [0-9]+ [0-9]+"))
@@ -55,63 +64,18 @@ public class Controller {
             runHandler(command.substring(4));
         else if( command.matches("turn [0-9]+") )
             turnHandler(Integer.parseInt(command.substring(5)));
-        else if( command.matches("truck|helicopter add [item_name] [count]") )
-
-        switch (this.command[0])
-        {
-            case "load":
-                if( command.length == 3 )
-                {
-                    if( command[1].equals("custom") )
-                        loadHandler(command[2]);
-                    else if( command[1].equals("game") )
-                        loadGameHandler(command[2]);
-                    else
-                        view.printError("Format of command is wrong!");
-                }
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "print":
-                if( command.length == 2 )
-                    printHandler(command[1]);
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            case "truck":
-            case "helicopter":
-                if( command.length > 1 )
-                {
-                    switch (command[1])
-                    {
-                        case "add":
-                            if( command.length == 4 )
-                                addToTransportationHandler(command[0],command[2],Integer.parseInt(command[3]));
-                            else
-                                view.printError("Format of command is wrong!");
-                            break;
-                        case "clear":
-                            if( command.length == 2 )
-                                clearFromTransportationHandler(command[0]);
-                            else
-                                view.printError("Format of command is wrong!");
-                            break;
-                        case "go":
-                            if( command.length == 2 )
-                                goHandler(command[0]);
-                            else
-                                view.printError("Format of command is wrong!");
-                            break;
-                        default:
-                            view.printError("Format of command is wrong!");
-                    }
-                }
-                else
-                    view.printError("Format of command is wrong!");
-                break;
-            default:
-                view.printError("Format of command is wrong!");
-        }
+        else if( command.matches("truck|helicopter add [{a-z, }]+ [0-9]+") )
+            addToTransportationHandler(command.startsWith("truck"),command.substring(command.indexOf("add")+4,command.indexOf("add")));
+        else if( command.matches("truck|helicopter clear"))
+            clearFromTransportationHandler(command.startsWith("truck"));
+        else if( command.matches("truck|helicopter go") )
+            goHandler(command.startsWith("truck"));
+        else if( command.matches("print info|map|levels|warehouse|well|workshops|truck|helicopter") )
+            printHandler(command.substring(6));
+        else if( command.startsWith("load custom ") )
+            loadHandler(command.substring(12));
+        else
+            throw new Exception("Wrong Command Format");
     }
 
     public void buyHandler(String animalName)
