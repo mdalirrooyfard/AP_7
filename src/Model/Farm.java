@@ -324,7 +324,7 @@ public class Farm {
             stuffs.removeIf((Entity entity) -> entity instanceof Wild);
             shootWildAnimalTime = -1;
         }
-        checkTransportaion();
+        checkTransportation();
         checkWorkShops();
         map.clearCells();
         map.updateCells(stuffs);
@@ -646,9 +646,9 @@ public class Farm {
         if (activeWorkShops.contains(spinnery.getWorkShopName()))
             workshops.add(spinnery);
 
-        WeavingBakery weavingBakery = new WeavingBakery();
-        if (activeWorkShops.contains(weavingBakery.getWorkShopName()))
-            workshops.add(weavingBakery);
+        WeavingFactory weavingFactory = new WeavingFactory();
+        if (activeWorkShops.contains(weavingFactory.getWorkShopName()))
+            workshops.add(weavingFactory);
 
     }
 

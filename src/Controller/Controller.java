@@ -7,6 +7,7 @@ import com.gilecode.yagson.YaGson;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
@@ -73,7 +74,7 @@ public class Controller {
         else if( command.matches("print info|map|levels|warehouse|well|workshops|truck|helicopter") )
             printHandler(command.substring(6));
         else if( command.startsWith("load custom ") )
-            loadHandler(command.substring(12));
+            loadCustomHandler(command.substring(12));
         else
             throw new Exception("Wrong Command Format");
     }
@@ -139,7 +140,7 @@ public class Controller {
             throw new Exception(entityName+" doesn't exits");
     }
 
-    public void turnHandler(int n)
+    private void turnHandler(int n)
     {
         for (int i = 0 ; i < n && !isLevelFinished ; i++)
             if(farm.turn())
@@ -148,9 +149,23 @@ public class Controller {
             view.levelIsFinished();
     }
 
-    public void loadHandler(String path)
+    private void loadCustomHandler(String path) throws Exception
     {
-        paths = path;
+        try
+        {
+            InputStream inputStream = new FileInputStream(path);
+            Scanner scanner = new Scanner(inputStream);
+            String name = scanner.next() , input = scanner.nextLine().substring(8) , output = scanner.next();
+            ArrayList<String> inputs = new ArrayList<>();
+            for( String s : input.split(" ") )
+                inputs.add(s);
+            farm.makeCustomWorkshop(name,inputs,output);
+
+        }
+        catch ( FileNotFoundException e )
+        {
+            throw new Exception("No such directory exists!");
+        }
     }
 
     public void runHandler( String mapName )
