@@ -331,12 +331,16 @@ public class Controller {
         }
     }
 
-    public void clearFromTransportationHandler(String vehicle)
+    private void clearFromTransportationHandler(boolean vehicle) throws Exception
     {
-        if (vehicle.equals("helicopter"))
-            farm.clearFromHelicopter();
-        else if(vehicle.equals("truck"))
-            farm.clearFromTruck();
+        if (vehicle)
+        {
+            if( !farm.clearFromTruck() )
+                throw new Exception("Truck is moving right now!");
+        }
+        else
+            if( !farm.clearFromHelicopter() )
+                throw new Exception("Helicopter is moving right now!");
     }
 
     public void goHandler(String vehicle)
