@@ -7,5 +7,6 @@ public class CakeBakery extends Workshop{
         inputs.add("cookie");
         inputs.add("flour");
         output = "cake";
+        upgradeCost = 100;
     }
 }

@@ -7,6 +7,7 @@ public class WeavingBakery extends Workshop{
         this.workShopName = "weavingBakery";
         this.inputs.add("string");
         this.output = "cloth" ;
+        upgradeCost = 100;
     }
 
 

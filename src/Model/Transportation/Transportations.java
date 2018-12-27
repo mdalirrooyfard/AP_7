@@ -10,7 +10,6 @@ public class Transportations extends Entity {
     private boolean isMoving = false ;
     private int workingTime ;
     private int currentTime ;
-    private int upgradeCost;
 
     public ArrayList<Item> getItems() {
         return items;
@@ -66,14 +65,6 @@ public class Transportations extends Entity {
         this.setWorkingTime(this.workingTime * 2/3);
         this.setVolume(this.volume * 2);
         this.setUpgradeCost(this.upgradeCost  + 50);
-    }
-
-    public int getUpgradeCost() {
-        return upgradeCost;
-    }
-
-    public void setUpgradeCost(int upgradeCost) {
-        this.upgradeCost = upgradeCost;
     }
 
     public boolean isMoving() {

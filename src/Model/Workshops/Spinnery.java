@@ -5,5 +5,6 @@ public class Spinnery extends Workshop{
         this.workShopName = "spinnery";
         this.inputs.add("wool");
         this.output = "string";
+        upgradeCost = 100;
     }
 }
