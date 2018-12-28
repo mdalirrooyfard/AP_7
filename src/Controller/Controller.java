@@ -109,7 +109,7 @@ public class Controller {
     private void plantHandler(double x , double y) throws Exception
     {
         if(!farm.plantGrass(x,y))
-            throw new Exception("Not Enough Money! :'( ");
+            throw new Exception("Well is empty! :'( ");
     }
 
     private void wellHandler() throws Exception
@@ -120,11 +120,12 @@ public class Controller {
 
     private void upgradeHandler(String entityName) throws Exception
     {
-        if( farm.upgrade(entityName) == 1 )
+        int result = farm.upgrade(entityName);
+        if( result == 1 )
             throw new Exception("Not Enough Money! :'( ");
-        else if( farm.upgrade(entityName) == 2 )
+        else if( result == 2 )
             throw new Exception(entityName+" is at maximum level!");
-        else if( farm.upgrade(entityName) == 3 )
+        else if( result == 3 )
             throw new Exception(entityName+" doesn't exits");
     }
 
@@ -402,11 +403,12 @@ public class Controller {
 
     private void startWorkShopHandler(String name) throws Exception
     {
-        if( farm.startWorkShop(name) == -2 )
+        int result = farm.startWorkShop(name);
+        if( result == -2 )
             throw new Exception("This workshop is working now!");
-        else if( farm.startWorkShop(name) == -1 )
+        else if( result == -1 )
             throw new Exception("This workshop doesn't exist!");
-        else if( farm.startWorkShop(name) == 0 )
+        else if( result == 0 )
             throw new Exception("Inputs of this workshop don't exist in warehouse");
     }
 
