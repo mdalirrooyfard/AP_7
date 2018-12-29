@@ -668,7 +668,9 @@ public class Farm {
         Spinnery spinnery = new Spinnery();
         if (activeWorkShops.contains(spinnery.getWorkShopName()))
             workshops.add(spinnery);
-
+        WeavingFactory weavingFactory = new WeavingFactory();
+        if (activeWorkShops.contains(weavingFactory.getWorkShopName()))
+            workshops.add(weavingFactory);
     }
 
     public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output){
