@@ -8,7 +8,7 @@ public class Workshop extends Entity {
     protected int item_x;
     protected int item_y;
     protected int count;
-    protected ArrayList<String> inputs;
+    protected ArrayList<String> inputs = new ArrayList<>();
     protected String output;
     protected int workingTime = 1000;
     protected int currentTime;

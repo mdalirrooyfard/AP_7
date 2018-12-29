@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Farm;
+import Model.Workshops.*;
 import View.View;
 import com.gilecode.yagson.YaGson;
 
@@ -32,7 +33,7 @@ public class Controller {
             }
             catch ( Exception e )
             {
-                if( !( e instanceof NullPointerException ) )
+                //if( !( e instanceof NullPointerException ) )
                     view.printError(e.getMessage());
             }
         }
@@ -66,14 +67,17 @@ public class Controller {
             runHandler(command.substring(4));
         else if( command.matches("turn [0-9]+") )
             turnHandler(Integer.parseInt(command.substring(5)));
-        else if( command.matches("truck|helicopter add [{a-z, }]+ [0-9]+") )
+        else if( command.matches("[truck|helicopter] add [{a-z, }]+ [0-9]+") )
             addToTransportationHandler(command.startsWith("truck"),command.substring(command.indexOf("add")+4,command.indexOf("add")));
-        else if( command.matches("truck|helicopter clear"))
+        else if( command.matches("[truck|helicopter] clear"))
             clearFromTransportationHandler(command.startsWith("truck"));
-        else if( command.matches("truck|helicopter go") )
+        else if( command.matches("[truck|helicopter] go") )
             goHandler(command.startsWith("truck"));
-        else if( command.matches("print info|map|levels|warehouse|well|workshops|truck|helicopter") )
-            printHandler(command.substring(6));
+        else if( command.startsWith("print") )
+        {
+            if( command.substring(6).matches("info|map|levels|warehouse|well|workshops|truck|helicopter") )
+                printHandler(command.substring(6));
+        }
         else if( command.startsWith("load custom ") )
             loadCustomHandler(command.substring(12));
         else
@@ -173,7 +177,7 @@ public class Controller {
         }
         catch ( Exception e )
         {
-            throw new Exception("No such directory exists!");
+            throw e;
         }
     }
 
@@ -239,10 +243,11 @@ public class Controller {
                     default:
                 }
             }
+            farm.updateMap();
         }
         catch ( FileNotFoundException e )
         {
-            throw e;
+            throw new Exception("No such directory exists!");
         }
         finally
         {
@@ -263,11 +268,12 @@ public class Controller {
                 String name = scanner.next();
                 int count = scanner.nextInt();
                 farm.getGoals().put(name, count);
+                farm.getAchievements().put(name, 0);
             }
         }
         catch (FileNotFoundException e)
         {
-            throw e;
+            throw new Exception("No such directory exists!");
         }
         finally
         {
@@ -281,18 +287,18 @@ public class Controller {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream("E:\\AP\\Project\\src\\Resources\\Level1\\workShops.txt");
+            inputStream = new FileInputStream(path+"\\workShops.txt");
             Scanner scanner = new Scanner(inputStream);
-            ArrayList<String> workShops = new ArrayList<>();
+            ArrayList<String> workshops = new ArrayList<>();
             while(scanner.hasNext())
             {
-                workShops.add(scanner.nextLine());
+                workshops.add(scanner.nextLine());
             }
-            farm.makeWorkShops(workShops);
+            farm.makeWorkShops(workshops);
         }
         catch (FileNotFoundException e)
         {
-            throw e;
+            throw new Exception("No such directory exists!");
         }
         finally
         {

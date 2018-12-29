@@ -14,6 +14,10 @@ public class Map
         this.length = length;
         this.width = length;
         cells = new Cell[length][width];
+        for ( int i = 0 ; i < length ; i++ )
+            for( int j = 0 ; j < width ; j++ )
+                cells[i][j] = new Cell();
+
     }
 
     public int getLength()

@@ -9,12 +9,7 @@ import java.util.ArrayList;
 
 public class Cell
 {
-    private ArrayList<Entity> stuffs;
-
-    Cell( ArrayList<Entity> stuffs )
-    {
-        this.stuffs = stuffs;
-    }
+    private ArrayList<Entity> stuffs = new ArrayList<>();
     public ArrayList<Entity> getStuffs()
     {
         return stuffs;
@@ -34,7 +29,7 @@ public class Cell
     }
     public boolean[] status()
     {
-        boolean[] stuffs = new boolean[5];
+        boolean[] stuffs = new boolean[6];
         for( Entity e : this.stuffs )
         {
             if( e instanceof Wild )
@@ -47,6 +42,8 @@ public class Cell
                 stuffs[3] = true;
             else if( e instanceof Dog )
                 stuffs[4] = true;
+            else if( e instanceof Cat )
+                stuffs[5] = true;
         }
         return stuffs;
     }

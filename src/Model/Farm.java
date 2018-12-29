@@ -38,6 +38,12 @@ public class Farm {
     private boolean areCatsUpgraded = false;
     private ArrayList<Workshop> workshops = new ArrayList<>();
 
+    public HashMap<String, Integer> getAchievements() {
+        return achievements;
+    }
+    public ArrayList<Workshop> getWorkshops() {
+        return workshops;
+    }
     public HashMap<String, Integer> getGoals() {
         return goals;
     }
@@ -450,6 +456,10 @@ public class Farm {
             achievements.replace(kind, achievements.get(kind) + 1);
     }
 
+    public void updateMap(){
+        map.updateCells(stuffs);
+    }
+
     public boolean isLevelFinished(){
         for (String s : goals.keySet())
             if (achievements.get(s) < goals.get(s))
@@ -605,7 +615,7 @@ public class Farm {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < mapLength; i++) {
             for (int j = 0; j < mapWidth; j++){
-                boolean[] status = map.cellStatus(j, i);
+                boolean[] status = map.getCells()[j][i].status();
                 for(boolean k : status) {
                     if (k)
                         stringBuilder.append(1);
@@ -649,29 +659,20 @@ public class Farm {
     }
 
     //workShops
-    public void makeWorkShops(ArrayList<String> activeWorkShops){
-        CakeBakery cakeBakery = new CakeBakery();
-        if (activeWorkShops.contains(cakeBakery.getWorkShopName()))
-            workshops.add(cakeBakery);
-
-        CookieBakery cookieBakery = new CookieBakery();
-        if (activeWorkShops.contains(cookieBakery.getWorkShopName()))
-            workshops.add(cookieBakery);
-
-        EggPowderPlant eggPowderPlant = new EggPowderPlant();
-        if (activeWorkShops.contains(eggPowderPlant.getWorkShopName()))
-            workshops.add(eggPowderPlant);
-
-        SewingFactory sewingFactory = new SewingFactory();
-        if (activeWorkShops.contains(sewingFactory.getWorkShopName()))
-            workshops.add(sewingFactory);
-
-        Spinnery spinnery = new Spinnery();
-        if (activeWorkShops.contains(spinnery.getWorkShopName()))
-            workshops.add(spinnery);
-        WeavingFactory weavingFactory = new WeavingFactory();
-        if (activeWorkShops.contains(weavingFactory.getWorkShopName()))
-            workshops.add(weavingFactory);
+    public void makeWorkShops(ArrayList<String> activeWorkShops)
+    {
+        for( String workshop : activeWorkShops )
+        {
+            switch (workshop)
+            {
+                case "cakeBakery":workshops.add(new CakeBakery());break;
+                case "cookieBakery":workshops.add(new CookieBakery());break;
+                case "eggPowderPlant":workshops.add(new EggPowderPlant());break;
+                case "sewingFactory":workshops.add(new SewingFactory());break;
+                case "weavingFactory":workshops.add(new WeavingFactory());break;
+                case "spinnery":workshops.add(new Spinnery());break;
+            }
+        }
     }
 
     public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output){
