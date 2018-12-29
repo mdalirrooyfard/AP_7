@@ -17,7 +17,7 @@ public class Controller {
     private View view = new View();
     private Farm farm ;
     private String command ;
-    private String paths;
+    private String path;
     private boolean isLevelFinished = false;
 
     public void getCommand()
@@ -140,20 +140,29 @@ public class Controller {
 
     private void loadCustomHandler(String path) throws Exception
     {
+        InputStream inputStream = null;
         try
         {
-            InputStream inputStream = new FileInputStream(path);
-            Scanner scanner = new Scanner(inputStream);
-            String name = scanner.next() , input = scanner.nextLine().substring(8) , output = scanner.next();
-            ArrayList<String> inputs = new ArrayList<>();
-            for( String s : input.split(" ") )
-                inputs.add(s);
-            farm.makeCustomWorkshop(name,inputs,output);
-
+            inputStream = new FileInputStream(path);
+            this.path = path;
+            File file = new File(path+"\\custom.txt");
+            if( file.exists() )
+            {
+                Scanner scanner = new Scanner(inputStream);
+                String name = scanner.next() , input = scanner.nextLine().substring(8) , output = scanner.next();
+                ArrayList<String> inputs = new ArrayList<>();
+                for( String s : input.split(" ") )
+                    inputs.add(s);
+                farm.makeCustomWorkshop(name,inputs,output);
+            }
         }
         catch ( FileNotFoundException e )
         {
             throw new Exception("No such directory exists!");
+        }
+        finally
+        {
+            inputStream.close();
         }
     }
 
@@ -176,7 +185,7 @@ public class Controller {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(paths + "\\" + mapName + ".txt");
+            inputStream = new FileInputStream(path + "\\" + mapName + ".txt");
             Scanner scanner = new Scanner(inputStream);
             int length = 0;
             while(scanner.hasNext())
@@ -250,7 +259,7 @@ public class Controller {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(paths+"\\goals.txt");
+            inputStream = new FileInputStream(path+"\\goals.txt");
             Scanner scanner = new Scanner(inputStream);
             while (scanner.hasNext())
             {
@@ -275,7 +284,7 @@ public class Controller {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(paths+"\\workShops.txt");
+            inputStream = new FileInputStream(path+"\\workShops.txt");
             Scanner scanner = new Scanner(inputStream);
             ArrayList<String> workShops = new ArrayList<>();
             while(scanner.hasNext())
