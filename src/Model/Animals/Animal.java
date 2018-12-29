@@ -6,9 +6,10 @@ import Model.Map;
 
 public abstract class Animal extends Entity {
     protected Map map;
-    public Animal (double x , double y){
+    public Animal (double x , double y, Map map){
         this.x = x;
         this.y = y;
+        this.map = map;
     }
     public void move(){
         int direction = (int)(Math.random() * 3 + 1);

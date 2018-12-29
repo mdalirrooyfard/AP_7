@@ -4,6 +4,7 @@ import Model.Animals.Animal;
 import Model.Constants;
 import Model.DIRECTION;
 import Model.Items.Item;
+import Model.Map;
 
 import static Model.Constants.FULL_SATIETY;
 
@@ -38,7 +39,7 @@ public abstract class Domestic extends Animal {
 
     //public abstract Item produce();
 
-    public Domestic(double x, double y){
-        super(x , y);
+    public Domestic(double x, double y, Map map){
+        super(x , y, map);
     }
 }

@@ -41,14 +41,16 @@ public class Farm {
     public HashMap<String, Integer> getAchievements() {
         return achievements;
     }
+
     public ArrayList<Workshop> getWorkshops() {
         return workshops;
     }
+
     public HashMap<String, Integer> getGoals() {
         return goals;
     }
 
-    public Farm(int length, int width){
+    public Farm(int length, int width) {
         mapLength = length;
         mapWidth = width;
         map = new Map(length, width);
@@ -56,30 +58,29 @@ public class Farm {
         money = 0;
     }
 
-    public void makeWell(int volume){
+    public void makeWell(int volume) {
         well = new Well(volume);
     }
 
-    public void makeWareHouse(int volume){
+    public void makeWareHouse(int volume) {
         wareHouse = new WareHouse(volume);
     }
 
-    public void makeTruck(int volume){
+    public void makeTruck(int volume) {
         truck = new Truck(volume);
     }
 
-    public void makeHelicopter(int volume){
+    public void makeHelicopter(int volume) {
         helicopter = new Helicopter(volume);
     }
 
-    public int makeRandomXAndY(int dim){
+    public int makeRandomXAndY(int dim) {
         double temp = Math.random() * dim;
-        return (int)temp;
+        return (int) temp;
     }
 
-    public boolean addHen(boolean isBought){
-        if( isBought )
-        {
+    public boolean addHen(boolean isBought) {
+        if (isBought) {
             if (Constants.HEN_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.HEN_BUY_COST);
@@ -87,39 +88,37 @@ public class Farm {
         Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(hen);
         updateAchievement("hen");
-        map.getCells()[(int)hen.getY()][(int)hen.getX()].add(hen);
+        map.getCells()[(int) hen.getY()][(int) hen.getX()].add(hen);
         return true;
     }
 
-    public boolean addCow(boolean isBought){
-        if( isBought )
-        {
-            if (Constants.COW_BUY_COST  > money)
+    public boolean addCow(boolean isBought) {
+        if (isBought) {
+            if (Constants.COW_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.COW_BUY_COST);
         }
         Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(cow);
         updateAchievement("cow");
-        map.getCells()[(int)cow.getY()][(int)cow.getX()].add(cow);
+        map.getCells()[(int) cow.getY()][(int) cow.getX()].add(cow);
         return true;
     }
 
-    public boolean addSheep(boolean isBought){
-        if( isBought )
-        {
-            if (Constants.SHEEP_BUY_COST  > money)
+    public boolean addSheep(boolean isBought) {
+        if (isBought) {
+            if (Constants.SHEEP_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.SHEEP_BUY_COST);
         }
         Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(sheep);
         updateAchievement("sheep");
-        map.getCells()[(int)sheep.getY()][(int)sheep.getX()].add(sheep);
+        map.getCells()[(int) sheep.getY()][(int) sheep.getX()].add(sheep);
         return true;
     }
 
-    public boolean plantGrass(double x, double y){
+    public boolean plantGrass(double x, double y) {
         if (well.getCurrentVolume() == 0)
             return false;
         well.setCurrentVolume(well.getCurrentVolume() - 1);
@@ -130,14 +129,14 @@ public class Farm {
             stuffs.add(new Grass(centerX, centerY - 1)); //up
         if (centerY + 1 <= mapLength - 1)
             stuffs.add(new Grass(centerX, centerY + 1));   //down
-        if (centerX - 1 >= 0){
+        if (centerX - 1 >= 0) {
             stuffs.add(new Grass(centerX - 1, centerY));   //left
             if (centerY - 1 >= 0)
                 stuffs.add(new Grass(centerX - 1, centerY - 1)); //up left
             if (centerY + 1 <= mapLength - 1)
                 stuffs.add(new Grass(centerX - 1, centerY + 1)); //down left
         }
-        if (centerX + 1 <= mapWidth - 1){
+        if (centerX + 1 <= mapWidth - 1) {
             stuffs.add(new Grass(centerX + 1, centerY)); //right
             if (centerY - 1 >= 0)
                 stuffs.add(new Grass(centerX + 1, centerY - 1)); //up right
@@ -149,9 +148,8 @@ public class Farm {
         return true;
     }
 
-    public boolean addDog( boolean isBought ){
-        if( isBought )
-        {
+    public boolean addDog(boolean isBought) {
+        if (isBought) {
             if (Constants.DOG_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.DOG_BUY_COST);
@@ -160,13 +158,12 @@ public class Farm {
         decreaseMoney(dog.getBuyCost());
         stuffs.add(dog);
         updateAchievement("dog");
-        map.getCells()[(int)dog.getY()][(int)dog.getX()].add(dog);
+        map.getCells()[(int) dog.getY()][(int) dog.getX()].add(dog);
         return true;
     }
 
-    public boolean addCat( boolean isBought ){
-        if( isBought )
-        {
+    public boolean addCat(boolean isBought) {
+        if (isBought) {
             int cost;
             if (areCatsUpgraded)
                 cost = Constants.CAT_BUY_COST + Constants.CAT_BASE_UPGRADE_COST;
@@ -177,18 +174,18 @@ public class Farm {
             decreaseMoney(cost);
         }
         Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
-        if(areCatsUpgraded)
+        if (areCatsUpgraded)
             cat.setLevel(2);
         decreaseMoney(cat.getBuyCost());
         stuffs.add(cat);
         updateAchievement("cat");
-        map.getCells()[(int)cat.getY()][(int)cat.getX()].add(cat);
+        map.getCells()[(int) cat.getY()][(int) cat.getX()].add(cat);
         return true;
     }
 
-    public int upgrade(String entityName){
-        switch (entityName){
-            case "cat":{
+    public int upgrade(String entityName) {
+        switch (entityName) {
+            case "cat": {
                 if (areCatsUpgraded)
                     return 2;
                 if (money < catCount() * Constants.CAT_BASE_UPGRADE_COST)
@@ -200,21 +197,21 @@ public class Farm {
                 areCatsUpgraded = true;
                 return 0;
             }
-            case "well":{
+            case "well": {
                 return upgradeEntity(well);
             }
-            case "truck":{
+            case "truck": {
                 return upgradeEntity(truck);
             }
-            case "helicopter":{
+            case "helicopter": {
                 return upgradeEntity(helicopter);
             }
-            case "warehouse":{
+            case "warehouse": {
                 return upgradeEntity(wareHouse);
             }
-            default:{ //workshops
+            default: { //workshops
                 Workshop workshop = null;
-                for (Workshop w : workshops){
+                for (Workshop w : workshops) {
                     if (w.getWorkShopName().equals(entityName)) {
                         workshop = w;
                         break;
@@ -222,15 +219,14 @@ public class Farm {
                 }
                 if (workshop != null) {
                     return upgradeEntity(workshop);
-                }
-                else
+                } else
                     return 3;
 
             }
         }
     }
 
-    public int upgradeEntity(Entity entity){
+    public int upgradeEntity(Entity entity) {
         if (entity.getLevel() == 5)
             return 2;
         if (entity.getUpgradeCost() > money)
@@ -240,20 +236,19 @@ public class Farm {
         return 0;
     }
 
-    public boolean pickUp(double x, double y){
+    public boolean pickUp(double x, double y) {
         int currentX = (int) Math.round(x);
         int currentY = (int) Math.round(y);
         ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
         ArrayList<Entity> cellRemainItems = new ArrayList<>();
         boolean isEveryThingPickedUp = true;
-        for (Entity entity : cellItems){
+        for (Entity entity : cellItems) {
             if (entity instanceof Item)
-                if (entity.getVolume() <= wareHouse.getCurrentVolume()){
+                if (entity.getVolume() <= wareHouse.getCurrentVolume()) {
                     wareHouse.decreaseCurrentVolume(entity.getVolume());
                     wareHouse.getCollectedItems().add((Item) entity);
                     stuffs.remove(entity);
-                }
-                else{
+                } else {
                     cellRemainItems.add(entity);
                     isEveryThingPickedUp = false;
                 }
@@ -264,34 +259,33 @@ public class Farm {
         return isEveryThingPickedUp;
     }
 
-    public boolean putCage(double x, double y){
+    public boolean putCage(double x, double y) {
         int currentX = (int) Math.round(x);
         int currentY = (int) Math.round(y);
         if (!map.getCells()[currentY][currentX].status()[0])
             return false;
         ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
-        Iterator<Entity>  iterator = cellItems.iterator();
+        Iterator<Entity> iterator = cellItems.iterator();
         int numberOfBears = 0;
         int numberOfLions = 0;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Entity entity = iterator.next();
-            if (entity instanceof Bear){
+            if (entity instanceof Bear) {
                 iterator.remove();
                 stuffs.remove(entity);
-                numberOfBears ++;
-            }
-            else if (entity instanceof Lion){
+                numberOfBears++;
+            } else if (entity instanceof Lion) {
                 iterator.remove();
                 stuffs.remove(entity);
                 numberOfLions++;
             }
         }
-        for (int i = 0; i < numberOfBears; i++){
+        for (int i = 0; i < numberOfBears; i++) {
             Item item = new Item(currentX, currentY, "cagedBrownBear");
             stuffs.add(item);
             cellItems.add(item);
         }
-        for (int i = 0; i < numberOfLions; i++){
+        for (int i = 0; i < numberOfLions; i++) {
             Item item = new Item(currentX, currentY, "cagedLion");
             stuffs.add(item);
             cellItems.add(item);
@@ -299,8 +293,8 @@ public class Farm {
         return true;
     }
 
-    public boolean fullWell(){
-        if (well.getBuyCost() <= money){
+    public boolean fullWell() {
+        if (well.getBuyCost() <= money) {
             money -= well.getBuyCost();
             well.full();
             return true;
@@ -308,23 +302,23 @@ public class Farm {
         return false;
     }
 
-    public void increaseMoney(int amount){
+    public void increaseMoney(int amount) {
         money += amount;
     }
 
-    public void decreaseMoney(int amount){
+    public void decreaseMoney(int amount) {
         money -= amount;
     }
 
-    public int getMoney(){
+    public int getMoney() {
         return money;
     }
 
-    public void checkCollision(){
+    public void checkCollision() {
         if (!map.isThereWild())
             return;
         for (int i = 0; i < mapLength; i++)
-            for (int j = 0; j < mapWidth; j++){
+            for (int j = 0; j < mapWidth; j++) {
                 Cell cell = map.getCells()[i][j];
                 if (cell.status()[0]) //has wild animal
                     if (cell.status()[4]) //has dog
@@ -334,21 +328,21 @@ public class Farm {
             }
     }
 
-    public void killDogAndWild(int y, int x){
+    public void killDogAndWild(int y, int x) {
         ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Dog || entity instanceof Wild)
                 stuffs.remove(entity);
     }
 
-    public void killDomesticAndItems(int y, int x){
+    public void killDomesticAndItems(int y, int x) {
         ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Item || entity instanceof Domestic)
                 stuffs.remove(entity);
     }
 
-    public boolean turn(){
+    public boolean turn() {
         time = time + 1;
         checkMoves();
         updateMap();
@@ -359,7 +353,7 @@ public class Farm {
         if (time % 10 == 0) {   //wild animals come
             shootWildAnimal();
             updateMap();
-            shootWildAnimalTime = time ;
+            shootWildAnimalTime = time;
         }
         if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
             stuffs.removeIf((Entity entity) -> entity instanceof Wild);
@@ -373,55 +367,54 @@ public class Farm {
         return isLevelFinished();
     }
 
-    public void shootWildAnimal(){
-        for (int i = 0; i < 2; i++){
+    public void shootWildAnimal() {
+        for (int i = 0; i < 2; i++) {
             double random = Math.random();
-            if ((int)(random * 100) % 2 == 0)
-                stuffs.add(new Bear(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength)));
+            if ((int) (random * 100) % 2 == 0)
+                stuffs.add(new Bear(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map));
             else
-                stuffs.add(new Lion(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength)));
+                stuffs.add(new Lion(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map));
         }
     }
 
-    public boolean checkEatingGrass(double y, double x){
-        int X = (int)Math.round(x);
-        int Y = (int)Math.round(y);
+    public boolean checkEatingGrass(double y, double x) {
+        int X = (int) Math.round(x);
+        int Y = (int) Math.round(y);
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Grass && !((Grass) entity).isEaten()){
+            if (entity instanceof Grass && !((Grass) entity).isEaten()) {
                 ((Grass) entity).setEaten(true);
                 return true;
             }
         return false;
     }
 
-    public boolean catCollect(double y, double x){
-        int X = (int)Math.round(x);
-        int Y = (int)Math.round(y);
+    public boolean catCollect(double y, double x) {
+        int X = (int) Math.round(x);
+        int Y = (int) Math.round(y);
         boolean result = false;
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume() && !((Item) entity).isTakenByCat()){
+            if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume() && !((Item) entity).isTakenByCat()) {
                 wareHouse.decreaseCurrentVolume(entity.getVolume());
                 ((Item) entity).setTakenByCat(true);
-                wareHouse.add((Item)entity);
+                wareHouse.add((Item) entity);
                 result = true;
             }
         return result;
     }
 
-    public void checkMoves(){
+    public void checkMoves() {
         Iterator<Entity> iterator = stuffs.iterator();
         ArrayList<Item> items = new ArrayList<>();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Entity entity = iterator.next();
             boolean doMove = true;
-            if (entity instanceof Domestic){
+            if (entity instanceof Domestic) {
                 if (((Domestic) entity).getSatiety() == 0) {
                     iterator.remove();
                     continue;
-                }
-                else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                } else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX());
                     if (!doMove) {
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
@@ -434,22 +427,21 @@ public class Farm {
                             items.add(new Item(entity.getX(), entity.getY(), "wool"));
                     }
                 }
-            }
-            else if (entity instanceof Cat)
+            } else if (entity instanceof Cat)
                 doMove = !catCollect(entity.getY(), entity.getX());
-            if (entity instanceof Animal && doMove){
+            if (entity instanceof Animal && doMove) {
                 ((Animal) entity).move();
                 if (entity instanceof Domestic)
                     ((Domestic) entity).decreaseSatiety(1);
             }
         }
-        for (Item item :  items){
+        for (Item item : items) {
             stuffs.add(item);
             updateAchievement(item.getKind());
         }
     }
 
-    public void removeGrassAndItem(){
+    public void removeGrassAndItem() {
         if (map.isThereGrass() && map.isThereItem()) {
             Iterator<Entity> iterator = stuffs.iterator();
             while (iterator.hasNext()) {
@@ -463,44 +455,44 @@ public class Farm {
         updateMap();
     }
 
-    public void updateAchievement(String kind){
+    public void updateAchievement(String kind) {
         if (achievements.containsKey(kind))
             achievements.replace(kind, achievements.get(kind) + 1);
     }
 
-    public void updateMap(){
+    public void updateMap() {
         map.updateCells(stuffs);
     }
 
-    public boolean isLevelFinished(){
+    public boolean isLevelFinished() {
         for (String s : goals.keySet())
             if (achievements.get(s) < goals.get(s))
                 return false;
         return true;
     }
 
-    public int catCount(){
+    public int catCount() {
         int count = 0;
         for (Entity entity : stuffs)
             if (entity instanceof Cat)
-                count ++;
+                count++;
         return count;
     }
 
     //transportation methods
-    public boolean clearFromHelicopter(){
+    public boolean clearFromHelicopter() {
         if (helicopter.isMoving())
             return false;
         helicopter.setMoving(false);
         Iterator<Item> iterator = helicopter.getItems().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             stuffs.add(iterator.next());
             iterator.remove();
         }
         return true;
     }
 
-    public boolean clearFromTruck(){
+    public boolean clearFromTruck() {
         if (truck.isMoving())
             return false;
         truck.setMoving(false);
@@ -510,56 +502,53 @@ public class Farm {
         return true;
     }
 
-    public int addToTruck(String itemName, int count){
+    public int addToTruck(String itemName, int count) {
         if (truck.isMoving())
             return -1;
         int result = 0;
         Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
-        while (iterator.hasNext() && result < count){
+        while (iterator.hasNext() && result < count) {
             Item item = iterator.next();
-            if (item.getKind().equals(itemName)){
-                if (item.getVolume() <= truck.getCurrentVolume()){
+            if (item.getKind().equals(itemName)) {
+                if (item.getVolume() <= truck.getCurrentVolume()) {
                     truck.decreaseCurrentVolume(item.getVolume());
                     truck.increaseSpentMoney(item.getSellCost());
                     truck.add(item);
                     wareHouse.increaseCurrentVolume(item.getVolume());
                     iterator.remove();
-                    result ++;
-                }
-                else
+                    result++;
+                } else
                     return result;
             }
         }
         return result;
     }
 
-    public int addToHelicopter(String itemName , int count){
+    public int addToHelicopter(String itemName, int count) {
         if (helicopter.isMoving())
             return -1;
         int result = 0;
-        for (int i = 0; i < count ; i++) {
+        for (int i = 0; i < count; i++) {
             Item item = new Item(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), itemName);
             if (item.getVolume() <= helicopter.getCurrentVolume()
-                    && item.getBuyCost() <= money){
+                    && item.getBuyCost() <= money) {
                 decreaseMoney(item.getBuyCost());
                 helicopter.decreaseCurrentVolume(item.getVolume());
                 helicopter.add(item);
-                result ++;
-            }
-            else
+                result++;
+            } else
                 return result;
         }
         return result;
     }
 
-    public boolean goTransportation(boolean vehicle){
-        if(vehicle){
+    public boolean goTransportation(boolean vehicle) {
+        if (vehicle) {
             if (truck.isMoving())
                 return false;
             truck.setCurrentTime(truck.getWorkingTime());
             truck.setMoving(true);
-        }
-        else {
+        } else {
             if (helicopter.isMoving())
                 return false;
             helicopter.setCurrentTime(helicopter.getWorkingTime());
@@ -568,14 +557,14 @@ public class Farm {
         return true;
     }
 
-    public void checkTransportation(){
-        if (truck.isMoving()){
+    public void checkTransportation() {
+        if (truck.isMoving()) {
             if (truck.getCurrentTime() > 0)
                 truck.decreaseCurrentTime(1);
             else
                 clearFromTruck();
         }
-        if (helicopter.isMoving()){
+        if (helicopter.isMoving()) {
             if (helicopter.getCurrentTime() > 0)
                 helicopter.decreaseCurrentTime(1);
             else
@@ -584,26 +573,28 @@ public class Farm {
     }
 
     //print methods
-    public String printLevel(){
+    public String printLevel() {
         String string = goals.toString();
-        string = string.replace("{","");
-        string = string.replace("}","");
-        string = string.replace(", ","\n");
+        string = string.replace("{", "");
+        string = string.replace("}", "");
+        string = string.replace(", ", "\n");
         return string;
     }
 
-    public String printInfo(){
+    public String printInfo() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("money : ").append(money).append("\n");
         stringBuilder.append("time : ").append(time);
-        for (String s : goals.keySet()){
-            stringBuilder.append("\n").append(s).append(" : ").append(achievements.get(s));
-            stringBuilder.append(" of ").append(goals.get(s));
+        for (String s : goals.keySet()) {
+            stringBuilder.append("\n").append(s).append(" : ");
+            if (achievements.get(s) == null)
+                achievements.put(s, 0);
+            stringBuilder.append(achievements.get(s)).append(" of ").append(goals.get(s));
         }
         return stringBuilder.toString();
     }
 
-    public String printWell(){
+    public String printWell() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("volume : ").append(well.getVolume()).append("\n");
         stringBuilder.append("current water : ").append(well.getCurrentVolume()).append("\n");
@@ -612,7 +603,7 @@ public class Farm {
         return stringBuilder.toString();
     }
 
-    public String printWareHouse(){
+    public String printWareHouse() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Item item : wareHouse.getCollectedItems())
             stringBuilder.append(item.getKind()).append(", ");
@@ -622,12 +613,12 @@ public class Farm {
         return stringBuilder.toString();
     }
 
-    public String printMap(){
+    public String printMap() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < mapLength; i++) {
-            for (int j = 0; j < mapWidth; j++){
+            for (int j = 0; j < mapWidth; j++) {
                 boolean[] status = map.getCells()[i][j].status();
-                for(boolean k : status) {
+                for (boolean k : status) {
                     if (k)
                         stringBuilder.append(1);
                     else
@@ -640,7 +631,7 @@ public class Farm {
         return stringBuilder.toString();
     }
 
-    public String printTransportation(boolean vehicle){
+    public String printTransportation(boolean vehicle) {
         Transportations transportations;
         if (vehicle)
             transportations = truck;
@@ -652,9 +643,9 @@ public class Farm {
         return stringBuilder.toString();
     }
 
-    public String printWorkshop(String workShopName){
+    public String printWorkshop(String workShopName) {
         Workshop workshop = null;
-        for(Workshop w : workshops)
+        for (Workshop w : workshops)
             if (w.getWorkShopName().equals(workShopName)) {
                 workshop = w;
                 break;
@@ -671,31 +662,40 @@ public class Farm {
     }
 
     //workShops
-    public void makeWorkShops(ArrayList<String> activeWorkShops)
-    {
-        for( String workshop : activeWorkShops )
-        {
-            switch (workshop)
-            {
-                case "cakeBakery":workshops.add(new CakeBakery());break;
-                case "cookieBakery":workshops.add(new CookieBakery());break;
-                case "eggPowderPlant":workshops.add(new EggPowderPlant());break;
-                case "sewingFactory":workshops.add(new SewingFactory());break;
-                case "weavingFactory":workshops.add(new WeavingFactory());break;
-                case "spinnery":workshops.add(new Spinnery());break;
+    public void makeWorkShops(ArrayList<String> activeWorkShops) {
+        for (String workshop : activeWorkShops) {
+            switch (workshop) {
+                case "cakeBakery":
+                    workshops.add(new CakeBakery(0, mapLength - 1));
+                    break;
+                case "cookieBakery":
+                    workshops.add(new CookieBakery(0, (int) mapLength / 2));
+                    break;
+                case "eggPowderPlant":
+                    workshops.add(new EggPowderPlant(0, 0));
+                    break;
+                case "sewingFactory":
+                    workshops.add(new SewingFactory(mapWidth - 1, mapLength - 1));
+                    break;
+                case "weavingFactory":
+                    workshops.add(new WeavingFactory(mapWidth - 1, (int)mapLength/2));
+                    break;
+                case "spinnery":
+                    workshops.add(new Spinnery(mapWidth - 1, 0));
+                    break;
             }
         }
     }
 
-    public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output){
-        CustomFactory customFactory = new CustomFactory(name, inputs, output);
+    public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output) {
+        CustomFactory customFactory = new CustomFactory(name, inputs, output, (int)mapWidth/2, mapLength - 1);
         workshops.add(customFactory);
     }
 
-    public int startWorkShop(String name){
+    public int startWorkShop(String name) {
         Workshop workshop = null;
         for (Workshop w : workshops)
-            if (w.getWorkShopName().equals(name)){
+            if (w.getWorkShopName().equals(name)) {
                 workshop = w;
                 break;
             }
@@ -708,11 +708,11 @@ public class Farm {
             for (String s : workshop.getInputs()) {
                 Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
                 int count = 0;
-                while (iterator.hasNext() && count < workshop.getCount()){
+                while (iterator.hasNext() && count < workshop.getCount()) {
                     Item item = iterator.next();
-                    if (item.getKind().equals(s)){
+                    if (item.getKind().equals(s)) {
                         iterator.remove();
-                        count ++ ;
+                        count++;
                     }
                 }
             }
@@ -722,9 +722,9 @@ public class Farm {
         return workshop.getCount();
     }
 
-    public int availableInputCount(ArrayList<String> inputs, int initial){
+    public int availableInputCount(ArrayList<String> inputs, int initial) {
         int min = initial;
-        for (String s : inputs){
+        for (String s : inputs) {
             int count = 0;
             for (Item item : wareHouse.getCollectedItems())
                 if (item.getKind().equals(s))
@@ -735,7 +735,7 @@ public class Farm {
         return min;
     }
 
-    public void checkWorkShops(){
+    public void checkWorkShops() {
         for (Workshop w : workshops)
             if (w.isWorking())
                 if (w.getCurrentTime() > 0)
@@ -744,9 +744,9 @@ public class Farm {
                     endWorkShop(w);
     }
 
-    public void endWorkShop(Workshop workshop){
+    public void endWorkShop(Workshop workshop) {
         workshop.setWorking(false);
-        for (int i = 0; i < workshop.getCount() ; i++) {
+        for (int i = 0; i < workshop.getCount(); i++) {
             Item item = new Item(workshop.getItem_x(), workshop.getItem_y(), workshop.getOutput());
             stuffs.add(item);
         }

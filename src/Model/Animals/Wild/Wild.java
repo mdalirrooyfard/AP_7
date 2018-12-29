@@ -1,6 +1,7 @@
 package Model.Animals.Wild;
 
 import Model.Animals.Animal;
+import Model.Map;
 
 public abstract class Wild extends Animal {
     boolean isInCage = false;
@@ -12,8 +13,8 @@ public abstract class Wild extends Animal {
         isInCage = inCage;
     }
 
-    public Wild(double x, double y){
-        super(x , y);
+    public Wild(double x, double y, Map map){
+        super(x , y, map);
     }
 
     @Override

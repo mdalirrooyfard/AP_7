@@ -7,8 +7,7 @@ import static Model.Constants.HEN_SELL_COST;
 
 public class Hen extends Domestic {
     public Hen (double x, double y , Map map){
-        super(x , y);
-        this.map = map ;
+        super(x , y, map);
         this.setSellCost(HEN_SELL_COST);
         this.setBuyCost(HEN_BUY_COST);
     }

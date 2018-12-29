@@ -10,11 +10,10 @@ public class Workshop extends Entity {
     protected int count;
     protected ArrayList<String> inputs = new ArrayList<>();
     protected String output;
-    protected int workingTime = 1000;
+    protected int workingTime = 10;
     protected int currentTime;
     protected boolean isWorking;
     protected String workShopName;
-    //todo item places in each workshop
     //todo workshop places
 
     public int getCount() {

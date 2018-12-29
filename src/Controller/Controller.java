@@ -56,13 +56,13 @@ public class Controller {
             plantHandler(Double.parseDouble(command.substring(6,7)),Double.parseDouble(command.substring(8)));
         else if( command.matches("well") )
             wellHandler();
-        else if( command.matches("start ") )
+        else if( command.startsWith("start ") )
         {
             if( command.substring(6).matches("eggPowderPlant|cakeBakery|cookieBakery|customFactory|sewingFactory|" +
                     "spinnery|weavingFactory"))
                 startWorkShopHandler(command.substring(6));
         }
-        else if( command.matches("upgrade "))
+        else if( command.startsWith("upgrade "))
         {
             if( command.substring(8).matches("eggPowderPlant|cakeBakery|cookieBakery|customFactory|sewingFactory|" +
                     "spinnery|weavingFactory|cat|well|truck|helicopter|warehouse"))
