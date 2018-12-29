@@ -155,11 +155,18 @@ public class Farm {
     public boolean addCat( boolean isBought ){
         if( isBought )
         {
-            if (Constants.CAT_BUY_COST > money)
+            int cost;
+            if (areCatsUpgraded)
+                cost = Constants.CAT_BUY_COST + Constants.CAT_BASE_UPGRADE_COST;
+            else
+                cost = Constants.CAT_BUY_COST;
+            if (cost > money)
                 return false;
-            decreaseMoney(Constants.CAT_BUY_COST);
+            decreaseMoney(cost);
         }
         Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
+        if(areCatsUpgraded)
+            cat.setLevel(2);
         decreaseMoney(cat.getBuyCost());
         stuffs.add(cat);
         updateAchievement("cat");
