@@ -32,7 +32,8 @@ public class Controller {
             }
             catch ( Exception e )
             {
-                view.printError(e.getMessage());
+                if( !( e instanceof NullPointerException ) )
+                    view.printError(e.getMessage());
             }
         }
     }
@@ -143,20 +144,16 @@ public class Controller {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(path);
             this.path = path;
-            File file = new File(path+"\\custom.txt");
-            if( file.exists() )
-            {
-                Scanner scanner = new Scanner(inputStream);
-                String name = scanner.next() , input = scanner.nextLine().substring(8) , output = scanner.next();
-                ArrayList<String> inputs = new ArrayList<>();
-                for( String s : input.split(" ") )
-                    inputs.add(s);
-                farm.makeCustomWorkshop(name,inputs,output);
-            }
+            inputStream = new FileInputStream(path+"\\custom.txt");
+            Scanner scanner = new Scanner(inputStream);
+            String name = scanner.next() , input = scanner.nextLine().substring(8) , output = scanner.next();
+            ArrayList<String> inputs = new ArrayList<>();
+            for( String s : input.split(" ") )
+                inputs.add(s);
+            farm.makeCustomWorkshop(name,inputs,output);
         }
-        catch ( FileNotFoundException e )
+        catch ( Exception e )
         {
             throw new Exception("No such directory exists!");
         }
@@ -284,7 +281,7 @@ public class Controller {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(path+"\\workShops.txt");
+            inputStream = new FileInputStream("E:\\AP\\Project\\src\\Resources\\Level1\\workShops.txt");
             Scanner scanner = new Scanner(inputStream);
             ArrayList<String> workShops = new ArrayList<>();
             while(scanner.hasNext())
