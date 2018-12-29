@@ -606,11 +606,12 @@ public class Farm {
         for (int i = 0; i < mapLength; i++) {
             for (int j = 0; j < mapWidth; j++){
                 boolean[] status = map.cellStatus(j, i);
-                for(boolean k : status)
+                for(boolean k : status) {
                     if (k)
                         stringBuilder.append(1);
                     else
                         stringBuilder.append(0);
+                }
                 stringBuilder.append(" ");
             }
             stringBuilder.append("\n");
