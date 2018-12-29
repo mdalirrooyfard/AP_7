@@ -30,10 +30,8 @@ public class Controller {
             }
             catch ( Exception e )
             {
-                if( !( e instanceof NullPointerException ) )
-                {
+                if( !( command.startsWith("load custom") && e instanceof NullPointerException ) )
                     view.printError(e.getMessage());
-                }
             }
         }
     }
@@ -74,9 +72,9 @@ public class Controller {
         else if( command.matches("turn [0-9]+") )
             turnHandler(Integer.parseInt(command.substring(5)));
         else if( command.matches("truck add [{a-z, }]+ [0-9]+") )
-            addToTransportationHandler(true,command.substring(command.indexOf("add")+4,command.indexOf("add")));
+            addToTransportationHandler(true,command.substring(command.indexOf("add")+4));
         else if( command.matches("helicopter add [{a-z, }]+ [0-9]+") )
-            addToTransportationHandler(false,command.substring(command.indexOf("add")+4,command.indexOf("add")));
+            addToTransportationHandler(false,command.substring(command.indexOf("add")+4));
         else if( command.endsWith(" clear"))
         {
             if( command.startsWith("truck") )
@@ -357,13 +355,6 @@ public class Controller {
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
             farm = yaGson.fromJson(savedFarm,Farm.class);
-            HashMap<String,Integer> hashMap = farm.getAchievements();
-            HashMap<String,Integer> goals = farm.getGoals();
-            //todo clear this:
-            for( String s : hashMap.keySet() )
-                System.out.println(s + " : " + hashMap.get(s) + "\n");
-            for( String s : goals.keySet() )
-                System.out.println(s + " : " + goals.get(s) + "\n");
         }
         catch ( IOException e )
         {

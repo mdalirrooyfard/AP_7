@@ -506,6 +506,7 @@ public class Farm {
             stuffs.add(iterator.next());
             iterator.remove();
         }
+        helicopter.setCurrentVolume(helicopter.getVolume());
         return true;
     }
 
@@ -516,6 +517,7 @@ public class Farm {
         truck.getItems().clear();
         increaseMoney(truck.getSpentMoney());
         truck.setSpentMoney(0);
+        truck.setCurrentVolume(truck.getVolume());
         return true;
     }
 
