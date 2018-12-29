@@ -9,10 +9,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.server.ExportException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.Scanner;
+import java.util.*;
 
 public class Controller {
     private View view = new View();
@@ -158,11 +155,12 @@ public class Controller {
 
     private void turnHandler(int n)
     {
-        for (int i = 0 ; i < n && !isLevelFinished ; i++)
+        for (int i = 0 ; i < n ; i++)
             if(farm.turn())
-                isLevelFinished = true;
-        if (isLevelFinished)
-            view.levelIsFinished();
+            {
+                view.levelIsFinished();
+                break;
+            }
     }
 
     private void loadCustomHandler(String path) throws Exception
@@ -290,7 +288,7 @@ public class Controller {
                 String name = scanner.next();
                 int count = scanner.nextInt();
                 farm.getGoals().put(name, count);
-                farm.getAchievements().put(name, 0);
+                farm.makeAchievements();
             }
         }
         catch (FileNotFoundException e)
@@ -334,7 +332,7 @@ public class Controller {
         Date date = new Date();
         try
         {
-            OutputStream outputStream = new FileOutputStream(path + "\\game" + Long.toString(date.getTime()) + ".txt");
+            OutputStream outputStream = new FileOutputStream(path + "\\game" + date.getTime() + ".txt");
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = yaGson.toJson(farm);
@@ -359,6 +357,13 @@ public class Controller {
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
             farm = yaGson.fromJson(savedFarm,Farm.class);
+            HashMap<String,Integer> hashMap = farm.getAchievements();
+            HashMap<String,Integer> goals = farm.getGoals();
+            //todo clear this:
+            for( String s : hashMap.keySet() )
+                System.out.println(s + " : " + hashMap.get(s) + "\n");
+            for( String s : goals.keySet() )
+                System.out.println(s + " : " + goals.get(s) + "\n");
         }
         catch ( IOException e )
         {

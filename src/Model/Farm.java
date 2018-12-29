@@ -34,11 +34,26 @@ public class Farm {
     private int money;
     private int shootWildAnimalTime = -1;
     private HashMap<String, Integer> goals = new HashMap<>();
-    private HashMap<String, Integer> achievements = new HashMap<>();
+    private ArrayList<String> achievementsNames = new ArrayList<>();
+    private ArrayList<Integer> achievementsCounts = new ArrayList<>();
     private boolean areCatsUpgraded = false;
     private ArrayList<Workshop> workshops = new ArrayList<>();
 
+    public void makeAchievements()
+    {
+        for( String s : goals.keySet() )
+        {
+            achievementsNames.add(s);
+            achievementsCounts.add(0);
+        }
+    }
+
     public HashMap<String, Integer> getAchievements() {
+        HashMap<String, Integer> achievements = new HashMap<>();
+        for( String s : achievementsNames )
+        {
+            achievements.put(s,achievementsCounts.get(achievementsNames.indexOf(s)));
+        }
         return achievements;
     }
 
@@ -191,7 +206,7 @@ public class Farm {
                 if (money < catCount() * Constants.CAT_BASE_UPGRADE_COST)
                     return 1;
                 decreaseMoney(catCount() * Constants.CAT_BASE_UPGRADE_COST);
-                for (Entity entity : stuffs)
+                for (Entity entity:stuffs)
                     if (entity instanceof Cat)
                         entity.upgrade();
                 areCatsUpgraded = true;
@@ -211,9 +226,11 @@ public class Farm {
             }
             default: { //workshops
                 Workshop workshop = null;
-                for (Workshop w : workshops) {
-                    if (w.getWorkShopName().equals(entityName)) {
-                        workshop = w;
+                for (Workshop w : workshops)
+                {
+                    if( w.getWorkShopName().equals(entityName) )
+                    {
+                        workshop =  w;
                         break;
                     }
                 }
@@ -456,8 +473,8 @@ public class Farm {
     }
 
     public void updateAchievement(String kind) {
-        if (achievements.containsKey(kind))
-            achievements.replace(kind, achievements.get(kind) + 1);
+        if (achievementsNames.contains(kind))
+            achievementsCounts.set(achievementsNames.indexOf(kind), achievementsCounts.get(achievementsNames.indexOf(kind)) + 1);
     }
 
     public void updateMap() {
@@ -466,7 +483,7 @@ public class Farm {
 
     public boolean isLevelFinished() {
         for (String s : goals.keySet())
-            if (achievements.get(s) < goals.get(s))
+            if (achievementsCounts.get(achievementsNames.indexOf(s)) < goals.get(s))
                 return false;
         return true;
     }
@@ -587,9 +604,7 @@ public class Farm {
         stringBuilder.append("time : ").append(time);
         for (String s : goals.keySet()) {
             stringBuilder.append("\n").append(s).append(" : ");
-            if (achievements.get(s) == null)
-                achievements.put(s, 0);
-            stringBuilder.append(achievements.get(s)).append(" of ").append(goals.get(s));
+            stringBuilder.append(achievementsCounts.get(achievementsNames.indexOf(s))).append(" of ").append(goals.get(s));
         }
         return stringBuilder.toString();
     }
@@ -716,6 +731,7 @@ public class Farm {
                     }
                 }
             }
+            workshop.setWorkingTime(10);
             workshop.setCurrentTime(workshop.getWorkingTime());
             workshop.setWorking(true);
         }
@@ -738,10 +754,12 @@ public class Farm {
     public void checkWorkShops() {
         for (Workshop w : workshops)
             if (w.isWorking())
+            {
                 if (w.getCurrentTime() > 0)
                     w.currentTimeDecrease(1);
                 else
                     endWorkShop(w);
+            }
     }
 
     public void endWorkShop(Workshop workshop) {
@@ -749,6 +767,7 @@ public class Farm {
         for (int i = 0; i < workshop.getCount(); i++) {
             Item item = new Item(workshop.getItem_x(), workshop.getItem_y(), workshop.getOutput());
             stuffs.add(item);
+            updateAchievement(item.getKind());
         }
     }
 
