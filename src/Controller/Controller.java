@@ -34,14 +34,15 @@ public class Controller {
             catch ( Exception e )
             {
                 if( !( e instanceof NullPointerException ) )
+                {
                     view.printError(e.getMessage());
+                }
             }
         }
     }
 
     private void commandHandler() throws Exception
     {
-        command = command.toLowerCase();
         if( command.startsWith("buy") )
         {
             if( command.substring(4).matches("sheep|cow|hen|cat|dog") )
@@ -57,14 +58,14 @@ public class Controller {
             wellHandler();
         else if( command.matches("start ") )
         {
-            if( command.substring(6).matches("eggpowderplant|cakebaker|cookiebakery|customfactory|sweingfactory|" +
-                    "spinnery|weavingfactory"))
+            if( command.substring(6).matches("eggPowderPlant|cakeBakery|cookieBakery|customFactory|sewingFactory|" +
+                    "spinnery|weavingFactory"))
                 startWorkShopHandler(command.substring(6));
         }
         else if( command.matches("upgrade "))
         {
-            if( command.substring(8).matches("eggpowderplant|cakebaker|cookiebakery|customfactory|sweingfactory|" +
-                    "spinnery|weavingfactory|cat|well|truck|helicopter|warehouse"))
+            if( command.substring(8).matches("eggPowderPlant|cakeBakery|cookieBakery|customFactory|sewingFactory|" +
+                    "spinnery|weavingFactory|cat|well|truck|helicopter|warehouse"))
                 upgradeHandler(command.substring(8));
         }
         else if( command.startsWith("load game "))
@@ -95,7 +96,8 @@ public class Controller {
         }
         else if( command.startsWith("print") )
         {
-            if( command.substring(6).matches("info|map|levels|warehouse|well|workshops|truck|helicopter") )
+            if( command.substring(6).matches("info|map|levels|warehouse|well|eggPowderPlant|cakeBakery|" +
+                    "cookieBakery|customFactory|sewingFactory|spinnery|weavingFactory|truck|helicopter") )
                 printHandler(command.substring(6));
         }
         else if( command.startsWith("load custom ") )
@@ -378,9 +380,9 @@ public class Controller {
             case "levels":view.printInfo(farm.printLevel());break;
             case "warehouse":view.printInfo(farm.printWareHouse());break;
             case "well":view.printInfo(farm.printWell());break;
-            case "workshops":view.printInfo(farm.printWorkshop(what));break;
             case "helicopter":view.printInfo(farm.printTransportation(false));break;
             case "truck":view.printInfo(farm.printTransportation(true));break;
+            default:view.printInfo(farm.printWorkshop(what));
         }
     }
 

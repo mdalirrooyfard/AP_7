@@ -1,13 +1,14 @@
 package Model.Animals.Domestic;
 
 import Model.Animals.Animal;
+import Model.Constants;
 import Model.DIRECTION;
 import Model.Items.Item;
 
 import static Model.Constants.FULL_SATIETY;
 
 public abstract class Domestic extends Animal {
-    private int satiety ;
+    private int satiety = Constants.FULL_SATIETY;
 
     public int getSatiety() {
         return satiety;

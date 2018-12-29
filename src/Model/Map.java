@@ -12,7 +12,7 @@ public class Map
     public Map( int length , int width )
     {
         this.length = length;
-        this.width = length;
+        this.width = width;
         cells = new Cell[length][width];
         for ( int i = 0 ; i < length ; i++ )
             for( int j = 0 ; j < width ; j++ )
@@ -44,8 +44,9 @@ public class Map
 
     public void updateCells(ArrayList<Entity> stuffs )
     {
+        clearCells();
         for( Entity e : stuffs )
-            cells[(int)Math.round(e.getY())][(int)Math.round(e.getX())].add(e);
+            cells[(int)(e.getY())][(int)(e.getX())].add(e);
     }
 
     public boolean[] cellStatus( int x , int y )
@@ -111,7 +112,7 @@ public class Map
                         }
                 }
             }
-            getDirection( x, y , Item_x , Item_y );
+            return getDirection( x, y , Item_x , Item_y );
         }
         return DIRECTION.NONE;
     }
@@ -174,7 +175,7 @@ public class Map
                         }
                 }
             }
-            getDirection( x, y , Grass_x , Grass_y );
+            return getDirection( x, y , Grass_x , Grass_y );
         }
         return DIRECTION.NONE;
     }
@@ -237,7 +238,7 @@ public class Map
                         }
                 }
             }
-            getDirection( x, y , Wild_x , Wild_y );
+            return getDirection( x, y , Wild_x , Wild_y );
         }
         return DIRECTION.NONE;
     }
@@ -272,7 +273,7 @@ public class Map
         return false;
     }
 
-    public DIRECTION getDirection( int startX , int startY , int destinationX , int destinationY )
+    private DIRECTION getDirection( int startX , int startY , int destinationX , int destinationY )
     {
         if( destinationY < startY )
             return DIRECTION.UP;
@@ -280,7 +281,9 @@ public class Map
             return DIRECTION.DOWN;
         else if( destinationX < startX )
             return DIRECTION.LEFT;
-        else
+        else if( destinationX > startX )
             return DIRECTION.RIGHT;
+        else
+            return DIRECTION.NONE;
     }
 }

@@ -61,19 +61,19 @@ public abstract class Animal extends Entity {
     public void smartMove (DIRECTION direction){
         switch (direction){
             case UP:{
-                this.y -- ;
+                this.y-- ;
                 break;
             }
             case DOWN:{
-                this.y ++ ;
+                this.y++ ;
                 break;
             }
             case RIGHT:{
-                this.x ++ ;
+                this.x++ ;
                 break;
             }
             case LEFT:{
-                this.x -- ;
+                this.x-- ;
                 break;
             }
             default:{

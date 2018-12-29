@@ -87,6 +87,7 @@ public class Farm {
         Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(hen);
         updateAchievement("hen");
+        map.getCells()[(int)hen.getY()][(int)hen.getX()].add(hen);
         return true;
     }
 
@@ -100,6 +101,7 @@ public class Farm {
         Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(cow);
         updateAchievement("cow");
+        map.getCells()[(int)cow.getY()][(int)cow.getX()].add(cow);
         return true;
     }
 
@@ -113,6 +115,7 @@ public class Farm {
         Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(sheep);
         updateAchievement("sheep");
+        map.getCells()[(int)sheep.getY()][(int)sheep.getX()].add(sheep);
         return true;
     }
 
@@ -123,16 +126,16 @@ public class Farm {
         int centerX = (int) Math.round(x);
         int centerY = (int) Math.round(y);
         stuffs.add(new Grass(centerX, centerY));
+        if (centerY - 1 >= 0)
+            stuffs.add(new Grass(centerX, centerY - 1)); //up
+        if (centerY + 1 <= mapLength - 1)
+            stuffs.add(new Grass(centerX, centerY + 1));   //down
         if (centerX - 1 >= 0){
             stuffs.add(new Grass(centerX - 1, centerY));   //left
-            if (centerY - 1 >= 0){
-                stuffs.add(new Grass(centerX, centerY - 1)); //up
+            if (centerY - 1 >= 0)
                 stuffs.add(new Grass(centerX - 1, centerY - 1)); //up left
-            }
-            if (centerY + 1 <= mapLength - 1) {
-                stuffs.add(new Grass(centerX, centerY + 1));   //down
+            if (centerY + 1 <= mapLength - 1)
                 stuffs.add(new Grass(centerX - 1, centerY + 1)); //down left
-            }
         }
         if (centerX + 1 <= mapWidth - 1){
             stuffs.add(new Grass(centerX + 1, centerY)); //right
@@ -140,7 +143,9 @@ public class Farm {
                 stuffs.add(new Grass(centerX + 1, centerY - 1)); //up right
             if (centerY + 1 <= mapLength - 1)
                 stuffs.add(new Grass(centerX + 1, centerY + 1)); //down right
+
         }
+        updateMap();
         return true;
     }
 
@@ -155,6 +160,7 @@ public class Farm {
         decreaseMoney(dog.getBuyCost());
         stuffs.add(dog);
         updateAchievement("dog");
+        map.getCells()[(int)dog.getY()][(int)dog.getX()].add(dog);
         return true;
     }
 
@@ -176,6 +182,7 @@ public class Farm {
         decreaseMoney(cat.getBuyCost());
         stuffs.add(cat);
         updateAchievement("cat");
+        map.getCells()[(int)cat.getY()][(int)cat.getX()].add(cat);
         return true;
     }
 
@@ -243,6 +250,7 @@ public class Farm {
             if (entity instanceof Item)
                 if (entity.getVolume() <= wareHouse.getCurrentVolume()){
                     wareHouse.decreaseCurrentVolume(entity.getVolume());
+                    wareHouse.getCollectedItems().add((Item) entity);
                     stuffs.remove(entity);
                 }
                 else{
@@ -343,20 +351,25 @@ public class Farm {
     public boolean turn(){
         time = time + 1;
         checkMoves();
+        updateMap();
         removeGrassAndItem();
+        updateMap();
         checkCollision();
+        updateMap();
         if (time % 10 == 0) {   //wild animals come
             shootWildAnimal();
+            updateMap();
             shootWildAnimalTime = time ;
         }
         if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
             stuffs.removeIf((Entity entity) -> entity instanceof Wild);
             shootWildAnimalTime = -1;
+            updateMap();
         }
         checkTransportation();
+        updateMap();
         checkWorkShops();
-        map.clearCells();
-        map.updateCells(stuffs);
+        updateMap();
         return isLevelFinished();
     }
 
@@ -399,6 +412,7 @@ public class Farm {
 
     public void checkMoves(){
         Iterator<Entity> iterator = stuffs.iterator();
+        ArrayList<Item> items = new ArrayList<>();
         while (iterator.hasNext()){
             Entity entity = iterator.next();
             boolean doMove = true;
@@ -412,19 +426,12 @@ public class Farm {
                     if (!doMove) {
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
                         Item item;
-                        if (entity instanceof Hen) {
-                            item = new Item(entity.getX(), entity.getY(), "egg");
-                            stuffs.add(item);
-                        }
-                        else if (entity instanceof Cow) {
-                            item = new Item(entity.getX(), entity.getY(), "milk");
-                            stuffs.add(item);
-                        }
-                        else {
-                            item = new Item(entity.getX(), entity.getY(), "wool");
-                            stuffs.add(item);
-                        }
-                        updateAchievement(item.getKind());
+                        if (entity instanceof Hen)
+                            items.add(new Item(entity.getX(), entity.getY(), "egg"));
+                        else if (entity instanceof Cow)
+                            items.add(new Item(entity.getX(), entity.getY(), "milk"));
+                        else
+                            items.add(new Item(entity.getX(), entity.getY(), "wool"));
                     }
                 }
             }
@@ -435,6 +442,10 @@ public class Farm {
                 if (entity instanceof Domestic)
                     ((Domestic) entity).decreaseSatiety(1);
             }
+        }
+        for (Item item :  items){
+            stuffs.add(item);
+            updateAchievement(item.getKind());
         }
     }
 
@@ -449,6 +460,7 @@ public class Farm {
                     iterator.remove();
             }
         }
+        updateMap();
     }
 
     public void updateAchievement(String kind){
@@ -601,14 +613,13 @@ public class Farm {
     }
 
     public String printWareHouse(){
-        String string = wareHouse.getCollectedItems().toString();
-        string = string.replace("{","");
-        string = string.replace("}","");
-        string = string.replace(", ","\n");
-        string += "\nvolume : " + wareHouse.getVolume() + "\n";
-        string += "current volume : " + wareHouse.getCurrentVolume() + "\n";
-        string += "upgrade cost : " + wareHouse.getUpgradeCost();
-        return string;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Item item : wareHouse.getCollectedItems())
+            stringBuilder.append(item.getKind()).append(", ");
+        stringBuilder.append("\nvolume : ").append(wareHouse.getVolume());
+        stringBuilder.append("\ncurrent volume : ").append(wareHouse.getCurrentVolume());
+        stringBuilder.append("\nupgrade cost : ").append(wareHouse.getUpgradeCost());
+        return stringBuilder.toString();
     }
 
     public String printMap(){
@@ -652,8 +663,9 @@ public class Farm {
             return "This workShop is not included in this level!";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("inputs : ");
-        for (String input : workshop.getInputs())
+        for (String input : workshop.getInputs()) {
             stringBuilder.append(input).append(" ");
+        }
         stringBuilder.append("\noutput : ").append(workshop.getOutput());
         return stringBuilder.toString();
     }
