@@ -21,10 +21,8 @@ public class View
     {
         System.out.println(info);
     }
-    public void setCommand()
+    public void setCommand( Scanner scanner )
     {
-        Scanner scanner = new Scanner(System.in);
         command = scanner.nextLine();
-        scanner.close();
     }
 }

@@ -20,11 +20,11 @@ public class Controller {
     private String path;
     private boolean isLevelFinished = false;
 
-    public void getCommand()
+    public void getCommand(Scanner scanner)
     {
         while(!isLevelFinished)
         {
-            view.setCommand();
+            view.setCommand(scanner);
             command = view.getCommand();
             try
             {
