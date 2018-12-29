@@ -615,7 +615,7 @@ public class Farm {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < mapLength; i++) {
             for (int j = 0; j < mapWidth; j++){
-                boolean[] status = map.getCells()[j][i].status();
+                boolean[] status = map.getCells()[i][j].status();
                 for(boolean k : status) {
                     if (k)
                         stringBuilder.append(1);
