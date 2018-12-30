@@ -263,7 +263,7 @@ public class Farm {
             if (entity instanceof Item)
                 if (entity.getVolume() <= wareHouse.getCurrentVolume()) {
                     wareHouse.decreaseCurrentVolume(entity.getVolume());
-                    wareHouse.getCollectedItems().add((Item) entity);
+                    wareHouse.add((Item)entity);
                     stuffs.remove(entity);
                 } else {
                     cellRemainItems.add(entity);
@@ -506,6 +506,7 @@ public class Farm {
             stuffs.add(iterator.next());
             iterator.remove();
         }
+        updateMap();
         helicopter.setCurrentVolume(helicopter.getVolume());
         return true;
     }
@@ -518,6 +519,32 @@ public class Farm {
         increaseMoney(truck.getSpentMoney());
         truck.setSpentMoney(0);
         truck.setCurrentVolume(truck.getVolume());
+        return true;
+    }
+
+    public boolean clearTruckBeforeGo(){
+        if (truck.isMoving())
+            return false;
+        Iterator<Item> iterator = truck.getItems().iterator();
+        while (iterator.hasNext()){
+            Item item = iterator.next();
+            wareHouse.add(item);
+            wareHouse.decreaseCurrentVolume(item.getVolume());
+            iterator.remove();
+        }
+        truck.setCurrentVolume(truck.getVolume());
+        return true;
+    }
+
+    public boolean clearHelicopterBeforeGo(){
+        if (helicopter.isMoving())
+            return false;
+        Iterator<Item> iterator = helicopter.getItems().iterator();
+        while (iterator.hasNext()) {
+            increaseMoney(iterator.next().getBuyCost());
+            iterator.remove();
+        }
+        helicopter.setCurrentVolume(helicopter.getVolume());
         return true;
     }
 

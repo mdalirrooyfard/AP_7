@@ -412,11 +412,11 @@ public class Controller {
     {
         if (vehicle)
         {
-            if( !farm.clearFromTruck() )
+            if( !farm.clearTruckBeforeGo() )
                 throw new Exception("Truck is moving right now!");
         }
         else
-            if( !farm.clearFromHelicopter() )
+            if( !farm.clearHelicopterBeforeGo() )
                 throw new Exception("Helicopter is moving right now!");
     }
 
