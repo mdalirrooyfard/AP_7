@@ -1,16 +1,22 @@
 import Controller.Controller;
+import Model.Player;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import Graphic.*;
+import View.Graphic.*;
 
-import java.io.FileInputStream;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main extends Application
 {
     private Controller controller = new Controller();
     private static Stage stage;
+
+    //TODO move reading players from file to controller
+    private ArrayList<Player> players = new ArrayList<>();
+
+
+
     public static void main(String[] args)
     {
         launch(args);
