@@ -1,21 +1,20 @@
 import Controller.Controller;
 import Model.Player;
+import com.gilecode.yagson.YaGson;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import View.Graphic.*;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.Scanner;
 
 public class Main extends Application
 {
     private Controller controller = new Controller();
     private static Stage stage;
-
-    //TODO move reading players from file to controller
-    private ArrayList<Player> players = new ArrayList<>();
-
-
 
     public static void main(String[] args)
     {

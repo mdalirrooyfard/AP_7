@@ -1,6 +1,6 @@
 package Model;
 
-public class Player
+public class Player implements Comparable<Player>
 {
     private String name;
     private int lastLevel;
@@ -18,5 +18,11 @@ public class Player
     public int getLastLevel()
     {
         return lastLevel;
+    }
+
+    @Override
+    public int compareTo(Player player)
+    {
+        return Integer.compare(Integer.parseInt(name),Integer.parseInt(player.getName()));
     }
 }
