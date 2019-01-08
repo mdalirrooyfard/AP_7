@@ -25,8 +25,8 @@ public class Menu
     Stage stage;
     public static final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
     public static final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
-    private Options options;
-    private Start start;
+    private Options optionsScene;
+    private Start startُScene;
     private Group group = new Group();
     private Scene scene = new Scene(group, WIDTH, HEIGHT);
     private boolean doesChoosePlayer = false;
@@ -55,8 +55,8 @@ public class Menu
         newPlayer.relocate(WIDTH / 2 - 90, 3.70 * HEIGHT / 5);
         newPlayer.setId("button");
 
-        String style = getClass().getResource("graphic.css").toString();
-        group.getStylesheets().add(style);
+       // String style = getClass().getResource("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\buttons.css").toExternalForm();
+        //group.getStylesheets().add(style);
 
         Button start = new Button("start");
         start.relocate(WIDTH/2 + 90, 4 * HEIGHT / 5);
@@ -67,7 +67,7 @@ public class Menu
             public void handle(MouseEvent event)
             {
                 if( doesChoosePlayer )
-                    stage.setScene(start.getScene());
+                    stage.setScene(startُScene.getScene());
                 else
                 {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -88,7 +88,7 @@ public class Menu
             public void handle(MouseEvent event)
             {
                 doesChoosePlayer = true;
-                stage.setScene(start.getScene());
+                stage.setScene(startُScene.getScene());
             }
         });
         Button options = new Button("options");
@@ -99,7 +99,7 @@ public class Menu
             @Override
             public void handle(MouseEvent event)
             {
-                stage.setScene(start.getScene());
+                stage.setScene(optionsScene.getScene());
             }
         });
         Button exit = new Button("exit");
@@ -130,8 +130,8 @@ public class Menu
 
     public void passMenuInstance(Menu menu)
     {
-        options = new Options();
-        start = new Start(stage,menu);
+        optionsScene = new Options();
+        startُScene = new Start(stage,menu);
     }
 
 }
