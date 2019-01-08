@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class Menu
 {
     Stage stage;
-    public static final int WIDTH = 400;
-    public static final int HEIGHT = 400;
+    public static final int WIDTH = 1137;
+    public static final int HEIGHT = 700;
     private ChoosePlayer choosePlayer;
     private Options options;
     private Start start;
@@ -38,25 +38,57 @@ public class Menu
     public Menu(Stage stage)
     {
         this.stage = stage;
-        Label player = new Label("New Player");
-        player.relocate(20, 450);
-        player.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-        Label start = new Label("Start");
-        start.relocate(160, 450);
-        start.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-        Label options = new Label("Options");
-        options.relocate(20, 500);
-        options.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-        Label exit = new Label("Exit");
-        exit.relocate(160, 500);
-        exit.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+        try
+        {
+            Image image = new Image(new FileInputStream("E:\\AP\\Project\\src\\Graphic\\menu.png")
+                    , 1137, 700, false, true);
+            ImageView imageView = new ImageView(image);
+            imageView.setY(0);
+            imageView.setX(0);
+            group.getChildren().addAll(imageView);
+        }
+        catch ( IOException e ){}
+        Text start = new Text( WIDTH - 300 , HEIGHT / 5 , "Start");
+        start.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        start.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                stage.setScene(start.getScene());
+            }
+        });
+        Text choosePlayer = new Text(WIDTH - 350 , HEIGHT * 2 / 5 , "Choose Player");
+        choosePlayer.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        choosePlayer.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                stage.setScene(start.getScene());
+            }
+        });
+        Text options = new Text(WIDTH - 320 , HEIGHT * 3 / 5 , "Options");
+        options.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        options.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                stage.setScene(start.getScene());
+            }
+        });
+        Text exit = new Text(WIDTH - 290 , HEIGHT * 4 / 5 , "Exit");
+        exit.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        group.getChildren().addAll(start,choosePlayer,options,exit);
         exit.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("The game is closing...");
-                alert.setContentText("Are you sure???");
+                alert.setContentText("Are you sure?");
                 ButtonType b1 = new ButtonType("Yes");
                 ButtonType b2 = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
                 alert.getButtonTypes().setAll(b1, b2);
@@ -66,17 +98,7 @@ public class Menu
                 });
             }
         });
-        try
-        {
-            Image image = new Image(new FileInputStream("farm-cartoon-background.png")
-                    , 1000, 960, false, true);
-            ImageView imageView = new ImageView(image);
-            imageView.setY(0);
-            imageView.setX(0);
-        }
-        catch ( IOException e ){}
         stage.setScene(scene);
-
     }
 
     public void passMenuInstance(Menu menu)
@@ -85,5 +107,6 @@ public class Menu
         options = new Options();
         start = new Start();
     }
+
 }
 

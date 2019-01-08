@@ -1,5 +1,6 @@
 import Controller.Controller;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import Graphic.*;
 
@@ -9,7 +10,7 @@ import java.util.Scanner;
 public class Main extends Application
 {
     private Controller controller = new Controller();
-    private Stage stage;
+    private static Stage stage;
     public static void main(String[] args)
     {
         launch(args);
@@ -22,7 +23,12 @@ public class Main extends Application
     {
         stage = primaryStage;
         Menu menu = new Menu(primaryStage);
+        menu.passMenuInstance(menu);
         primaryStage.setTitle("Farm Frenzy");
         primaryStage.show();
+    }
+    public static void setSceneOnStage(Scene scene)
+    {
+        stage.setScene(scene);
     }
 }
