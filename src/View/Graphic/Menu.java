@@ -42,7 +42,7 @@ public class Menu
         this.stage = stage;
         try
         {
-            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\menu.jpg")
+            Image image = new Image(new FileInputStream("E:\\AP\\Project\\src\\Resources\\Graphic\\MenuBackground.jpg")
                     , WIDTH, HEIGHT, false, true);
             ImageView imageView = new ImageView(image);
             imageView.setY(0);
@@ -66,9 +66,9 @@ public class Menu
             @Override
             public void handle(MouseEvent event)
             {
-                if( doesChoosePlayer )
+                //if( doesChoosePlayer )
                     stage.setScene(startُScene.getScene());
-                else
+                /*else
                 {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText("Player hasn't been chosen!");
@@ -76,7 +76,7 @@ public class Menu
                     ButtonType b1 = new ButtonType("OK");
                     alert.getButtonTypes().setAll(b1);
                     alert.showAndWait();
-                }
+                }*/
             }
         });
         Button choosePlayer = new Button("choose player");
@@ -123,8 +123,6 @@ public class Menu
                 });
             }
         });
-        stage.setResizable(false);
-        stage.setFullScreen(true);
         stage.setScene(scene);
     }
 

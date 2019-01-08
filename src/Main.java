@@ -29,6 +29,8 @@ public class Main extends Application
         stage = primaryStage;
         Menu menu = new Menu(primaryStage);
         menu.passMenuInstance(menu);
+        primaryStage.setFullScreen(true);
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Farm Frenzy");
         primaryStage.show();
     }

@@ -46,7 +46,7 @@ public class Start
             Text[] level = new Text[10];
             for( int i = 0 ; i < 10 ; i++ )
             {
-                level[i] = new Text( ( i % 2) * ( Menu.WIDTH - 200 ) + ( ( i + 1 ) % 2 ) * 200 , 200 + i / 2 * 50
+                level[i] = new Text( ( i % 2) * ( Menu.WIDTH - 200 ) + ( ( i + 1 ) % 2 ) * 200 , 120 + i / 2 * 100
                         , "Level "+Integer.toString(i + 1));
                 level[i].setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
                 group.getChildren().addAll(level[i]);
