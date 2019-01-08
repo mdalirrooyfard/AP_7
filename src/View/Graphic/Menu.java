@@ -1,5 +1,6 @@
 package View.Graphic;
 
+import Model.Animals.Wild.Wild;
 import Model.Player;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -41,7 +42,7 @@ public class Menu
         this.stage = stage;
         try
         {
-            Image image = new Image(new FileInputStream("E:\\AP\\Project\\src\\View\\Graphic\\menu.jpg")
+            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\menu.jpg")
                     , WIDTH, HEIGHT, false, true);
             ImageView imageView = new ImageView(image);
             imageView.setY(0);
@@ -50,8 +51,16 @@ public class Menu
         }
 
         catch ( IOException e ){}
-        Text start = new Text( WIDTH - 300 , HEIGHT / 5 , "Start");
-        start.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        Button newPlayer = new Button("New Player");
+        newPlayer.relocate(WIDTH / 2 - 90, 3.70 * HEIGHT / 5);
+        newPlayer.setId("button");
+
+        String style = getClass().getResource("graphic.css").toString();
+        group.getStylesheets().add(style);
+
+        Button start = new Button("start");
+        start.relocate(WIDTH/2 + 90, 4 * HEIGHT / 5);
+        start.setId("button");
         start.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
@@ -70,8 +79,9 @@ public class Menu
                 }
             }
         });
-        Text choosePlayer = new Text(WIDTH - 350 , HEIGHT * 2 / 5 , "Choose Player");
-        choosePlayer.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        Button choosePlayer = new Button("choose player");
+        choosePlayer.relocate(WIDTH/2 , 3.80 * HEIGHT / 5);
+        choosePlayer.setId("button");
         choosePlayer.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
@@ -81,8 +91,9 @@ public class Menu
                 stage.setScene(start.getScene());
             }
         });
-        Text options = new Text(WIDTH - 320 , HEIGHT * 3 / 5 , "Options");
-        options.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        Button options = new Button("options");
+        options.relocate(WIDTH/2 + 130, 4.25 * HEIGHT / 5);
+        options.setId("button");
         options.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
@@ -91,9 +102,10 @@ public class Menu
                 stage.setScene(start.getScene());
             }
         });
-        Text exit = new Text(WIDTH - 290 , HEIGHT * 4 / 5 , "Exit");
-        exit.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
-        group.getChildren().addAll(start,choosePlayer,options,exit);
+        Button exit = new Button("exit");
+        exit.relocate(WIDTH / 2 + 135, 4.5 * HEIGHT / 5);
+        exit.setId("button");
+        group.getChildren().addAll(newPlayer,start,choosePlayer,options,exit);
         exit.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
