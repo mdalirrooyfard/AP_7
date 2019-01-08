@@ -2,6 +2,7 @@ package View.Graphic;
 
 import Model.Animals.Wild.Wild;
 import Model.Player;
+import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -42,7 +43,7 @@ public class Menu
         this.stage = stage;
         try
         {
-            Image image = new Image(new FileInputStream("E:\\AP\\Project\\src\\Resources\\Graphic\\MenuBackground.jpg")
+            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\MenuBackground.jpg")
                     , WIDTH, HEIGHT, false, true);
             ImageView imageView = new ImageView(image);
             imageView.setY(0);
@@ -52,14 +53,14 @@ public class Menu
 
         catch ( IOException e ){}
         Button newPlayer = new Button("New Player");
-        newPlayer.relocate(WIDTH / 2 - 90, 3.70 * HEIGHT / 5);
+        newPlayer.relocate(WIDTH / 2 - 160, 3.4 * HEIGHT / 5);
         newPlayer.setId("button");
 
-       // String style = getClass().getResource("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\buttons.css").toExternalForm();
-        //group.getStylesheets().add(style);
+        String style = this.getClass().getResource("buttons.css").toExternalForm();
+        scene.getStylesheets().add(style);
 
         Button start = new Button("start");
-        start.relocate(WIDTH/2 + 90, 4 * HEIGHT / 5);
+        start.relocate(WIDTH/2 + 65, 3.85 * HEIGHT / 5);
         start.setId("button");
         start.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
@@ -80,7 +81,7 @@ public class Menu
             }
         });
         Button choosePlayer = new Button("choose player");
-        choosePlayer.relocate(WIDTH/2 , 3.80 * HEIGHT / 5);
+        choosePlayer.relocate(WIDTH/2 - 60 , 3.63 * HEIGHT / 5);
         choosePlayer.setId("button");
         choosePlayer.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
@@ -103,7 +104,7 @@ public class Menu
             }
         });
         Button exit = new Button("exit");
-        exit.relocate(WIDTH / 2 + 135, 4.5 * HEIGHT / 5);
+        exit.relocate(WIDTH / 2 + 135, 4.65 * HEIGHT / 5);
         exit.setId("button");
         group.getChildren().addAll(newPlayer,start,choosePlayer,options,exit);
         exit.setOnMouseClicked(new EventHandler<MouseEvent>()
