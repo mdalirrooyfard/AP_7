@@ -50,6 +50,7 @@ public class Menu
             imageView.setX(0);
             group.getChildren().addAll(imageView);
         }
+
         catch ( IOException e ){}
         Button newPlayer = new Button("New Player");
         newPlayer.relocate(WIDTH / 2 - 90, 3.70 * HEIGHT / 5);
