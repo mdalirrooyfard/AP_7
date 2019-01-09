@@ -1,11 +1,11 @@
-start of map
+startOfMap
 money 100
 well 7
 wareHouse 100
 truck 80
 helicopter 80
 hen 3
-end of map
-start of goals
+endOfMap
+startOfGoals
 egg 6
-end of goals
+endOfGoals
