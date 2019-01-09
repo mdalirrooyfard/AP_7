@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Controller {
     private View view = new View();
-    private Farm farm ;
+    private Farm farm = new Farm();
     private String command ;
     private String path;
     private boolean isLevelFinished = false;
@@ -35,7 +35,6 @@ public class Controller {
     public void setLevel(int level) {
         this.level = level;
     }
-
 
     public void getCommand(Scanner scanner)
     {
@@ -207,37 +206,17 @@ public class Controller {
 
     public void runHandler( String mapName ) throws Exception
     {
-        try
-        {
-            mapHandler(mapName);
-            goalsHandler();
-            workShopHandler();
-        }
-        catch ( Exception e )
-        {
-            throw e;
-        }
-    }
-
-    private void mapHandler( String mapName ) throws Exception
-    {
         InputStream inputStream = null;
         try
         {
             inputStream = new FileInputStream(path + "\\" + mapName + ".txt");
             Scanner scanner = new Scanner(inputStream);
             int length = 0;
-            while(scanner.hasNext())
+            String string = scanner.next();
+            while(!string.equals("end of map"))
             {
-                String string = scanner.next();
                 switch (string)
                 {
-                    case "length":
-                        length = scanner.nextInt();
-                        break;
-                    case "width":
-                        farm = new Farm(length, scanner.nextInt());
-                        break;
                     case "well":
                         farm.makeWell(scanner.nextInt());
                         break;
@@ -280,28 +259,10 @@ public class Controller {
                         break;
                     default:
                 }
+                string = scanner.next();
             }
             farm.updateMap();
-        }
-        catch ( FileNotFoundException e )
-        {
-            throw new Exception("No such directory exists!");
-        }
-        finally
-        {
-            if (inputStream != null)
-                inputStream.close();
-        }
-    }
-
-    private void goalsHandler() throws Exception
-    {
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = new FileInputStream(path+"\\goals.txt");
-            Scanner scanner = new Scanner(inputStream);
-            while (scanner.hasNext())
+            while(!string.equals("end of goals"))
             {
                 String name = scanner.next();
                 int count = scanner.nextInt();
@@ -309,7 +270,7 @@ public class Controller {
                 farm.makeAchievements();
             }
         }
-        catch (FileNotFoundException e)
+        catch ( FileNotFoundException e )
         {
             throw new Exception("No such directory exists!");
         }

@@ -1,0 +1,3 @@
+eggPowder 10
+cookie 8
+hen 6

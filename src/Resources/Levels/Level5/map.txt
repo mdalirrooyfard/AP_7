@@ -1,0 +1,7 @@
+length 4
+width 6
+money 190
+well 7
+wareHouse 100
+truck 80
+helicopter 80 

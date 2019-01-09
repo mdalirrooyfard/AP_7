@@ -1,10 +1,8 @@
 length 4
 width 6
-money 1000
+money 1500
 well 7
 wareHouse 100
 truck 80
 helicopter 80 
-hen 1
-sheep 1
-cow 1
+sheep 3

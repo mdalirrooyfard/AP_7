@@ -1,0 +1,3 @@
+string 24
+cloth 24
+cake 5
