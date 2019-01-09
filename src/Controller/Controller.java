@@ -249,9 +249,12 @@ public class Controller {
             }
             farm.updateMap();
             string = scanner.nextLine();
-            while(!string.equals("endOfGoals"))
+            string = scanner.nextLine();
+            while(true)
             {
                 String name = scanner.next();
+                if( name.equals("endOfGoals") )
+                    break;
                 int count = scanner.nextInt();
                 farm.getGoals().put(name, count);
                 farm.makeAchievements();

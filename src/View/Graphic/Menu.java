@@ -79,9 +79,9 @@ public class Menu
             @Override
             public void handle(MouseEvent event)
             {
-                //if( doesChoosePlayer )
+                if( player != null )
                     stage.setScene(startُScene.getScene());
-                /*else
+                else
                 {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText("Player hasn't been chosen!");
@@ -89,7 +89,7 @@ public class Menu
                     ButtonType b1 = new ButtonType("OK");
                     alert.getButtonTypes().setAll(b1);
                     alert.showAndWait();
-                }*/
+                }
             }
         });
         Button choosePlayer = new Button("choose player");
