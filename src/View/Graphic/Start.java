@@ -68,14 +68,14 @@ public class Start
                 if (newGame){
                     //todo ask if player wanted custom workshop
                     try{
-                        String path2 = "src\\Resources\\Level"+Integer.toString(number);
+                        String path2 = "src\\Resources\\Levels\\Level"+Integer.toString(number)+".txt";
                         controller.loadCustomHandler(path2);
                     }
                     catch (Exception e) {
                     }
                     finally {
                         try {
-                            controller.runHandler("map");
+                            controller.runHandler();
                         } catch (Exception e) {
 
                         }
@@ -137,7 +137,7 @@ public class Start
     {
         try
         {
-            Image image = new Image(new FileInputStream("E:\\AP\\Project\\src\\Resources\\Graphic\\back.png")
+            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\back.png")
                     , 100, 70, false, true);
             ImageView back = new ImageView(image);
             back.setY(Menu.HEIGHT - 200);

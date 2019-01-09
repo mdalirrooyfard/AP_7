@@ -37,7 +37,7 @@ public class Farm {
     private ArrayList<String> achievementsNames = new ArrayList<>();
     private ArrayList<Integer> achievementsCounts = new ArrayList<>();
     private boolean areCatsUpgraded = false;
-    private ArrayList<Workshop> workshops = new ArrayList<>();
+    private Workshop[] workshops = new Workshop[7];
 
     public void makeAchievements()
     {
@@ -57,7 +57,7 @@ public class Farm {
         return achievements;
     }
 
-    public ArrayList<Workshop> getWorkshops() {
+    public Workshop[] getWorkshops() {
         return workshops;
     }
 
@@ -705,34 +705,18 @@ public class Farm {
     }
 
     //workShops
-    public void makeWorkShops(ArrayList<String> activeWorkShops) {
-        for (String workshop : activeWorkShops) {
-            switch (workshop) {
-                case "cakeBakery":
-                    workshops.add(new CakeBakery(0, mapLength - 1));
-                    break;
-                case "cookieBakery":
-                    workshops.add(new CookieBakery(0, (int) mapLength / 2));
-                    break;
-                case "eggPowderPlant":
-                    workshops.add(new EggPowderPlant(0, 0));
-                    break;
-                case "sewingFactory":
-                    workshops.add(new SewingFactory(mapWidth - 1, mapLength - 1));
-                    break;
-                case "weavingFactory":
-                    workshops.add(new WeavingFactory(mapWidth - 1, (int)mapLength/2));
-                    break;
-                case "spinnery":
-                    workshops.add(new Spinnery(mapWidth - 1, 0));
-                    break;
-            }
-        }
+    public void makeWorkShops()
+    {
+        workshops[0] = new CakeBakery(0, mapLength - 1);
+        workshops[1] = new CookieBakery(0, mapLength / 2);
+        workshops[2] = new EggPowderPlant(0, 0);
+        workshops[3] = new SewingFactory(mapWidth - 1, mapLength - 1);
+        workshops[4] = new WeavingFactory(mapWidth - 1, (int)mapLength/2);
+        workshops[5] = new Spinnery(mapWidth - 1, 0);
     }
 
     public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output) {
-        CustomFactory customFactory = new CustomFactory(name, inputs, output, (int)mapWidth/2, mapLength - 1);
-        workshops.add(customFactory);
+        workshops[6] = new CustomFactory(name, inputs, output, (int)mapWidth/2, mapLength - 1);
     }
 
     public int startWorkShop(String name) {
