@@ -26,7 +26,7 @@ public class Start
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
-    private String player = "mahsa";
+    private Player player;
     //todo set players name
     class levelHandler implements EventHandler<MouseEvent>{
         private final int number;
@@ -38,10 +38,10 @@ public class Start
         public void handle(MouseEvent event) {
             Controller controller = new Controller();
             try{
-                controller.setPlayer(player);
+                controller.setPlayer(player.getName());
                 controller.setLevel(number);
                 //todo this address
-                String path = "src\\SavedGames\\"+player+"-"+Integer.toString(number);
+                String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(number);
                 controller.canGameBeContinued(path);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("Would you like to continue?");
@@ -92,8 +92,9 @@ public class Start
         return scene;
     }
 
-    public Start(Stage stage, Menu menu)
+    public Start(Stage stage, Menu menu, Player player)
     {
+        this.player = player;
         insertBack(stage,menu);
         insertLevels();
     }

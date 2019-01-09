@@ -65,6 +65,8 @@ public class Menu
             @Override
             public void handle(MouseEvent event) {
                 NewPlayer newPlayer1 = new NewPlayer(stage, players.size());
+                player = newPlayer1.getPlayer();
+                players.add(player);
             }
         });
 
@@ -140,7 +142,7 @@ public class Menu
     public void passMenuInstance(Menu menu)
     {
         optionsScene = new Options();
-        startُScene = new Start(stage,menu);
+        startُScene = new Start(stage,menu, player);
     }
 
 }
