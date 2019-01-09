@@ -43,7 +43,7 @@ public class Menu
         this.stage = stage;
         try
         {
-            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\MenuBackground.jpg")
+            Image image = new Image(new FileInputStream("E:\\Project\\src\\Resources\\Graphic\\MenuBackground.jpg")
                     , WIDTH, HEIGHT, false, true);
             ImageView imageView = new ImageView(image);
             imageView.setY(0);

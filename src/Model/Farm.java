@@ -23,8 +23,8 @@ import java.util.Iterator;
 
 public class Farm {
     private Map map;
-    private int mapLength;
-    private int mapWidth;
+    private final int mapLength = 40;
+    private final int mapWidth = 60;
     private ArrayList<Entity> stuffs = new ArrayList<>();
     private int time;
     private Helicopter helicopter;
@@ -65,10 +65,9 @@ public class Farm {
         return goals;
     }
 
-    public Farm(int length, int width) {
-        mapLength = length;
-        mapWidth = width;
-        map = new Map(length, width);
+    public Farm()
+    {
+        map = new Map(mapLength, mapWidth);
         time = 0;
         money = 0;
     }

@@ -1,0 +1,3 @@
+sheep 4
+cookie 5
+carnivalDress 20
