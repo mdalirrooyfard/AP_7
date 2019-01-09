@@ -35,6 +35,7 @@ public class Menu
     private boolean doesChoosePlayer = false;
     private Player player;
     private ArrayList<Player> players = new ArrayList<>();
+    private NewPlayer newPlayer1;
 
     public Scene getScene()
     {
@@ -64,9 +65,7 @@ public class Menu
         newPlayer.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                NewPlayer newPlayer1 = new NewPlayer(stage, players.size());
-                player = newPlayer1.getPlayer();
-                players.add(player);
+                newPlayer1 = new NewPlayer(stage, players.size());
             }
         });
 
@@ -79,8 +78,11 @@ public class Menu
             @Override
             public void handle(MouseEvent event)
             {
-                if( player != null )
+                if( newPlayer1 != null ) {
+                    player = newPlayer1.getPlayer();
+                    players.add(player);
                     stage.setScene(startُScene.getScene());
+                }
                 else
                 {
                     Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -47,6 +47,7 @@ public class NewPlayer {
                     String name = nameField.getText();
                     if (!name.equals("")){
                         player = new Player(name, lastId + 1);
+
                         newPlayerStage.close();
                     }
                     else {

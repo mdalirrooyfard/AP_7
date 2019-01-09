@@ -21,6 +21,9 @@ public class Controller {
     private Player player;
     private int level;
 
+    public Farm getFarm(){
+        return farm;
+    }
     public void setPlayer(Player player){
         this.player = player;
     }

@@ -2,6 +2,7 @@ package View.Graphic;
 
 import Controller.Controller;
 import Model.Player;
+import View.View;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -30,9 +31,11 @@ public class Start
     //todo set players name
     class levelHandler implements EventHandler<MouseEvent>{
         private final int number;
+        private Stage stage;
         private boolean newGame = false;
-        levelHandler(int n){
+        levelHandler(int n, Stage stage){
             this.number = n;
+            this.stage = stage;
         }
         @Override
         public void handle(MouseEvent event) {
@@ -81,6 +84,7 @@ public class Start
                         }
                     }
                 }
+                View view = new View(controller, stage);
             }
 
         }
@@ -93,17 +97,17 @@ public class Start
 
     public Start(Stage stage, Menu menu, Player player)
     {
+        //todo make players
         this.player = player;
         insertBack(stage,menu);
-        insertLevels();
+        insertLevels(stage);
     }
 
-    private void insertLevels()
+    private void insertLevels(Stage stage)
     {
         Text[] level = new Text[10];
         try
         {
-            //todo this path
             Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Level.png")
                     , Menu.WIDTH, Menu.HEIGHT, false, true);
             ImageView levels = new ImageView(image);
@@ -120,16 +124,16 @@ public class Start
         }
         catch ( IOException e ){}
         finally {
-            level[0].setOnMouseClicked(new levelHandler(1));
-            level[1].setOnMouseClicked(new levelHandler(2));
-            level[2].setOnMouseClicked(new levelHandler(3));
-            level[3].setOnMouseClicked(new levelHandler(4));
-            level[4].setOnMouseClicked(new levelHandler(5));
-            level[5].setOnMouseClicked(new levelHandler(6));
-            level[6].setOnMouseClicked(new levelHandler(7));
-            level[7].setOnMouseClicked(new levelHandler(8));
-            level[8].setOnMouseClicked(new levelHandler(9));
-            level[9].setOnMouseClicked(new levelHandler(10));
+            level[0].setOnMouseClicked(new levelHandler(1, stage));
+            level[1].setOnMouseClicked(new levelHandler(2, stage));
+            level[2].setOnMouseClicked(new levelHandler(3, stage));
+            level[3].setOnMouseClicked(new levelHandler(4, stage));
+            level[4].setOnMouseClicked(new levelHandler(5, stage));
+            level[5].setOnMouseClicked(new levelHandler(6, stage));
+            level[6].setOnMouseClicked(new levelHandler(7, stage));
+            level[7].setOnMouseClicked(new levelHandler(8, stage));
+            level[8].setOnMouseClicked(new levelHandler(9, stage));
+            level[9].setOnMouseClicked(new levelHandler(10, stage));
         }
     }
 
