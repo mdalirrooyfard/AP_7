@@ -13,9 +13,9 @@ import java.rmi.server.ExportException;
 import java.util.*;
 
 public class Controller {
-    private View view = new View();
+    //private View view = new View();
     private Farm farm = new Farm();
-    private String command ;
+    //private String command ;
     private String path;
     private boolean isLevelFinished = false;
     private Player player;
@@ -33,7 +33,7 @@ public class Controller {
         this.level = level;
     }
 
-    public void getCommand(Scanner scanner)
+    /*public void getCommand(Scanner scanner)
     {
         while(!isLevelFinished)
         {
@@ -49,9 +49,9 @@ public class Controller {
                     view.printError(e.getMessage());
             }
         }
-    }
+    }*/
 
-    private void commandHandler() throws Exception
+    private void commandHandler(String command) throws Exception
     {
         if( command.startsWith("buy") )
         {
@@ -171,7 +171,7 @@ public class Controller {
         for (int i = 0 ; i < n ; i++)
             if(farm.turn())
             {
-                view.levelIsFinished();
+                //view.levelIsFinished();
                 break;
             }
     }
@@ -327,14 +327,14 @@ public class Controller {
     {
         switch (what)
         {
-            case "info":view.printInfo(farm.printInfo());break;
+            /*case "info":view.printInfo(farm.printInfo());break;
             case "map":view.printInfo(farm.printMap());break;
             case "levels":view.printInfo(farm.printLevel());break;
             case "warehouse":view.printInfo(farm.printWareHouse());break;
             case "well":view.printInfo(farm.printWell());break;
             case "helicopter":view.printInfo(farm.printTransportation(false));break;
             case "truck":view.printInfo(farm.printTransportation(true));break;
-            default:view.printInfo(farm.printWorkshop(what));
+            default:view.printInfo(farm.printWorkshop(what));*/
         }
     }
 
