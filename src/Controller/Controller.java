@@ -24,6 +24,7 @@ public class Controller {
     public void setPlayer(Player player){
         this.player = player;
     }
+
     public int getLevel() {
         return level;
     }
@@ -82,7 +83,7 @@ public class Controller {
         else if( command.startsWith("save game "))
             saveGameHandler(command.substring(10));
         else if( command.startsWith("run ") )
-            runHandler(command.substring(4));
+            runHandler();
         else if( command.matches("turn [0-9]+") )
             turnHandler(Integer.parseInt(command.substring(5)));
         else if( command.matches("truck add [{a-z, }]+ [0-9]+") )
@@ -200,34 +201,23 @@ public class Controller {
         }
     }
 
-    public void runHandler( String mapName ) throws Exception
+    public void runHandler() throws Exception
     {
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(path + "\\" + mapName + ".txt");
+            inputStream = new FileInputStream(path);
             Scanner scanner = new Scanner(inputStream);
-            int length = 0;
             String string = scanner.next();
             while(!string.equals("end of map"))
             {
                 switch (string)
                 {
-                    case "well":
-                        farm.makeWell(scanner.nextInt());
-                        break;
-                    case "wareHouse":
-                        farm.makeWareHouse(scanner.nextInt());
-                        break;
-                    case "truck":
-                        farm.makeTruck(scanner.nextInt());
-                        break;
-                    case "helicopter":
-                        farm.makeHelicopter(scanner.nextInt());
-                        break;
-                    case "money":
-                        farm.increaseMoney(scanner.nextInt());
-                        break;
+                    case "well":farm.makeWell(scanner.nextInt());break;
+                    case "wareHouse":farm.makeWareHouse(scanner.nextInt());break;
+                    case "truck":farm.makeTruck(scanner.nextInt());break;
+                    case "helicopter":farm.makeHelicopter(scanner.nextInt());break;
+                    case "money":farm.increaseMoney(scanner.nextInt());break;
                     case "hen":
                         int count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
@@ -258,6 +248,7 @@ public class Controller {
                 string = scanner.next();
             }
             farm.updateMap();
+            string = scanner.next();
             while(!string.equals("end of goals"))
             {
                 String name = scanner.next();
@@ -265,33 +256,9 @@ public class Controller {
                 farm.getGoals().put(name, count);
                 farm.makeAchievements();
             }
+            farm.makeWorkShops();
         }
         catch ( FileNotFoundException e )
-        {
-            throw new Exception("No such directory exists!");
-        }
-        finally
-        {
-            if (inputStream != null)
-                inputStream.close();
-        }
-    }
-
-    private void workShopHandler() throws Exception
-    {
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = new FileInputStream(path+"\\workShops.txt");
-            Scanner scanner = new Scanner(inputStream);
-            ArrayList<String> workshops = new ArrayList<>();
-            while(scanner.hasNext())
-            {
-                workshops.add(scanner.nextLine());
-            }
-            farm.makeWorkShops(workshops);
-        }
-        catch (FileNotFoundException e)
         {
             throw new Exception("No such directory exists!");
         }
