@@ -17,6 +17,25 @@ public class Controller {
     private String command ;
     private String path;
     private boolean isLevelFinished = false;
+    private String player;
+    private int level;
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(String player) {
+        this.player = player;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
 
     public void getCommand(Scanner scanner)
     {
@@ -161,7 +180,7 @@ public class Controller {
             }
     }
 
-    private void loadCustomHandler(String path) throws Exception
+    public void loadCustomHandler(String path) throws Exception
     {
         InputStream inputStream = null;
         try
@@ -185,7 +204,7 @@ public class Controller {
         }
     }
 
-    private void runHandler( String mapName ) throws Exception
+    public void runHandler( String mapName ) throws Exception
     {
         try
         {
@@ -325,12 +344,11 @@ public class Controller {
         }
     }
 
-    private void saveGameHandler(String path) throws Exception
+    public void saveGameHandler(String path) throws Exception
     {
-        Date date = new Date();
         try
         {
-            OutputStream outputStream = new FileOutputStream(path + "\\game" + date.getTime() + ".txt");
+            OutputStream outputStream = new FileOutputStream(path + "\\"+ player + "-" + Integer.toString(level) + ".txt");
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = yaGson.toJson(farm);
@@ -345,7 +363,16 @@ public class Controller {
 
     }
 
-    private void loadGameHandler(String path) throws Exception
+    public void canGameBeContinued(String path) throws Exception{
+        InputStream inputStream = null;
+        try{
+            inputStream = new FileInputStream(path);
+        }
+        catch (IOException e){
+            throw e;
+        }
+    }
+    public void loadGameHandler(String path) throws Exception
     {
         InputStream inputStream = null;
         try

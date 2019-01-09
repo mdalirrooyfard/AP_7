@@ -1,8 +1,14 @@
 package View.Graphic;
 
+import Controller.Controller;
 import Model.Player;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +26,69 @@ public class Start
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
+    private String player = "mahsa";
+    //todo set players name
+    class levelHandler implements EventHandler<MouseEvent>{
+        private final int number;
+        private boolean newGame = false;
+        levelHandler(int n){
+            this.number = n;
+        }
+        @Override
+        public void handle(MouseEvent event) {
+            Controller controller = new Controller();
+            try{
+                controller.setPlayer(player);
+                controller.setLevel(number);
+                //todo this address
+                String path = "C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\SavedGames\\"+player+"-"+Integer.toString(number);
+                controller.canGameBeContinued(path);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Would you like to continue?");
+                alert.setHeaderText("You have started this level before");
+                ButtonType b1 = new ButtonType("Yes");
+                ButtonType b2 = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(b1, b2);
+                alert.showAndWait().ifPresent(result -> {
+                    if (result == b1) {
+                        try {
+                            controller.loadGameHandler(path);
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        //todo make the game from controller
+                    }
+                    if (result == b2)
+                        newGame = true;
+                });
+            }
+            catch (Exception e){
+                newGame = true;
+            }
+            finally {
+                if (newGame){
+                    //todo ask if player wanted custom workshop
+                    try{
+                        String path2 = "C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Level"+Integer.toString(number);
+                        controller.loadCustomHandler(path2);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    finally {
+                        try {
+                            controller.runHandler("map");
+                            System.out.println("done");
+                        } catch (Exception e) {
 
+                        }
+                    }
+                }
+            }
+
+        }
+    }
 
     public Scene getScene()
     {
@@ -35,15 +103,16 @@ public class Start
 
     private void insertLevels()
     {
+        Text[] level = new Text[10];
         try
         {
-            Image image = new Image(new FileInputStream("E:\\AP\\Project\\src\\Resources\\Graphic\\Level.png")
+            //todo this path
+            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\Level.png")
                     , Menu.WIDTH, Menu.HEIGHT, false, true);
             ImageView levels = new ImageView(image);
             levels.setY(0);
             levels.setX(0);
             group.getChildren().addAll(levels);
-            Text[] level = new Text[10];
             for( int i = 0 ; i < 10 ; i++ )
             {
                 level[i] = new Text( ( i % 2) * ( Menu.WIDTH - 200 ) + ( ( i + 1 ) % 2 ) * 200 , 120 + i / 2 * 100
@@ -53,6 +122,18 @@ public class Start
             }
         }
         catch ( IOException e ){}
+        finally {
+            level[0].setOnMouseClicked(new levelHandler(1));
+            level[1].setOnMouseClicked(new levelHandler(2));
+            level[2].setOnMouseClicked(new levelHandler(3));
+            level[3].setOnMouseClicked(new levelHandler(4));
+            level[4].setOnMouseClicked(new levelHandler(5));
+            level[5].setOnMouseClicked(new levelHandler(6));
+            level[6].setOnMouseClicked(new levelHandler(7));
+            level[7].setOnMouseClicked(new levelHandler(8));
+            level[8].setOnMouseClicked(new levelHandler(9));
+            level[9].setOnMouseClicked(new levelHandler(10));
+        }
     }
 
     private void insertBack( Stage stage , Menu menu )
