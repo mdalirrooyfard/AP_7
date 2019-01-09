@@ -81,6 +81,7 @@ public class Menu
                 if( newPlayer1 != null ) {
                     player = newPlayer1.getPlayer();
                     players.add(player);
+                    makeStart();
                     stage.setScene(startُScene.getScene());
                 }
                 else
@@ -144,7 +145,10 @@ public class Menu
     public void passMenuInstance(Menu menu)
     {
         optionsScene = new Options();
-        startُScene = new Start(stage,menu, player);
+    }
+
+    public void makeStart(){
+        startُScene = new Start(stage,this, player);
     }
 
 }

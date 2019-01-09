@@ -39,6 +39,14 @@ public class Start
         }
         @Override
         public void handle(MouseEvent event) {
+            if (player.getLastLevel() < number){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("This level is not opened for you!");
+                alert.setContentText("Choose a lower level");
+                alert.showAndWait();
+                return;
+            }
+
             Controller controller = new Controller();
             try{
                 controller.setPlayer(player);
