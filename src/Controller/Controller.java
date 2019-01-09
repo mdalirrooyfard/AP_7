@@ -209,7 +209,7 @@ public class Controller {
             inputStream = new FileInputStream(path);
             Scanner scanner = new Scanner(inputStream);
             String string = scanner.next();
-            while(!string.equals("end of map"))
+            while(!string.equals("endOfMap"))
             {
                 switch (string)
                 {
@@ -248,10 +248,13 @@ public class Controller {
                 string = scanner.next();
             }
             farm.updateMap();
-            string = scanner.next();
-            while(!string.equals("end of goals"))
+            string = scanner.nextLine();
+            string = scanner.nextLine();
+            while(true)
             {
                 String name = scanner.next();
+                if( name.equals("endOfGoals") )
+                    break;
                 int count = scanner.nextInt();
                 farm.getGoals().put(name, count);
                 farm.makeAchievements();
