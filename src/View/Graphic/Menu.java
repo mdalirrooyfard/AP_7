@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class Menu
@@ -32,6 +34,7 @@ public class Menu
     private Scene scene = new Scene(group, WIDTH, HEIGHT);
     private boolean doesChoosePlayer = false;
     private Player player;
+    private ArrayList<Player> players = new ArrayList<>();
 
     public Scene getScene()
     {
@@ -40,10 +43,13 @@ public class Menu
 
     public Menu(Stage stage)
     {
+        String style = this.getClass().getResource("graphic.css").toExternalForm();
+        scene.getStylesheets().add(style);
+
         this.stage = stage;
         try
         {
-            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\MenuBackground.jpg")
+            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\MenuBackground.jpg")
                     , WIDTH, HEIGHT, false, true);
             ImageView imageView = new ImageView(image);
             imageView.setY(0);
@@ -55,9 +61,13 @@ public class Menu
         Button newPlayer = new Button("New Player");
         newPlayer.relocate(WIDTH / 2 - 160, 3.4 * HEIGHT / 5);
         newPlayer.setId("button");
+        newPlayer.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                NewPlayer newPlayer1 = new NewPlayer(stage, players.size());
+            }
+        });
 
-        String style = this.getClass().getResource("buttons.css").toExternalForm();
-        scene.getStylesheets().add(style);
 
         Button start = new Button("start");
         start.relocate(WIDTH/2 + 65, 3.85 * HEIGHT / 5);

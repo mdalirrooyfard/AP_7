@@ -200,7 +200,8 @@ public class Controller {
         }
         finally
         {
-            inputStream.close();
+            if (inputStream != null)
+                inputStream.close();
         }
     }
 
@@ -370,6 +371,10 @@ public class Controller {
         }
         catch (IOException e){
             throw e;
+        }
+        finally {
+            if (inputStream != null)
+                inputStream.close();
         }
     }
     public void loadGameHandler(String path) throws Exception

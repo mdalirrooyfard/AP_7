@@ -41,7 +41,7 @@ public class Start
                 controller.setPlayer(player);
                 controller.setLevel(number);
                 //todo this address
-                String path = "C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\SavedGames\\"+player+"-"+Integer.toString(number);
+                String path = "src\\SavedGames\\"+player+"-"+Integer.toString(number);
                 controller.canGameBeContinued(path);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("Would you like to continue?");
@@ -55,7 +55,6 @@ public class Start
                             controller.loadGameHandler(path);
                         }
                         catch (Exception e){
-                            e.printStackTrace();
                         }
                         //todo make the game from controller
                     }
@@ -70,16 +69,14 @@ public class Start
                 if (newGame){
                     //todo ask if player wanted custom workshop
                     try{
-                        String path2 = "C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Level"+Integer.toString(number);
+                        String path2 = "src\\Resources\\Level"+Integer.toString(number);
                         controller.loadCustomHandler(path2);
                     }
                     catch (Exception e) {
-                        e.printStackTrace();
                     }
                     finally {
                         try {
                             controller.runHandler("map");
-                            System.out.println("done");
                         } catch (Exception e) {
 
                         }
@@ -107,7 +104,7 @@ public class Start
         try
         {
             //todo this path
-            Image image = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\Level.png")
+            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Level.png")
                     , Menu.WIDTH, Menu.HEIGHT, false, true);
             ImageView levels = new ImageView(image);
             levels.setY(0);

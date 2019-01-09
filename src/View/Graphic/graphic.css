@@ -23,3 +23,12 @@
             #84ca6a,
             radial-gradient(center 50% 50%, radius 100%, #b5e7a0, #84ca6a);
 }
+#NewPlayer{
+    -fx-font-family: "Segoe Print";
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-alignment: center;
+}
+#NameText{
+
+}
