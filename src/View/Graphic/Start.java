@@ -38,10 +38,9 @@ public class Start
         public void handle(MouseEvent event) {
             Controller controller = new Controller();
             try{
-                controller.setPlayer(player.getName());
+                controller.setPlayer(player);
                 controller.setLevel(number);
-                //todo this address
-                String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(number);
+                String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(number);
                 controller.canGameBeContinued(path);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("Would you like to continue?");

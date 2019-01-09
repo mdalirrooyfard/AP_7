@@ -22,6 +22,10 @@ public class Player implements Comparable<Player>
         return lastLevel;
     }
 
+    public int getId(){
+        return id;
+    }
+
     @Override
     public int compareTo(Player player)
     {

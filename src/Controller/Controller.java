@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Farm;
+import Model.Player;
 import Model.Workshops.*;
 import View.View;
 import com.gilecode.yagson.YaGson;
@@ -17,17 +18,12 @@ public class Controller {
     private String command ;
     private String path;
     private boolean isLevelFinished = false;
-    private String player;
+    private Player player;
     private int level;
 
-    public String getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(String player) {
+    public void setPlayer(Player player){
         this.player = player;
     }
-
     public int getLevel() {
         return level;
     }
@@ -310,7 +306,7 @@ public class Controller {
     {
         try
         {
-            OutputStream outputStream = new FileOutputStream(path + "\\"+ player + "-" + Integer.toString(level) + ".txt");
+            OutputStream outputStream = new FileOutputStream(path + "\\"+ player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level)+".txt");
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = yaGson.toJson(farm);
