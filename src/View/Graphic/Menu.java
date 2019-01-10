@@ -1,23 +1,22 @@
 package View.Graphic;
 
-import Model.Animals.Wild.Wild;
 import Model.Player;
-import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,6 +54,7 @@ public class Menu
             ImageView imageView = new ImageView(image);
             imageView.setY(0);
             imageView.setX(0);
+            music();
             group.getChildren().addAll(imageView);
         }
 
@@ -141,7 +141,12 @@ public class Menu
         });
         stage.setScene(scene);
     }
-
+    public static void music(){
+        Media media = new Media(new File("src\\Resources\\oldmacdonald.mp3").toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(mediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+    }
     public void passMenuInstance(Menu menu)
     {
         optionsScene = new Options();
