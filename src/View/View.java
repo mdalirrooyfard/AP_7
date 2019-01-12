@@ -16,20 +16,24 @@ import java.io.FileNotFoundException;
 
 public class View
 {
-    private Farm farm;
-    private Controller controller;
-    public View(Controller controller, Stage stage){
-        this.controller = controller;
-        this.farm = controller.getFarm();
-        play(stage);
+    private Group group = new Group();
+    private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
+
+    public Scene getScene()
+    {
+        return scene;
     }
 
-    public void play(Stage stage){
+
+
+    public void play(Stage stage)
+    {
         Group root = new Group();
         Scene scene = new Scene(root , Menu.WIDTH,
                 Menu.HEIGHT);
         stage.setScene(scene);
-        try {
+        try
+        {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
                     Menu.HEIGHT, false, true);
             ImageView imageView = new ImageView(background);
@@ -41,9 +45,8 @@ public class View
                     100 , 100 , false , true);
             ImageView henIconView = new ImageView(henIcon);
             root.getChildren().addAll(henIconView);
-        } catch (FileNotFoundException e) {
-
         }
+        catch (FileNotFoundException e) {}
     }
 
     /*String command;

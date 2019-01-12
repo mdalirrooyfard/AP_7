@@ -25,6 +25,7 @@ public class Controller {
     public Farm getFarm(){
         return farm;
     }
+
     public void setPlayer(Player player){
         this.player = player;
     }
@@ -41,6 +42,8 @@ public class Controller {
     {
         return players;
     }
+
+
 
     /*public void getCommand(Scanner scanner)
     {

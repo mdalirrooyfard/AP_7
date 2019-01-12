@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -29,11 +30,13 @@ public class Start
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Player player;
     //todo set players name
-    class levelHandler implements EventHandler<MouseEvent>{
+    class levelHandler implements EventHandler<MouseEvent>
+    {
         private final int number;
         private Stage stage;
         private boolean newGame = false;
-        levelHandler(int n, Stage stage){
+        levelHandler(int n, Stage stage)
+        {
             this.number = n;
             this.stage = stage;
         }
@@ -92,10 +95,14 @@ public class Start
                         }
                     }
                 }
-                View view = new View(controller, stage);
             }
 
         }
+    }
+
+    public void setPlayer(Player player)
+    {
+        this.player = player;
     }
 
     public Scene getScene()
@@ -103,67 +110,81 @@ public class Start
         return scene;
     }
 
-    public Start(Stage stage, Menu menu, Player player)
+    public Start(Stage stage , Menu menu , Player player)
     {
-        //todo make players
         this.player = player;
+        try
+        {
+            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
+                    , Menu.WIDTH, Menu.HEIGHT, false, true);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setY(0);
+            backgroundView.setX(0);
+
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image menuBackground = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuBackground.png")
+                    , 550, Menu.HEIGHT, false, true);
+            ImageView menuBackgroundView = new ImageView(menuBackground);
+            menuBackgroundView.setY(0);
+            menuBackgroundView.setX(Menu.WIDTH - 550);
+            group.getChildren().addAll(backgroundView,rectangle,menuBackgroundView);
+        }
+        catch ( Exception e ){}
         insertBack(stage,menu);
         insertLevels(stage);
     }
 
     private void insertLevels(Stage stage)
     {
-        Text[] level = new Text[10];
         try
         {
-            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Level.png")
-                    , Menu.WIDTH, Menu.HEIGHT, false, true);
-            ImageView levels = new ImageView(image);
-            levels.setY(0);
-            levels.setX(0);
-            group.getChildren().addAll(levels);
             for( int i = 0 ; i < 10 ; i++ )
             {
-                level[i] = new Text( ( i % 2) * ( Menu.WIDTH - 200 ) + ( ( i + 1 ) % 2 ) * 200 , 120 + i / 2 * 100
-                        , "Level "+Integer.toString(i + 1));
-                level[i].setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
-                group.getChildren().addAll(level[i]);
+                String levelName = "Level"+Integer.toString(i + 1);
+                if( i + 1 <= player.getLastLevel() )
+                    levelName += "Open.png";
+                else
+                    levelName += "Close.png";
+                Image level = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName)
+                        , 200, 79, false, true);
+                ImageView levelView = new ImageView(level);
+                levelView.setX((Menu.WIDTH - 500) * ( (i + 1) % 2 ) + (Menu.WIDTH - 250) * ( i % 2));
+                levelView.setY(Menu.HEIGHT * ( i / 2  + 1) / 7);
+                group.getChildren().addAll(levelView);
+                levelView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+
+                    }
+                });
             }
         }
         catch ( IOException e ){}
-        finally {
-            level[0].setOnMouseClicked(new levelHandler(1, stage));
-            level[1].setOnMouseClicked(new levelHandler(2, stage));
-            level[2].setOnMouseClicked(new levelHandler(3, stage));
-            level[3].setOnMouseClicked(new levelHandler(4, stage));
-            level[4].setOnMouseClicked(new levelHandler(5, stage));
-            level[5].setOnMouseClicked(new levelHandler(6, stage));
-            level[6].setOnMouseClicked(new levelHandler(7, stage));
-            level[7].setOnMouseClicked(new levelHandler(8, stage));
-            level[8].setOnMouseClicked(new levelHandler(9, stage));
-            level[9].setOnMouseClicked(new levelHandler(10, stage));
-        }
     }
 
-    private void insertBack( Stage stage , Menu menu )
+    private void insertBack(Stage stage,Menu menu)
     {
         try
         {
-            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\back.png")
-                    , 100, 70, false, true);
-            ImageView back = new ImageView(image);
-            back.setY(Menu.HEIGHT - 200);
-            back.setX(Menu.WIDTH - 400);
-            group.getChildren().addAll(back);
-            back.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>()
+            Image back = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\backButton.png")
+                    , 84, 79, false, true);
+            ImageView backView = new ImageView(back);
+            backView.setX(0);
+            backView.setY(0);
+            backView.setY(Menu.HEIGHT - 120);
+            backView.setX(Menu.WIDTH - 450);
+            group.getChildren().addAll(backView);
+            backView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
-                public void handle(MouseEvent event)
-                {
-                    stage.setScene(menu.getScene());
-                }
+                public void handle(MouseEvent event){stage.setScene(menu.getScene());}
             });
         }
-        catch ( IOException e ){}
+        catch ( Exception e ){}
     }
 }

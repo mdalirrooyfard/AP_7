@@ -29,6 +29,7 @@ public class Main extends Application
         //controller.loadPlayers();
         stage = primaryStage;
         Menu menu = new Menu(primaryStage,controller.getPlayers());
+        menu.setMenu(menu);
         menu.passMenuInstance(menu);
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);

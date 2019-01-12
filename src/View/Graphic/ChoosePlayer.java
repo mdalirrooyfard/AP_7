@@ -167,7 +167,7 @@ public class ChoosePlayer
                             @Override
                             public void handle(MouseEvent event)
                             {
-                                player = new Player(playerName.getText(),players.size());
+                                player = new Player(playerName.getText(),players.size() + 1);
                                 players.add(player);
                                 group.getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
                                 writePlayers(players);
