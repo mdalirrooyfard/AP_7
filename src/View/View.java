@@ -7,12 +7,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Screen;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 
 public class View
 {
@@ -34,6 +34,13 @@ public class View
                     Menu.HEIGHT, false, true);
             ImageView imageView = new ImageView(background);
             root.getChildren().add(imageView);
+            Circle circle = new Circle(50 , 65 , 30);
+            circle.setFill(Color.rgb(255 , 255 ,125));
+            root.getChildren().addAll(circle);
+            Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\icons\\henIcon.png"),
+                    100 , 100 , false , true);
+            ImageView henIconView = new ImageView(henIcon);
+            root.getChildren().addAll(henIconView);
         } catch (FileNotFoundException e) {
 
         }
