@@ -5,10 +5,7 @@ import Model.Player;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -84,6 +81,8 @@ public class Menu
 
     public Scene getScene()
     {
+        player = choosePlayerScene.getPlayer();
+        insertPlayer();
         return scene;
     }
 
@@ -123,6 +122,8 @@ public class Menu
                         ImageView menuBackgroundView = new ImageView(menuBackground);
                         menuBackgroundView.setY(0);
                         menuBackgroundView.setX(WIDTH - 550);
+
+                        insertPlayer();
 
                         ImageView startView = insertStart();
                         startView.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -230,6 +231,20 @@ public class Menu
         startScene = new Start(stage,this, player);
     }
 
+    private void insertPlayer()
+    {
+        Label playerName = new Label("Player hasn't been chosen!");
+        playerName.setTextFill(Color.rgb(54,16,0));
+        playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        playerName.setLayoutX(Menu.WIDTH - 400);
+        playerName.setLayoutY(Menu.HEIGHT / 6);
+        if( player != null )
+            playerName.setText("Player : "+player.getName());
+        else
+            playerName.setText("Player hasn't been chosen!");
+        group.getChildren().addAll(playerName);
+    }
+
     private ImageView insertStart()
     {
         try
@@ -237,7 +252,7 @@ public class Menu
             Image start = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\startButton.png")
                     , 250,81, false, true);
             ImageView startView = new ImageView(start);
-            startView.setY(HEIGHT/ 5);
+            startView.setY(HEIGHT / 3);
             startView.setX(WIDTH - 400);
             return startView;
         }
@@ -252,7 +267,7 @@ public class Menu
             Image choosePlayer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\choosePlayerButton.png")
                     , 250, 81, false, true);
             ImageView choosePlayerView = new ImageView(choosePlayer);
-            choosePlayerView.setY(HEIGHT * 2 / 5);
+            choosePlayerView.setY(HEIGHT / 2);
             choosePlayerView.setX(WIDTH - 400);
             return choosePlayerView;
         }
@@ -267,7 +282,7 @@ public class Menu
             Image options = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png")
                     , 250, 81, false, true);
             ImageView optionsView = new ImageView(options);
-            optionsView.setY(HEIGHT * 3 / 5);
+            optionsView.setY(HEIGHT * 2 / 3);
             optionsView.setX(WIDTH - 400);
             return optionsView;
         }
@@ -282,7 +297,7 @@ public class Menu
             Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\exitButton.png")
                     , 250, 81, false, true);
             ImageView exitView = new ImageView(exit);
-            exitView.setY(HEIGHT * 4 / 5);
+            exitView.setY(HEIGHT * 5 / 6);
             exitView.setX(WIDTH - 400);
             return exitView;
         }

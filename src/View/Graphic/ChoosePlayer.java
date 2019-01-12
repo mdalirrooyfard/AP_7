@@ -19,16 +19,14 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ChoosePlayer
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
-    private Player player;
+    private Player player = null;
 
     public Player getPlayer()
     {
@@ -72,20 +70,44 @@ public class ChoosePlayer
 
     private void writePlayers(ArrayList<Player> players)
     {
-        //TODO choose player!
-        for(Node node:group.getChildren())
-            if( node instanceof Text )
-                ((Text) node).setText("");
-        Text text;
-        int i = 0;
-        for (Player p : players)
+        try
         {
-            i++;
-            text = new Text( Menu.WIDTH - 450, ( Menu.HEIGHT - 150 ) * i / (players.size() + 1),p.getName());
-            text.setFill(Color.rgb(54,16,0));
-            text.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            group.getChildren().add(text);
+            Image uncheckedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxFalse.png")
+                    , 25, 25, false, true);
+            Image checkedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxTrue.png")
+                    , 25, 25, false, true);
+            for(Node node:group.getChildren())
+            {
+                if( node instanceof Text )
+                    ((Text) node).setText("");
+                if( node instanceof ImageView && ( ((ImageView) node).getImage() == uncheckedCheckBox
+                        || ((ImageView) node).getImage() == checkedCheckBox)  )
+                    ((ImageView) node).setImage(null);
+            }
+            Text text;
+            int i = 0;
+            for (Player p : players)
+            {
+                i++;
+                text = new Text( Menu.WIDTH - 450, ( Menu.HEIGHT - 150 ) * ( i + 1 ) / (players.size() + 2),p.getName());
+                text.setFill(Color.rgb(54,16,0));
+                text.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+                group.getChildren().addAll(text);
+                text.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        for( Node node : group.getChildren() )
+                            if( node instanceof Label )
+                                ((Label) node).setText("");
+                        player = p;
+                        insertPlayer(players);
+                    }
+                });
+            }
         }
+        catch ( Exception e ){}
     }
 
     private void insertNewPlayer(ArrayList<Player> players)
@@ -149,6 +171,10 @@ public class ChoosePlayer
                                 players.add(player);
                                 group.getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
                                 writePlayers(players);
+                                for( Node node : group.getChildren() )
+                                    if( node instanceof Label )
+                                        ((Label) node).setText("");
+                                insertPlayer(players);
                             }
                         });
 
@@ -199,4 +225,15 @@ public class ChoosePlayer
 
     }
 
+    private void insertPlayer(ArrayList<Player> players)
+    {
+        Label playerName = new Label("");
+        playerName.setTextFill(Color.rgb(54,16,0));
+        playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        playerName.setLayoutX(Menu.WIDTH - 400);
+        playerName.setLayoutY((Menu.HEIGHT - 150 ) / (players.size() + 2));
+        if( player != null )
+            playerName.setText("Player : "+player.getName());
+        group.getChildren().addAll(playerName);
+    }
 }
