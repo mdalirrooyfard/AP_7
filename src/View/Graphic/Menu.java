@@ -1,5 +1,6 @@
 package View.Graphic;
 
+import Controller.Controller;
 import Model.Player;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -13,6 +14,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -28,132 +38,302 @@ public class Menu
     public static final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
     public static final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
     private Options optionsScene;
-    private Start startُScene;
+    private Start startScene;
+    private ChoosePlayer choosePlayerScene;
     private Group group = new Group();
     private Scene scene = new Scene(group, WIDTH, HEIGHT);
-    private boolean doesChoosePlayer = false;
     private Player player;
-    private ArrayList<Player> players = new ArrayList<>();
-    private NewPlayer newPlayer1;
+    private ArrayList<Player> players;
+    private boolean muteMusic = false , muteSound = false , fullScreen = true;
+    private MediaPlayer mediaPlayer;
+
+    public MediaPlayer getMediaPlayer()
+    {
+        return mediaPlayer;
+    }
+
+    public boolean isMusicMuted()
+    {
+        return muteMusic;
+    }
+
+    public void setMuteMusic(boolean muteMusic)
+    {
+        this.muteMusic = muteMusic;
+    }
+
+    public boolean isSoundMuted()
+    {
+        return muteSound;
+    }
+
+    public void setMuteSound(boolean muteSound)
+    {
+        this.muteSound = muteSound;
+    }
+
+    public boolean isFullScreen()
+    {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen)
+    {
+        this.fullScreen = fullScreen;
+    }
 
     public Scene getScene()
     {
         return scene;
     }
 
-    public Menu(Stage stage)
+    public Menu(Stage stage , ArrayList<Player> players)
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);
-
         this.stage = stage;
+        this.players = players;
         try
         {
-            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\MenuBackground.jpg")
-                    , WIDTH, HEIGHT, false, true);
-            ImageView imageView = new ImageView(image);
-            imageView.setY(0);
-            imageView.setX(0);
             music();
-            group.getChildren().addAll(imageView);
-        }
-
-        catch ( IOException e ){}
-        Button newPlayer = new Button("New Player");
-        newPlayer.relocate(WIDTH / 2 - 160, 3.4 * HEIGHT / 5);
-        newPlayer.setId("button");
-        newPlayer.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                newPlayer1 = new NewPlayer(stage, players.size());
-            }
-        });
-
-
-        Button start = new Button("start");
-        start.relocate(WIDTH/2 + 65, 3.85 * HEIGHT / 5);
-        start.setId("button");
-        start.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
+            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
+                    , WIDTH, HEIGHT, false, true);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setY(0);
+            backgroundView.setX(0);
+            Image menu = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\mainMenuButton.png")
+                    , 220, 79, false, true);
+            ImageView menuView = new ImageView(menu);
+            menuView.setY(HEIGHT - 100);
+            menuView.setX(20);
+            group.getChildren().addAll(backgroundView,menuView);
+            menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                if( newPlayer1 != null ) {
-                    player = newPlayer1.getPlayer();
-                    players.add(player);
-                    makeStart();
-                    stage.setScene(startُScene.getScene());
-                }
-                else
+                @Override
+                public void handle(MouseEvent event)
                 {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setHeaderText("Player hasn't been chosen!");
-                    alert.setContentText("Choose Player First");
-                    ButtonType b1 = new ButtonType("OK");
-                    alert.getButtonTypes().setAll(b1);
-                    alert.showAndWait();
+                    try
+                    {
+                        Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+                        rectangle.setFill(Color.rgb(54,16,0));
+                        rectangle.setOpacity(0.7);
+
+                        Image menuBackground = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuBackground.png")
+                                , 550, HEIGHT, false, true);
+                        ImageView menuBackgroundView = new ImageView(menuBackground);
+                        menuBackgroundView.setY(0);
+                        menuBackgroundView.setX(WIDTH - 550);
+
+                        ImageView startView = insertStart();
+                        startView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if( player != null )
+                                {
+                                    makeStart();
+                                    stage.setScene(startScene.getScene());
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+                                        rectangle.setFill(Color.rgb(54,16,0));
+                                        rectangle.setOpacity(0.7);
+
+                                        Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\playerHasNotBeenChosenMessageBox.png")
+                                                , 800, 300, false, true);
+                                        ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
+                                        playerHasNotBeenChosenMessageView.setY(HEIGHT / 2 - 150);
+                                        playerHasNotBeenChosenMessageView.setX(WIDTH / 2 - 400);
+
+                                        Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                                                , 200, 79, false, true);
+                                        ImageView okView = new ImageView(ok);
+                                        okView.setY(HEIGHT / 2 + 150);
+                                        okView.setX(WIDTH / 2 - 100);
+                                        okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                        {
+                                            @Override
+                                            public void handle(MouseEvent event)
+                                            {
+                                                group.getChildren().removeAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                                            }
+                                        });
+
+                                        group.getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                                    }
+                                    catch ( Exception e ){}
+                                }
+                            }
+                        });
+
+                        ImageView choosePlayerView = insertChoosePlayer();
+                        choosePlayerView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                stage.setScene(choosePlayerScene.getScene());
+                            }
+                        });
+
+                        ImageView optionsView = insertOptions();
+                        optionsView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                stage.setScene(optionsScene.getScene());
+                            }
+                        });
+
+                        ImageView exitView = insertExit();
+                        exitView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                exitHandler();
+                            }
+                        });
+                        group.getChildren().addAll(rectangle,menuBackgroundView,startView,choosePlayerView,optionsView,exitView);
+                    }
+                    catch ( Exception e ){}
                 }
-            }
-        });
-        Button choosePlayer = new Button("choose player");
-        choosePlayer.relocate(WIDTH/2 - 60 , 3.63 * HEIGHT / 5);
-        choosePlayer.setId("button");
-        choosePlayer.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                doesChoosePlayer = true;
-                stage.setScene(startُScene.getScene());
-            }
-        });
-        Button options = new Button("options");
-        options.relocate(WIDTH/2 + 130, 4.25 * HEIGHT / 5);
-        options.setId("button");
-        options.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                stage.setScene(optionsScene.getScene());
-            }
-        });
-        Button exit = new Button("exit");
-        exit.relocate(WIDTH / 2 + 135, 4.65 * HEIGHT / 5);
-        exit.setId("button");
-        group.getChildren().addAll(newPlayer,start,choosePlayer,options,exit);
-        exit.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("The game is closing...");
-                alert.setContentText("Are you sure?");
-                ButtonType b1 = new ButtonType("Yes");
-                ButtonType b2 = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-                alert.getButtonTypes().setAll(b1, b2);
-                alert.showAndWait().ifPresent(result -> {
-                    if (result == b1)
-                        stage.close();
-                });
-            }
-        });
+            });
+        }
+        catch ( IOException e ){}
+        stage.setFullScreen(fullScreen);
+        stage.setResizable(false);
         stage.setScene(scene);
     }
-    public static void music(){
+
+    public void music()
+    {
         Media media = new Media(new File("src\\Resources\\oldmacdonald.mp3").toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(mediaPlayer.INDEFINITE);
         mediaPlayer.play();
     }
+
     public void passMenuInstance(Menu menu)
     {
-        optionsScene = new Options();
+        optionsScene = new Options(stage,menu);
+        choosePlayerScene = new ChoosePlayer(stage,menu,players);
     }
 
-    public void makeStart(){
-        startُScene = new Start(stage,this, player);
+    public void makeStart()
+    {
+        startScene = new Start(stage,this, player);
+    }
+
+    private ImageView insertStart()
+    {
+        try
+        {
+            Image start = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\startButton.png")
+                    , 250,81, false, true);
+            ImageView startView = new ImageView(start);
+            startView.setY(HEIGHT/ 5);
+            startView.setX(WIDTH - 400);
+            return startView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertChoosePlayer()
+    {
+        try
+        {
+            Image choosePlayer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\choosePlayerButton.png")
+                    , 250, 81, false, true);
+            ImageView choosePlayerView = new ImageView(choosePlayer);
+            choosePlayerView.setY(HEIGHT * 2 / 5);
+            choosePlayerView.setX(WIDTH - 400);
+            return choosePlayerView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertOptions()
+    {
+        try
+        {
+            Image options = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png")
+                    , 250, 81, false, true);
+            ImageView optionsView = new ImageView(options);
+            optionsView.setY(HEIGHT * 3 / 5);
+            optionsView.setX(WIDTH - 400);
+            return optionsView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertExit()
+    {
+        try
+        {
+            Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\exitButton.png")
+                    , 250, 81, false, true);
+            ImageView exitView = new ImageView(exit);
+            exitView.setY(HEIGHT * 4 / 5);
+            exitView.setX(WIDTH - 400);
+            return exitView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private void exitHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image exitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\exitMessageBox.png")
+                    , 800, 300, false, true);
+            ImageView exitMessageView = new ImageView(exitMessage);
+            exitMessageView.setY(HEIGHT / 2 - 150);
+            exitMessageView.setX(WIDTH / 2 - 400);
+
+            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
+                    , 153, 145, false, true);
+            ImageView yesView = new ImageView(yes);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
+            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    stage.close();
+                }
+            });
+
+            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                    , 153, 146, false, true);
+            ImageView noView = new ImageView(no);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
+            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                }
+            });
+            group.getChildren().addAll(rectangle,exitMessageView,yesView,noView);
+        }
+        catch ( Exception e ){}
     }
 
 }

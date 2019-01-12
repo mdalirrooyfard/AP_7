@@ -1,2 +1,0 @@
-eggPowder 10
-cookie 8

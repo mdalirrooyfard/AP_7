@@ -26,8 +26,9 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        //controller.loadPlayers();
         stage = primaryStage;
-        Menu menu = new Menu(primaryStage);
+        Menu menu = new Menu(primaryStage,controller.getPlayers());
         menu.passMenuInstance(menu);
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);

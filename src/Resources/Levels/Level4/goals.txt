@@ -1,4 +1,0 @@
-egg 6
-cookie 2
-eggPowder 4
-money 300

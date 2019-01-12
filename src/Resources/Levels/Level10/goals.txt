@@ -1,4 +1,0 @@
-string 40
-cloth 40
-carnivalDress 10
-cake 10

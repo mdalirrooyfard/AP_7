@@ -1,3 +1,0 @@
-egg 10
-eggPowder 4
-hen 6

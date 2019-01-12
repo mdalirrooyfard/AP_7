@@ -1,10 +1,10 @@
 package Model;
 
-public class Player implements Comparable<Player>
+public class Player
 {
     private String name;
-    private int lastLevel;
-    private int id;
+    private int lastLevel , id;
+    private boolean isLastPlayer;
     public Player( String name, int id)
     {
         this.name = name;
@@ -26,9 +26,14 @@ public class Player implements Comparable<Player>
         return id;
     }
 
-    @Override
-    public int compareTo(Player player)
+    public boolean isLastPlayer()
     {
-        return Integer.compare(Integer.parseInt(name),Integer.parseInt(player.getName()));
+        return isLastPlayer;
     }
+
+    public void setLastPlayer(boolean lastPlayer)
+    {
+        isLastPlayer = lastPlayer;
+    }
+
 }

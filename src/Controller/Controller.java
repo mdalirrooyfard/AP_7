@@ -20,6 +20,7 @@ public class Controller {
     private boolean isLevelFinished = false;
     private Player player;
     private int level;
+    private ArrayList<Player> players = new ArrayList<>();
 
     public Farm getFarm(){
         return farm;
@@ -34,6 +35,11 @@ public class Controller {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public ArrayList<Player> getPlayers()
+    {
+        return players;
     }
 
     /*public void getCommand(Scanner scanner)
@@ -307,6 +313,7 @@ public class Controller {
                 inputStream.close();
         }
     }
+
     public void loadGameHandler(String path) throws Exception
     {
         InputStream inputStream = null;
@@ -404,4 +411,37 @@ public class Controller {
             throw new Exception("Inputs of this workshop don't exist in warehouse");
     }
 
+   /* public void loadPlayers()
+    {
+        InputStream inputStream;
+        try
+        {
+            inputStream = new FileInputStream("src\\Resources\\Player.txt");
+            Scanner scanner = new Scanner(inputStream);
+            YaGson yaGson = new YaGson();
+            if(scanner.hasNextLine())
+            {
+                String savedPlayers = scanner.nextLine();
+                players = yaGson.fromJson(savedPlayers,ArrayList.class);
+            }
+            inputStream.close();
+        }
+        catch ( Exception e ){}
+    }
+
+    public static void savePlayers( ArrayList<Player> players )
+    {
+        OutputStream outputStream;
+        try
+        {
+            outputStream = new FileOutputStream("src\\Resources\\Players.txt");
+            Formatter formatter = new Formatter(outputStream);
+            YaGson yaGson = new YaGson();
+            String savedPlayers = yaGson.toJson(players);
+            formatter.format(savedPlayers);
+            formatter.flush();
+            outputStream.close();
+        }
+        catch ( IOException e ){}
+    }*/
 }
