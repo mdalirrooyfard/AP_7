@@ -1,0 +1,14 @@
+startOfMap
+money 999
+well 7
+wareHouse 100
+truck 80
+helicopter 80
+sheep 3
+dog 1
+endOfMap
+startOfGoals
+sheep 4
+cookie 5
+carnivalDress 20
+endOfGoals

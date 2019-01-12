@@ -1,0 +1,12 @@
+startOfMap
+money 120
+well 7
+wareHouse 100
+truck 80
+helicopter 80
+hen 2
+endOfMap
+startOfGoals
+egg 6
+hen 4
+endOfGoals

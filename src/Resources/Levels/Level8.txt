@@ -1,0 +1,13 @@
+startOfMap
+money 1500
+well 7
+wareHouse 100
+truck 80
+helicopter 80
+sheep 3
+endOfMap
+startOfGoals
+string 24
+cloth 24
+cake 5
+endOfGoals

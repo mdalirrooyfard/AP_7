@@ -1,0 +1,14 @@
+startOfMap
+money 90
+well 7
+wareHouse 100
+truck 80
+helicopter 80
+hen 1
+endOfMap
+startOfGoals
+eggPowder 12
+cookie 10
+hen 6
+money 1000
+endOfGoals
