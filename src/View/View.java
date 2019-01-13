@@ -32,22 +32,22 @@ public class View
 
     public void play()
     {
-        Group root = new Group();
-        Scene scene = new Scene(root , Menu.WIDTH, Menu.HEIGHT);
         stage.setScene(scene);
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
                     Menu.HEIGHT, false, true);
-            ImageView imageView = new ImageView(background);
-            root.getChildren().add(imageView);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setX(0);
+            backgroundView.setY(0);
             Circle circle = new Circle(50 , 65 , 30);
             circle.setFill(Color.rgb(255 , 255 ,125));
-            root.getChildren().addAll(circle);
             Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\icons\\henIcon.png"),
                     100 , 100 , false , true);
             ImageView henIconView = new ImageView(henIcon);
-            root.getChildren().addAll(henIconView);
+            henIconView.setY(30);
+            henIconView.setX(25);
+            group.getChildren().addAll(backgroundView,circle,henIconView);
         }
         catch (FileNotFoundException e) {}
     }

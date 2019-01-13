@@ -433,7 +433,7 @@ public class Controller
         InputStream inputStream;
         try
         {
-            inputStream = new FileInputStream("E:\\AP\\Project\\src\\Resources\\Players.txt");
+            inputStream = new FileInputStream("src\\Resources\\Players.txt");
             Scanner scanner = new Scanner(inputStream);
             YaGson yaGson = new YaGson();
             if(scanner.hasNext())
