@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 public class Main extends Application
 {
-    private Controller controller = new Controller();
     private static Stage stage;
 
     public static void main(String[] args)
@@ -26,9 +25,17 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        //controller.loadPlayers();
         stage = primaryStage;
-        Menu menu = new Menu(primaryStage,controller.getPlayers());
+        ArrayList<Player> players = Controller.loadPlayers();
+        Player player = null;
+        for( Player p : players )
+            if( p.isLastPlayer() )
+            {
+                player = p;
+                break;
+            }
+        Menu menu = new Menu(primaryStage,players,player);
+        menu.setMenu(menu);
         menu.passMenuInstance(menu);
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);

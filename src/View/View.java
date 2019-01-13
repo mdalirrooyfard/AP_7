@@ -16,54 +16,40 @@ import java.io.FileNotFoundException;
 
 public class View
 {
-    private Farm farm;
-    private Controller controller;
-    public View(Controller controller, Stage stage){
-        this.controller = controller;
-        this.farm = controller.getFarm();
-        play(stage);
+    private Group group = new Group();
+    private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
+    private Stage stage;
+    public Scene getScene()
+    {
+        return scene;
     }
 
-    public void play(Stage stage){
-        Group root = new Group();
-        Scene scene = new Scene(root , Menu.WIDTH,
-                Menu.HEIGHT);
+    public View(Stage stage)
+    {
+        this.stage = stage;
+    }
+
+
+    public void play()
+    {
         stage.setScene(scene);
-        try {
+        try
+        {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
                     Menu.HEIGHT, false, true);
-            ImageView imageView = new ImageView(background);
-            root.getChildren().add(imageView);
-            Circle henCircle = new Circle(35 , 42 , 30);
-            henCircle.setFill(Color.rgb(250 , 0 ,30));
-            root.getChildren().addAll(henCircle);
-            Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\chicken.png"),
-                    60 , 60 , false , true);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setX(0);
+            backgroundView.setY(0);
+            Circle circle = new Circle(50 , 65 , 30);
+            circle.setFill(Color.rgb(255 , 255 ,125));
+            Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\icons\\henIcon.png"),
+                    100 , 100 , false , true);
             ImageView henIconView = new ImageView(henIcon);
-            henIconView.setX(5);
-            henIconView.setY(8);
-            root.getChildren().addAll(henIconView);
-            Circle cowCircle = new Circle(100 , 42 , 30);
-            cowCircle.setFill(Color.rgb(96 , 96 ,96));
-            root.getChildren().addAll(cowCircle);
-            Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\cow.png"),
-                    50 , 50 , false , true);
-            ImageView cowIconView = new ImageView(cowIcon);
-            cowIconView.setX(70);
-            cowIconView.setY(13);
-            root.getChildren().addAll(cowIconView);
-            Circle sheepCircle = new Circle(175 , 42 , 30);
-            sheepCircle.setFill(Color.rgb(225 , 153 ,224));
-            root.getChildren().addAll(sheepCircle);
-            Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\sheep.png"),
-                    52, 52 , false , true);
-            ImageView sheepIconView = new ImageView(sheepIcon);
-            sheepIconView.setX(146);
-            sheepIconView.setY(10);
-            root.getChildren().addAll(sheepIconView);
-        } catch (FileNotFoundException e) {
-
+            henIconView.setY(30);
+            henIconView.setX(25);
+            group.getChildren().addAll(backgroundView,circle,henIconView);
         }
+        catch (FileNotFoundException e) {}
     }
 
     /*String command;

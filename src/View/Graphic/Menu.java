@@ -4,6 +4,7 @@ import Controller.Controller;
 import Model.Player;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -39,10 +40,16 @@ public class Menu
     private ChoosePlayer choosePlayerScene;
     private Group group = new Group();
     private Scene scene = new Scene(group, WIDTH, HEIGHT);
-    private Player player;
+    private Player player = new Player("",0);
     private ArrayList<Player> players;
     private boolean muteMusic = false , muteSound = false , fullScreen = true;
     private MediaPlayer mediaPlayer;
+    private Menu menu;
+
+    public void setMenu(Menu menu)
+    {
+        this.menu = menu;
+    }
 
     public MediaPlayer getMediaPlayer()
     {
@@ -82,16 +89,24 @@ public class Menu
     public Scene getScene()
     {
         player = choosePlayerScene.getPlayer();
-        insertPlayer();
+        for( Node node : group.getChildren() )
+            if( node instanceof Label )
+                ((Label) node).setText("");
+        for( Player p : players )
+            if( p.isLastPlayer() && p != player )
+                p.setLastPlayer(false);
+        Label playerName = insertPlayer();
+        group.getChildren().addAll(playerName);
         return scene;
     }
 
-    public Menu(Stage stage , ArrayList<Player> players)
+    public Menu(Stage stage , ArrayList<Player> players , Player player)
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);
         this.stage = stage;
         this.players = players;
+        this.player = player;
         try
         {
             music();
@@ -123,15 +138,13 @@ public class Menu
                         menuBackgroundView.setY(0);
                         menuBackgroundView.setX(WIDTH - 550);
 
-                        insertPlayer();
-
                         ImageView startView = insertStart();
                         startView.setOnMouseClicked(new EventHandler<MouseEvent>()
                         {
                             @Override
                             public void handle(MouseEvent event)
                             {
-                                if( player != null )
+                                if( player != null && player.getId() > 0 )
                                 {
                                     makeStart();
                                     stage.setScene(startScene.getScene());
@@ -200,7 +213,8 @@ public class Menu
                                 exitHandler();
                             }
                         });
-                        group.getChildren().addAll(rectangle,menuBackgroundView,startView,choosePlayerView,optionsView,exitView);
+                        Label playerName = insertPlayer();
+                        group.getChildren().addAll(rectangle,menuBackgroundView,startView,choosePlayerView,optionsView,exitView,playerName);
                     }
                     catch ( Exception e ){}
                 }
@@ -226,23 +240,18 @@ public class Menu
         choosePlayerScene = new ChoosePlayer(stage,menu,players);
     }
 
-    public void makeStart()
-    {
-        startScene = new Start(stage,this, player);
-    }
-
-    private void insertPlayer()
+    private Label insertPlayer()
     {
         Label playerName = new Label("Player hasn't been chosen!");
         playerName.setTextFill(Color.rgb(54,16,0));
         playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
-        playerName.setLayoutX(Menu.WIDTH - 400);
+        playerName.setLayoutX(Menu.WIDTH - 470);
         playerName.setLayoutY(Menu.HEIGHT / 6);
-        if( player != null )
+        if( player != null && player.getId() > 0 )
             playerName.setText("Player : "+player.getName());
         else
             playerName.setText("Player hasn't been chosen!");
-        group.getChildren().addAll(playerName);
+        return playerName;
     }
 
     private ImageView insertStart()
@@ -329,6 +338,11 @@ public class Menu
                 @Override
                 public void handle(MouseEvent event)
                 {
+                    player.setLastPlayer(true);
+                    for( Player p : players )
+                        if( p.isLastPlayer() && p != player )
+                            p.setLastPlayer(false);
+                    Controller.savePlayers(players);
                     stage.close();
                 }
             });
@@ -351,5 +365,9 @@ public class Menu
         catch ( Exception e ){}
     }
 
+    private void makeStart()
+    {
+        startScene = new Start(stage,menu,player,players);
+    }
 }
 
