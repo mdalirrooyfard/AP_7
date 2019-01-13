@@ -18,19 +18,22 @@ public class View
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
-
+    private Stage stage;
     public Scene getScene()
     {
         return scene;
     }
 
+    public View(Stage stage)
+    {
+        this.stage = stage;
+    }
 
 
-    public void play(Stage stage)
+    public void play()
     {
         Group root = new Group();
-        Scene scene = new Scene(root , Menu.WIDTH,
-                Menu.HEIGHT);
+        Scene scene = new Scene(root , Menu.WIDTH, Menu.HEIGHT);
         stage.setScene(scene);
         try
         {

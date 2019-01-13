@@ -12,8 +12,9 @@ import java.nio.file.Paths;
 import java.rmi.server.ExportException;
 import java.util.*;
 
-public class Controller {
-    //private View view = new View();
+public class Controller
+{
+    private View view;
     private Farm farm = new Farm();
     //private String command ;
     private String path;
@@ -21,6 +22,11 @@ public class Controller {
     private Player player;
     private int level;
     private ArrayList<Player> players = new ArrayList<>();
+
+    public void setView( View view )
+    {
+        this.view = view;
+    }
 
     public Farm getFarm(){
         return farm;
@@ -43,7 +49,10 @@ public class Controller {
         return players;
     }
 
-
+    public void setPlayers(ArrayList<Player> players)
+    {
+        this.players = players;
+    }
 
     /*public void getCommand(Scanner scanner)
     {
@@ -272,6 +281,7 @@ public class Controller {
                 farm.makeAchievements();
             }
             farm.makeWorkShops();
+            view.play();
         }
         catch ( FileNotFoundException e )
         {
@@ -305,13 +315,16 @@ public class Controller {
 
     public void canGameBeContinued(String path) throws Exception{
         InputStream inputStream = null;
-        try{
+        try
+        {
             inputStream = new FileInputStream(path);
         }
-        catch (IOException e){
+        catch (IOException e)
+        {
             throw e;
         }
-        finally {
+        finally
+        {
             if (inputStream != null)
                 inputStream.close();
         }
@@ -414,22 +427,25 @@ public class Controller {
             throw new Exception("Inputs of this workshop don't exist in warehouse");
     }
 
-   /* public void loadPlayers()
+    public static ArrayList<Player> loadPlayers()
     {
+        ArrayList<Player> players = new ArrayList<>();
         InputStream inputStream;
         try
         {
-            inputStream = new FileInputStream("src\\Resources\\Player.txt");
+            inputStream = new FileInputStream("E:\\AP\\Project\\src\\Resources\\Players.txt");
             Scanner scanner = new Scanner(inputStream);
             YaGson yaGson = new YaGson();
-            if(scanner.hasNextLine())
+            if(scanner.hasNext())
             {
                 String savedPlayers = scanner.nextLine();
                 players = yaGson.fromJson(savedPlayers,ArrayList.class);
             }
             inputStream.close();
+            return players;
         }
-        catch ( Exception e ){}
+        catch ( Exception e ){e.printStackTrace();}
+        return players;
     }
 
     public static void savePlayers( ArrayList<Player> players )
@@ -446,5 +462,5 @@ public class Controller {
             outputStream.close();
         }
         catch ( IOException e ){}
-    }*/
+    }
 }

@@ -1,1 +1,1 @@
-[null]
+[{"@type":"Model.Player","@val":{"name":"Zahra","lastLevel":1,"id":1,"isLastPlayer":true}},{"@type":"Model.Player","@val":{"name":"Mahsa","lastLevel":1,"id":2,"isLastPlayer":true}}]

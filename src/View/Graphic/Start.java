@@ -23,82 +23,18 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Start
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Player player;
+    private Controller controller = new Controller();
+    private View view;
+    private ArrayList<Player> players;
+
     //todo set players name
-    class levelHandler implements EventHandler<MouseEvent>
-    {
-        private final int number;
-        private Stage stage;
-        private boolean newGame = false;
-        levelHandler(int n, Stage stage)
-        {
-            this.number = n;
-            this.stage = stage;
-        }
-        @Override
-        public void handle(MouseEvent event) {
-            if (player.getLastLevel() < number){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("This level is not opened for you!");
-                alert.setContentText("Choose a lower level");
-                alert.showAndWait();
-                return;
-            }
-
-            Controller controller = new Controller();
-            try{
-                controller.setPlayer(player);
-                controller.setLevel(number);
-                String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(number);
-                controller.canGameBeContinued(path);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Would you like to continue?");
-                alert.setHeaderText("You have started this level before");
-                ButtonType b1 = new ButtonType("Yes");
-                ButtonType b2 = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
-                alert.getButtonTypes().setAll(b1, b2);
-                alert.showAndWait().ifPresent(result -> {
-                    if (result == b1) {
-                        try {
-                            controller.loadGameHandler(path);
-                        }
-                        catch (Exception e){
-                        }
-                        //todo make the game from controller
-                    }
-                    if (result == b2)
-                        newGame = true;
-                });
-            }
-            catch (Exception e){
-                newGame = true;
-            }
-            finally {
-                if (newGame){
-                    //todo ask if player wanted custom workshop
-                    try{
-                        String path2 = "src\\Resources\\Levels\\Level"+Integer.toString(number)+".txt";
-                        controller.loadCustomHandler(path2);
-                    }
-                    catch (Exception e) {
-                    }
-                    finally {
-                        try {
-                            controller.runHandler();
-                        } catch (Exception e) {
-
-                        }
-                    }
-                }
-            }
-
-        }
-    }
 
     public void setPlayer(Player player)
     {
@@ -110,9 +46,10 @@ public class Start
         return scene;
     }
 
-    public Start(Stage stage , Menu menu , Player player)
+    public Start(Stage stage , Menu menu , Player player , ArrayList<Player> players)
     {
         this.player = player;
+        this.players = players;
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
@@ -143,23 +80,134 @@ public class Start
         {
             for( int i = 0 ; i < 10 ; i++ )
             {
-                String levelName = "Level"+Integer.toString(i + 1);
-                if( i + 1 <= player.getLastLevel() )
-                    levelName += "Open.png";
-                else
-                    levelName += "Close.png";
-                Image level = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName)
+                String levelName = "Level"+Integer.toString(i);
+                Image openLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName+"Open.png")
                         , 200, 79, false, true);
-                ImageView levelView = new ImageView(level);
+                Image closeLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName+"Close.png")
+                        , 200, 79, false, true);
+                ImageView levelView;
+                if( i + 1 <= player.getLastLevel() )
+                    levelView = new ImageView(openLevel);
+                else
+                    levelView = new ImageView(closeLevel);
                 levelView.setX((Menu.WIDTH - 500) * ( (i + 1) % 2 ) + (Menu.WIDTH - 250) * ( i % 2));
                 levelView.setY(Menu.HEIGHT * ( i / 2  + 1) / 7);
                 group.getChildren().addAll(levelView);
                 levelView.setOnMouseClicked(new EventHandler<MouseEvent>()
                 {
+                    private boolean newGame;
                     @Override
                     public void handle(MouseEvent event)
                     {
+                        if( levelView.getImage() == openLevel )
+                        {
+                            int level = Integer.parseInt(Character.toString(levelName.toCharArray()[levelName.length()-1])+1);
+                            controller.setLevel(level);
+                            controller.setPlayer(player);
+                            view = new View(stage);
+                            controller.setView(view);
+                            controller.setPlayers(players);
+                            try
+                            {
+                                String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
+                                controller.canGameBeContinued(path);
 
+                                Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                                rectangle.setFill(Color.rgb(54,16,0));
+                                rectangle.setOpacity(0.7);
+
+                                Image exitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
+                                        , 800, 300, false, true);
+                                ImageView exitMessageView = new ImageView(exitMessage);
+                                exitMessageView.setY(Menu.HEIGHT / 2 - 150);
+                                exitMessageView.setX(Menu.WIDTH / 2 - 400);
+
+                                Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
+                                        , 153, 145, false, true);
+                                ImageView yesView = new ImageView(yes);
+                                yesView.setY(Menu.HEIGHT / 2 + 150);
+                                yesView.setX(Menu.WIDTH / 2 - 200);
+
+                                Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                                        , 153, 146, false, true);
+                                ImageView noView = new ImageView(no);
+                                noView.setY(Menu.HEIGHT / 2 + 150 );
+                                noView.setX(Menu.WIDTH / 2 + 47);
+
+                                yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                {
+                                    @Override
+                                    public void handle(MouseEvent event)
+                                    {
+                                        newGame = false;
+                                        group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                                    }
+                                });
+
+                                noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                {
+                                    @Override
+                                    public void handle(MouseEvent event)
+                                    {
+                                        newGame = true;
+                                        group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                                    }
+                                });
+                                group.getChildren().addAll(rectangle,exitMessageView,yesView,noView);
+                            }
+                            catch ( Exception e ){newGame = true;}
+                            finally
+                            {
+                                if (newGame)
+                                {
+                                    //todo ask if player wanted custom workshop
+                                    try
+                                    {
+                                        String path2 = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
+                                        controller.loadCustomHandler(path2);
+                                    }
+                                    catch (Exception e) {}
+                                }
+                                try
+                                {
+                                    controller.runHandler();
+                                }
+                                catch ( Exception e ){}
+                            }
+                            stage.setScene(view.getScene());
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                                rectangle.setFill(Color.rgb(54,16,0));
+                                rectangle.setOpacity(0.7);
+
+                                Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelErrorMessagebox.png")
+                                        , 800, 300, false, true);
+                                ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
+                                playerHasNotBeenChosenMessageView.setY(Menu.HEIGHT / 2 - 150);
+                                playerHasNotBeenChosenMessageView.setX(Menu.WIDTH / 2 - 400);
+
+                                Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                                        , 200, 79, false, true);
+                                ImageView okView = new ImageView(ok);
+                                okView.setY(Menu.HEIGHT / 2 + 150);
+                                okView.setX(Menu.WIDTH / 2 - 100);
+                                okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                {
+                                    @Override
+                                    public void handle(MouseEvent event)
+                                    {
+                                        group.getChildren().removeAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                                    }
+                                });
+
+                                group.getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                            }
+                            catch ( Exception e ){}
+                        }
                     }
                 });
             }
