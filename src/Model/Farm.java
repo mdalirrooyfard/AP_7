@@ -432,7 +432,6 @@ public class Farm {
 
     public void checkMoves() {
         Iterator<Entity> iterator = stuffs.iterator();
-        ArrayList<Item> items = new ArrayList<>();
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
             boolean doMove = true;
@@ -443,14 +442,8 @@ public class Farm {
                 } else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX());
                     if (!doMove) {
+                        ((Domestic)entity).setEating(true);
                         ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
-                        Item item;
-                        if (entity instanceof Hen)
-                            items.add(new Item(entity.getX(), entity.getY(), "egg"));
-                        else if (entity instanceof Cow)
-                            items.add(new Item(entity.getX(), entity.getY(), "milk"));
-                        else
-                            items.add(new Item(entity.getX(), entity.getY(), "wool"));
                     }
                 }
             } else if (entity instanceof Cat)
@@ -461,12 +454,20 @@ public class Farm {
                     ((Domestic) entity).decreaseSatiety(1);
             }
         }
-        for (Item item : items) {
-            stuffs.add(item);
-            updateAchievement(item.getKind());
-        }
-    }
 
+    }
+    public void produceItem(Domestic entity){
+        Item item;
+        if (entity instanceof Hen)
+            item = new Item(entity.getX(), entity.getY(), "egg");
+        else if (entity instanceof Cow)
+            item = new Item(entity.getX(), entity.getY(), "milk");
+        else
+            item = new Item(entity.getX(), entity.getY(), "wool");
+        updateAchievement(item.getKind());
+        stuffs.add(item);
+        updateMap();
+    }
     public void removeGrassAndItem() {
         if (map.isThereGrass() && map.isThereItem()) {
             Iterator<Entity> iterator = stuffs.iterator();
