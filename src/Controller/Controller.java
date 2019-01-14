@@ -313,7 +313,8 @@ public class Controller
 
     }
 
-    public void canGameBeContinued(String path) throws Exception{
+    public void canGameBeContinued(String path) throws Exception
+    {
         InputStream inputStream = null;
         try
         {
