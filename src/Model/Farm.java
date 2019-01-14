@@ -43,6 +43,17 @@ public class Farm {
         return stuffs;
     }
 
+    public int getMapLength(){
+        return mapLength;
+    }
+
+    public int getMapWidth(){
+        return mapWidth;
+    }
+
+    public Map getMap(){
+        return map;
+    }
 
 
     public Well getWell(){

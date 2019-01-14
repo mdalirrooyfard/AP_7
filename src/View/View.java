@@ -1,10 +1,7 @@
 package View;
 
+import Model.*;
 import Model.Animals.Animal;
-import Model.Constants;
-import Model.Entity;
-import Model.Farm;
-import Model.Grass;
 import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
@@ -56,7 +53,7 @@ public class View
     private ImageView leftTruck;
     private ImageView rightTruck;
     private ImageView cage;
-    private ArrayList<ImageView> grass = new ArrayList<>();
+    private ImageView[] grass = new ImageView[4];
     private Farm farm;
     private ImageView imageView;
 
@@ -114,33 +111,45 @@ public class View
             sheepIconView.setY(10);
             group.getChildren().addAll(sheepIconView);
 
-            for(Workshop w : farm.getWorkshops()){
-                if(w != null){
+            for(Workshop w : farm.getWorkshops()) {
+                if (w != null) {
                     imageView = fixedWorkshops.get(w.getWorkShopName());
                     imageView.setTranslateX(w.getX());
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(w.getY()*3) , imageView);
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(w.getY() * 3), imageView);
                     translateTransition.setToY(w.getY());
                     group.getChildren().add(imageView);
                     translateTransition.play();
                 }
-                for(Entity e : farm.getStuffs()){
-                    if(e instanceof Animal){
-                        imageView = animalsFixed.get(((Animal) e).getName());
-                    }
-                    else if(e instanceof Item){
-                        imageView = items.get(((Item) e).getKind());
-                    }
-                    else if(e instanceof Grass){
-                        //todo for baraye grass
-                    }
-                    imageView.setTranslateX(e.getX());
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , imageView);
-                    translateTransition.setToY(e.getY());
-                    group.getChildren().add(imageView);
-                    translateTransition.play();
-                }
             }
-
+            for(int j = 0; j < farm.getMapLength(); j++)
+                for (int i = 0; i < farm.getMapWidth(); i++){
+                    int numberOfGrass = 0;
+                    ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
+                    for (Entity e : stuffs){
+                        if(e instanceof Animal){
+                            imageView = animalsFixed.get(((Animal) e).getName());
+                        }
+                        else if(e instanceof Item){
+                            imageView = items.get(((Item) e).getKind());
+                        }
+                        else if(e instanceof Grass){
+                            numberOfGrass ++;
+                            if (numberOfGrass == 1)
+                                imageView = grass[0];
+                            else if(numberOfGrass == 2)
+                                imageView = grass[1];
+                            else if(numberOfGrass == 3)
+                                imageView = grass[2];
+                            else
+                                imageView = grass[3];
+                        }
+                        imageView.setTranslateX(e.getX());
+                        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , imageView);
+                        translateTransition.setToY(e.getY());
+                        group.getChildren().add(imageView);
+                        translateTransition.play();
+                    }
+                }
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -211,6 +220,12 @@ public class View
             rightHelicopter = new ImageView(image);
 
             //grass
+            for (int i = 0; i < 4; i++){
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\"+
+                        Integer.toString(i+1)+".png"),
+                        50, 50, false, true);
+                grass[i] = new ImageView(image);
+            }
 
             //animals
             for (String s : Constants.ANIMAL){
