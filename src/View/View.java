@@ -1,6 +1,8 @@
 package View;
 
+import Model.Animals.Animal;
 import Model.Constants;
+import Model.Entity;
 import Model.Farm;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
@@ -118,6 +120,11 @@ public class View
                     translateTransition.setToY(w.getY());
                     group.getChildren().add(imageView);
                     translateTransition.play();
+                }
+                for(Entity e : farm.getStuffs()){
+                    if(e instanceof Animal){
+
+                    }
                 }
             }
 

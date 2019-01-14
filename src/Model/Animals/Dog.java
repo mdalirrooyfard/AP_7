@@ -9,6 +9,7 @@ public class Dog extends Animal {
     public Dog (double x, double y , Map map){
         super(x , y , map);
         this.setBuyCost(DOG_BUY_COST);
+        this.name = "dog";
     }
     @Override
     public void move(){
