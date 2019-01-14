@@ -110,6 +110,7 @@ public class View
                 imageView = new ImageView(image);
                 items.put(item, imageView);
             }
+
             //workshops
             for (Workshop w : farm.getWorkshops()){
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"fixed"
@@ -123,6 +124,7 @@ public class View
                 imageView = new ImageView(image);
                 movingWorkshops.put(w.getWorkShopName(), imageView);
             }
+
             //well
             image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
@@ -132,6 +134,7 @@ public class View
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
                     50, 50, false, true);
             movingWell =new ImageView(image);
+
             //truck
             image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
@@ -145,6 +148,20 @@ public class View
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
             rightTruck = new ImageView(image);
+
+            //helicopter
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            fixedHelicopter = new ImageView(image);
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            leftHelicopter = new ImageView(image);
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            rightHelicopter = new ImageView(image);
 
 
 
