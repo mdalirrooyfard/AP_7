@@ -281,7 +281,7 @@ public class Controller
                 farm.makeAchievements();
             }
             farm.makeWorkShops();
-            view.play();
+            view.play(farm);
         }
         catch ( FileNotFoundException e )
         {

@@ -1,6 +1,8 @@
 package View;
 
 import Model.Constants;
+import Model.Farm;
+import Model.Workshops.Workshop;
 import View.Graphic.Menu;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -37,7 +39,7 @@ public class View
     private ImageView fixedTruck;
     private ImageView leftTruck;
     private ImageView rightTruck;
-
+    private Farm farm;
 
 
     public Scene getScene()
@@ -51,8 +53,9 @@ public class View
     }
 
 
-    public void play()
+    public void play(Farm farm)
     {
+        this.farm = farm;
         stage.setScene(scene);
         loadImages();
         try
@@ -97,13 +100,28 @@ public class View
 
     public void loadImages(){
         try{
+            Image image;
+            ImageView imageView;
             //items
             for (String item : Constants.ITEM_NAMES){
-                Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
                         50, 50, false, true);
-                ImageView imageView = new ImageView(image);
+                imageView = new ImageView(image);
                 items.put(item, imageView);
             }
+            for (Workshop w : farm.getWorkshops()){
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"fixed"
+                        +Integer.toString(w.getLevel()) +".png"),
+                        50, 50, false, true);
+                imageView = new ImageView(image);
+                fixedWorkshops.put(w.getWorkShopName(), imageView);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"moving"
+                        +Integer.toString(w.getLevel()) +".png"),
+                        50, 50, false, true);
+                imageView = new ImageView(image);
+                movingWorkshops.put(w.getWorkShopName(), imageView);
+            }
+
 
 
         }catch (IOException e){
