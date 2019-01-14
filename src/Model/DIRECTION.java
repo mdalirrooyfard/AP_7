@@ -6,5 +6,9 @@ public enum DIRECTION
     RIGHT,
     DOWN,
     LEFT,
+    UP_LEFT,
+    DOWN_LEFT,
+    UP_RIGHT,
+    DOWN_RIGHT,
     NONE
 }
