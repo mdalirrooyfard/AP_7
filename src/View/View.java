@@ -39,6 +39,7 @@ public class View
     private ImageView fixedTruck;
     private ImageView leftTruck;
     private ImageView rightTruck;
+    //todo cage photo
     private Farm farm;
 
 
@@ -131,6 +132,20 @@ public class View
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
                     50, 50, false, true);
             movingWell =new ImageView(image);
+            //truck
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            fixedTruck = new ImageView(image);
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            leftTruck = new ImageView(image);
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            rightTruck = new ImageView(image);
+
 
 
 
