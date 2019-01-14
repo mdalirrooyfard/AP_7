@@ -1,5 +1,6 @@
 package View;
 
+import Model.Constants;
 import View.Graphic.Menu;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class View
@@ -52,6 +54,7 @@ public class View
     public void play()
     {
         stage.setScene(scene);
+        loadImages();
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
@@ -93,7 +96,19 @@ public class View
     }
 
     public void loadImages(){
+        try{
+            //items
+            for (String item : Constants.ITEM_NAMES){
+                Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
+                        50, 50, false, true);
+                ImageView imageView = new ImageView(image);
+                items.put(item, imageView);
+            }
 
+
+        }catch (IOException e){
+
+        }
     }
     /*String command;
     public String getCommand()
