@@ -221,7 +221,7 @@ public class View
 
             //grass
             for (int i = 0; i < 4; i++){
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\"+
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\grass"+
                         Integer.toString(i+1)+".png"),
                         50, 50, false, true);
                 grass[i] = new ImageView(image);
