@@ -131,7 +131,7 @@ public class Start
                                         @Override
                                         public void handle(MouseEvent event)
                                         {
-                                            game.loadNewGame(true,level);
+                                            game.loadNewGame(false,level,player);
                                             group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
                                         }
                                     });
@@ -141,14 +141,14 @@ public class Start
                                         @Override
                                         public void handle(MouseEvent event)
                                         {
-                                            game.loadNewGame(false,level);
+                                            game.loadNewGame(true,level,player);
                                             group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
                                         }
                                     });
                                     group.getChildren().addAll(rectangle,exitMessageView,yesView,noView);
                                 }
                                 else
-                                    game.loadNewGame(false,level);
+                                    game.loadNewGame(true,level,player);
                                 game.getScene();
                             }
                             catch ( Exception e ){}

@@ -46,6 +46,11 @@ public class Menu
     private MediaPlayer mediaPlayer;
     private Menu menu;
 
+    public Player getPlayer()
+    {
+        return player;
+    }
+
     public void setMenu(Menu menu)
     {
         this.menu = menu;
@@ -100,13 +105,18 @@ public class Menu
         return scene;
     }
 
-    public Menu(Stage stage , ArrayList<Player> players , Player player)
+    public Menu(Stage stage , ArrayList<Player> players )
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);
         this.stage = stage;
         this.players = players;
-        this.player = player;
+        for( Player p : players )
+            if( p.isLastPlayer() )
+            {
+                player = p;
+                break;
+            }
         try
         {
             music();
@@ -115,13 +125,13 @@ public class Menu
             ImageView backgroundView = new ImageView(background);
             backgroundView.setY(0);
             backgroundView.setX(0);
-            Image menu = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\mainMenuButton.png")
+            Image menuButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\mainMenuButton.png")
                     , 220, 79, false, true);
-            ImageView menuView = new ImageView(menu);
-            menuView.setY(HEIGHT - 100);
-            menuView.setX(20);
-            group.getChildren().addAll(backgroundView,menuView);
-            menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            ImageView menuButtonView = new ImageView(menuButton);
+            menuButtonView.setY(HEIGHT - 100);
+            menuButtonView.setX(20);
+            group.getChildren().addAll(backgroundView,menuButtonView);
+            menuButtonView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
                 public void handle(MouseEvent event)
@@ -190,6 +200,7 @@ public class Menu
                             @Override
                             public void handle(MouseEvent event)
                             {
+                                choosePlayerScene.setPlayer(player);
                                 stage.setScene(choosePlayerScene.getScene());
                             }
                         });
@@ -338,7 +349,8 @@ public class Menu
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    player.setLastPlayer(true);
+                    if( player != null )
+                        player.setLastPlayer(true);
                     for( Player p : players )
                         if( p.isLastPlayer() && p != player )
                             p.setLastPlayer(false);

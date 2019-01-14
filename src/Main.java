@@ -27,14 +27,7 @@ public class Main extends Application
     {
         stage = primaryStage;
         ArrayList<Player> players = Controller.loadPlayers();
-        Player player = null;
-        for( Player p : players )
-            if( p.isLastPlayer() )
-            {
-                player = p;
-                break;
-            }
-        Menu menu = new Menu(primaryStage,players,player);
+        Menu menu = new Menu(primaryStage,players);
         menu.setMenu(menu);
         menu.passMenuInstance(menu);
         primaryStage.setFullScreen(true);

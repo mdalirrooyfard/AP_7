@@ -111,24 +111,27 @@ public class View
             sheepIconView.setY(10);
             group.getChildren().addAll(sheepIconView);
 
-            for(Workshop w : farm.getWorkshops()) {
-                if (w != null) {
+            for(Workshop w : farm.getWorkshops())
+            {
+                if (w != null)
+                {
                     imageView = fixedWorkshops.get(w.getWorkShopName());
                     show(imageView, w);
                 }
             }
             for(int j = 0; j < farm.getMapLength(); j++)
-                for (int i = 0; i < farm.getMapWidth(); i++){
+                for (int i = 0; i < farm.getMapWidth(); i++)
+                {
                     int numberOfGrass = 0;
                     ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
-                    for (Entity e : stuffs){
-                        if(e instanceof Animal){
+                    for (Entity e : stuffs)
+                    {
+                        if(e instanceof Animal)
                             imageView = animalsFixed.get(((Animal) e).getName());
-                        }
-                        else if(e instanceof Item){
+                        else if(e instanceof Item)
                             imageView = items.get(((Item) e).getKind());
-                        }
-                        else if(e instanceof Grass){
+                        else if(e instanceof Grass)
+                        {
                             numberOfGrass ++;
                             if (numberOfGrass == 1)
                                 imageView = grass[0];
@@ -143,12 +146,11 @@ public class View
                     }
                 }
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        catch (FileNotFoundException e) {e.printStackTrace();}
     }
 
-    public void show(ImageView iView, Entity e){
+    public void show(ImageView iView, Entity e)
+    {
         iView.setTranslateX(e.getX());
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , iView);
         translateTransition.setToY(e.getY());
@@ -156,19 +158,24 @@ public class View
         translateTransition.play();
     }
 
-    public void loadImages(){
-        try{
+    public void loadImages()
+    {
+        try
+        {
             Image image;
             //items
-            for (String item : Constants.ITEM_NAMES){
+            for (String item : Constants.ITEM_NAMES)
+            {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
                         50, 50, false, true);
                 items.put(item, new ImageView(image));
             }
 
             //workshops
-            for (Workshop w : farm.getWorkshops()){
-                if (w != null) {
+            for (Workshop w : farm.getWorkshops())
+            {
+                if (w != null)
+                {
                     String name = w instanceof CustomFactory? "customFactory" : w.getWorkShopName();
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
                             + Integer.toString(w.getLevel()) + ".png"),
@@ -220,7 +227,8 @@ public class View
             rightHelicopter = new ImageView(image);
 
             //grass
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < 4; i++)
+            {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\grass"+
                         Integer.toString(i+1)+".png"),
                         50, 50, false, true);
@@ -228,14 +236,17 @@ public class View
             }
 
             //animals
-            for (String s : Constants.ANIMAL){
-                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep")) {
+            for (String s : Constants.ANIMAL)
+            {
+                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep"))
+                {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "death" + ".png"),
                             50, 50, false, true);
                     animalsDeath.put(s.toLowerCase(), new ImageView(image));
                 }
-                if (s.equals("Bear") || s.equals("Lion")){
+                if (s.equals("Bear") || s.equals("Lion"))
+                {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "caged" + ".png"),
                             50, 50, false, true);
@@ -279,7 +290,8 @@ public class View
                 animalsUpLeft.put(s.toLowerCase(), new ImageView(image));
             }
             //domestic eat
-            for (String s: Constants.DOMESTIC){
+            for (String s: Constants.DOMESTIC)
+            {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "eat"+".png"),
                         50, 50, false, true);
@@ -290,9 +302,8 @@ public class View
             cage = new ImageView(image);
 
 
-        }catch (Exception e){
-            e.printStackTrace();
         }
+        catch (Exception e) {e.printStackTrace();}
     }
     /*String command;
     public String getCommand()

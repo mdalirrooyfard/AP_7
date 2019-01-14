@@ -33,6 +33,11 @@ public class ChoosePlayer
         return player;
     }
 
+    public void setPlayer(Player player)
+    {
+        this.player = player;
+    }
+
     public Scene getScene()
     {
         return scene;
@@ -102,6 +107,10 @@ public class ChoosePlayer
                             if( node instanceof Label )
                                 ((Label) node).setText("");
                         player = p;
+                        player.setLastPlayer(true);
+                        for( Player p1 : players )
+                            if( p1.isLastPlayer() && p1 != p )
+                                p1.setLastPlayer(false);
                         insertPlayer(players);
                     }
                 });
@@ -169,6 +178,10 @@ public class ChoosePlayer
                             {
                                 player = new Player(playerName.getText(),players.size() + 1);
                                 players.add(player);
+                                player.setLastPlayer(true);
+                                for( Player p1 : players )
+                                    if( p1.isLastPlayer() && p1 != player )
+                                        p1.setLastPlayer(false);
                                 group.getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
                                 writePlayers(players);
                                 for( Node node : group.getChildren() )
