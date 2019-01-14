@@ -11,12 +11,33 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 
 public class View
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Stage stage;
+    private HashMap<String, ImageView> fixedWorkshops = new HashMap<>();
+    private HashMap<String, ImageView> movingWorkshops = new HashMap<>();
+    private HashMap<String, ImageView> animalsLeft = new HashMap<>();
+    private HashMap<String, ImageView> animalsRight = new HashMap<>();
+    private HashMap<String, ImageView> animalsUp = new HashMap<>();
+    private HashMap<String, ImageView> animalsDown = new HashMap<>();
+    private HashMap<String, ImageView> animalsDeath = new HashMap<>();
+    private HashMap<String, ImageView> domesticEat = new HashMap<>();
+    private HashMap<String, ImageView> items = new HashMap<>();
+    private ImageView movingWell;
+    private ImageView fixedWell;
+    private ImageView fixedHelicopter;
+    private ImageView leftHelicopter;
+    private ImageView rightHelicopter;
+    private ImageView fixedTruck;
+    private ImageView leftTruck;
+    private ImageView rightTruck;
+
+
+
     public Scene getScene()
     {
         return scene;
@@ -71,6 +92,9 @@ public class View
         catch (FileNotFoundException e) {}
     }
 
+    public void loadImages(){
+
+    }
     /*String command;
     public String getCommand()
     {
