@@ -1,8 +1,9 @@
 package Model;
 
+import javafx.stage.Screen;
+
 import static Model.Constants.WELL_BASE_MONEY;
 import static Model.Constants.WELL_BASE_UPGRADE_COST;
-import static Model.Constants.WELL_CAPACITY;
 
 public class Well extends Entity{
     private int currentVolume;
@@ -10,6 +11,8 @@ public class Well extends Entity{
     public Well(int volume){
         this.setVolume(volume);
         this.setCurrentVolume(volume);
+        this.x = Screen.getPrimary().getVisualBounds().getWidth() / 2;
+        this.y = Screen.getPrimary().getVisualBounds().getHeight() / 2 - 260;
         this.setBuyCost(WELL_BASE_MONEY);
         this.setUpgradeCost(WELL_BASE_UPGRADE_COST);
     }
