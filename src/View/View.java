@@ -114,11 +114,7 @@ public class View
             for(Workshop w : farm.getWorkshops()) {
                 if (w != null) {
                     imageView = fixedWorkshops.get(w.getWorkShopName());
-                    imageView.setTranslateX(w.getX());
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(w.getY() * 3), imageView);
-                    translateTransition.setToY(w.getY());
-                    group.getChildren().add(imageView);
-                    translateTransition.play();
+                    show(imageView, w);
                 }
             }
             for(int j = 0; j < farm.getMapLength(); j++)
@@ -143,17 +139,21 @@ public class View
                             else
                                 imageView = grass[3];
                         }
-                        imageView.setTranslateX(e.getX());
-                        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , imageView);
-                        translateTransition.setToY(e.getY());
-                        group.getChildren().add(imageView);
-                        translateTransition.play();
+                        show(imageView, e);
                     }
                 }
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void show(ImageView iView, Entity e){
+        iView.setTranslateX(e.getX());
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , iView);
+        translateTransition.setToY(e.getY());
+        group.getChildren().add(iView);
+        translateTransition.play();
     }
 
     public void loadImages(){
