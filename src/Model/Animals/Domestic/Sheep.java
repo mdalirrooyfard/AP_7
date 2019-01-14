@@ -10,5 +10,6 @@ public class Sheep extends Domestic {
         super(x , y, map);
         this.setSellCost(SHEEP_SELL_COST);
         this.setBuyCost(SHEEP_BUY_COST);
+        this.name = "sheep";
     }
 }

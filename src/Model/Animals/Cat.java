@@ -12,6 +12,7 @@ public class Cat extends Animal {
         super(x , y , map);
         this.setBuyCost(CAT_BUY_COST);
         this.setUpgradeCost(Constants.CAT_BASE_UPGRADE_COST);
+        this.name = "cat";
     }
 
     @Override
