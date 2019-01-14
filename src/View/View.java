@@ -5,17 +5,21 @@ import Model.Farm;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 
 public class View
@@ -47,6 +51,8 @@ public class View
     private ImageView rightTruck;
     private ImageView cage;
     private Farm farm;
+    private ImageView imageView;
+
 
 
     public Scene getScene()
@@ -101,6 +107,20 @@ public class View
             sheepIconView.setY(10);
             group.getChildren().addAll(sheepIconView);
 
+            for(Workshop w : farm.getWorkshops()){
+                if(w != null){
+                    Path path = new Path(new MoveTo(0 , 0) , new LineTo(0 , w.getY()*100));
+                    path.setVisible(false);
+                    group.getChildren().addAll(path);
+                    imageView = fixedWorkshops.get(w.getWorkShopName());
+                    imageView.setTranslateX(w.getX());
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(w.getY()*3) , imageView);
+                    translateTransition.setToY(w.getY());
+                    group.getChildren().add(imageView);
+                    translateTransition.play();
+                }
+            }
+
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -123,11 +143,11 @@ public class View
                     String name = w instanceof CustomFactory? "customFactory" : w.getWorkShopName();
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
                             + Integer.toString(w.getLevel()) + ".png"),
-                            50, 50, false, true);
+                            200, 200, false, true);
                     fixedWorkshops.put(w.getWorkShopName(), new ImageView(image));
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
                             + Integer.toString(w.getLevel()) + ".png"),
-                            50, 50, false, true);
+                            200, 200, false, true);
                     movingWorkshops.put(w.getWorkShopName(), new ImageView(image));
                 }
             }

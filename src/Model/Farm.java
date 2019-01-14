@@ -39,6 +39,12 @@ public class Farm {
     private boolean areCatsUpgraded = false;
     private Workshop[] workshops = new Workshop[7];
 
+    public ArrayList<Entity> getStuffs() {
+        return stuffs;
+    }
+
+
+
     public Well getWell(){
         return well;
     }
