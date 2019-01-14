@@ -13,11 +13,11 @@ public class Constants
     public static final int TRUCK_WORKING_TIME = 100 ;
     public static final int TRUCK_BASE_UPGRADE_COST = 100;
     public static final int HELICOPTER_BASE_UPGRADE_COST = 100;
-    public static final String[] ITEM_NAMES = {"souvenir","fabric","sewing","flouryCake","driedEgg","egg","wool",
+    public static final String[] ITEM_NAMES = {"souvenir","egg","wool",
             "milk","eggPowder","cookie","cake","string","cloth","carnivalDress","flour","adornment","plume",
-            "cagedLion", "cagedBrown bear","cagedWhite bear","cagedGrizzly","cagedJaguar","horn","sourCream","curd",
+            "cagedLion", "cagedBrownBear","cagedWhiteBear","cagedGrizzly","cagedJaguar","horn","sourCream","curd",
             "cheese","coloredPlume","brightHorn","intermediate","cheeseFerment","varnish","megaPie","spruceLion",
-            "spruceBrownBear","spruceWhite bear","spruceGrizzly","spruceJaguar"};
+            "spruceBrownBear","spruceWhiteBear","spruceGrizzly","spruceJaguar"};
     public static final String[] WORKSHOP_NAMES = {"cakeBakery" , "cookieBakery" , "eggPowderPlant" , "sewingFactory"
             , "spinnery" , "weavingFactory"};
     public static final String[] ANIMAL = {"Hen" , "Cow" , "Sheep" , "Dog" , "Cat" , "Bear" , "Lion"};

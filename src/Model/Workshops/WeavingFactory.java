@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class WeavingFactory extends Workshop{
     public WeavingFactory(int item_x, int item_y){
-        this.workShopName = "weavingBakery";
+        this.workShopName = "weavingFactory";
         this.inputs.add("string");
         this.output = "cloth" ;
         upgradeCost = 100;

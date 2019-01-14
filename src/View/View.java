@@ -2,6 +2,7 @@ package View;
 
 import Model.Constants;
 import Model.Farm;
+import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
 import javafx.scene.Group;
@@ -34,6 +35,7 @@ public class View
     private HashMap<String, ImageView> animalsDownRight = new HashMap<>();
     private HashMap<String, ImageView> animalsUpLeft = new HashMap<>();
     private HashMap<String, ImageView> animalsUpRight = new HashMap<>();
+    private HashMap<String, ImageView> wildCaged = new HashMap<>();
     private HashMap<String, ImageView> items = new HashMap<>();
     private ImageView movingWell;
     private ImageView fixedWell;
@@ -100,7 +102,9 @@ public class View
             group.getChildren().addAll(sheepIconView);
 
         }
-        catch (FileNotFoundException e) {}
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadImages(){
@@ -115,14 +119,17 @@ public class View
 
             //workshops
             for (Workshop w : farm.getWorkshops()){
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"fixed"
-                        +Integer.toString(w.getLevel()) +".png"),
-                        50, 50, false, true);
-                fixedWorkshops.put(w.getWorkShopName(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"moving"
-                        +Integer.toString(w.getLevel()) +".png"),
-                        50, 50, false, true);
-                movingWorkshops.put(w.getWorkShopName(), new ImageView(image));
+                if (w != null) {
+                    String name = w instanceof CustomFactory? "customFactory" : w.getWorkShopName();
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
+                            + Integer.toString(w.getLevel()) + ".png"),
+                            50, 50, false, true);
+                    fixedWorkshops.put(w.getWorkShopName(), new ImageView(image));
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
+                            + Integer.toString(w.getLevel()) + ".png"),
+                            50, 50, false, true);
+                    movingWorkshops.put(w.getWorkShopName(), new ImageView(image));
+                }
             }
 
             //well
@@ -165,10 +172,18 @@ public class View
 
             //animals
             for (String s : Constants.ANIMAL){
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "death"+".png"),
-                        50, 50, false, true);
-                animalsDeath.put(s.toLowerCase(), new ImageView(image));
+                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep")) {
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
+                            "death" + ".png"),
+                            50, 50, false, true);
+                    animalsDeath.put(s.toLowerCase(), new ImageView(image));
+                }
+                if (s.equals("Bear") || s.equals("Lion")){
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
+                            "caged" + ".png"),
+                            50, 50, false, true);
+                    wildCaged.put(s.toLowerCase(), new ImageView(image));
+                }
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down"+".png"),
                         50, 50, false, true);
@@ -214,7 +229,7 @@ public class View
             cage = new ImageView(image);
 
 
-        }catch (IOException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
