@@ -109,6 +109,7 @@ public class View
                 imageView = new ImageView(image);
                 items.put(item, imageView);
             }
+            //workshops
             for (Workshop w : farm.getWorkshops()){
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"fixed"
                         +Integer.toString(w.getLevel()) +".png"),
@@ -121,6 +122,16 @@ public class View
                 imageView = new ImageView(image);
                 movingWorkshops.put(w.getWorkShopName(), imageView);
             }
+            //well
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
+                    +Integer.toString(farm.getWell().getLevel()) +".png"),
+                    50, 50, false, true);
+            fixedWell = new ImageView(image);
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
+                    +Integer.toString(farm.getWell().getLevel()) +".png"),
+                    50, 50, false, true);
+            movingWell =new ImageView(image);
+
 
 
 

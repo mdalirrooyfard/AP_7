@@ -39,6 +39,16 @@ public class Farm {
     private boolean areCatsUpgraded = false;
     private Workshop[] workshops = new Workshop[7];
 
+    public Well getWell(){
+        return well;
+    }
+
+    public Truck getTruck(){
+        return truck;
+    }
+    public Helicopter getHelicopter(){
+        return helicopter;
+    }
     public void makeAchievements()
     {
         for( String s : goals.keySet() )
@@ -243,7 +253,7 @@ public class Farm {
     }
 
     public int upgradeEntity(Entity entity) {
-        if (entity.getLevel() == 5)
+        if (entity.getLevel() == 4)
             return 2;
         if (entity.getUpgradeCost() > money)
             return 1;
