@@ -2,6 +2,7 @@ package Model;
 
 public class Constants
 {
+    public static final double scale = 0.3;
     public static final int FULL_SATIETY = 8;
     public static final int WELL_CAPACITY = 7;
     public static final int WAREHOUSE_VOLUME = 100;
