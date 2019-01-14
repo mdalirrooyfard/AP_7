@@ -13,9 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -117,6 +114,10 @@ public class View
                     show(imageView, w);
                 }
             }
+            show(fixedWell , farm.getWell());
+            show(fixedTruck , farm.getTruck());
+            show(fixedHelicopter , farm.getHelicopter());
+            //todo show(wareHouse)
             for(int j = 0; j < farm.getMapLength(); j++)
                 for (int i = 0; i < farm.getMapWidth(); i++){
                     int numberOfGrass = 0;
