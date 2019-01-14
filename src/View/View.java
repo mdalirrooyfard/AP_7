@@ -30,6 +30,10 @@ public class View
     private HashMap<String, ImageView> animalsDown = new HashMap<>();
     private HashMap<String, ImageView> animalsDeath = new HashMap<>();
     private HashMap<String, ImageView> domesticEat = new HashMap<>();
+    private HashMap<String, ImageView> animalsDownLeft = new HashMap<>();
+    private HashMap<String, ImageView> animalsDownRight = new HashMap<>();
+    private HashMap<String, ImageView> animalsUpLeft = new HashMap<>();
+    private HashMap<String, ImageView> animalsUpRight = new HashMap<>();
     private HashMap<String, ImageView> items = new HashMap<>();
     private ImageView movingWell;
     private ImageView fixedWell;
@@ -102,13 +106,11 @@ public class View
     public void loadImages(){
         try{
             Image image;
-            ImageView imageView;
             //items
             for (String item : Constants.ITEM_NAMES){
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
                         50, 50, false, true);
-                imageView = new ImageView(image);
-                items.put(item, imageView);
+                items.put(item, new ImageView(image));
             }
 
             //workshops
@@ -116,13 +118,11 @@ public class View
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"fixed"
                         +Integer.toString(w.getLevel()) +".png"),
                         50, 50, false, true);
-                imageView = new ImageView(image);
-                fixedWorkshops.put(w.getWorkShopName(), imageView);
+                fixedWorkshops.put(w.getWorkShopName(), new ImageView(image));
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\"+w.getWorkShopName()+"\\"+"moving"
                         +Integer.toString(w.getLevel()) +".png"),
                         50, 50, false, true);
-                imageView = new ImageView(image);
-                movingWorkshops.put(w.getWorkShopName(), imageView);
+                movingWorkshops.put(w.getWorkShopName(), new ImageView(image));
             }
 
             //well
@@ -162,6 +162,53 @@ public class View
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
             rightHelicopter = new ImageView(image);
+
+            //animals
+            for (String s : Constants.ANIMAL){
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "death"+".png"),
+                        50, 50, false, true);
+                animalsDeath.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down"+".png"),
+                        50, 50, false, true);
+                animalsDown.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down_left"+".png"),
+                        50, 50, false, true);
+                animalsDownLeft.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down_right"+".png"),
+                        50, 50, false, true);
+                animalsDownRight.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "right"+".png"),
+                        50, 50, false, true);
+                animalsRight.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "left"+".png"),
+                        50, 50, false, true);
+                animalsLeft.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up"+".png"),
+                        50, 50, false, true);
+                animalsUp.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up_right"+".png"),
+                        50, 50, false, true);
+                animalsUpRight.put(s.toLowerCase(), new ImageView(image));
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up_left"+".png"),
+                        50, 50, false, true);
+                animalsUpLeft.put(s.toLowerCase(), new ImageView(image));
+            }
+            //domestic eat
+            for (String s: Constants.DOMESTIC){
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "eat"+".png"),
+                        50, 50, false, true);
+                domesticEat.put(s.toLowerCase(), new ImageView(image));
+            }
 
 
 
