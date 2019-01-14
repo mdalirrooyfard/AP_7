@@ -43,7 +43,7 @@ public class View
     private ImageView fixedTruck;
     private ImageView leftTruck;
     private ImageView rightTruck;
-    //todo cage photo
+    private ImageView cage;
     private Farm farm;
 
 
@@ -209,13 +209,13 @@ public class View
                         50, 50, false, true);
                 domesticEat.put(s.toLowerCase(), new ImageView(image));
             }
-
-
-
+            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
+                    50, 50, false, true);
+            cage = new ImageView(image);
 
 
         }catch (IOException e){
-
+            e.printStackTrace();
         }
     }
     /*String command;
