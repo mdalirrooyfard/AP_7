@@ -1,21 +1,30 @@
 package View;
 
+import Model.Animals.Animal;
 import Model.Constants;
+import Model.Entity;
 import Model.Farm;
+import Model.Grass;
+import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class View
@@ -35,6 +44,7 @@ public class View
     private HashMap<String, ImageView> animalsDownRight = new HashMap<>();
     private HashMap<String, ImageView> animalsUpLeft = new HashMap<>();
     private HashMap<String, ImageView> animalsUpRight = new HashMap<>();
+    private HashMap<String, ImageView> animalsFixed = new HashMap<>();
     private HashMap<String, ImageView> wildCaged = new HashMap<>();
     private HashMap<String, ImageView> items = new HashMap<>();
     private ImageView movingWell;
@@ -46,7 +56,10 @@ public class View
     private ImageView leftTruck;
     private ImageView rightTruck;
     private ImageView cage;
+    private ArrayList<ImageView> grass = new ArrayList<>();
     private Farm farm;
+    private ImageView imageView;
+
 
 
     public Scene getScene()
@@ -101,6 +114,33 @@ public class View
             sheepIconView.setY(10);
             group.getChildren().addAll(sheepIconView);
 
+            for(Workshop w : farm.getWorkshops()){
+                if(w != null){
+                    imageView = fixedWorkshops.get(w.getWorkShopName());
+                    imageView.setTranslateX(w.getX());
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(w.getY()*3) , imageView);
+                    translateTransition.setToY(w.getY());
+                    group.getChildren().add(imageView);
+                    translateTransition.play();
+                }
+                for(Entity e : farm.getStuffs()){
+                    if(e instanceof Animal){
+                        imageView = animalsFixed.get(((Animal) e).getName());
+                    }
+                    else if(e instanceof Item){
+                        imageView = items.get(((Item) e).getKind());
+                    }
+                    else if(e instanceof Grass){
+                        //todo for baraye grass
+                    }
+                    imageView.setTranslateX(e.getX());
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , imageView);
+                    translateTransition.setToY(e.getY());
+                    group.getChildren().add(imageView);
+                    translateTransition.play();
+                }
+            }
+
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -123,11 +163,11 @@ public class View
                     String name = w instanceof CustomFactory? "customFactory" : w.getWorkShopName();
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
                             + Integer.toString(w.getLevel()) + ".png"),
-                            50, 50, false, true);
+                            200, 200, false, true);
                     fixedWorkshops.put(w.getWorkShopName(), new ImageView(image));
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
                             + Integer.toString(w.getLevel()) + ".png"),
-                            50, 50, false, true);
+                            200, 200, false, true);
                     movingWorkshops.put(w.getWorkShopName(), new ImageView(image));
                 }
             }
@@ -170,6 +210,8 @@ public class View
                     50, 50, false, true);
             rightHelicopter = new ImageView(image);
 
+            //grass
+
             //animals
             for (String s : Constants.ANIMAL){
                 if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep")) {
@@ -184,6 +226,10 @@ public class View
                             50, 50, false, true);
                     wildCaged.put(s.toLowerCase(), new ImageView(image));
                 }
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "fixed"+".png"),
+                        50, 50, false, true);
+                animalsFixed.put(s.toLowerCase(), new ImageView(image));
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down"+".png"),
                         50, 50, false, true);

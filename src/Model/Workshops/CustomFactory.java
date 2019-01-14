@@ -8,6 +8,8 @@ public class CustomFactory extends Workshop{
         this.output = output;
         this.inputs = inputs;
         upgradeCost = 100;
+        this.x = 500;
+        this.y = 600;
         this.item_x = item_x;
         this.item_y = item_y;
     }
