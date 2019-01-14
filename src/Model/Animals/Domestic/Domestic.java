@@ -3,13 +3,13 @@ package Model.Animals.Domestic;
 import Model.Animals.Animal;
 import Model.Constants;
 import Model.DIRECTION;
-import Model.Items.Item;
 import Model.Map;
 
 import static Model.Constants.FULL_SATIETY;
 
 public abstract class Domestic extends Animal {
     private int satiety = Constants.FULL_SATIETY;
+    private boolean isEating = false;
 
     public int getSatiety() {
         return satiety;
@@ -41,5 +41,13 @@ public abstract class Domestic extends Animal {
 
     public Domestic(double x, double y, Map map){
         super(x , y, map);
+    }
+
+    public boolean isEating() {
+        return isEating;
+    }
+
+    public void setEating(boolean eating) {
+        isEating = eating;
     }
 }

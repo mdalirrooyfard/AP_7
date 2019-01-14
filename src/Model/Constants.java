@@ -13,11 +13,15 @@ public class Constants
     public static final int TRUCK_WORKING_TIME = 100 ;
     public static final int TRUCK_BASE_UPGRADE_COST = 100;
     public static final int HELICOPTER_BASE_UPGRADE_COST = 100;
-    public static final String[] ITEM_NAMES = {"souvenir","fabric","sewing","floury cake","dried egg","egg","wool",
-            "milk","egg powder","cookie","cake","string","cloth","carnival dress","flour","adornment","plume",
-            "caged lion", "caged brown bear","caged white bear","caged grizzly","caged jaguar","horn","sour cream","curd",
-            "cheese","colored plume","bright horn","intermediate","cheese ferment","varnish","mega pie","spruce lion",
-            "spruce brown bear","spruce white bear","spruce grizzly","spruce jaguar"};
+    public static final String[] ITEM_NAMES = {"souvenir","fabric","sewing","flouryCake","driedEgg","egg","wool",
+            "milk","eggPowder","cookie","cake","string","cloth","carnivalDress","flour","adornment","plume",
+            "cagedLion", "cagedBrown bear","cagedWhite bear","cagedGrizzly","cagedJaguar","horn","sourCream","curd",
+            "cheese","coloredPlume","brightHorn","intermediate","cheeseFerment","varnish","megaPie","spruceLion",
+            "spruceBrownBear","spruceWhite bear","spruceGrizzly","spruceJaguar"};
+    public static final String[] WORKSHOP_NAMES = {"cakeBakery" , "cookieBakery" , "eggPowderPlant" , "sewingFactory"
+            , "spinnery" , "weavingFactory"};
+    public static final String[] ANIMAL = {"hen" , "cow" , "sheep" , "dog" , "cat" , "bear" , "lion"};
+    public static final String[] DOMESTIC = {"hen" , "cow" , "sheep"};
 
     /* VOLUME */
     public static final int SOUVENIR_VOLUME = 3;
