@@ -4,6 +4,8 @@ import Model.Animals.Animal;
 import Model.Constants;
 import Model.Entity;
 import Model.Farm;
+import Model.Grass;
+import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
@@ -22,6 +24,7 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class View
@@ -41,6 +44,7 @@ public class View
     private HashMap<String, ImageView> animalsDownRight = new HashMap<>();
     private HashMap<String, ImageView> animalsUpLeft = new HashMap<>();
     private HashMap<String, ImageView> animalsUpRight = new HashMap<>();
+    private HashMap<String, ImageView> animalsFixed = new HashMap<>();
     private HashMap<String, ImageView> wildCaged = new HashMap<>();
     private HashMap<String, ImageView> items = new HashMap<>();
     private ImageView movingWell;
@@ -52,6 +56,7 @@ public class View
     private ImageView leftTruck;
     private ImageView rightTruck;
     private ImageView cage;
+    private ArrayList<ImageView> grass = new ArrayList<>();
     private Farm farm;
     private ImageView imageView;
 
@@ -111,9 +116,6 @@ public class View
 
             for(Workshop w : farm.getWorkshops()){
                 if(w != null){
-                    Path path = new Path(new MoveTo(0 , 0) , new LineTo(0 , w.getY()*100));
-                    path.setVisible(false);
-                    group.getChildren().addAll(path);
                     imageView = fixedWorkshops.get(w.getWorkShopName());
                     imageView.setTranslateX(w.getX());
                     TranslateTransition translateTransition = new TranslateTransition(Duration.millis(w.getY()*3) , imageView);
@@ -123,8 +125,19 @@ public class View
                 }
                 for(Entity e : farm.getStuffs()){
                     if(e instanceof Animal){
-
+                        imageView = animalsFixed.get(((Animal) e).getName());
                     }
+                    else if(e instanceof Item){
+                        imageView = items.get(((Item) e).getKind());
+                    }
+                    else if(e instanceof Grass){
+                        //todo for baraye grass
+                    }
+                    imageView.setTranslateX(e.getX());
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , imageView);
+                    translateTransition.setToY(e.getY());
+                    group.getChildren().add(imageView);
+                    translateTransition.play();
                 }
             }
 
@@ -197,6 +210,8 @@ public class View
                     50, 50, false, true);
             rightHelicopter = new ImageView(image);
 
+            //grass
+
             //animals
             for (String s : Constants.ANIMAL){
                 if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep")) {
@@ -211,6 +226,10 @@ public class View
                             50, 50, false, true);
                     wildCaged.put(s.toLowerCase(), new ImageView(image));
                 }
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "fixed"+".png"),
+                        50, 50, false, true);
+                animalsFixed.put(s.toLowerCase(), new ImageView(image));
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down"+".png"),
                         50, 50, false, true);
