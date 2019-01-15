@@ -22,14 +22,7 @@ public class Game
                 String path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
                 controller.loadCustomHandler(path);
             }
-            catch (Exception e)
-            {
-                if( !e.getMessage().equals("No such directory exists!") )
-                {
-                    System.out.println("loadNewGame Exception");
-                    e.printStackTrace();
-                }
-            }
+            catch (Exception e) {}
         }
         else
         {
@@ -38,22 +31,13 @@ public class Game
                 String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
                 controller.loadCustomHandler(path);
             }
-            catch (Exception e)
-            {
-                System.out.println("loadGame Exception");
-                e.printStackTrace();
-            }
+            catch (Exception e) {}
         }
         try
         {
             controller.runHandler();
-            System.out.println("done");
         }
-        catch ( Exception e )
-        {
-            System.out.println("Run Handler Exception");
-            e.printStackTrace();
-        }
+        catch ( Exception e ) {}
     }
 
     public Game(Stage stage , Menu menu , int level , Player player , ArrayList<Player> players)

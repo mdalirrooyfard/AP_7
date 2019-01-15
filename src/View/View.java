@@ -26,35 +26,32 @@ public class View
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Stage stage;
-    private HashMap<String, ImageView> fixedWorkshops = new HashMap<>();
-    private HashMap<String, ImageView> movingWorkshops = new HashMap<>();
-    private HashMap<String, ImageView> animalsLeft = new HashMap<>();
-    private HashMap<String, ImageView> animalsRight = new HashMap<>();
-    private HashMap<String, ImageView> animalsUp = new HashMap<>();
-    private HashMap<String, ImageView> animalsDown = new HashMap<>();
-    private HashMap<String, ImageView> animalsDeath = new HashMap<>();
-    private HashMap<String, ImageView> domesticEat = new HashMap<>();
-    private HashMap<String, ImageView> animalsDownLeft = new HashMap<>();
-    private HashMap<String, ImageView> animalsDownRight = new HashMap<>();
-    private HashMap<String, ImageView> animalsUpLeft = new HashMap<>();
-    private HashMap<String, ImageView> animalsUpRight = new HashMap<>();
-    private HashMap<String, ImageView> animalsFixed = new HashMap<>();
-    private HashMap<String, ImageView> wildCaged = new HashMap<>();
-    private HashMap<String, ImageView> items = new HashMap<>();
-    private ImageView movingWell;
-    private ImageView fixedWell;
-    private ImageView fixedHelicopter;
-    private ImageView leftHelicopter;
-    private ImageView rightHelicopter;
-    private ImageView fixedTruck;
-    private ImageView leftTruck;
-    private ImageView rightTruck;
-    private ImageView cage;
-    private ImageView[] grass = new ImageView[4];
+    private HashMap<String, Image> fixedWorkshops = new HashMap<>();
+    private HashMap<String, Image> movingWorkshops = new HashMap<>();
+    private HashMap<String, Image> animalsLeft = new HashMap<>();
+    private HashMap<String, Image> animalsRight = new HashMap<>();
+    private HashMap<String, Image> animalsUp = new HashMap<>();
+    private HashMap<String, Image> animalsDown = new HashMap<>();
+    private HashMap<String, Image> animalsDeath = new HashMap<>();
+    private HashMap<String, Image> domesticEat = new HashMap<>();
+    private HashMap<String, Image> animalsDownLeft = new HashMap<>();
+    private HashMap<String, Image> animalsDownRight = new HashMap<>();
+    private HashMap<String, Image> animalsUpLeft = new HashMap<>();
+    private HashMap<String, Image> animalsUpRight = new HashMap<>();
+    private HashMap<String, Image> animalsFixed = new HashMap<>();
+    private HashMap<String, Image> wildCaged = new HashMap<>();
+    private HashMap<String, Image> items = new HashMap<>();
+    private Image movingWell;
+    private Image fixedWell;
+    private Image fixedHelicopter;
+    private Image leftHelicopter;
+    private Image rightHelicopter;
+    private Image fixedTruck;
+    private Image leftTruck;
+    private Image rightTruck;
+    private Image cage;
+    private Image[] grass = new Image[4];
     private Farm farm;
-    private ImageView imageView;
-
-
 
     public Scene getScene()
     {
@@ -66,20 +63,22 @@ public class View
         this.stage = stage;
     }
 
-
     public void play(Farm farm)
     {
         this.farm = farm;
         stage.setScene(scene);
         loadImages();
+        showBackground();
+        showIcons();
+        showWorkshops();
+        showServices();
+        showMap();
+    }
+
+    private void showIcons()
+    {
         try
         {
-            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
-                    Menu.HEIGHT, false, true);
-            ImageView backgroundView = new ImageView(background);
-            backgroundView.setX(0);
-            backgroundView.setY(0);
-            group.getChildren().addAll(backgroundView);
             Circle henCircle = new Circle(35 , 42 , 30);
             henCircle.setFill(Color.rgb(250 , 0 ,30));
             group.getChildren().addAll(henCircle);
@@ -107,50 +106,73 @@ public class View
             sheepIconView.setX(146);
             sheepIconView.setY(10);
             group.getChildren().addAll(sheepIconView);
-
-            for(Workshop w : farm.getWorkshops())
-            {
-                if (w != null)
-                {
-                    imageView = fixedWorkshops.get(w.getWorkShopName());
-                    show(imageView, w);
-                }
-            }
-            show(fixedWell , farm.getWell());
-            show(fixedTruck , farm.getTruck());
-            show(fixedHelicopter , farm.getHelicopter());
-            //todo show(wareHouse)
-            for(int j = 0; j < farm.getMapLength(); j++)
-                for (int i = 0; i < farm.getMapWidth(); i++)
-                {
-                    int numberOfGrass = 0;
-                    ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
-                    for (Entity e : stuffs)
-                    {
-                        if(e instanceof Animal)
-                            imageView = animalsFixed.get(((Animal) e).getName());
-                        else if(e instanceof Item)
-                            imageView = items.get(((Item) e).getKind());
-                        else if(e instanceof Grass)
-                        {
-                            numberOfGrass ++;
-                            if (numberOfGrass == 1)
-                                imageView = grass[0];
-                            else if(numberOfGrass == 2)
-                                imageView = grass[1];
-                            else if(numberOfGrass == 3)
-                                imageView = grass[2];
-                            else
-                                imageView = grass[3];
-                        }
-                        show(imageView, e);
-                    }
-                }
         }
-        catch (FileNotFoundException e) {e.printStackTrace();}
+        catch ( Exception e ){}
     }
 
-    public void show(ImageView iView, Entity e)
+    private void showBackground()
+    {
+        try
+        {
+            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
+                    Menu.HEIGHT, false, true);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setX(0);
+            backgroundView.setY(0);
+            group.getChildren().addAll(backgroundView);
+        }
+        catch ( Exception e ){}
+    }
+
+    private void showWorkshops()
+    {
+        for(Workshop w : farm.getWorkshops())
+            if (w != null)
+            {
+                ImageView imageView = new ImageView(fixedWorkshops.get(w.getWorkShopName()));
+                show(imageView, w);
+            }
+    }
+
+    private void showServices()
+    {
+        ImageView imageView = new ImageView(fixedWell);
+        show(imageView , farm.getWell());
+        imageView = new ImageView(fixedTruck);
+        show(imageView , farm.getTruck());
+        imageView = new ImageView(fixedHelicopter);
+        show(imageView , farm.getHelicopter());
+        //todo show(wareHouse)
+    }
+
+    private void showMap()
+    {
+        ImageView imageView = null;
+        for(int j = 0; j < farm.getMapLength(); j++)
+            for (int i = 0; i < farm.getMapWidth(); i++)
+            {
+                int numberOfGrass = 0;
+                ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
+                for (Entity e : stuffs)
+                {
+                    if(e instanceof Animal)
+                        imageView = new ImageView(animalsFixed.get(((Animal) e).getName()));
+                    else if(e instanceof Item)
+                        imageView = new ImageView(items.get(((Item) e).getKind()));
+                    else if(e instanceof Grass)
+                    {
+                        numberOfGrass ++;
+                        if (numberOfGrass <= 3)
+                            imageView = new ImageView(grass[numberOfGrass - 1]);
+                        else
+                            imageView = new ImageView(grass[3]);
+                    }
+                    show(imageView, e);
+                }
+            }
+    }
+
+    private void show(ImageView iView, Entity e)
     {
         iView.setTranslateX(e.getX());
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , iView);
@@ -159,20 +181,117 @@ public class View
         translateTransition.play();
     }
 
-    public void loadImages()
+    private void loadImages()
+    {
+        try
+        {
+            loadImagesOfItems();
+            loadImagesOfWorkshops();
+            loadImageOfServices();
+            loadImagesOfGrass();
+            loadImagesOfAnimals();
+        }
+        catch (Exception e) {e.printStackTrace();}
+    }
+
+    private void loadImagesOfAnimals()
     {
         try
         {
             Image image;
-            //items
+            for (String s : Constants.ANIMAL)
+            {
+                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep"))
+                {
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
+                            "death" + ".png"),
+                            50, 50, false, true);
+                    animalsDeath.put(s.toLowerCase(), image);
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                            "eat"+".png"),
+                            50, 50, false, true);
+                    domesticEat.put(s.toLowerCase(), image);
+                }
+                if (s.equals("Bear") || s.equals("Lion"))
+                {
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
+                            "caged" + ".png"),
+                            50, 50, false, true);
+                    wildCaged.put(s.toLowerCase(), image);
+                }
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "fixed"+".png"),
+                        50, 50, false, true);
+                animalsFixed.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down"+".png"),
+                        50, 50, false, true);
+                animalsDown.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down_left"+".png"),
+                        50, 50, false, true);
+                animalsDownLeft.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down_right"+".png"),
+                        50, 50, false, true);
+                animalsDownRight.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "right"+".png"),
+                        50, 50, false, true);
+                animalsRight.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "left"+".png"),
+                        50, 50, false, true);
+                animalsLeft.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up"+".png"),
+                        50, 50, false, true);
+                animalsUp.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up_right"+".png"),
+                        50, 50, false, true);
+                animalsUpRight.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up_left"+".png"),
+                        50, 50, false, true);
+                animalsUpLeft.put(s.toLowerCase(),image);
+            }
+        }
+        catch ( Exception e ){}
+    }
+
+    private void loadImagesOfGrass()
+    {
+        try
+        {
+            for (int i = 0; i < 4; i++)
+                grass[i] = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\grass"+
+                        Integer.toString(i+1)+".png"),
+                        50, 50, false, true);
+        }
+        catch ( Exception e ){}
+    }
+
+    private void loadImagesOfItems()
+    {
+        try
+        {
+            Image image;
             for (String item : Constants.ITEM_NAMES)
             {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
                         50, 50, false, true);
-                items.put(item, new ImageView(image));
+                items.put(item, image);
             }
+        }
+        catch ( Exception e ){}
+    }
 
-            //workshops
+    private void loadImagesOfWorkshops()
+    {
+        try
+        {
+            Image image;
             for (Workshop w : farm.getWorkshops())
             {
                 if (w != null)
@@ -181,130 +300,49 @@ public class View
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
                             + Integer.toString(w.getLevel()) + ".png"),
                             200, 200, false, true);
-                    fixedWorkshops.put(w.getWorkShopName(), new ImageView(image));
+                    fixedWorkshops.put(w.getWorkShopName(), image);
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
                             + Integer.toString(w.getLevel()) + ".png"),
                             200, 200, false, true);
-                    movingWorkshops.put(w.getWorkShopName(), new ImageView(image));
+                    movingWorkshops.put(w.getWorkShopName(), image);
                 }
             }
-
-            //well
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
-                    +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    50, 50, false, true);
-            fixedWell = new ImageView(image);
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
-                    +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    50, 50, false, true);
-            movingWell =new ImageView(image);
-
-            //truck
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            fixedTruck = new ImageView(image);
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            leftTruck = new ImageView(image);
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            rightTruck = new ImageView(image);
-
-            //helicopter
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            fixedHelicopter = new ImageView(image);
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            leftHelicopter = new ImageView(image);
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            rightHelicopter = new ImageView(image);
-
-            //grass
-            for (int i = 0; i < 4; i++)
-            {
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\grass"+
-                        Integer.toString(i+1)+".png"),
-                        50, 50, false, true);
-                grass[i] = new ImageView(image);
-            }
-
-            //animals
-            for (String s : Constants.ANIMAL)
-            {
-                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep"))
-                {
-                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
-                            "death" + ".png"),
-                            50, 50, false, true);
-                    animalsDeath.put(s.toLowerCase(), new ImageView(image));
-                }
-                if (s.equals("Bear") || s.equals("Lion"))
-                {
-                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
-                            "caged" + ".png"),
-                            50, 50, false, true);
-                    wildCaged.put(s.toLowerCase(), new ImageView(image));
-                }
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "fixed"+".png"),
-                        50, 50, false, true);
-                animalsFixed.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "down"+".png"),
-                        50, 50, false, true);
-                animalsDown.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "down_left"+".png"),
-                        50, 50, false, true);
-                animalsDownLeft.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "down_right"+".png"),
-                        50, 50, false, true);
-                animalsDownRight.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "right"+".png"),
-                        50, 50, false, true);
-                animalsRight.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "left"+".png"),
-                        50, 50, false, true);
-                animalsLeft.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "up"+".png"),
-                        50, 50, false, true);
-                animalsUp.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "up_right"+".png"),
-                        50, 50, false, true);
-                animalsUpRight.put(s.toLowerCase(), new ImageView(image));
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "up_left"+".png"),
-                        50, 50, false, true);
-                animalsUpLeft.put(s.toLowerCase(), new ImageView(image));
-            }
-            //domestic eat
-            for (String s: Constants.DOMESTIC)
-            {
-                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "eat"+".png"),
-                        50, 50, false, true);
-                domesticEat.put(s.toLowerCase(), new ImageView(image));
-            }
-            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
-                    50, 50, false, true);
-            cage = new ImageView(image);
-
-
         }
-        catch (Exception e) {e.printStackTrace();}
+        catch ( Exception e ){}
+    }
+
+    private void loadImageOfServices()
+    {
+        try
+        {
+            fixedTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            leftTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            rightTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            fixedHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            leftHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            rightHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
+                    +Integer.toString(farm.getWell().getLevel()) +".png"),
+                    50, 50, false, true);
+            movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
+                    +Integer.toString(farm.getWell().getLevel()) +".png"),
+                    50, 50, false, true);
+            cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
+                    50, 50, false, true);
+        }
+        catch ( Exception e ){}
     }
     /*String command;
     public String getCommand()
