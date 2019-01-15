@@ -1,28 +1,41 @@
 package View;
 
+import Controller.Controller;
 import Model.*;
 import Model.Animals.Animal;
 import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
+import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class View
 {
+    private final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
+    private final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Stage stage;
@@ -52,14 +65,18 @@ public class View
     private Image cage;
     private Image[] grass = new Image[4];
     private Farm farm;
+    private long gameTime = 0 , lastTime = 0 , second = 1000000000;
+    private Label timerLabel;
+    private Menu menu;
 
     public Scene getScene()
     {
         return scene;
     }
 
-    public View(Stage stage)
+    public View(Stage stage , Menu menu)
     {
+        this.menu = menu;
         this.stage = stage;
     }
 
@@ -73,6 +90,7 @@ public class View
         showWorkshops();
         showServices();
         showMap();
+        showTimer();
     }
 
     private void showIcons()
@@ -81,31 +99,45 @@ public class View
         {
             Circle henCircle = new Circle(35 , 42 , 30);
             henCircle.setFill(Color.rgb(250 , 0 ,30));
-            group.getChildren().addAll(henCircle);
             Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\chicken.png"),
                     60 , 60 , false , true);
             ImageView henIconView = new ImageView(henIcon);
             henIconView.setX(5);
             henIconView.setY(8);
-            group.getChildren().addAll(henIconView);
+
             Circle cowCircle = new Circle(100 , 42 , 30);
             cowCircle.setFill(Color.rgb(96 , 96 ,96));
-            group.getChildren().addAll(cowCircle);
+            group.getChildren().addAll();
             Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\cow.png"),
                     50 , 50 , false , true);
             ImageView cowIconView = new ImageView(cowIcon);
             cowIconView.setX(70);
             cowIconView.setY(13);
-            group.getChildren().addAll(cowIconView);
+
             Circle sheepCircle = new Circle(175 , 42 , 30);
             sheepCircle.setFill(Color.rgb(225 , 153 ,224));
-            group.getChildren().addAll(sheepCircle);
             Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\sheep.png"),
                     52, 52 , false , true);
             ImageView sheepIconView = new ImageView(sheepIcon);
             sheepIconView.setX(146);
             sheepIconView.setY(10);
-            group.getChildren().addAll(sheepIconView);
+
+            Image menuIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuButton.png"),
+                    77, 73, false, true);
+            ImageView menuView = new ImageView(menuIcon);
+            menuView.setX(30);
+            menuView.setY(HEIGHT - 100);
+            menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    showMenu();
+                }
+            });
+
+            group.getChildren().addAll(henCircle,henIconView,cowCircle,cowIconView,sheepCircle,sheepIconView,menuView);
+
         }
         catch ( Exception e ){}
     }
@@ -179,6 +211,122 @@ public class View
         translateTransition.setToY(e.getY());
         group.getChildren().add(iView);
         translateTransition.play();
+    }
+
+    private void showTimer()
+    {
+        timerLabel = new Label();
+        timerLabel.relocate(WIDTH - 100, HEIGHT - 80);
+        timerLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,16));
+        try
+        {
+            Image timerImage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\timer.png"),
+                    150, 79, false, true);
+            ImageView timerView = new ImageView(timerImage);
+            timerView.setX(WIDTH - 150);
+            timerView.setY(HEIGHT - 100);
+            group.getChildren().addAll(timerView,timerLabel);
+            new AnimationTimer()
+            {
+                @Override
+                public void handle(long now)
+                {
+                    if (lastTime == 0)
+                        lastTime = now;
+                    if (now > lastTime + second )
+                    {
+                        lastTime = now;
+                        gameTime += 1;
+                        String time = "";
+                        if( gameTime / 3600 < 10 )
+                            time += "0";
+                        time += Long.toString(gameTime / 3600) + ":";
+                        if( ( gameTime % 3600 ) / 60  < 10 )
+                            time += "0";
+                        time += Long.toString(( gameTime % 3600 ) / 60) + ":";
+                        if( gameTime % 60 < 10 )
+                            time += "0";
+                        time += Long.toString(gameTime % 60 );
+                        timerLabel.setText(time);
+                    }
+                }
+            }.start();
+        }
+        catch ( Exception e )
+        {
+
+        }
+
+    }
+
+    private void showMenu()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image menuBackground = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMenuBackground.png")
+                    , 300, 480, false, true);
+            ImageView menuBackgroundView = new ImageView(menuBackground);
+            menuBackgroundView.setY(HEIGHT / 2 - 240);
+            menuBackgroundView.setX(WIDTH / 2 - 150);
+
+            ImageView continueView = insertContinue();
+            ImageView mainMenuView = insertMainMenu();
+            ImageView restartView = insertRestart();
+            ImageView levelsView = insertBackToLevels();
+            ImageView optionsView = insertOptions();
+
+            continueView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,levelsView,optionsView);
+                }
+            });
+
+            mainMenuView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    goToMainMenuHandler();
+                }
+            });
+
+            restartView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    restartHandler();
+                }
+            });
+
+            levelsView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    changeLevelHandler();
+                }
+            });
+
+            optionsView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    //TODO show Options
+                }
+            });
+
+            group.getChildren().addAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,levelsView,optionsView);
+        }
+        catch ( IOException e ){}
     }
 
     private void loadImages()
@@ -341,6 +489,223 @@ public class View
                     50, 50, false, true);
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
+        }
+        catch ( Exception e ){}
+    }
+
+    private ImageView insertContinue()
+    {
+        try
+        {
+            Image continueButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueButton.png")
+                    , 150, 60, false, true);
+            ImageView continueView = new ImageView(continueButton);
+            continueView.setY(HEIGHT / 2 - 210);
+            continueView.setX(WIDTH / 2 - 75);
+            return continueView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertMainMenu()
+    {
+        try
+        {
+            Image menuButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMainMenuButton.png")
+                    , 150, 60, false, true);
+            ImageView menuView = new ImageView(menuButton);
+            menuView.setY(HEIGHT / 2 - 120);
+            menuView.setX(WIDTH / 2 - 75);
+            return menuView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertRestart()
+    {
+        try
+        {
+            Image restartButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\restartButton.png")
+                    , 150, 60, false, true);
+            ImageView restartView = new ImageView(restartButton);
+            restartView.setY(HEIGHT / 2 - 30);
+            restartView.setX(WIDTH / 2 - 75);
+            return restartView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertBackToLevels()
+    {
+        try
+        {
+            Image levelsButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelsButton.png")
+                    , 150, 60, false, true);
+            ImageView levelView = new ImageView(levelsButton);
+            levelView.setY(HEIGHT / 2 + 60);
+            levelView.setX(WIDTH / 2 - 75);
+            return levelView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertOptions()
+    {
+        try
+        {
+            Image options = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png")
+                    , 150, 60, false, true);
+            ImageView optionsView = new ImageView(options);
+            optionsView.setY(HEIGHT / 2 + 150);
+            optionsView.setX(WIDTH / 2 - 75);
+            return optionsView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private void goToMainMenuHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image quitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\quitMessageBox.png")
+                    , 800, 300, false, true);
+            ImageView quitMessageView = new ImageView(quitMessage);
+            quitMessageView.setY(HEIGHT / 2 - 150);
+            quitMessageView.setX(WIDTH / 2 - 400);
+
+            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
+                    , 153, 145, false, true);
+            ImageView yesView = new ImageView(yes);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
+            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    //TODO save game!
+                    stage.setScene(menu.getScene());
+                }
+            });
+
+            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                    , 153, 146, false, true);
+            ImageView noView = new ImageView(no);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
+            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(rectangle,quitMessageView,yesView,noView);
+                }
+            });
+
+            group.getChildren().addAll(rectangle,quitMessageView,yesView,noView);
+        }
+        catch ( Exception e ){}
+    }
+
+    private void restartHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image restartMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\restartMessageBox.png")
+                    , 800, 300, false, true);
+            ImageView restartMessageView = new ImageView(restartMessage);
+            restartMessageView.setY(HEIGHT / 2 - 150);
+            restartMessageView.setX(WIDTH / 2 - 400);
+
+            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
+                    , 153, 145, false, true);
+            ImageView yesView = new ImageView(yes);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
+            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    //TODO Restart Game
+                }
+            });
+
+            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                    , 153, 146, false, true);
+            ImageView noView = new ImageView(no);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
+            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(rectangle,restartMessageView,yesView,noView);
+                }
+            });
+
+            group.getChildren().addAll(rectangle,restartMessageView,yesView,noView);
+        }
+        catch ( Exception e ){}
+    }
+
+    private void changeLevelHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image quitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\quitMessageBox.png")
+                    , 800, 300, false, true);
+            ImageView quitMessageView = new ImageView(quitMessage);
+            quitMessageView.setY(HEIGHT / 2 - 150);
+            quitMessageView.setX(WIDTH / 2 - 400);
+
+            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
+                    , 153, 145, false, true);
+            ImageView yesView = new ImageView(yes);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
+            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    //TODO Show Levels & ...
+                }
+            });
+
+            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                    , 153, 146, false, true);
+            ImageView noView = new ImageView(no);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
+            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(rectangle,quitMessageView,yesView,noView);
+                }
+            });
+
+            group.getChildren().addAll(rectangle,quitMessageView,yesView,noView);
         }
         catch ( Exception e ){}
     }

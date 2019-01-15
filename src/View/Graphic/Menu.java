@@ -94,6 +94,7 @@ public class Menu
     public Scene getScene()
     {
         player = choosePlayerScene.getPlayer();
+        player = menu.getPlayer();
         for( Node node : group.getChildren() )
             if( node instanceof Label )
                 ((Label) node).setText("");
@@ -237,11 +238,11 @@ public class Menu
         stage.setScene(scene);
     }
 
-    public void music()
+    private void music()
     {
-        Media media = new Media(new File("src\\Resources\\oldmacdonald.mp3").toURI().toString());
+        Media media = new Media(new File("src\\Resources\\Music\\oldmacdonald.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(mediaPlayer.INDEFINITE);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
     }
 

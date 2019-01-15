@@ -3,6 +3,7 @@ package View.Graphic;
 import Controller.Controller;
 import Model.Player;
 import View.View;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -12,6 +13,8 @@ public class Game
 {
     private Controller controller = new Controller();
     private View view;
+    private Group group;
+    private Scene scene;
 
     public void loadNewGame(boolean loadNewGame,int level,Player player)
     {
@@ -42,7 +45,7 @@ public class Game
 
     public Game(Stage stage , Menu menu , int level , Player player , ArrayList<Player> players)
     {
-        view = new View(stage);
+        view = new View(stage,menu);
         controller.setView(view);
         controller.setLevel(level);
         controller.setPlayer(player);
