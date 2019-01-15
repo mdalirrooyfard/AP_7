@@ -1,7 +1,10 @@
 package View;
 
-import Model.*;
 import Model.Animals.Animal;
+import Model.Constants;
+import Model.Entity;
+import Model.Farm;
+import Model.Grass;
 import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
@@ -17,7 +20,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -205,23 +207,23 @@ public class View
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "death" + ".png"),
-                            50, 50, false, true);
+                            100, 100, false, true);
                     animalsDeath.put(s.toLowerCase(), image);
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                             "eat"+".png"),
-                            50, 50, false, true);
+                            100, 100, false, true);
                     domesticEat.put(s.toLowerCase(), image);
                 }
                 if (s.equals("Bear") || s.equals("Lion"))
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "caged" + ".png"),
-                            50, 50, false, true);
+                            100, 100, false, true);
                     wildCaged.put(s.toLowerCase(), image);
                 }
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "fixed"+".png"),
-                        50, 50, false, true);
+                        100, 100, false, true);
                 animalsFixed.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down"+".png"),
@@ -317,28 +319,28 @@ public class View
         {
             fixedTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    125, 125, false, true);
             leftTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    100, 100, false, true);
             rightTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    100, 100, false, true);
             fixedHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    125, 125, false, true);
             leftHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    100, 100, false, true);
             rightHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    100, 100, false, true);
             fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    50, 50, false, true);
+                    125, 125, false, true);
             movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    50, 50, false, true);
+                    125, 125, false, true);
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
         }

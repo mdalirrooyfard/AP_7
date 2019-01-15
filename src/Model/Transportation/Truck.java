@@ -8,8 +8,8 @@ public class Truck extends Transportations{
     public Truck(int volume){
         this.setVolume(volume);
         this.setCurrentVolume(volume);
-        this.x = Screen.getPrimary().getVisualBounds().getWidth() / 2 - 200;
-        this.y = Screen.getPrimary().getVisualBounds().getHeight() / 2 + 70;
+        this.x = Screen.getPrimary().getVisualBounds().getWidth() / 2 - 300;
+        this.y = Screen.getPrimary().getVisualBounds().getHeight() / 2 + 200;
         this.setWorkingTime(Constants.TRUCK_WORKING_TIME);
         this.setUpgradeCost(Constants.TRUCK_BASE_UPGRADE_COST);
     }
