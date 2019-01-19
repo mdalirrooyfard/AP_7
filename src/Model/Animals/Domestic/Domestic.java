@@ -9,7 +9,7 @@ import static Model.Constants.FULL_SATIETY;
 
 public abstract class Domestic extends Animal {
     private int satiety = Constants.FULL_SATIETY;
-    private boolean isEating = false;
+    private int isEating = 0;
 
     public int getSatiety() {
         return satiety;
@@ -43,11 +43,11 @@ public abstract class Domestic extends Animal {
         super(x , y, map);
     }
 
-    public boolean isEating() {
+    public int isEating() {
         return isEating;
     }
 
-    public void setEating(boolean eating) {
+    public void setEating(int eating) {
         isEating = eating;
     }
 }
