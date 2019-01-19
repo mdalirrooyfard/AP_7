@@ -92,7 +92,7 @@ public class View
         showWorkshops();
         showServices();
         showMap();
-        showTimer();
+        //showTimer();
     }
 
     private void showIcons()
@@ -139,7 +139,7 @@ public class View
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    showMenu();
+                    //showMenu();
                 }
             });
 
@@ -220,7 +220,7 @@ public class View
         translateTransition.play();
     }
 
-    private void loadImages()
+    public void loadImages()
     {
         try
         {
