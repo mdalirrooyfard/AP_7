@@ -1,10 +1,7 @@
 package View;
 
+import Model.*;
 import Model.Animals.Animal;
-import Model.Constants;
-import Model.Entity;
-import Model.Farm;
-import Model.Grass;
 import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
@@ -84,6 +81,7 @@ public class View
         showWorkshops();
         showServices();
         showMap();
+        showFixedAnimal();
         //showTimer();
     }
 
@@ -178,6 +176,8 @@ public class View
 
     private void showMap()
     {
+        group.getChildren().removeAll(currentEntities);
+        currentEntities.clear();
         ImageView imageView = null;
         for(int j = 0; j < farm.getMapLength(); j++)
             for (int i = 0; i < farm.getMapWidth(); i++)
@@ -211,13 +211,50 @@ public class View
             }
         }
     }
-    public void letsMove(){
-        ImageView imageView;
+    public void showMovingAnimals(){
+        ImageView imageView = null;
         ArrayList<Entity> stuffs = farm.getStuffs();
-        group.getChildren().removeAll(currentEntities);
-        currentEntities.clear();
         for(Entity e : stuffs){
-
+            if(e instanceof Animal){
+                DIRECTION direction = ((Animal) e).getDirection();
+                switch (direction){
+                    case UP:
+                        imageView = new ImageView(animalsUp.get(((Animal) e).getName()));
+                        break;
+                    case RIGHT:
+                        imageView = new ImageView(animalsRight.get(((Animal) e).getName()));
+                        break;
+                    case LEFT:
+                        imageView = new ImageView(animalsLeft.get(((Animal) e).getName()));
+                        break;
+                    case DOWN:
+                        imageView = new ImageView(animalsDown.get(((Animal) e).getName()));
+                        break;
+                    case UP_LEFT:
+                        imageView = new ImageView(animalsUpLeft.get(((Animal) e).getName()));
+                        break;
+                    case DOWN_LEFT:
+                        imageView = new ImageView(animalsDownLeft.get(((Animal) e).getName()));
+                        break;
+                    case DOWN_RIGHT:
+                        imageView = new ImageView(animalsDownRight.get(((Animal) e).getName()));
+                        break;
+                    case UP_RIGHT:
+                        imageView = new ImageView(animalsUpRight.get(((Animal) e).getName()));
+                        break;
+                    case NONE:
+                        imageView = new ImageView(domesticEat.get(((Animal) e).getName()));
+                        break;
+                }
+                if (direction != DIRECTION.NONE) {
+                    imageView.setX(((Animal) e).getPreviousX());
+                    imageView.setY(((Animal) e).getPreviousY());
+                }
+                else{
+                    imageView.setX(e.getShowX());
+                    imageView.setY(e.getShowY());
+                }
+            }
         }
     }
     private void show(ImageView iView, Entity e)

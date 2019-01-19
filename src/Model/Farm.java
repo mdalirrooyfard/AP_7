@@ -475,12 +475,15 @@ public class Farm {
                 }
             }
             else if (entity instanceof Cat)
-                doMove = !catCollect(entity.getY(), entity.getX());
+                catCollect(entity.getY(), entity.getX());
             if (entity instanceof Animal && doMove) {
                 ((Animal) entity).move();
                 if (entity instanceof Domestic)
                     ((Domestic) entity).decreaseSatiety(1);
             }
+            else if (entity instanceof Animal)
+                ((Animal) entity).setDirection(DIRECTION.NONE);
+
         }
 
     }
