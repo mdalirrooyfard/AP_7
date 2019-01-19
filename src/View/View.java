@@ -1,8 +1,10 @@
 package View;
 
-import Controller.Controller;
-import Model.*;
 import Model.Animals.Animal;
+import Model.Constants;
+import Model.Entity;
+import Model.Farm;
+import Model.Grass;
 import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
@@ -218,137 +220,7 @@ public class View
         translateTransition.play();
     }
 
-    private void showTimer()
-    {
-        timerLabel = new Label();
-        timerLabel.relocate(WIDTH - 100, HEIGHT - 80);
-        timerLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,16));
-        try
-        {
-            Image timerImage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\timer.png"),
-                    150, 79, false, true);
-            ImageView timerView = new ImageView(timerImage);
-            timerView.setX(WIDTH - 150);
-            timerView.setY(HEIGHT - 100);
-            group.getChildren().addAll(timerView,timerLabel);
-            new AnimationTimer()
-            {
-                @Override
-                public void handle(long now)
-                {
-                    if (lastTime == 0)
-                        lastTime = now;
-                    if (now > lastTime + second )
-                    {
-                        lastTime = now;
-                        gameTime += 1;
-                        String time = "";
-                        if( gameTime / 3600 < 10 )
-                            time += "0";
-                        time += Long.toString(gameTime / 3600) + ":";
-                        if( ( gameTime % 3600 ) / 60  < 10 )
-                            time += "0";
-                        time += Long.toString(( gameTime % 3600 ) / 60) + ":";
-                        if( gameTime % 60 < 10 )
-                            time += "0";
-                        time += Long.toString(gameTime % 60 );
-                        timerLabel.setText(time);
-                    }
-                }
-            }.start();
-        }
-        catch ( Exception e )
-        {
-
-        }
-
-    }
-
-    private void showMenu()
-    {
-        try
-        {
-            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
-            rectangle.setFill(Color.rgb(54,16,0));
-            rectangle.setOpacity(0.7);
-
-            Image menuBackground = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMenuBackground.png")
-                    , 300, 480, false, true);
-            ImageView menuBackgroundView = new ImageView(menuBackground);
-            menuBackgroundView.setY(HEIGHT / 2 - 240);
-            menuBackgroundView.setX(WIDTH / 2 - 150);
-
-            ImageView continueView = insertContinue();
-            ImageView mainMenuView = insertMainMenu();
-            ImageView restartView = insertRestart();
-            ImageView levelsView = insertBackToLevels();
-            ImageView optionsView = insertOptions();
-
-            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    if( Math.abs(event.getX() - WIDTH / 2) > 150 )
-                        group.getChildren().removeAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,
-                                levelsView,optionsView);
-                    else if( Math.abs(event.getY() - HEIGHT / 2) > 240 )
-                        group.getChildren().removeAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,
-                                levelsView,optionsView);
-                }
-            });
-
-            continueView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    group.getChildren().removeAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,levelsView,optionsView);
-                }
-            });
-
-            mainMenuView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    goToMainMenuHandler();
-                }
-            });
-
-            restartView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    restartHandler();
-                }
-            });
-
-            levelsView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    changeLevelHandler();
-                }
-            });
-
-            optionsView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    //TODO show Options
-                }
-            });
-
-            group.getChildren().addAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,levelsView,optionsView);
-        }
-        catch ( IOException e ){}
-    }
-
-    public void loadImages()
+    private void loadImages()
     {
         try
         {
@@ -511,220 +383,25 @@ public class View
         }
         catch ( Exception e ){}
     }
-
-    private ImageView insertContinue()
+    /*String command;
+    public String getCommand()
     {
-        try
-        {
-            Image continueButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueButton.png")
-                    , 150, 60, false, true);
-            ImageView continueView = new ImageView(continueButton);
-            continueView.setY(HEIGHT / 2 - 210);
-            continueView.setX(WIDTH / 2 - 75);
-            return continueView;
-        }
-        catch ( Exception e ){}
-        return null;
+        return command;
     }
-
-    private ImageView insertMainMenu()
+    public void printError(String error)
     {
-        try
-        {
-            Image menuButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMainMenuButton.png")
-                    , 150, 60, false, true);
-            ImageView menuView = new ImageView(menuButton);
-            menuView.setY(HEIGHT / 2 - 120);
-            menuView.setX(WIDTH / 2 - 75);
-            return menuView;
-        }
-        catch ( Exception e ){}
-        return null;
+        System.out.println(error);
     }
-
-    private ImageView insertRestart()
+    public void levelIsFinished()
     {
-        try
-        {
-            Image restartButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\restartButton.png")
-                    , 150, 60, false, true);
-            ImageView restartView = new ImageView(restartButton);
-            restartView.setY(HEIGHT / 2 - 30);
-            restartView.setX(WIDTH / 2 - 75);
-            return restartView;
-        }
-        catch ( Exception e ){}
-        return null;
+        System.out.println("Level is finished.  Congratulations! :) ");
     }
-
-    private ImageView insertBackToLevels()
+    public void printInfo(String info)
     {
-        try
-        {
-            Image levelsButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelsButton.png")
-                    , 150, 60, false, true);
-            ImageView levelView = new ImageView(levelsButton);
-            levelView.setY(HEIGHT / 2 + 60);
-            levelView.setX(WIDTH / 2 - 75);
-            return levelView;
-        }
-        catch ( Exception e ){}
-        return null;
+        System.out.println(info);
     }
-
-    private ImageView insertOptions()
+    public void setCommand( Scanner scanner )
     {
-        try
-        {
-            Image options = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png")
-                    , 150, 60, false, true);
-            ImageView optionsView = new ImageView(options);
-            optionsView.setY(HEIGHT / 2 + 150);
-            optionsView.setX(WIDTH / 2 - 75);
-            return optionsView;
-        }
-        catch ( Exception e ){}
-        return null;
-    }
-
-    private void goToMainMenuHandler()
-    {
-        try
-        {
-            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
-            rectangle.setFill(Color.rgb(54,16,0));
-            rectangle.setOpacity(0.7);
-
-            Image quitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\quitMessageBox.png")
-                    , 800, 300, false, true);
-            ImageView quitMessageView = new ImageView(quitMessage);
-            quitMessageView.setY(HEIGHT / 2 - 150);
-            quitMessageView.setX(WIDTH / 2 - 400);
-
-            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
-                    , 153, 145, false, true);
-            ImageView yesView = new ImageView(yes);
-            yesView.setY(HEIGHT / 2 + 150);
-            yesView.setX(WIDTH / 2 - 200);
-            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    //TODO save game!
-                    stage.setScene(menu.getScene());
-                }
-            });
-
-            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
-                    , 153, 146, false, true);
-            ImageView noView = new ImageView(no);
-            noView.setY(HEIGHT / 2 + 150 );
-            noView.setX(WIDTH / 2 + 47);
-            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    group.getChildren().removeAll(rectangle,quitMessageView,yesView,noView);
-                }
-            });
-
-            group.getChildren().addAll(rectangle,quitMessageView,yesView,noView);
-        }
-        catch ( Exception e ){}
-    }
-
-    private void restartHandler()
-    {
-        try
-        {
-            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
-            rectangle.setFill(Color.rgb(54,16,0));
-            rectangle.setOpacity(0.7);
-
-            Image restartMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\restartMessageBox.png")
-                    , 800, 300, false, true);
-            ImageView restartMessageView = new ImageView(restartMessage);
-            restartMessageView.setY(HEIGHT / 2 - 150);
-            restartMessageView.setX(WIDTH / 2 - 400);
-
-            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
-                    , 153, 145, false, true);
-            ImageView yesView = new ImageView(yes);
-            yesView.setY(HEIGHT / 2 + 150);
-            yesView.setX(WIDTH / 2 - 200);
-            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    //TODO
-                }
-            });
-            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
-                    , 153, 146, false, true);
-            ImageView noView = new ImageView(no);
-            noView.setY(HEIGHT / 2 + 150 );
-            noView.setX(WIDTH / 2 + 47);
-            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    group.getChildren().removeAll(rectangle,restartMessageView,yesView,noView);
-                }
-            });
-
-            group.getChildren().addAll(rectangle,restartMessageView,yesView,noView);
-        }
-        catch ( Exception e ){}
-    }
-
-    private void changeLevelHandler()
-    {
-        try
-        {
-            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
-            rectangle.setFill(Color.rgb(54,16,0));
-            rectangle.setOpacity(0.7);
-
-            Image quitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\quitMessageBox.png")
-                    , 800, 300, false, true);
-            ImageView quitMessageView = new ImageView(quitMessage);
-            quitMessageView.setY(HEIGHT / 2 - 150);
-            quitMessageView.setX(WIDTH / 2 - 400);
-
-            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
-                    , 153, 145, false, true);
-            ImageView yesView = new ImageView(yes);
-            yesView.setY(HEIGHT / 2 + 150);
-            yesView.setX(WIDTH / 2 - 200);
-            yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    //TODO Show Levels & ...
-                }
-            });
-
-            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
-                    , 153, 146, false, true);
-            ImageView noView = new ImageView(no);
-            noView.setY(HEIGHT / 2 + 150 );
-            noView.setX(WIDTH / 2 + 47);
-            noView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    group.getChildren().removeAll(rectangle,quitMessageView,yesView,noView);
-                }
-            });
-
-            group.getChildren().addAll(rectangle,quitMessageView,yesView,noView);
-        }
-        catch ( Exception e ){}
-    }
+        command = scanner.nextLine();
+    }*/
 }

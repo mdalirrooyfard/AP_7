@@ -11,8 +11,8 @@ public class Well extends Entity{
     public Well(int volume){
         this.setVolume(volume);
         this.setCurrentVolume(volume);
-        this.x = Screen.getPrimary().getVisualBounds().getWidth() / 2;
-        this.y = Screen.getPrimary().getVisualBounds().getHeight() / 2 - 260;
+        this.x = Screen.getPrimary().getVisualBounds().getWidth() / 2 - 100;
+        this.y = Screen.getPrimary().getVisualBounds().getHeight() / 2 - 270;
         this.setBuyCost(WELL_BASE_MONEY);
         this.setUpgradeCost(WELL_BASE_UPGRADE_COST);
     }
