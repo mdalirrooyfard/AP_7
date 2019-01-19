@@ -420,13 +420,13 @@ public class Farm {
         }
     }
 
-    public boolean checkEatingGrass(double y, double x) {
+    public boolean checkEatingGrass(double y, double x, int max) {
         int X = (int) Math.round(x);
         int Y = (int) Math.round(y);
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Grass && !((Grass) entity).isEaten()) {
-                ((Grass) entity).setEaten(true);
+            if (entity instanceof Grass && ((Grass) entity).isEaten()== 8) {
+                ((Grass) entity).setEaten(max);
                 return true;
             }
         return false;
@@ -465,7 +465,8 @@ public class Farm {
                     ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
                     doMove = false;
                 }else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
-                    doMove = !checkEatingGrass(entity.getY(), entity.getX());
+                    doMove = !checkEatingGrass(entity.getY(), entity.getX(),
+                            7 - ((Domestic) entity).getSatiety());
                     if (!doMove) {
                         ((Domestic) entity).increaseSatiety(1);
                         ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
@@ -499,8 +500,10 @@ public class Farm {
             Iterator<Entity> iterator = stuffs.iterator();
             while (iterator.hasNext()) {
                 Entity entity = iterator.next();
-                if (entity instanceof Grass && ((Grass) entity).isEaten())
+                if (entity instanceof Grass && ((Grass) entity).isEaten() == 0)
                     iterator.remove();
+                else if (entity instanceof Grass)
+                    ((Grass) entity).decreaseEaten();
                 else if (entity instanceof Item && ((Item) entity).isTakenByCat())
                     iterator.remove();
             }
