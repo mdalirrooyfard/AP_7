@@ -13,8 +13,6 @@ import java.util.Scanner;
 
 public class Main extends Application
 {
-    private static Stage stage;
-
     public static void main(String[] args)
     {
         launch(args);
@@ -25,18 +23,10 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        stage = primaryStage;
-        ArrayList<Player> players = Controller.loadPlayers();
-        Menu menu = new Menu(primaryStage,players);
-        menu.setMenu(menu);
-        menu.passMenuInstance(menu);
+        Controller controller = new Controller(primaryStage);
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Farm Frenzy");
         primaryStage.show();
-    }
-    public static void setSceneOnStage(Scene scene)
-    {
-        stage.setScene(scene);
     }
 }

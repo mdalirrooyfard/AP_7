@@ -97,35 +97,40 @@ public class View
     {
         try
         {
-            Circle henCircle = new Circle(35 , 42 , 30);
-            henCircle.setFill(Color.rgb(250 , 0 ,30));
-            Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\chicken.png"),
+            Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyGuineaHenButton.png"),
                     60 , 60 , false , true);
             ImageView henIconView = new ImageView(henIcon);
             henIconView.setX(5);
-            henIconView.setY(8);
+            henIconView.setY(10);
 
-            Circle cowCircle = new Circle(100 , 42 , 30);
-            cowCircle.setFill(Color.rgb(96 , 96 ,96));
-            group.getChildren().addAll();
-            Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\cow.png"),
-                    50 , 50 , false , true);
+            Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCowButton.png"),
+                    60 , 60 , false , true);
             ImageView cowIconView = new ImageView(cowIcon);
-            cowIconView.setX(70);
-            cowIconView.setY(13);
+            cowIconView.setX(80);
+            cowIconView.setY(10);
 
-            Circle sheepCircle = new Circle(175 , 42 , 30);
-            sheepCircle.setFill(Color.rgb(225 , 153 ,224));
-            Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\UI\\Icons\\Products\\sheep.png"),
-                    52, 52 , false , true);
+            Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buySheepButton.png"),
+                    60, 60 , false , true);
             ImageView sheepIconView = new ImageView(sheepIcon);
-            sheepIconView.setX(146);
+            sheepIconView.setX(145);
             sheepIconView.setY(10);
+
+            Image dogIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyDogButton.png"),
+                    60, 60 , false , true);
+            ImageView dogIconView = new ImageView(dogIcon);
+            dogIconView.setX(210);
+            dogIconView.setY(10);
+
+            Image catIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCatButton.png"),
+                    80, 80 , false , true);
+            ImageView catIconView = new ImageView(catIcon);
+            catIconView.setX(275);
+            catIconView.setY(10);
 
             Image menuIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuButton.png"),
                     77, 73, false, true);
             ImageView menuView = new ImageView(menuIcon);
-            menuView.setX(30);
+            menuView.setX(5);
             menuView.setY(HEIGHT - 100);
             menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
@@ -136,7 +141,7 @@ public class View
                 }
             });
 
-            group.getChildren().addAll(henCircle,henIconView,cowCircle,cowIconView,sheepCircle,sheepIconView,menuView);
+            group.getChildren().addAll(henIconView,cowIconView,sheepIconView,dogIconView,catIconView,menuView);
 
         }
         catch ( Exception e ){}
@@ -279,6 +284,20 @@ public class View
             ImageView levelsView = insertBackToLevels();
             ImageView optionsView = insertOptions();
 
+            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    if( Math.abs(event.getX() - WIDTH / 2) > 150 )
+                        group.getChildren().removeAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,
+                                levelsView,optionsView);
+                    else if( Math.abs(event.getY() - HEIGHT / 2) > 240 )
+                        group.getChildren().removeAll(rectangle,menuBackgroundView,continueView,mainMenuView,restartView,
+                                levelsView,optionsView);
+                }
+            });
+
             continueView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -329,7 +348,7 @@ public class View
         catch ( IOException e ){}
     }
 
-    private void loadImages()
+    public void loadImages()
     {
         try
         {
@@ -640,10 +659,9 @@ public class View
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    //TODO Restart Game
+                    //TODO
                 }
             });
-
             Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
                     , 153, 146, false, true);
             ImageView noView = new ImageView(no);
@@ -709,25 +727,4 @@ public class View
         }
         catch ( Exception e ){}
     }
-    /*String command;
-    public String getCommand()
-    {
-        return command;
-    }
-    public void printError(String error)
-    {
-        System.out.println(error);
-    }
-    public void levelIsFinished()
-    {
-        System.out.println("Level is finished.  Congratulations! :) ");
-    }
-    public void printInfo(String info)
-    {
-        System.out.println(info);
-    }
-    public void setCommand( Scanner scanner )
-    {
-        command = scanner.nextLine();
-    }*/
 }

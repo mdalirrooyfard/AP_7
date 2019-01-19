@@ -3,8 +3,17 @@ package Controller;
 import Model.Farm;
 import Model.Player;
 import Model.Workshops.*;
+import View.Graphic.Menu;
+import View.Graphic.Start;
 import View.View;
 import com.gilecode.yagson.YaGson;
+import javafx.event.EventHandler;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -17,13 +26,31 @@ public class Controller
     private View view;
     private Farm farm = new Farm();
     //private String command ;
-    private String path;
+    private String path = null;
     private boolean isLevelFinished = false;
     private Player player;
     private int level;
-    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Player> players;
+    private Menu menu;
+    private Stage stage;
+    private Start start;
+    private ArrayList<ImageView> levels = new ArrayList<>();
 
-    public void setView( View view )
+    public Controller(Stage stage)
+    {
+        this.stage = stage;
+        loadPlayers();
+        this.start = new Start(stage);
+        loadLevels();
+        this.menu = new Menu(stage,players,start);
+        this.start.setMenu(menu);
+        view = new View(stage,menu);
+        view.loadImages();
+        menu.setMenu(menu);
+        menu.passMenuInstance(menu);
+    }
+
+    public void setView(View view )
     {
         this.view = view;
     }
@@ -428,9 +455,8 @@ public class Controller
             throw new Exception("Inputs of this workshop don't exist in warehouse");
     }
 
-    public static ArrayList<Player> loadPlayers()
+    private void loadPlayers()
     {
-        ArrayList<Player> players = new ArrayList<>();
         InputStream inputStream;
         try
         {
@@ -442,11 +468,12 @@ public class Controller
                 String savedPlayers = scanner.nextLine();
                 players = yaGson.fromJson(savedPlayers,ArrayList.class);
             }
+            for( Player p : players )
+                if( p.isLastPlayer() )
+                    player = p;
             inputStream.close();
-            return players;
         }
         catch ( Exception e ){e.printStackTrace();}
-        return players;
     }
 
     public static void savePlayers( ArrayList<Player> players )
@@ -463,5 +490,164 @@ public class Controller
             outputStream.close();
         }
         catch ( IOException e ){}
+    }
+
+    public void loadLevels()
+    {
+        try
+        {
+            for( int i = 0 ; i < 10 ; i++ )
+            {
+                String levelName = "Level"+Integer.toString(i);
+                Image openLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName+"Open.png")
+                        , 200, 79, false, true);
+                Image closeLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName+"Close.png")
+                        , 200, 79, false, true);
+                ImageView levelView;
+                if( i + 1 <= player.getLastLevel() )
+                    levelView = new ImageView(openLevel);
+                else
+                    levelView = new ImageView(closeLevel);
+                levels.add(levelView);
+                levelView.setX((Menu.WIDTH - 500) * ( (i + 1) % 2 ) + (Menu.WIDTH - 250) * ( i % 2));
+                levelView.setY(Menu.HEIGHT * ( i / 2  + 1) / 7);
+                start.getGroup().getChildren().addAll(levels.get(i));
+                levelView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        if( levelView.getImage() == openLevel )
+                        {
+                            int level = Integer.parseInt(Character.toString(levelName.toCharArray()[levelName.length()-1])+1);
+                            try
+                            {
+                                if( wasThisLevelPlayedBefore(level) )
+                                {
+                                    Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                                    rectangle.setFill(Color.rgb(54,16,0));
+                                    rectangle.setOpacity(0.7);
+
+                                    Image exitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
+                                            , 800, 300, false, true);
+                                    ImageView exitMessageView = new ImageView(exitMessage);
+                                    exitMessageView.setY(Menu.HEIGHT / 2 - 150);
+                                    exitMessageView.setX(Menu.WIDTH / 2 - 400);
+
+                                    Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
+                                            , 153, 145, false, true);
+                                    ImageView yesView = new ImageView(yes);
+                                    yesView.setY(Menu.HEIGHT / 2 + 150);
+                                    yesView.setX(Menu.WIDTH / 2 - 200);
+
+                                    Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                                            , 153, 146, false, true);
+                                    ImageView noView = new ImageView(no);
+                                    noView.setY(Menu.HEIGHT / 2 + 150 );
+                                    noView.setX(Menu.WIDTH / 2 + 47);
+
+                                    yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                    {
+                                        @Override
+                                        public void handle(MouseEvent event)
+                                        {
+                                            loadGame(false,level,player);
+                                            start.getGroup().getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                                        }
+                                    });
+
+                                    noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                    {
+                                        @Override
+                                        public void handle(MouseEvent event)
+                                        {
+                                            loadGame(true,level,player);
+                                            start.getGroup().getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                                        }
+                                    });
+                                    start.getGroup().getChildren().addAll(rectangle,exitMessageView,yesView,noView);
+                                }
+                                else
+                                    loadGame(true,level,player);
+                            }
+                            catch ( Exception e ){}
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                                rectangle.setFill(Color.rgb(54,16,0));
+                                rectangle.setOpacity(0.7);
+
+                                Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelErrorMessagebox.png")
+                                        , 800, 300, false, true);
+                                ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
+                                playerHasNotBeenChosenMessageView.setY(Menu.HEIGHT / 2 - 150);
+                                playerHasNotBeenChosenMessageView.setX(Menu.WIDTH / 2 - 400);
+
+                                Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                                        , 200, 79, false, true);
+                                ImageView okView = new ImageView(ok);
+                                okView.setY(Menu.HEIGHT / 2 + 150);
+                                okView.setX(Menu.WIDTH / 2 - 100);
+                                okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                                {
+                                    @Override
+                                    public void handle(MouseEvent event)
+                                    {
+                                        start.getGroup().getChildren().removeAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                                    }
+                                });
+
+                                start.getGroup().getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                            }
+                            catch ( Exception e ){}
+                        }
+                    }
+                });
+            }
+        }
+        catch ( IOException e ){}
+    }
+
+    private boolean wasThisLevelPlayedBefore(int level)
+    {
+        String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
+        InputStream inputStream = null;
+        try
+        {
+            inputStream = new FileInputStream(path);
+            return true;
+        }
+        catch ( Exception e )
+        {
+            return false;
+        }
+    }
+
+    private void loadGame( boolean newGame , int level , Player player )
+    {
+        if (newGame)
+        {
+            try
+            {
+                path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
+            }
+            catch (Exception e) {}
+        }
+        else
+        {
+            try
+            {
+                path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
+            }
+            catch (Exception e) {}
+        }
+        try
+        {
+            runHandler();
+        }
+        catch ( Exception e ){}
     }
 }

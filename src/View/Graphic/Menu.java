@@ -106,12 +106,13 @@ public class Menu
         return scene;
     }
 
-    public Menu(Stage stage , ArrayList<Player> players )
+    public Menu(Stage stage , ArrayList<Player> players , Start startScene )
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);
         this.stage = stage;
         this.players = players;
+        this.startScene = startScene;
         for( Player p : players )
             if( p.isLastPlayer() )
             {
@@ -157,7 +158,6 @@ public class Menu
                             {
                                 if( player != null && player.getId() > 0 )
                                 {
-                                    makeStart();
                                     stage.setScene(startScene.getScene());
                                 }
                                 else
@@ -378,9 +378,5 @@ public class Menu
         catch ( Exception e ){}
     }
 
-    private void makeStart()
-    {
-        startScene = new Start(stage,menu,player,players);
-    }
 }
 
