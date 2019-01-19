@@ -2,7 +2,6 @@ package View;
 
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ImageViewSprite extends AnimationTimer {
@@ -22,9 +21,8 @@ public class ImageViewSprite extends AnimationTimer {
 
     private long lastFrame = 0;
 
-    public ImageViewSprite(ImageView imageView, Image image, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond) {
+    public ImageViewSprite(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond) {
         this.imageView = imageView;
-        imageView.setImage(image);
         imageView.setViewport(new Rectangle2D(0, 0, frameWidth, frameHeight));
 
         cols = columns;

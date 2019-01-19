@@ -2,7 +2,6 @@ package Controller;
 
 import Model.Farm;
 import Model.Player;
-import Model.Workshops.*;
 import View.Graphic.Menu;
 import View.Graphic.Start;
 import View.View;
@@ -16,10 +15,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.rmi.server.ExportException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.Scanner;
 
 public class Controller
 {
@@ -309,6 +307,7 @@ public class Controller
             }
             farm.makeWorkShops();
             view.play(farm);
+            turnHandler();
         }
         catch ( FileNotFoundException e )
         {
@@ -319,6 +318,25 @@ public class Controller
             if (inputStream != null)
                 inputStream.close();
         }
+    }
+
+    public void turnHandler(){
+        while(true){
+            try {
+                boolean finish = farm.turn();
+                Thread.sleep(2000);
+                view.showMap();
+                view.showMovingAnimals();
+                if (finish) {
+                    System.out.println("wiiiiiiin");
+                    //todo win method in view
+                    break;
+                }
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void saveGameHandler(String path) throws Exception

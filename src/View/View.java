@@ -6,7 +6,10 @@ import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
+import javafx.animation.AnimationTimer;
+import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -14,6 +17,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -174,7 +180,7 @@ public class View
         //todo show(wareHouse)
     }
 
-    private void showMap()
+    public void showMap()
     {
         group.getChildren().removeAll(currentEntities);
         currentEntities.clear();
@@ -196,8 +202,10 @@ public class View
                         else
                             imageView = new ImageView(grass[3]);
                     }
-                    currentEntities.add(imageView);
-                    show(imageView, e);
+                    if (imageView != null) {
+                        currentEntities.add(imageView);
+                        show(imageView, e);
+                    }
                 }
             }
     }
@@ -249,14 +257,40 @@ public class View
                 if (direction != DIRECTION.NONE) {
                     imageView.setX(((Animal) e).getPreviousX());
                     imageView.setY(((Animal) e).getPreviousY());
+                    final AnimationTimer animationTimer = new ImageViewSprite(
+                            imageView, 5, 5, 24,
+                            (int)imageView.getImage().getWidth() / 5,
+                            (int)imageView.getImage().getHeight() / 5, 24
+                    );
+                    animationTimer.start();
+                    Path path = new Path(new MoveTo(((Animal) e).getPreviousX(), ((Animal) e).getPreviousY()),
+                            new LineTo(e.getShowX(),e.getShowY()));
+                    group.getChildren().addAll(path);
+                    path.setVisible(false);
+                    PathTransition pathTransition = new PathTransition(Duration.millis(5000), path, imageView);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+                    pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            animationTimer.stop();
+                        }
+                    });
+
                 }
                 else{
                     imageView.setX(e.getShowX());
                     imageView.setY(e.getShowY());
+                    final AnimationTimer animationTimer = new ImageViewSprite(
+                            imageView, 4, 6, 24, 120, 108, 24
+                    );
+                    animationTimer.start();
                 }
             }
         }
     }
+
     private void show(ImageView iView, Entity e)
     {
         iView.setTranslateX(e.getShowX());
