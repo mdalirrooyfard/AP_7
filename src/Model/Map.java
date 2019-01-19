@@ -2,6 +2,7 @@ package Model;
 
 import Model.Items.*;
 import Model.Animals.Wild.*;
+import com.sun.org.apache.xpath.internal.axes.WalkingIterator;
 
 import java.util.ArrayList;
 
@@ -64,52 +65,47 @@ public class Map
             {
                 level++;
                 Out:
-                for( int i = level ; i > -1 ; i-- )
+                for( int i = -level ; i <= level && !isItemFound ; i++ )
                 {
-                    if( y - i > -1 && x - level + i > -1 )
-                        for( Entity e : cells[y - i][x - level + i].getStuffs() )
+                    if( x + i > -1 && x + i < width )
+                    {
+                        if( Math.abs(i) == level )
                         {
-                            if( e instanceof Item )
-                            {
-                                isItemFound = true;
-                                Item_x = x - level + i;
-                                Item_y = y - i;
-                                break Out;
-                            }
+                            for( int j = -level ; j <= level ; j++ )
+                                if( y + j < length && y + j > -1 )
+                                    for( Entity e : cells[y + j][x + i].getStuffs() )
+                                    {
+                                        if( e instanceof Item )
+                                        {
+                                            isItemFound = true;
+                                            Item_y = y + j;
+                                        }
+                                    }
                         }
-                    if( y - i > -1 && x + level - i < width )
-                        for( Entity e : cells[y - i][x + level - i].getStuffs() )
+                        else
                         {
-                            if( e instanceof Item )
-                            {
-                                isItemFound = true;
-                                Item_x = x + level - i;
-                                Item_y = y - i;
-                                break Out;
-                            }
+                            if (y - level > -1)
+                                for (Entity e : cells[y - level][x + i].getStuffs())
+                                {
+                                    if (e instanceof Item)
+                                    {
+                                        isItemFound = true;
+                                        Item_y = y - level;
+                                    }
+                                }
+                            if (y + level < length)
+                                for (Entity e : cells[y + level][x + i].getStuffs())
+                                {
+                                    if (e instanceof Item)
+                                    {
+                                        isItemFound = true;
+                                        Item_y = y + level;
+                                    }
+                                }
                         }
-                    if( y + i < length && x - level + i > -1 )
-                        for( Entity e : cells[y + i][x - level + i].getStuffs() )
-                        {
-                            if( e instanceof Item )
-                            {
-                                isItemFound = true;
-                                Item_x = x - level + i;
-                                Item_y = y + i;
-                                break Out;
-                            }
-                        }
-                    if( y + i < length && x + level - i < width )
-                        for( Entity e : cells[y + i][x + level - i].getStuffs() )
-                        {
-                            if( e instanceof Item )
-                            {
-                                isItemFound = true;
-                                Item_x = x + level - i;
-                                Item_y = y + i;
-                                break Out;
-                            }
-                        }
+                        if( isItemFound )
+                            Item_x = x + i;
+                    }
                 }
             }
             return getDirection( x, y , Item_x , Item_y );
@@ -127,52 +123,47 @@ public class Map
             {
                 level++;
                 Out:
-                for( int i = level ; i > -1 ; i-- )
+                for( int i = -level ; i <= level && !isGrassFound ; i++ )
                 {
-                    if( y - i > -1 && x - level + i > -1 )
-                        for( Entity e : cells[y - i][x - level + i].getStuffs() )
+                    if( x + i > -1 && x + i < width )
+                    {
+                        if( Math.abs(i) == level )
                         {
-                            if( e instanceof Grass )
-                            {
-                                isGrassFound = true;
-                                Grass_x = x - level + i;
-                                Grass_y = y - i;
-                                break Out;
-                            }
+                            for( int j = -level ; j <= level ; j++ )
+                                if( y + j < length && y + j > -1 )
+                                    for( Entity e : cells[y + j][x + i].getStuffs() )
+                                    {
+                                        if( e instanceof Grass )
+                                        {
+                                            isGrassFound = true;
+                                            Grass_y = y + j;
+                                        }
+                                    }
                         }
-                    if( y - i > -1 && x + level - i < width )
-                        for( Entity e : cells[y - i][x + level - i].getStuffs() )
+                        else
                         {
-                            if( e instanceof Grass )
-                            {
-                                isGrassFound = true;
-                                Grass_x = x + level - i;
-                                Grass_y = y - i;
-                                break Out;
-                            }
+                            if (y - level > -1)
+                                for (Entity e : cells[y - level][x + i].getStuffs())
+                                {
+                                    if (e instanceof Grass)
+                                    {
+                                        isGrassFound = true;
+                                        Grass_y = y - level;
+                                    }
+                                }
+                            if (y + level < length)
+                                for (Entity e : cells[y + level][x + i].getStuffs())
+                                {
+                                    if (e instanceof Grass)
+                                    {
+                                        isGrassFound = true;
+                                        Grass_y = y + level;
+                                    }
+                                }
                         }
-                    if( y + i < length && x - level + i > -1 )
-                        for( Entity e : cells[y + i][x - level + i].getStuffs() )
-                        {
-                            if( e instanceof Grass )
-                            {
-                                isGrassFound = true;
-                                Grass_x = x - level + i;
-                                Grass_y = y + i;
-                                break Out;
-                            }
-                        }
-                    if( y + i < length && x + level - i < width )
-                        for( Entity e : cells[y + i][x + level - i].getStuffs() )
-                        {
-                            if( e instanceof Grass )
-                            {
-                                isGrassFound = true;
-                                Grass_x = x + level - i;
-                                Grass_y = y + i;
-                                break Out;
-                            }
-                        }
+                        if( isGrassFound )
+                            Grass_x = x + i;
+                    }
                 }
             }
             return getDirection( x, y , Grass_x , Grass_y );
@@ -190,52 +181,47 @@ public class Map
             {
                 level++;
                 Out:
-                for( int i = level ; i > -1 ; i-- )
+                for( int i = -level ; i <= level && !isWildFound ; i++ )
                 {
-                    if( y - i > -1 && x - level + i > -1 )
-                        for( Entity e : cells[y - i][x - level + i].getStuffs() )
+                    if( x + i > -1 && x + i < width )
+                    {
+                        if( Math.abs(i) == level )
                         {
-                            if( e instanceof Wild )
-                            {
-                                isWildFound = true;
-                                Wild_x = x - level + i;
-                                Wild_y = y - i;
-                                break Out;
-                            }
+                            for( int j = -level ; j <= level ; j++ )
+                                if( y + j < length && y + j > -1 )
+                                    for( Entity e : cells[y + j][x + i].getStuffs() )
+                                    {
+                                        if( e instanceof Wild )
+                                        {
+                                            isWildFound = true;
+                                            Wild_y = y + j;
+                                        }
+                                    }
                         }
-                    if( y - i > -1 && x + level - i < width )
-                        for( Entity e : cells[y - i][x + level - i].getStuffs() )
+                        else
                         {
-                            if( e instanceof Wild )
-                            {
-                                isWildFound = true;
-                                Wild_x = x + level - i;
-                                Wild_y = y - i;
-                                break Out;
-                            }
+                            if (y - level > -1)
+                                for (Entity e : cells[y - level][x + i].getStuffs())
+                                {
+                                    if (e instanceof Wild)
+                                    {
+                                        isWildFound = true;
+                                        Wild_y = y - level;
+                                    }
+                                }
+                            if (y + level < length)
+                                for (Entity e : cells[y + level][x + i].getStuffs())
+                                {
+                                    if (e instanceof Wild)
+                                    {
+                                        isWildFound = true;
+                                        Wild_y = y + level;
+                                    }
+                                }
                         }
-                    if( y + i < length && x - level + i > -1 )
-                        for( Entity e : cells[y + i][x - level + i].getStuffs() )
-                        {
-                            if( e instanceof Wild )
-                            {
-                                isWildFound = true;
-                                Wild_x = x - level + i;
-                                Wild_y = y + i;
-                                break Out;
-                            }
-                        }
-                    if( y + i < length && x + level - i < width )
-                        for( Entity e : cells[y + i][x + level - i].getStuffs() )
-                        {
-                            if( e instanceof Wild )
-                            {
-                                isWildFound = true;
-                                Wild_x = x + level - i;
-                                Wild_y = y + i;
-                                break Out;
-                            }
-                        }
+                        if( isWildFound )
+                            Wild_x = x + i;
+                    }
                 }
             }
             return getDirection( x, y , Wild_x , Wild_y );
@@ -275,15 +261,22 @@ public class Map
 
     private DIRECTION getDirection( int startX , int startY , int destinationX , int destinationY )
     {
-        if( destinationY < startY )
+        if( destinationX == startX && destinationY < startY )
             return DIRECTION.UP;
-        else if( destinationY > startY )
+        if( destinationX == startX && destinationY > startY )
             return DIRECTION.DOWN;
-        else if( destinationX < startX )
+        if( destinationY == startY && destinationX < startX )
             return DIRECTION.LEFT;
-        else if( destinationX > startX )
+        if( destinationY == startY && destinationX > startX )
             return DIRECTION.RIGHT;
-        else
-            return DIRECTION.NONE;
+        if( destinationX < startX && destinationY < startY )
+            return DIRECTION.UP_LEFT;
+        if( destinationX > startX && destinationY > startY )
+            return DIRECTION.DOWN_RIGHT;
+        if( destinationX > startX && destinationY < startY )
+            return DIRECTION.UP_RIGHT;
+        if( destinationX < startX && destinationY > startY )
+            return DIRECTION.DOWN_LEFT;
+        return DIRECTION.NONE;
     }
 }
