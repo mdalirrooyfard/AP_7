@@ -23,6 +23,11 @@ public abstract class Domestic extends Animal {
         satiety -= amount;
     }
 
+    public void increaseSatiety (int amount){
+        satiety += amount;
+    }
+
+
     public void eat () {
         this.satiety = FULL_SATIETY;
     }

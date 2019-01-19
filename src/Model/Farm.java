@@ -453,17 +453,26 @@ public class Farm {
             Entity entity = iterator.next();
             boolean doMove = true;
             if (entity instanceof Domestic) {
+                int isEating = ((Domestic) entity).isEating();
                 if (((Domestic) entity).getSatiety() == 0) {
                     iterator.remove();
                     continue;
-                } else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                }else if(isEating == Constants.FULL_SATIETY){
+                    isEating = 0;
+                    produceItem((Domestic) entity);
+                }else if (isEating != 0 && isEating < Constants.FULL_SATIETY) {
+                    ((Domestic) entity).increaseSatiety(1);
+                    ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
+                    doMove = false;
+                }else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX());
                     if (!doMove) {
-                        ((Domestic)entity).setEating(true);
-                        ((Domestic) entity).setSatiety(Constants.FULL_SATIETY);
+                        ((Domestic) entity).increaseSatiety(1);
+                        ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
                     }
                 }
-            } else if (entity instanceof Cat)
+            }
+            else if (entity instanceof Cat)
                 doMove = !catCollect(entity.getY(), entity.getX());
             if (entity instanceof Animal && doMove) {
                 ((Animal) entity).move();
