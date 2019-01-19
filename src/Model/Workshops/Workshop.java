@@ -16,6 +16,15 @@ public class Workshop extends Entity {
     protected String workShopName;
     //todo workshop places
 
+    @Override
+    public double getShowX() {
+        return getX();
+    }
+    @Override
+    public double getShowY() {
+        return getY();
+    }
+
     public int getCount() {
         return count;
     }

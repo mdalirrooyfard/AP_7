@@ -10,6 +10,15 @@ public abstract class Animal extends Entity {
     protected String name;
     protected DIRECTION direction;
 
+    @Override
+    public double getShowX() {
+        return getX()*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_X;
+    }
+    @Override
+    public double getShowY() {
+        return getY()*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_Y;
+    }
+
     public DIRECTION getDirection() {
         return direction;
     }

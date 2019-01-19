@@ -10,7 +10,12 @@ public class Transportations extends Entity {
     private boolean isMoving = false ;
     private int workingTime ;
     private int currentTime ;
-
+    @Override
+    public double getShowX() {
+        return getX();
+    }
+    @Override
+    public double getShowY() { return getY(); }
     public ArrayList<Item> getItems() {
         return items;
     }

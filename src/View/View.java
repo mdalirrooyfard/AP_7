@@ -9,7 +9,6 @@ import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
-import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -18,19 +17,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -213,9 +204,9 @@ public class View
 
     private void show(ImageView iView, Entity e)
     {
-        iView.setTranslateX(e.getX());
+        iView.setTranslateX(e.getShowX());
         TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , iView);
-        translateTransition.setToY(e.getY());
+        translateTransition.setToY(e.getShowY());
         group.getChildren().add(iView);
         translateTransition.play();
     }
@@ -244,55 +235,55 @@ public class View
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "death" + ".png"),
-                            50, 50, false, true);
+                            125, 125, false, true);
                     animalsDeath.put(s.toLowerCase(), image);
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                             "eat"+".png"),
-                            50, 50, false, true);
+                            125, 125, false, true);
                     domesticEat.put(s.toLowerCase(), image);
                 }
                 if (s.equals("Bear") || s.equals("Lion"))
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "caged" + ".png"),
-                            50, 50, false, true);
+                            Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                     wildCaged.put(s.toLowerCase(), image);
                 }
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "fixed"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsFixed.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE , Constants.ANIMAL_SIZE, false, true);
                 animalsDown.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down_left"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsDownLeft.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "down_right"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsDownRight.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "right"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsRight.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "left"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsLeft.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "up"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsUp.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "up_right"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsUpRight.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                         "up_left"+".png"),
-                        50, 50, false, true);
+                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                 animalsUpLeft.put(s.toLowerCase(),image);
             }
         }
@@ -356,7 +347,7 @@ public class View
         {
             fixedTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    125, 125, false, true);
             leftTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
@@ -365,7 +356,7 @@ public class View
                     50, 50, false, true);
             fixedHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
+                    135, 135, false, true);
             leftHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
@@ -374,10 +365,10 @@ public class View
                     50, 50, false, true);
             fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    50, 50, false, true);
+                    135, 135, false, true);
             movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    50, 50, false, true);
+                    150, 150, false, true);
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
         }

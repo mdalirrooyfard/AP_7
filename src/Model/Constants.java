@@ -2,6 +2,10 @@ package Model;
 
 public class Constants
 {
+    public static final int ANIMAL_SHOW_SCALE = 10;
+    public static final int ANIMAL_DISPLACEMENT_Y = 200;
+    public static final int ANIMAL_DISPLACEMENT_X = 330;
+    public static final int ANIMAL_SIZE = 110;
     public static final double scale = 0.3;
     public static final int FULL_SATIETY = 8;
     public static final int WELL_CAPACITY = 7;

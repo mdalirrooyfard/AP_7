@@ -16,7 +16,14 @@ public class Well extends Entity{
         this.setBuyCost(WELL_BASE_MONEY);
         this.setUpgradeCost(WELL_BASE_UPGRADE_COST);
     }
-
+    @Override
+    public double getShowX() {
+        return getX();
+    }
+    @Override
+    public double getShowY() {
+        return getY();
+    }
     public int getCurrentVolume() {
         return currentVolume;
     }

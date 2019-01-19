@@ -8,6 +8,14 @@ import java.util.ArrayList;
 public class WareHouse extends Entity{
 
     private ArrayList<Item> collectedItems = new ArrayList<>();
+    @Override
+    public double getShowX() {
+        return getX();
+    }
+    @Override
+    public double getShowY() {
+        return getY();
+    }
     private int currentVolume ;
 
     public WareHouse (int volume){

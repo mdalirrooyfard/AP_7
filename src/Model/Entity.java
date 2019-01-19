@@ -1,6 +1,6 @@
 package Model;
 
-public class Entity {
+public abstract class Entity {
     protected double x;
     protected double y;
     protected int level = 1;
@@ -8,6 +8,9 @@ public class Entity {
     protected int buyCost;
     protected int sellCost;
     protected int upgradeCost;
+    public abstract double getShowX();
+    public abstract double getShowY();
+
     public int getVolume() {
         return volume;
     }
