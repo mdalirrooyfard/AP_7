@@ -9,6 +9,16 @@ public abstract class Animal extends Entity {
     protected Map map;
     protected String name;
     protected DIRECTION direction;
+    protected double previousX;
+    protected double previousY;
+
+    public double getPreviousX() {
+        return previousX*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_X;
+    }
+
+    public double getPreviousY() {
+        return previousY * Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_Y;
+    }
 
     @Override
     public double getShowX() {
@@ -48,42 +58,60 @@ public abstract class Animal extends Entity {
         switch (dir)
         {
             case 7:
+                previousX = x;
+                previousY = y;
                 x += Constants.scale;
                 y -= Constants.scale;
                 direction = DIRECTION.UP_RIGHT;
                 break;
             case 6:
+                previousX = x;
+                previousY = y;
                 x -= Constants.scale;
                 y += Constants.scale;
                 direction = DIRECTION.DOWN_LEFT;
                 break;
             case 5:
+                previousX = x;
+                previousY = y;
                 x -= Constants.scale;
                 y -= Constants.scale;
                 direction = DIRECTION.UP_LEFT;
                 break;
             case 8:
+                previousX = x;
+                previousY = y;
                 x += Constants.scale;
                 y += Constants.scale;
                 direction = DIRECTION.DOWN_RIGHT;
                 break;
             case 1:
+                previousX = x;
+                previousY = y;
                 y -= Constants.scale;
                 direction = DIRECTION.UP;
                 break;
             case 3:
+                previousX = x;
+                previousY = y;
                 y += Constants.scale;
                 direction = DIRECTION.DOWN;
                 break;
             case 4:
+                previousX = x;
+                previousY = y;
                 x -= Constants.scale;
                 direction = DIRECTION.LEFT;
                 break;
             case 2:
+                previousX = x;
+                previousY = y;
                 x += Constants.scale;
                 direction = DIRECTION.RIGHT;
                 break;
             default:
+                previousX = x;
+                previousY = y;
                 direction = DIRECTION.NONE;
         }
     }
@@ -92,35 +120,51 @@ public abstract class Animal extends Entity {
     {
         switch (direction){
             case UP:
+                previousX = x;
+                previousY = y;
                 this.y -= Constants.scale ;
                 break;
 
             case DOWN:
+                previousX = x;
+                previousY = y;
                 this.y += Constants.scale ;
                 break;
 
             case RIGHT:
+                previousX = x;
+                previousY = y;
                 this.x += Constants.scale;
                 break;
 
             case LEFT:
+                previousX = x;
+                previousY = y;
                 this.x -= Constants.scale;
                 break;
 
             case UP_LEFT:
+                previousX = x;
+                previousY = y;
                 this.x -= Constants.scale;
                 this.y -= Constants.scale;
                 break;
 
             case DOWN_LEFT:
+                previousX = x;
+                previousY = y;
                 this.x -= Constants.scale;
                 this.y += Constants.scale;
                 break;
             case UP_RIGHT:
+                previousX = x;
+                previousY = y;
                 this.x += Constants.scale;
                 this.y -= Constants.scale;
                 break;
             case DOWN_RIGHT:
+                previousX = x;
+                previousY = y;
                 this.x += Constants.scale;
                 this.y += Constants.scale;
                 break;
