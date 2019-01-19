@@ -15,6 +15,7 @@ import Model.Transportation.Helicopter;
 import Model.Transportation.Transportations;
 import Model.Transportation.Truck;
 import Model.Workshops.*;
+import javafx.stage.Screen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,8 @@ import java.util.Iterator;
 
 public class Farm {
     private Map map;
-    private final int mapLength = 40;
-    private final int mapWidth = 60;
+    private final int mapLength =(int) (Screen.getPrimary().getVisualBounds().getHeight()/22.5);
+    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth()/20);
     private ArrayList<Entity> stuffs = new ArrayList<>();
     private int time;
     private Helicopter helicopter;

@@ -5,6 +5,14 @@ import Model.Entity;
 public class Item extends Entity {
     private String kind ;
     private boolean isTakenByCat = false;
+    @Override
+    public double getShowX() {
+        return getX()*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_X;
+    }
+    @Override
+    public double getShowY() {
+        return getY()*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_Y;
+    }
 
     public String getKind() {
         return kind;
