@@ -61,6 +61,7 @@ public class View
     private long gameTime = 0 , lastTime = 0 , second = 1000000000;
     private Label timerLabel;
     private Menu menu;
+    private ArrayList<ImageView> currentEntities = new ArrayList<>();
 
     public Scene getScene()
     {
@@ -185,9 +186,7 @@ public class View
                 ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
                 for (Entity e : stuffs)
                 {
-                    if(e instanceof Animal)
-                        imageView = new ImageView(animalsFixed.get(((Animal) e).getName()));
-                    else if(e instanceof Item)
+                    if(e instanceof Item)
                         imageView = new ImageView(items.get(((Item) e).getKind()));
                     else if(e instanceof Grass)
                     {
@@ -197,11 +196,30 @@ public class View
                         else
                             imageView = new ImageView(grass[3]);
                     }
+                    currentEntities.add(imageView);
                     show(imageView, e);
                 }
             }
     }
+    public void showFixedAnimal(){
+        ImageView imageView;
+        for (Entity e : farm.getStuffs()) {
+            if(e instanceof Animal) {
+                imageView = new ImageView(animalsFixed.get(((Animal) e).getName()));
+                currentEntities.add(imageView);
+                show(imageView, e);
+            }
+        }
+    }
+    public void letsMove(){
+        ImageView imageView;
+        ArrayList<Entity> stuffs = farm.getStuffs();
+        group.getChildren().removeAll(currentEntities);
+        currentEntities.clear();
+        for(Entity e : stuffs){
 
+        }
+    }
     private void show(ImageView iView, Entity e)
     {
         iView.setTranslateX(e.getShowX());

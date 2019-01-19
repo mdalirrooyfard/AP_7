@@ -2,7 +2,6 @@ package Model;
 
 import Model.Items.*;
 import Model.Animals.Wild.*;
-import com.sun.org.apache.xpath.internal.axes.WalkingIterator;
 
 import java.util.ArrayList;
 
