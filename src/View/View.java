@@ -294,7 +294,7 @@ public class View
     private void show(ImageView iView, Entity e)
     {
         iView.setTranslateX(e.getShowX());
-        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getY()*3) , iView);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getShowY()*3) , iView);
         translateTransition.setToY(e.getShowY());
         group.getChildren().add(iView);
         translateTransition.play();

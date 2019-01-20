@@ -24,8 +24,8 @@ import java.util.Iterator;
 
 public class Farm {
     private Map map;
-    private final int mapLength =(int) (Screen.getPrimary().getVisualBounds().getHeight()/22.5);
-    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth()/20);
+    private final int mapLength =(int) (Screen.getPrimary().getVisualBounds().getHeight()/22);
+    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth()/24);
     private ArrayList<Entity> stuffs = new ArrayList<>();
     private int time;
     private Helicopter helicopter;
