@@ -116,13 +116,13 @@ public class Map
     {
         if( isThereGrass() && !cellStatus(x,y)[3] )
         {
-            boolean isGrassFound = false;
+            //boolean isGrassFound = false;
             int level = 0 , Grass_x = -1 , Grass_y = -1;
-            while( !isGrassFound )
+            while( true )
             {
                 level++;
                 Out:
-                for( int i = -level ; i <= level && !isGrassFound ; i++ )
+                for( int i = -level ; i <= level ; i++ )
                 {
                     if( x + i > -1 && x + i < width )
                     {
@@ -134,8 +134,9 @@ public class Map
                                     {
                                         if( e instanceof Grass )
                                         {
-                                            isGrassFound = true;
-                                            Grass_y = y + j;
+                                            /*isGrassFound = true;
+                                            Grass_y = y + j;*/
+                                            return getDirection(x,y,x+i,y+j);
                                         }
                                     }
                         }
@@ -146,8 +147,9 @@ public class Map
                                 {
                                     if (e instanceof Grass)
                                     {
-                                        isGrassFound = true;
-                                        Grass_y = y - level;
+                                        /*isGrassFound = true;
+                                        Grass_y = y - level;*/
+                                        return getDirection(x,y,x+i,y-level);
                                     }
                                 }
                             if (y + level < length)
@@ -155,17 +157,18 @@ public class Map
                                 {
                                     if (e instanceof Grass)
                                     {
-                                        isGrassFound = true;
-                                        Grass_y = y + level;
+                                        /*isGrassFound = true;
+                                        Grass_y = y + level;*/
+                                        return getDirection(x,y,x+i,y+level);
                                     }
                                 }
                         }
-                        if( isGrassFound )
-                            Grass_x = x + i;
+                        /*if( isGrassFound )
+                            Grass_x = x + i;*/
                     }
                 }
             }
-            return getDirection( x, y , Grass_x , Grass_y );
+            //return getDirection( x, y , Grass_x , Grass_y );
         }
         return DIRECTION.NONE;
     }

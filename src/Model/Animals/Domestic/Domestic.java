@@ -33,7 +33,7 @@ public abstract class Domestic extends Animal {
     }
 
     public void move(){
-        if(this.satiety >= 4){
+        if(this.satiety >= 4 || !map.isThereGrass()){
             super.move();
         }
         else {

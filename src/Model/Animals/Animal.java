@@ -116,6 +116,7 @@ public abstract class Animal extends Entity {
                 previousY = y;
                 direction = DIRECTION.NONE;
         }
+        System.out.println("move "+name+" "+direction+" "+x+" "+y);
     }
 
     public void smartMove (DIRECTION direction)
@@ -171,12 +172,14 @@ public abstract class Animal extends Entity {
                 this.y += Constants.scale;
                 break;
             case NONE:
-                move();
+                this.move();
                 break;
             default:
                 break;
 
         }
+        System.out.println("smart "+name+" "+direction+" "+x+" "+y);
+
     }
 
     private boolean canMoveInThisDirection(int dir)
@@ -184,28 +187,28 @@ public abstract class Animal extends Entity {
         switch (dir)
         {
             case 7: //up_right
-                if( x + Constants.scale < map.getWidth()+0.0 && y - Constants.scale >= 0.0 )
+                if( (int)x + Constants.scale < 53 && (int)y - Constants.scale >= 0 )
                     return true;
             case 6: //down_left
-                if( x - Constants.scale >= 0.0 && y + Constants.scale < map.getLength()+0.0 )
+                if( (int)x - Constants.scale >= 0 && (int)y + Constants.scale < 30 )
                     return true;
             case 5: //up_left
-                if( x - Constants.scale >= 0.0 && y - Constants.scale >= 0.0 )
+                if( (int)x - Constants.scale >= 0 && (int)y - Constants.scale >= 0 )
                     return true;
             case 8: //down_right
-                if( x + Constants.scale < map.getWidth()+0.0 && y + Constants.scale < map.getLength()+0.0 )
+                if( (int)x + Constants.scale < 53 && (int)y + Constants.scale < 30 )
                     return true;
             case 1: //up
-                if( y - Constants.scale >= 0.0 )
+                if( (int)y - Constants.scale >= 0 )
                     return true;
             case 3: //down
-                if( y + Constants.scale < map.getLength()+0.0 )
+                if( (int)y + Constants.scale < 30 )
                     return true;
             case 4: //left
-                if( x - Constants.scale >= 0.0 )
+                if( (int)x - Constants.scale >= 0 )
                     return true;
             case 2: //right
-                if( x + Constants.scale < map.getWidth()+0.0 )
+                if( (int)x + Constants.scale < 53 )
                     return true;
         }
         return false;
