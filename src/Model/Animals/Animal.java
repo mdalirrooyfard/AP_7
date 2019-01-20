@@ -50,6 +50,7 @@ public abstract class Animal extends Entity {
         this.x = x;
         this.y = y;
         this.map = map;
+        this.direction = DIRECTION.NONE;
     }
     public void move()
     {

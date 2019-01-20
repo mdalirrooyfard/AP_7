@@ -6,6 +6,7 @@ import View.Graphic.Menu;
 import View.Graphic.Start;
 import View.View;
 import com.gilecode.yagson.YaGson;
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -321,22 +322,31 @@ public class Controller
     }
 
     public void turnHandler(){
-        while(true){
-            try {
-                boolean finish = farm.turn();
-                Thread.sleep(2000);
-                view.showMap();
-                view.showMovingAnimals();
-                if (finish) {
-                    System.out.println("wiiiiiiin");
-                    //todo win method in view
-                    break;
+        AnimationTimer aTimer = new AnimationTimer() {
+            private double time = 11;
+            private long lastTime = 0;
+            private long second = 1000000000;
+            private boolean finish = false;
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0)
+                    lastTime = now;
+                if (now > lastTime + (second / 10)) {
+                    time -= 1;
+                    lastTime = now;
                 }
-            }catch (InterruptedException e){
-                e.printStackTrace();
+                if (time == 0){
+                    finish = farm.turn();
+                    view.showMap();
+                    view.showMovingAnimals();
+                    time = 11;
+                    lastTime = 0;
+                }
+               // if (finish)
+                 //   this.stop();
             }
-        }
-
+        };
+        aTimer.start();
     }
 
     public void saveGameHandler(String path) throws Exception

@@ -219,6 +219,7 @@ public class View
             }
         }
     }
+
     public void showMovingAnimals(){
         ImageView imageView = null;
         ArrayList<Entity> stuffs = farm.getStuffs();
@@ -257,17 +258,18 @@ public class View
                 if (direction != DIRECTION.NONE) {
                     imageView.setX(((Animal) e).getPreviousX());
                     imageView.setY(((Animal) e).getPreviousY());
-                    final AnimationTimer animationTimer = new ImageViewSprite(
+                    imageView.setFitWidth(Constants.ANIMAL_SIZE);
+                    imageView.setFitHeight(Constants.ANIMAL_SIZE);
+                    group.getChildren().add(imageView);
+                    currentEntities.add(imageView);
+                    AnimationTimer animationTimer = new ImageViewSprite(
                             imageView, 5, 5, 24,
                             (int)imageView.getImage().getWidth() / 5,
                             (int)imageView.getImage().getHeight() / 5, 24
                     );
                     animationTimer.start();
-                    Path path = new Path(new MoveTo(((Animal) e).getPreviousX(), ((Animal) e).getPreviousY()),
-                            new LineTo(e.getShowX(),e.getShowY()));
-                    group.getChildren().addAll(path);
-                    path.setVisible(false);
-                    PathTransition pathTransition = new PathTransition(Duration.millis(5000), path, imageView);
+                    MoveTransition pathTransition = new MoveTransition(imageView, ((Animal) e).getPreviousX(),
+                            ((Animal) e).getPreviousY(), e.getShowX(), e.getShowY(), 3000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -282,6 +284,8 @@ public class View
                 else{
                     imageView.setX(e.getShowX());
                     imageView.setY(e.getShowY());
+                    group.getChildren().add(imageView);
+                    currentEntities.add(imageView);
                     final AnimationTimer animationTimer = new ImageViewSprite(
                             imageView, 4, 6, 24, 120, 108, 24
                     );
@@ -324,11 +328,11 @@ public class View
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "death" + ".png"),
-                            125, 125, false, true);
+                            Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                     animalsDeath.put(s.toLowerCase(), image);
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
                             "eat"+".png"),
-                            125, 125, false, true);
+                            Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
                     domesticEat.put(s.toLowerCase(), image);
                 }
                 if (s.equals("Bear") || s.equals("Lion"))

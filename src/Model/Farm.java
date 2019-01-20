@@ -164,8 +164,8 @@ public class Farm {
         if (well.getCurrentVolume() == 0)
             return false;
         well.setCurrentVolume(well.getCurrentVolume() - 1);
-        int centerX = (int) Math.round(x);
-        int centerY = (int) Math.round(y);
+        int centerX = (int) x;
+        int centerY = (int) y;
         stuffs.add(new Grass(centerX, centerY));
         if (centerY - 1 >= 0)
             stuffs.add(new Grass(centerX, centerY - 1)); //up
@@ -281,8 +281,8 @@ public class Farm {
     }
 
     public boolean pickUp(double x, double y) {
-        int currentX = (int) Math.round(x);
-        int currentY = (int) Math.round(y);
+        int currentX = (int)x;
+        int currentY = (int)y;
         ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
         ArrayList<Entity> cellRemainItems = new ArrayList<>();
         boolean isEveryThingPickedUp = true;
@@ -304,8 +304,8 @@ public class Farm {
     }
 
     public boolean putCage(double x, double y) {
-        int currentX = (int) Math.round(x);
-        int currentY = (int) Math.round(y);
+        int currentX = (int) x;
+        int currentY = (int) y;
         if (!map.getCells()[currentY][currentX].status()[0])
             return false;
         ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
@@ -422,8 +422,8 @@ public class Farm {
     }
 
     public boolean checkEatingGrass(double y, double x, int max) {
-        int X = (int) Math.round(x);
-        int Y = (int) Math.round(y);
+        int X = (int) x;
+        int Y = (int) y;
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Grass && ((Grass) entity).isEaten()== 8) {
@@ -434,8 +434,8 @@ public class Farm {
     }
 
     public boolean catCollect(double y, double x) {
-        int X = (int) Math.round(x);
-        int Y = (int) Math.round(y);
+        int X = (int) x;
+        int Y = (int) y;
         boolean result = false;
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
@@ -809,7 +809,7 @@ public class Farm {
 
     public void checkWorkShops() {
         for (Workshop w : workshops)
-            if (w.isWorking())
+            if (w != null && w.isWorking())
             {
                 if (w.getCurrentTime() > 0)
                     w.currentTimeDecrease(1);
