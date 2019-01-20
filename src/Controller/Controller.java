@@ -622,7 +622,7 @@ public class Controller
             timerView.setY(Constants.HEIGHT - 100);
 
             Label timeLabel = new Label("");
-            timeLabel.relocate(Constants.WIDTH - 180,Constants.HEIGHT - 80);
+            timeLabel.relocate(Constants.WIDTH - 160,Constants.HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
             timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
             if( time / 3600 < 10 )
@@ -1084,17 +1084,16 @@ public class Controller
             rectangle.setOpacity(0.7);
 
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMenuBackground.png")
-                    , 300, 480, false, true);
+                    , 500, 600, false, true);
             ImageView backgroundView = new ImageView(background);
-            backgroundView.setY(Constants.HEIGHT / 2 - 240);
-            backgroundView.setX(Constants.WIDTH / 2 - 150);
+            backgroundView.setY(Constants.HEIGHT / 2 - 300);
+            backgroundView.setX(Constants.WIDTH / 2 - 250);
 
             Label sound = new Label("Sound On/Off : ");
-            sound.setLayoutY(Menu.HEIGHT / 2 - 120);
-            sound.setLayoutX(Menu.WIDTH / 2 - 280);
+            sound.setLayoutY(Menu.HEIGHT / 2 - 150);
+            sound.setLayoutX(Menu.WIDTH / 2 - 200);
             sound.setTextFill(Color.rgb(54,16,0));
             sound.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-
             Image soundIconMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\muteSoundButton.png")
                     , 80, 76, false, true);
             Image soundIconUnMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\soundButton.png")
@@ -1104,8 +1103,8 @@ public class Controller
                 soundIconView = new ImageView(soundIconMute);
             else
                 soundIconView = new ImageView(soundIconUnMute);
-            soundIconView.setY(Menu.HEIGHT / 2 - 120);
-            soundIconView.setX(Menu.WIDTH / 2 - 190);
+            soundIconView.setY(Menu.HEIGHT / 2 - 175);
+            soundIconView.setX(Menu.WIDTH / 2 - 30);
             soundIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1128,10 +1127,9 @@ public class Controller
 
             Label music = new Label("Music On/Off : ");
             music.setLayoutY(Menu.HEIGHT / 2);
-            music.setLayoutX(Menu.WIDTH / 2 - 280);
+            music.setLayoutX(Menu.WIDTH / 2 - 200);
             music.setTextFill(Color.rgb(54,16,0));
             music.setFont(javafx.scene.text.Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-
             Image musicIconMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\musicMuteButton.png")
                     , 80, 76, false, true);
             Image musicIconUnMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\musicButton.png")
@@ -1141,8 +1139,8 @@ public class Controller
                 musicIconView = new ImageView(musicIconMute);
             else
                 musicIconView = new ImageView(musicIconUnMute);
-            musicIconView.setY(Menu.HEIGHT / 2);
-            musicIconView.setX(Menu.WIDTH / 2 - 190);
+            musicIconView.setY(Menu.HEIGHT / 2 - 25);
+            musicIconView.setX(Menu.WIDTH / 2 - 30);
             musicIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1163,14 +1161,12 @@ public class Controller
                     }
                 }
             });
-
             //TODO fullScreen still has problem!
             Label fullScreen = new Label("Full Screen On/Off : ");
-            fullScreen.setLayoutY(Menu.HEIGHT / 2 + 120);
-            fullScreen.setLayoutX(Menu.WIDTH / 2 - 280);
+            fullScreen.setLayoutY(Menu.HEIGHT / 2 + 150);
+            fullScreen.setLayoutX(Menu.WIDTH / 2 - 200);
             fullScreen.setTextFill(Color.rgb(54,16,0));
             fullScreen.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-
             Image uncheckedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxFalse.png")
                     , 25, 25, false, true);
             Image checkedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxTrue.png")
@@ -1180,8 +1176,8 @@ public class Controller
                 fullScreenView = new ImageView(checkedCheckBox);
             else
                 fullScreenView = new ImageView(uncheckedCheckBox);
-            fullScreenView.setY(Menu.HEIGHT / 2 + 130);
-            fullScreenView.setX(Menu.WIDTH / 2 - 135);
+            fullScreenView.setY(Menu.HEIGHT / 2 + 150);
+            fullScreenView.setX(Menu.WIDTH / 2 + 10);
             fullScreenView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1207,21 +1203,20 @@ public class Controller
                     , 80, 76, false, true);
             ImageView backView = new ImageView(back);
             backView.setY(0);
-            backView.setY(Menu.HEIGHT / 2 + 150);
-            backView.setX(Menu.WIDTH / 2 - 270);
-            view.getGroup().getChildren().addAll(backView);
+            backView.setY(Menu.HEIGHT / 2 + 200);
+            backView.setX(Menu.WIDTH / 2 - 200);
             backView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    view.getGroup().getChildren().removeAll(backgroundView,sound,soundIconView,music,musicIconView,
+                    view.getGroup().getChildren().removeAll(rectangle,backgroundView,sound,soundIconView,music,musicIconView,
                             fullScreen,fullScreenView,backView);
                 }
             });
 
-            view.getGroup().getChildren().addAll(backgroundView,sound,soundIconView,music,musicIconView,fullScreen,
-                    fullScreenView,backView);
+            view.getGroup().getChildren().addAll(rectangle,backgroundView,sound,soundIconView,music,musicIconView,
+                    fullScreen,fullScreenView,backView);
         }
         catch ( Exception e ){ e.printStackTrace(); }
     }
