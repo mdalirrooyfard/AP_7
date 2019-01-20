@@ -120,7 +120,7 @@ public class View
             dogIconView.setY(10);
 
             Image catIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCatButton.png"),
-                    80, 80 , false , true);
+                    60, 60 , false , true);
             ImageView catIconView = new ImageView(catIcon);
             catIconView.setX(275);
             catIconView.setY(10);
