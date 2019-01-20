@@ -116,7 +116,6 @@ public abstract class Animal extends Entity {
                 previousY = y;
                 direction = DIRECTION.NONE;
         }
-        System.out.println("move "+name+" "+direction+" "+x+" "+y);
     }
 
     public void smartMove (DIRECTION direction)
@@ -178,7 +177,6 @@ public abstract class Animal extends Entity {
                 break;
 
         }
-        System.out.println("smart "+name+" "+direction+" "+x+" "+y);
 
     }
 
@@ -189,27 +187,35 @@ public abstract class Animal extends Entity {
             case 7: //up_right
                 if( (int)x + Constants.scale < 53 && (int)y - Constants.scale >= 0 )
                     return true;
+                break;
             case 6: //down_left
                 if( (int)x - Constants.scale >= 0 && (int)y + Constants.scale < 30 )
                     return true;
+                break;
             case 5: //up_left
                 if( (int)x - Constants.scale >= 0 && (int)y - Constants.scale >= 0 )
                     return true;
+                break;
             case 8: //down_right
                 if( (int)x + Constants.scale < 53 && (int)y + Constants.scale < 30 )
                     return true;
+                break;
             case 1: //up
                 if( (int)y - Constants.scale >= 0 )
                     return true;
+                break;
             case 3: //down
                 if( (int)y + Constants.scale < 30 )
                     return true;
+                break;
             case 4: //left
                 if( (int)x - Constants.scale >= 0 )
                     return true;
+                break;
             case 2: //right
                 if( (int)x + Constants.scale < 53 )
                     return true;
+                break;
         }
         return false;
     }
