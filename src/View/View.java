@@ -1,13 +1,12 @@
 package View;
 
-import Model.*;
 import Model.Animals.Animal;
+import Model.*;
 import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
 import javafx.animation.AnimationTimer;
-import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,11 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -30,8 +24,6 @@ import java.util.HashMap;
 
 public class View
 {
-    private final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
-    private final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Stage stage;
@@ -71,6 +63,11 @@ public class View
         return scene;
     }
 
+    public Group getGroup()
+    {
+        return group;
+    }
+
     public View(Stage stage , Menu menu)
     {
         this.menu = menu;
@@ -83,66 +80,11 @@ public class View
         stage.setScene(scene);
         loadImages();
         showBackground();
-        showIcons();
         showWorkshops();
         showServices();
         showMap();
         showFixedAnimal();
         //showTimer();
-    }
-
-    private void showIcons()
-    {
-        try
-        {
-            Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyGuineaHenButton.png"),
-                    60 , 60 , false , true);
-            ImageView henIconView = new ImageView(henIcon);
-            henIconView.setX(5);
-            henIconView.setY(10);
-
-            Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCowButton.png"),
-                    60 , 60 , false , true);
-            ImageView cowIconView = new ImageView(cowIcon);
-            cowIconView.setX(80);
-            cowIconView.setY(10);
-
-            Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buySheepButton.png"),
-                    60, 60 , false , true);
-            ImageView sheepIconView = new ImageView(sheepIcon);
-            sheepIconView.setX(145);
-            sheepIconView.setY(10);
-
-            Image dogIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyDogButton.png"),
-                    60, 60 , false , true);
-            ImageView dogIconView = new ImageView(dogIcon);
-            dogIconView.setX(210);
-            dogIconView.setY(10);
-
-            Image catIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCatButton.png"),
-                    60, 60 , false , true);
-            ImageView catIconView = new ImageView(catIcon);
-            catIconView.setX(275);
-            catIconView.setY(10);
-
-            Image menuIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuButton.png"),
-                    77, 73, false, true);
-            ImageView menuView = new ImageView(menuIcon);
-            menuView.setX(5);
-            menuView.setY(HEIGHT - 100);
-            menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    //showMenu();
-                }
-            });
-
-            group.getChildren().addAll(henIconView,cowIconView,sheepIconView,dogIconView,catIconView,menuView);
-
-        }
-        catch ( Exception e ){}
     }
 
     private void showBackground()
@@ -440,7 +382,7 @@ public class View
         {
             fixedTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    125, 125, false, true);
+                    200, 200, false, true);
             leftTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
@@ -449,7 +391,7 @@ public class View
                     50, 50, false, true);
             fixedHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    135, 135, false, true);
+                    220, 220, false, true);
             leftHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
@@ -458,10 +400,10 @@ public class View
                     50, 50, false, true);
             fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    135, 135, false, true);
+                    200, 200, false, true);
             movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
                     +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    150, 150, false, true);
+                    200, 200, false, true);
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
         }

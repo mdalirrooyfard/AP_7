@@ -29,6 +29,8 @@ public class Constants
             , "spinnery" , "weavingFactory"};
     public static final String[] ANIMAL = {"Hen" , "Cow" , "Sheep" , "Dog" , "Cat" , "Bear" , "Lion"};
     public static final String[] DOMESTIC = {"Hen" , "Cow" , "Sheep"};
+    public static final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
+    public static final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
 
     /* VOLUME */
     public static final int SOUVENIR_VOLUME = 3;
