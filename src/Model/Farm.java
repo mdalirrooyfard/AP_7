@@ -352,13 +352,15 @@ public class Farm {
         return true;
     }
 
-    public boolean fullWell() {
+    public int fullWell() {
+        if (well.getCurrentVolume() == well.getVolume())
+            return 0;
         if (well.getBuyCost() <= money) {
             money -= well.getBuyCost();
             well.full();
-            return true;
+            return 1;
         }
-        return false;
+        return -1;
     }
 
     public void increaseMoney(int amount) {

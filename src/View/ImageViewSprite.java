@@ -15,12 +15,16 @@ public class ImageViewSprite extends AnimationTimer {
 
     private final int frameWidth; //Width of an individual frame
     private final int frameHeight; //Height of an individual frame
-
+    private boolean hasStoped = false;
     private int currentCol = 0;
     private int currentRow = 0;
     private int timesOfRepeat;
     private long lastFrame = 0;
     private boolean stopFactor;
+
+    public boolean isHasStoped(){
+        return hasStoped;
+    }
     public ImageViewSprite(ImageView imageView,int timesOfRepeat, boolean stop, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond) {
         this.imageView = imageView;
         imageView.setViewport(new Rectangle2D(0, 0, frameWidth, frameHeight));
@@ -41,8 +45,10 @@ public class ImageViewSprite extends AnimationTimer {
         int frameJump = (int) Math.floor((now - lastFrame) / (1000000000 / fps)); //Determine how many frames we need to advance to maintain frame rate independence
         if (currentCol == 0  && currentRow == 0)
             timesOfRepeat--;
-        if (currentRow == 0 && currentCol == 0 && timesOfRepeat == -1 && stopFactor)
+        if (currentRow == 0 && currentCol == 0 && timesOfRepeat == -1 && stopFactor){
+            hasStoped = true;
             this.stop();
+        }
         //Do a bunch of math to determine where the viewport needs to be positioned on the sprite sheet
         if (frameJump >= 1) {
             lastFrame = now;
