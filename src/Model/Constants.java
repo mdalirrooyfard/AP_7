@@ -9,7 +9,6 @@ public class Constants
     public static final double ANIMAL_DISPLACEMENT_X = Screen.getPrimary().getVisualBounds().getWidth() / 4;
     public static final int ANIMAL_SIZE = 90;
     public static final double scale = 5;
-    public static final int FULL_SATIETY = 8;
     public static final int WELL_CAPACITY = 7;
     public static final int WAREHOUSE_VOLUME = 100;
     public static final int WELL_BASE_MONEY = 20;
@@ -139,6 +138,6 @@ public class Constants
     public static final int CAGED_GRIZZLY_SALE_COST = 80;
     public static final int CAGED_JAGUAR_SALE_COST = 200;
     public static final int CAGED_WHITE_BEAR_SALE_COST = 100;
-    public static final int MAX_DOMESTIC_SATIETY = 8;
-    public static final int LEAST_DOMESTIC_SATIETY = 4;
+    public static final int MAX_DOMESTIC_SATIETY = 20;
+    public static final int LEAST_DOMESTIC_SATIETY = 8;
 }

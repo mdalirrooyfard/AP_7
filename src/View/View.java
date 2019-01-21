@@ -108,7 +108,6 @@ public class View
     {
         group.getChildren().removeAll(currentEntities);
         currentEntities.clear();
-        ImageView imageView = null;
         for(int j = 0; j < farm.getMapLength(); j++)
             for (int i = 0; i < farm.getMapWidth(); i++)
             {
@@ -116,6 +115,7 @@ public class View
                 ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
                 for (Entity e : stuffs)
                 {
+                    ImageView imageView = null;
                     if(e instanceof Item)
                         imageView = new ImageView(items.get(((Item) e).getKind()));
                     else if(e instanceof Grass)

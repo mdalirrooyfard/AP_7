@@ -475,16 +475,16 @@ public class Farm {
                 if (((Domestic) entity).getSatiety() == 0) {
                     iterator.remove();
                     continue;
-                }else if(isEating == Constants.FULL_SATIETY){
+                }else if(isEating == Constants.MAX_DOMESTIC_SATIETY){
                     isEating = 0;
                     produceItem((Domestic) entity);
-                }else if (isEating != 0 && isEating < Constants.FULL_SATIETY) {
+                }else if (isEating != 0 && isEating < Constants.MAX_DOMESTIC_SATIETY) {
                     ((Domestic) entity).increaseSatiety(1);
                     ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
                     doMove = false;
                 }else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
                     doMove = !checkEatingGrass(entity.getY(), entity.getX(),
-                            7 - ((Domestic) entity).getSatiety());
+                            Constants.MAX_DOMESTIC_SATIETY - 1 - ((Domestic) entity).getSatiety());
                     if (!doMove) {
                         ((Domestic) entity).increaseSatiety(1);
                         ((Domestic) entity).setEating(((Domestic) entity).getSatiety());

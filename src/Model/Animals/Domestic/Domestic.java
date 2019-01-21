@@ -5,10 +5,9 @@ import Model.Constants;
 import Model.DIRECTION;
 import Model.Map;
 
-import static Model.Constants.FULL_SATIETY;
 
 public abstract class Domestic extends Animal {
-    private int satiety = Constants.FULL_SATIETY;
+    private int satiety = Constants.MAX_DOMESTIC_SATIETY;
     private int isEating = 0;
 
     public int getSatiety() {
@@ -29,11 +28,11 @@ public abstract class Domestic extends Animal {
 
 
     public void eat () {
-        this.satiety = FULL_SATIETY;
+        this.satiety = Constants.MAX_DOMESTIC_SATIETY;
     }
 
     public void move(){
-        if(this.satiety >= 4 || !map.isThereGrass()){
+        if(this.satiety >= Constants.LEAST_DOMESTIC_SATIETY || !map.isThereGrass()){
             super.move();
         }
         else {
