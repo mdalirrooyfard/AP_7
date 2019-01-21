@@ -21,6 +21,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
@@ -102,16 +104,6 @@ public class Controller
             throw new Exception(entityName+" is at maximum level!");
         else if( result == 3 )
             throw new Exception(entityName+" doesn't exits");
-    }
-
-    private void turnHandler(int n)
-    {
-        for (int i = 0 ; i < n ; i++)
-            if(farm.turn())
-            {
-                //view.levelIsFinished();
-                break;
-            }
     }
 
     private void loadCustomHandler(String path) throws Exception
@@ -199,7 +191,7 @@ public class Controller
         }
     }
 
-    public void turnHandler()
+    private void turnHandler()
     {
         aTimer = new AnimationTimer()
         {
@@ -267,8 +259,10 @@ public class Controller
 
     private void saveGameHandler() throws Exception
     {
-        try(OutputStream outputStream = new FileOutputStream("src\\Resources\\Saved Games\\" +
-                player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level)+".txt"))
+        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt")) )
+            Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\"+player.getName()));
+        try(OutputStream outputStream = new FileOutputStream(
+                "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"))
         {
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
@@ -284,15 +278,17 @@ public class Controller
 
     }
 
-    private void loadGameHandler(String path) throws Exception
+    private void loadGameHandler() throws Exception
     {
         try(InputStream inputStream = new FileInputStream(path))
         {
-
             Scanner scanner = new Scanner(inputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
             farm = yaGson.fromJson(savedFarm,Farm.class);
+            view.play(farm);
+            iconsHandler();
+            turnHandler();
         }
         catch ( IOException e )
         {
@@ -422,7 +418,7 @@ public class Controller
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        if( levelView.getImage() == openLevel )
+                        if( levels.indexOf(levelView) < player.getLastLevel() )
                             chooseOpenLevelHandler( levelName );
                         else
                             chooseCloseLevelHandler();
@@ -435,41 +431,24 @@ public class Controller
 
     private boolean wasThisLevelPlayedBefore(int level)
     {
-        String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = new FileInputStream(path);
-            return true;
-        }
-        catch ( Exception e )
-        {
-            return false;
-        }
+        return Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"));
     }
 
     private void loadGame( boolean newGame , int level , Player player )
     {
         this.level = level;
-        if (newGame)
-        {
-            try
-            {
-                path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
-            }
-            catch ( Exception e ) { e.printStackTrace(); }
-        }
-        else
-        {
-            try
-            {
-                path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
-            }
-            catch ( Exception e ) { e.printStackTrace(); }
-        }
         try
         {
-            runHandler();
+            if (newGame)
+            {
+                path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
+                runHandler();
+            }
+            else
+            {
+                path = "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt";
+                loadGameHandler();
+            }
         }
         catch ( Exception e ){ e.printStackTrace(); }
     }
@@ -485,11 +464,11 @@ public class Controller
                 rectangle.setFill(Color.rgb(54,16,0));
                 rectangle.setOpacity(0.7);
 
-                Image exitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
+                Image continueMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
                         , 800, 300, false, true);
-                ImageView exitMessageView = new ImageView(exitMessage);
-                exitMessageView.setY(Menu.HEIGHT / 2 - 150);
-                exitMessageView.setX(Menu.WIDTH / 2 - 400);
+                ImageView continueMessageView = new ImageView(continueMessage);
+                continueMessageView.setY(Menu.HEIGHT / 2 - 150);
+                continueMessageView.setX(Menu.WIDTH / 2 - 400);
 
                 Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
                         , 153, 145, false, true);
@@ -509,7 +488,7 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                         loadGame(false,level,player);
-                        start.getGroup().getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                        start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
                     }
                 });
 
@@ -519,10 +498,10 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                         loadGame(true,level,player);
-                        start.getGroup().getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                        start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
                     }
                 });
-                start.getGroup().getChildren().addAll(rectangle,exitMessageView,yesView,noView);
+                start.getGroup().getChildren().addAll(rectangle,continueMessageView,yesView,noView);
             }
             else
                 loadGame(true,level,player);
