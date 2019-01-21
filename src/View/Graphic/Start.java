@@ -17,9 +17,11 @@ public class Start
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Menu menu;
+    private Stage stage;
 
     public Scene getScene()
     {
+        stage.setFullScreen(menu.isFullScreen());
         return scene;
     }
 
@@ -35,6 +37,7 @@ public class Start
 
     public Start(Stage stage)
     {
+        this.stage = stage;
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
@@ -55,10 +58,10 @@ public class Start
             group.getChildren().addAll(backgroundView,rectangle,menuBackgroundView);
         }
         catch ( Exception e ){}
-        insertBack(stage);
+        insertBack();
     }
 
-    private void insertBack(Stage stage)
+    private void insertBack()
     {
         try
         {

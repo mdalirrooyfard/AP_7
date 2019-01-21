@@ -27,6 +27,8 @@ public class ChoosePlayer
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
     private Player player = null;
+    private Stage stage;
+    private Menu menu;
 
     public Player getPlayer()
     {
@@ -40,12 +42,14 @@ public class ChoosePlayer
 
     public Scene getScene()
     {
+        stage.setFullScreen(menu.isFullScreen());
         return scene;
     }
 
     public ChoosePlayer(Stage stage , Menu menu , ArrayList<Player> players)
     {
-        stage.setFullScreen(menu.isFullScreen());
+        this.stage = stage;
+        this.menu = menu;
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
@@ -68,7 +72,7 @@ public class ChoosePlayer
             writePlayers(players);
             insertNewPlayer(players);
             insertDelete();
-            insertBack(stage,menu);
+            insertBack();
         }
         catch ( Exception e ){}
     }
@@ -210,7 +214,7 @@ public class ChoosePlayer
         catch ( Exception e ){}
     }
 
-    private void insertBack(Stage stage , Menu menu)
+    private void insertBack()
     {
         try
         {
@@ -225,6 +229,7 @@ public class ChoosePlayer
                 @Override
                 public void handle(MouseEvent event)
                 {
+                    menu.setPlayer(player);
                     stage.setScene(menu.getScene());
                 }
             });

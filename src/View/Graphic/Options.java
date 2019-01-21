@@ -20,15 +20,19 @@ public class Options
 {
     private Group group = new Group();
     private Scene scene = new Scene(group, Menu.WIDTH, Menu.HEIGHT);
+    private Stage stage;
+    private Menu menu;
 
     public Scene getScene()
     {
+        stage.setFullScreen(menu.isFullScreen());
         return scene;
     }
 
     public Options(Stage stage , Menu menu)
     {
-        stage.setFullScreen(menu.isFullScreen());
+        this.stage = stage;
+        this.menu = menu;
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
@@ -48,15 +52,15 @@ public class Options
             menuBackgroundView.setX(Menu.WIDTH - 550);
             group.getChildren().addAll(backgroundView,rectangle,menuBackgroundView);
 
-            insertSoundOption(menu);
-            insertMusicOption(menu);
-            insertFullScreenOption(stage,menu);
-            insertBack(stage,menu);
+            insertSoundOption();
+            insertMusicOption();
+            insertFullScreenOption();
+            insertBack();
         }
         catch ( Exception e ){}
     }
 
-    private void insertBack(Stage stage,Menu menu)
+    private void insertBack()
     {
         try
         {
@@ -70,13 +74,16 @@ public class Options
             backView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
-                public void handle(MouseEvent event){stage.setScene(menu.getScene());}
+                public void handle(MouseEvent event)
+                {
+                    stage.setScene(menu.getScene());
+                }
             });
         }
         catch ( Exception e ){}
     }
 
-    private void insertSoundOption(Menu menu)
+    private void insertSoundOption()
     {
         Label sound = new Label("Sound On/Off : ");
         sound.setLayoutY(Menu.HEIGHT / 4);
@@ -119,7 +126,7 @@ public class Options
         catch ( Exception e ){}
     }
 
-    private void insertMusicOption(Menu menu)
+    private void insertMusicOption()
     {
         Label music = new Label("Music On/Off : ");
         music.setLayoutY(Menu.HEIGHT / 2);
@@ -163,7 +170,7 @@ public class Options
         catch ( Exception e ){}
     }
 
-    private void insertFullScreenOption(Stage stage , Menu menu)
+    private void insertFullScreenOption()
     {
         //TODO fullScreen still has problem!
         Label fullScreen = new Label("Full Screen On/Off : ");

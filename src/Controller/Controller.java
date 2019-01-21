@@ -54,71 +54,6 @@ public class Controller
         menu.passMenuInstance(menu);
     }
 
-    private void commandHandler(String command) throws Exception
-    {
-        if( command.startsWith("buy") )
-        {
-            if( command.substring(4).matches("sheep|cow|hen|cat|dog") )
-                buyHandler(command.substring(4));
-        }
-        else if( command.matches("pickup [0-9]+ [0-9]+"))
-            pickUpHandler(Double.parseDouble(command.substring(7,8)),Double.parseDouble(command.substring(9)));
-        else if ( command.matches("cage [0-9]+ [0-9]+"))
-            cageHandler(Double.parseDouble(command.substring(5,6)),Double.parseDouble(command.substring(7)));
-        else if( command.matches("plant [0-9]+ [0-9]+") )
-            plantHandler(Double.parseDouble(command.substring(6,7)),Double.parseDouble(command.substring(8)));
-        else if( command.matches("well") )
-            wellHandler();
-        else if( command.startsWith("start ") )
-        {
-            if( command.substring(6).matches("eggPowderPlant|cakeBakery|cookieBakery|customFactory|sewingFactory|" +
-                    "spinnery|weavingFactory"))
-                startWorkShopHandler(command.substring(6));
-        }
-        else if( command.startsWith("upgrade "))
-        {
-            if( command.substring(8).matches("eggPowderPlant|cakeBakery|cookieBakery|customFactory|sewingFactory|" +
-                    "spinnery|weavingFactory|cat|well|truck|helicopter|warehouse"))
-                upgradeHandler(command.substring(8));
-        }
-        else if( command.startsWith("load game "))
-            loadGameHandler(command.substring(10));
-        else if( command.startsWith("save game "))
-            saveGameHandler(command.substring(10));
-        else if( command.startsWith("run ") )
-            runHandler();
-        else if( command.matches("turn [0-9]+") )
-            turnHandler(Integer.parseInt(command.substring(5)));
-        else if( command.matches("truck add [{a-z, }]+ [0-9]+") )
-            addToTransportationHandler(true,command.substring(command.indexOf("add")+4));
-        else if( command.matches("helicopter add [{a-z, }]+ [0-9]+") )
-            addToTransportationHandler(false,command.substring(command.indexOf("add")+4));
-        else if( command.endsWith(" clear"))
-        {
-            if( command.startsWith("truck") )
-                clearFromTransportationHandler(true);
-            else if( command.startsWith("helicopter") )
-                clearFromTransportationHandler(false);
-        }
-        else if( command.endsWith(" go"))
-        {
-            if( command.startsWith("truck") )
-                goHandler(true);
-            else if( command.startsWith("helicopter") )
-                goHandler(false);
-        }
-        /*else if( command.startsWith("print") )
-        {
-            if( command.substring(6).matches("info|map|levels|warehouse|well|eggPowderPlant|cakeBakery|" +
-                    "cookieBakery|customFactory|sewingFactory|spinnery|weavingFactory|truck|helicopter") )
-                printHandler(command.substring(6));
-        }*/
-        else if( command.startsWith("load custom ") )
-            loadCustomHandler(command.substring(12));
-        else
-            throw new Exception("Wrong Command Format");
-    }
-
     private void buyHandler(String animalName) throws Exception
     {
         boolean isBought = false;
@@ -292,16 +227,48 @@ public class Controller
                     time = 31;
                     lastTime = 0;
                 }
-               // if (finish)
-                 //   this.stop();
+               if (finish)
+               {
+                   this.stop();
+                   try
+                   {
+                       Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                       rectangle.setFill(Color.rgb(54,16,0));
+                       rectangle.setOpacity(0.7);
+
+                       Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\winningMessage.png")
+                               , 800, 300, false, true);
+                       ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
+                       playerHasNotBeenChosenMessageView.setY(Menu.HEIGHT / 2 - 150);
+                       playerHasNotBeenChosenMessageView.setX(Menu.WIDTH / 2 - 400);
+
+                       Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                               , 200, 79, false, true);
+                       ImageView okView = new ImageView(ok);
+                       okView.setY(Menu.HEIGHT / 2 + 150);
+                       okView.setX(Menu.WIDTH / 2 - 100);
+                       okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                       {
+                           @Override
+                           public void handle(MouseEvent event)
+                           {
+                               stage.setScene(start.getScene());
+                           }
+                       });
+
+                       start.getGroup().getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+                   }
+                   catch ( Exception e ) { e.printStackTrace(); }
+               }
             }
         };
         aTimer.start();
     }
 
-    private void saveGameHandler(String path) throws Exception
+    private void saveGameHandler() throws Exception
     {
-        try(OutputStream outputStream = new FileOutputStream(path + "\\"+ player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level)+".txt"))
+        try(OutputStream outputStream = new FileOutputStream("src\\Resources\\Saved Games\\" +
+                player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level)+".txt"))
         {
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
@@ -332,21 +299,6 @@ public class Controller
             throw new Exception("No such directory exsits!");
         }
     }
-
-    /*private void printHandler(String what)
-    {
-        switch (what)
-        {
-            case "info":view.printInfo(farm.printInfo());break;
-            case "map":view.printInfo(farm.printMap());break;
-            case "levels":view.printInfo(farm.printLevel());break;
-            case "warehouse":view.printInfo(farm.printWareHouse());break;
-            case "well":view.printInfo(farm.printWell());break;
-            case "helicopter":view.printInfo(farm.printTransportation(false));break;
-            case "truck":view.printInfo(farm.printTransportation(true));break;
-            default:view.printInfo(farm.printWorkshop(what));
-        }
-    }*/
 
     private void addToTransportationHandler(boolean  vehicle , String name_count) throws Exception
     {
@@ -947,7 +899,8 @@ public class Controller
                 {
                     try
                     {
-                        saveGameHandler("src\\Resources\\Saved Games");
+                        saveGameHandler();
+
                         stage.setScene(menu.getScene());
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
@@ -1050,7 +1003,7 @@ public class Controller
                 {
                     try
                     {
-                        saveGameHandler("src\\Resources\\Saved Games");
+                        saveGameHandler();
                         stage.setScene(start.getScene());
                     }
                     catch ( Exception e ) {}

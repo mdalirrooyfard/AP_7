@@ -6,13 +6,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -20,7 +17,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -46,9 +42,9 @@ public class Menu
     private MediaPlayer mediaPlayer;
     private Menu menu;
 
-    public Player getPlayer()
+    public void setPlayer(Player player)
     {
-        return player;
+        this.player = player;
     }
 
     public void setMenu(Menu menu)
@@ -94,7 +90,6 @@ public class Menu
     public Scene getScene()
     {
         player = choosePlayerScene.getPlayer();
-        player = menu.getPlayer();
         for( Node node : group.getChildren() )
             if( node instanceof Label )
                 ((Label) node).setText("");
@@ -250,6 +245,7 @@ public class Menu
     {
         optionsScene = new Options(stage,menu);
         choosePlayerScene = new ChoosePlayer(stage,menu,players);
+        choosePlayerScene.setPlayer(player);
     }
 
     private Label insertPlayer()
