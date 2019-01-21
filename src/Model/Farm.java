@@ -353,7 +353,7 @@ public class Farm {
     }
 
     public int fullWell() {
-        if (well.getCurrentVolume() == well.getVolume())
+        if (well.getCurrentVolume() != 0)
             return 0;
         if (well.getBuyCost() <= money) {
             money -= well.getBuyCost();

@@ -23,10 +23,8 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
+
 import View.ImageViewSprite;
 
 public class Controller
@@ -60,6 +58,7 @@ public class Controller
         this.start.setMenu(menu);
         view = new View(stage,menu);
         view.loadImages();
+        //loadImage();
         menu.setMenu(menu);
         menu.passMenuInstance(menu);
     }
@@ -185,6 +184,7 @@ public class Controller
             farm.makeWorkShops();
             view.play(farm);
             iconsHandler();
+            loadWell();
             turnHandler();
         }
         catch ( FileNotFoundException e )
@@ -1169,16 +1169,17 @@ public class Controller
 
     }
 
-    private void loadServices(){
+    private void loadWell(){
         try {
             fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
                     + Integer.toString(farm.getWell().getLevel()) + ".png"),
                     200, 200, false, true);
             movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
                     + Integer.toString(farm.getWell().getLevel()) + ".png"),
-                    200, 200, false, true);
-
+                    800, 800, false, true);
             ImageView fixedWellView = new ImageView(fixedWell);
+            fixedWellView.setX(farm.getWell().getShowX());
+            fixedWellView.setY(farm.getWell().getShowY());
             view.getGroup().getChildren().add(fixedWellView);
             fixedWellView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -1188,20 +1189,21 @@ public class Controller
                     if (result == 1){
                         view.getGroup().getChildren().remove(fixedWellView);
                         ImageView movingWellView = new ImageView(movingWell);
+                        movingWellView.setX(farm.getWell().getShowX());
+                        movingWellView.setY(farm.getWell().getShowY());
                         view.getGroup().getChildren().add(movingWellView);
                         AnimationTimer imageViewSprite = new ImageViewSprite(movingWellView,
-                                10 - farm.getWell().getLevel(),true,4, 4, 16, 200, 200, 16);
+                                40,true,4, 4, 16, 200, 200, 16);
                         imageViewSprite.start();
-                        while(!((ImageViewSprite) imageViewSprite).isHasStoped()){
-
-                        }
-                        view.getGroup().getChildren().remove(movingWellView);
-                        view.getGroup().getChildren().add(fixedWellView);
                     }
                 }
             });
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    private void loadImage(){
+        loadWell();
     }
 }
