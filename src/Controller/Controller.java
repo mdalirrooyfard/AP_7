@@ -184,7 +184,7 @@ public class Controller
             farm.makeWorkShops();
             view.play(farm);
             iconsHandler();
-            loadWell();
+            loadImage();
             turnHandler();
         }
         catch ( FileNotFoundException e )
@@ -1203,7 +1203,33 @@ public class Controller
         }
     }
 
+    private void loadMap(){
+        try
+        {
+            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
+                    Menu.HEIGHT, false, true);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setX(0);
+            backgroundView.setY(0);
+            view.getGroup().getChildren().addAll(backgroundView);
+            backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    double x = event.getX() - Constants.ANIMAL_DISPLACEMENT_X;
+                    double y = event.getY() - Constants.ANIMAL_DISPLACEMENT_Y;
+                    if (x >= 0 && x <= farm.getMapWidth()*Constants.ANIMAL_SHOW_SCALE &&
+                        y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE){
+                            boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
+                            //todo flesh be chah
+                    }
+                }
+            });
+        }
+        catch ( Exception e ){}
+    }
+
     private void loadImage(){
+        loadMap();
         loadWell();
     }
 }

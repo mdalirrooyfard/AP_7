@@ -77,26 +77,11 @@ public class View
         this.farm = farm;
         stage.setScene(scene);
         loadImages();
-        showBackground();
         showWorkshops();
         showServices();
         showMap();
         showFixedAnimal();
         //showTimer();
-    }
-
-    private void showBackground()
-    {
-        try
-        {
-            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
-                    Menu.HEIGHT, false, true);
-            ImageView backgroundView = new ImageView(background);
-            backgroundView.setX(0);
-            backgroundView.setY(0);
-            group.getChildren().addAll(backgroundView);
-        }
-        catch ( Exception e ){}
     }
 
     private void showWorkshops()
@@ -143,11 +128,18 @@ public class View
                     }
                     if (imageView != null) {
                         currentEntities.add(imageView);
-                        show(imageView, e);
+                        showFixed(imageView, e);
                     }
                 }
             }
     }
+
+    public void showFixed(ImageView iView, Entity e){
+        iView.setX(e.getShowX());
+        iView.setY(e.getShowY());
+        group.getChildren().add(iView);
+    }
+
     public void showFixedAnimal(){
         ImageView imageView;
         for (Entity e : farm.getStuffs()) {
