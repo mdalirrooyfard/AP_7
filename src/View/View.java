@@ -42,8 +42,6 @@ public class View
     private HashMap<String, Image> animalsFixed = new HashMap<>();
     private HashMap<String, Image> wildCaged = new HashMap<>();
     private HashMap<String, Image> items = new HashMap<>();
-    private Image movingWell;
-    private Image fixedWell;
     private Image fixedHelicopter;
     private Image leftHelicopter;
     private Image rightHelicopter;
@@ -79,26 +77,11 @@ public class View
         this.farm = farm;
         stage.setScene(scene);
         loadImages();
-        showBackground();
         showWorkshops();
         showServices();
         showMap();
         showFixedAnimal();
         //showTimer();
-    }
-
-    private void showBackground()
-    {
-        try
-        {
-            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
-                    Menu.HEIGHT, false, true);
-            ImageView backgroundView = new ImageView(background);
-            backgroundView.setX(0);
-            backgroundView.setY(0);
-            group.getChildren().addAll(backgroundView);
-        }
-        catch ( Exception e ){}
     }
 
     private void showWorkshops()
@@ -113,8 +96,7 @@ public class View
 
     private void showServices()
     {
-        ImageView imageView = new ImageView(fixedWell);
-        show(imageView , farm.getWell());
+        ImageView imageView;
         imageView = new ImageView(fixedTruck);
         show(imageView , farm.getTruck());
         imageView = new ImageView(fixedHelicopter);
@@ -146,11 +128,18 @@ public class View
                     }
                     if (imageView != null) {
                         currentEntities.add(imageView);
-                        show(imageView, e);
+                        showFixed(imageView, e);
                     }
                 }
             }
     }
+
+    public void showFixed(ImageView iView, Entity e){
+        iView.setX(e.getShowX());
+        iView.setY(e.getShowY());
+        group.getChildren().add(iView);
+    }
+
     public void showFixedAnimal(){
         ImageView imageView;
         for (Entity e : farm.getStuffs()) {
@@ -205,7 +194,7 @@ public class View
                     group.getChildren().add(imageView);
                     currentEntities.add(imageView);
                     AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView, 5, 5, 24,
+                            imageView,1,false, 5, 5, 24,
                             (int)imageView.getImage().getWidth() / 5,
                             (int)imageView.getImage().getHeight() / 5, 24
                     );
@@ -215,12 +204,6 @@ public class View
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
-                    pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            animationTimer.stop();
-                        }
-                    });
 
                 }
                 else{
@@ -229,7 +212,7 @@ public class View
                     group.getChildren().add(imageView);
                     currentEntities.add(imageView);
                     final AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView, 4, 6, 24, 120, 108, 24
+                            imageView,1 ,false,4, 6, 24, 120, 108, 24
                     );
                     animationTimer.start();
                 }
@@ -398,36 +381,10 @@ public class View
             rightHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
                     50, 50, false, true);
-            fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"fixed"
-                    +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    200, 200, false, true);
-            movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\"+"moving"
-                    +Integer.toString(farm.getWell().getLevel()) +".png"),
-                    200, 200, false, true);
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
         }
         catch ( Exception e ){}
     }
-    /*String command;
-    public String getCommand()
-    {
-        return command;
-    }
-    public void printError(String error)
-    {
-        System.out.println(error);
-    }
-    public void levelIsFinished()
-    {
-        System.out.println("Level is finished.  Congratulations! :) ");
-    }
-    public void printInfo(String info)
-    {
-        System.out.println(info);
-    }
-    public void setCommand( Scanner scanner )
-    {
-        command = scanner.nextLine();
-    }*/
+
 }

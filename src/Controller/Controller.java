@@ -21,9 +21,11 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+
+import View.ImageViewSprite;
 
 public class Controller
 {
@@ -40,6 +42,12 @@ public class Controller
     private ArrayList<ImageView> levels = new ArrayList<>();
     private AnimationTimer aTimer;
 
+
+
+    private Image movingWell;
+    private Image fixedWell;
+
+
     public Controller(Stage stage)
     {
         this.stage = stage;
@@ -50,6 +58,7 @@ public class Controller
         this.start.setMenu(menu);
         view = new View(stage,menu);
         view.loadImages();
+        //loadImage();
         menu.setMenu(menu);
         menu.passMenuInstance(menu);
     }
@@ -87,12 +96,6 @@ public class Controller
             throw new Exception("Well is empty! :'( ");
     }
 
-    private void wellHandler() throws Exception
-    {
-        if(!farm.fullWell())
-            throw new Exception("Not Enough Money! :'( ");
-    }
-
     private void upgradeHandler(String entityName) throws Exception
     {
         int result = farm.upgrade(entityName);
@@ -102,16 +105,6 @@ public class Controller
             throw new Exception(entityName+" is at maximum level!");
         else if( result == 3 )
             throw new Exception(entityName+" doesn't exits");
-    }
-
-    private void turnHandler(int n)
-    {
-        for (int i = 0 ; i < n ; i++)
-            if(farm.turn())
-            {
-                //view.levelIsFinished();
-                break;
-            }
     }
 
     private void loadCustomHandler(String path) throws Exception
@@ -191,6 +184,7 @@ public class Controller
             farm.makeWorkShops();
             view.play(farm);
             iconsHandler();
+            loadImage();
             turnHandler();
         }
         catch ( FileNotFoundException e )
@@ -199,7 +193,7 @@ public class Controller
         }
     }
 
-    public void turnHandler()
+    private void turnHandler()
     {
         aTimer = new AnimationTimer()
         {
@@ -211,12 +205,13 @@ public class Controller
             @Override
             public void handle(long now)
             {
-                timer(time);
+                timer();
                 if (lastTime == 0)
                     lastTime = now;
                 if (now > lastTime + second )
                 {
                     time += 1;
+                    farm.increaseTimer();
                     lastTime = now;
                 }
                 if (time % 3 == 0)
@@ -267,8 +262,10 @@ public class Controller
 
     private void saveGameHandler() throws Exception
     {
-        try(OutputStream outputStream = new FileOutputStream("src\\Resources\\Saved Games\\" +
-                player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level)+".txt"))
+        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt")) )
+            Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\"+player.getName()));
+        try(OutputStream outputStream = new FileOutputStream(
+                "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"))
         {
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
@@ -284,15 +281,17 @@ public class Controller
 
     }
 
-    private void loadGameHandler(String path) throws Exception
+    private void loadGameHandler() throws Exception
     {
         try(InputStream inputStream = new FileInputStream(path))
         {
-
             Scanner scanner = new Scanner(inputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
             farm = yaGson.fromJson(savedFarm,Farm.class);
+            view.play(farm);
+            iconsHandler();
+            turnHandler();
         }
         catch ( IOException e )
         {
@@ -422,7 +421,7 @@ public class Controller
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        if( levelView.getImage() == openLevel )
+                        if( levels.indexOf(levelView) < player.getLastLevel() )
                             chooseOpenLevelHandler( levelName );
                         else
                             chooseCloseLevelHandler();
@@ -435,41 +434,24 @@ public class Controller
 
     private boolean wasThisLevelPlayedBefore(int level)
     {
-        String path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
-        InputStream inputStream = null;
-        try
-        {
-            inputStream = new FileInputStream(path);
-            return true;
-        }
-        catch ( Exception e )
-        {
-            return false;
-        }
+        return Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"));
     }
 
     private void loadGame( boolean newGame , int level , Player player )
     {
         this.level = level;
-        if (newGame)
-        {
-            try
-            {
-                path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
-            }
-            catch ( Exception e ) { e.printStackTrace(); }
-        }
-        else
-        {
-            try
-            {
-                path = "src\\SavedGames\\"+player.getName()+"-"+Integer.toString(player.getId())+"-"+Integer.toString(level);
-            }
-            catch ( Exception e ) { e.printStackTrace(); }
-        }
         try
         {
-            runHandler();
+            if (newGame)
+            {
+                path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
+                runHandler();
+            }
+            else
+            {
+                path = "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt";
+                loadGameHandler();
+            }
         }
         catch ( Exception e ){ e.printStackTrace(); }
     }
@@ -485,11 +467,11 @@ public class Controller
                 rectangle.setFill(Color.rgb(54,16,0));
                 rectangle.setOpacity(0.7);
 
-                Image exitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
+                Image continueMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
                         , 800, 300, false, true);
-                ImageView exitMessageView = new ImageView(exitMessage);
-                exitMessageView.setY(Menu.HEIGHT / 2 - 150);
-                exitMessageView.setX(Menu.WIDTH / 2 - 400);
+                ImageView continueMessageView = new ImageView(continueMessage);
+                continueMessageView.setY(Menu.HEIGHT / 2 - 150);
+                continueMessageView.setX(Menu.WIDTH / 2 - 400);
 
                 Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
                         , 153, 145, false, true);
@@ -509,7 +491,7 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                         loadGame(false,level,player);
-                        start.getGroup().getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                        start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
                     }
                 });
 
@@ -519,10 +501,10 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                         loadGame(true,level,player);
-                        start.getGroup().getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                        start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
                     }
                 });
-                start.getGroup().getChildren().addAll(rectangle,exitMessageView,yesView,noView);
+                start.getGroup().getChildren().addAll(rectangle,continueMessageView,yesView,noView);
             }
             else
                 loadGame(true,level,player);
@@ -563,7 +545,7 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void timer(long time)
+    private void timer()
     {
         try
         {
@@ -577,15 +559,15 @@ public class Controller
             timeLabel.relocate(Constants.WIDTH - 160,Constants.HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
             timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
-            if( time / 3600 < 10 )
+            if( farm.getTimer() / 3600 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
-            timeLabel.setText(timeLabel.getText()+Long.toString(time / 3600)+":");
-            if( time % 3600 / 60 < 10 )
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() / 3600)+":");
+            if( farm.getTimer() % 3600 / 60 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
-            timeLabel.setText(timeLabel.getText()+Long.toString(time % 3600 / 60)+":");
-            if( time % 60 < 10 )
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() % 3600 / 60)+":");
+            if( farm.getTimer() % 60 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
-            timeLabel.setText(timeLabel.getText()+Long.toString(time % 60));
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() % 60));
 
             view.getGroup().getChildren().addAll(timerView,timeLabel);
         }
@@ -951,8 +933,10 @@ public class Controller
                 {
                     try
                     {
-                        path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
                         view.getGroup().getChildren().removeAll();
+                        Thread.sleep(700);
+                        farm.setTimer(0);
+                        path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
                         runHandler();
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
@@ -1179,8 +1163,73 @@ public class Controller
 
     }
 
+
     private void helicopterIconHandler()
     {
 
+    }
+
+    private void loadWell(){
+        try {
+            fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
+                    + Integer.toString(farm.getWell().getLevel()) + ".png"),
+                    200, 200, false, true);
+            movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
+                    + Integer.toString(farm.getWell().getLevel()) + ".png"),
+                    800, 800, false, true);
+            ImageView fixedWellView = new ImageView(fixedWell);
+            fixedWellView.setX(farm.getWell().getShowX());
+            fixedWellView.setY(farm.getWell().getShowY());
+            view.getGroup().getChildren().add(fixedWellView);
+            fixedWellView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    int result = farm.fullWell();
+                    //todo if result == -1 dance the money
+                    if (result == 1){
+                        view.getGroup().getChildren().remove(fixedWellView);
+                        ImageView movingWellView = new ImageView(movingWell);
+                        movingWellView.setX(farm.getWell().getShowX());
+                        movingWellView.setY(farm.getWell().getShowY());
+                        view.getGroup().getChildren().add(movingWellView);
+                        AnimationTimer imageViewSprite = new ImageViewSprite(movingWellView,
+                                25,true,4, 4, 16, 200, 200, 16);
+                        imageViewSprite.start();
+                    }
+                }
+            });
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadMap(){
+        try
+        {
+            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
+                    Menu.HEIGHT, false, true);
+            ImageView backgroundView = new ImageView(background);
+            backgroundView.setX(0);
+            backgroundView.setY(0);
+            view.getGroup().getChildren().addAll(backgroundView);
+            backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    double x = event.getX() - Constants.ANIMAL_DISPLACEMENT_X;
+                    double y = event.getY() - Constants.ANIMAL_DISPLACEMENT_Y;
+                    if (x >= 0 && x <= farm.getMapWidth()*Constants.ANIMAL_SHOW_SCALE &&
+                        y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE){
+                            boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
+                            //todo flesh be chah
+                    }
+                }
+            });
+        }
+        catch ( Exception e ){}
+    }
+
+    private void loadImage(){
+        loadMap();
+        loadWell();
     }
 }
