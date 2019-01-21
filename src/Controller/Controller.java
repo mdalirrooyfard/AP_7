@@ -1193,7 +1193,7 @@ public class Controller
                         movingWellView.setY(farm.getWell().getShowY());
                         view.getGroup().getChildren().add(movingWellView);
                         AnimationTimer imageViewSprite = new ImageViewSprite(movingWellView,
-                                40,true,4, 4, 16, 200, 200, 16);
+                                25,true,4, 4, 16, 200, 200, 16);
                         imageViewSprite.start();
                     }
                 }
