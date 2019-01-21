@@ -24,10 +24,11 @@ import java.util.Iterator;
 
 public class Farm {
     private Map map;
-    private final int mapLength =(int) (Screen.getPrimary().getVisualBounds().getHeight()/22);
-    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth()/24);
+    private final int mapLength = (int) (Screen.getPrimary().getVisualBounds().getHeight() / 22);
+    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth() / 24);
     private ArrayList<Entity> stuffs = new ArrayList<>();
     private int time;
+    private long timer = 0;
     private Helicopter helicopter;
     private Truck truck;
     private WareHouse wareHouse;
@@ -44,18 +45,32 @@ public class Farm {
         return stuffs;
     }
 
-    public int getMapLength(){
+    public int getMapLength() {
         return mapLength;
     }
 
-    public int getMapWidth(){
+    public int getMapWidth() {
         return mapWidth;
     }
 
-    public Map getMap(){
+    public Map getMap() {
         return map;
     }
 
+    public long getTimer()
+    {
+        return timer;
+    }
+
+    public void increaseTimer()
+    {
+        timer++;
+    }
+
+    public void setTimer(long timer)
+    {
+        this.timer = timer;
+    }
 
     public Well getWell(){
         return well;

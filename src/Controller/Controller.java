@@ -203,12 +203,13 @@ public class Controller
             @Override
             public void handle(long now)
             {
-                timer(time);
+                timer();
                 if (lastTime == 0)
                     lastTime = now;
                 if (now > lastTime + second )
                 {
                     time += 1;
+                    farm.increaseTimer();
                     lastTime = now;
                 }
                 if (time % 3 == 0)
@@ -542,7 +543,7 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void timer(long time)
+    private void timer()
     {
         try
         {
@@ -556,15 +557,15 @@ public class Controller
             timeLabel.relocate(Constants.WIDTH - 160,Constants.HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
             timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
-            if( time / 3600 < 10 )
+            if( farm.getTimer() / 3600 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
-            timeLabel.setText(timeLabel.getText()+Long.toString(time / 3600)+":");
-            if( time % 3600 / 60 < 10 )
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() / 3600)+":");
+            if( farm.getTimer() % 3600 / 60 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
-            timeLabel.setText(timeLabel.getText()+Long.toString(time % 3600 / 60)+":");
-            if( time % 60 < 10 )
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() % 3600 / 60)+":");
+            if( farm.getTimer() % 60 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
-            timeLabel.setText(timeLabel.getText()+Long.toString(time % 60));
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() % 60));
 
             view.getGroup().getChildren().addAll(timerView,timeLabel);
         }
@@ -930,8 +931,10 @@ public class Controller
                 {
                     try
                     {
-                        path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
                         view.getGroup().getChildren().removeAll();
+                        Thread.sleep(700);
+                        farm.setTimer(0);
+                        path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
                         runHandler();
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
