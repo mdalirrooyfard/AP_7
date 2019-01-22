@@ -8,8 +8,6 @@ import Model.Workshops.Workshop;
 import View.Graphic.Menu;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -186,6 +184,8 @@ public class View
                         imageView = new ImageView(domesticEat.get(((Animal) e).getName()));
                         break;
                 }
+                imageView.setFitWidth(Constants.ANIMAL_SIZE);
+                imageView.setFitHeight(Constants.ANIMAL_SIZE);
                 if (direction != DIRECTION.NONE) {
                     imageView.setX(((Animal) e).getPreviousX());
                     imageView.setY(((Animal) e).getPreviousY());
@@ -194,9 +194,9 @@ public class View
                     group.getChildren().add(imageView);
                     currentEntities.add(imageView);
                     AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView,1,false, 5, 5, 24,
-                            (int)imageView.getImage().getWidth() / 5,
-                            (int)imageView.getImage().getHeight() / 5, 24
+                            imageView,1,false, 6, 4, 24,
+                            (int)imageView.getImage().getWidth() / 6,
+                            (int)imageView.getImage().getHeight() / 4, 24
                     );
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(imageView, ((Animal) e).getPreviousX(),
@@ -252,56 +252,44 @@ public class View
                 if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep"))
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
-                            "death" + ".png"),
-                            Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                            "death" + ".png"));
                     animalsDeath.put(s.toLowerCase(), image);
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                            "eat"+".png"),
-                            Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                            "eat"+".png"));
                     domesticEat.put(s.toLowerCase(), image);
                 }
                 if (s.equals("Bear") || s.equals("Lion"))
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
-                            "caged" + ".png"),
-                            Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                            "caged" + ".png"));
                     wildCaged.put(s.toLowerCase(), image);
                 }
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "fixed"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "fixed"+".png"));
                 animalsFixed.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "down"+".png"),
-                        Constants.ANIMAL_SIZE , Constants.ANIMAL_SIZE, false, true);
+                        "down"+".png"));
                 animalsDown.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "down_left"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "down_left"+".png"));
                 animalsDownLeft.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "down_right"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "down_right"+".png"));
                 animalsDownRight.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "right"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "right"+".png"));
                 animalsRight.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "left"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "left"+".png"));
                 animalsLeft.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "up"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "up"+".png"));
                 animalsUp.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "up_right"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "up_right"+".png"));
                 animalsUpRight.put(s.toLowerCase(), image);
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
-                        "up_left"+".png"),
-                        Constants.ANIMAL_SIZE, Constants.ANIMAL_SIZE, false, true);
+                        "up_left"+".png"));
                 animalsUpLeft.put(s.toLowerCase(),image);
             }
         }
