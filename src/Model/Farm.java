@@ -438,6 +438,10 @@ public class Farm {
         }
     }
 
+    public WareHouse getWareHouse(){
+        return wareHouse;
+    }
+
     public boolean checkEatingGrass(double y, double x, int max) {
         int X = (int) x;
         int Y = (int) y;
@@ -474,9 +478,10 @@ public class Farm {
                 int isEating = ((Domestic) entity).isEating();
                 if (((Domestic) entity).getSatiety() == 0) {
                     iterator.remove();
+                    //System.out.println("mord");
                     continue;
                 }else if(isEating == Constants.MAX_DOMESTIC_SATIETY){
-                    isEating = 0;
+                    ((Domestic) entity).setEating(0);
                     produceItem((Domestic) entity);
                 }else if (isEating != 0 && isEating < Constants.MAX_DOMESTIC_SATIETY) {
                     ((Domestic) entity).increaseSatiety(1);
