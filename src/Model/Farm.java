@@ -523,12 +523,14 @@ public class Farm {
         updateMap();
     }
     public void removeGrassAndItem() {
-        if (map.isThereGrass() && map.isThereItem()) {
+        if (map.isThereGrass() || map.isThereItem()) {
             Iterator<Entity> iterator = stuffs.iterator();
             while (iterator.hasNext()) {
                 Entity entity = iterator.next();
-                if (entity instanceof Grass && ((Grass) entity).isEaten() == 0)
+                if (entity instanceof Grass && ((Grass) entity).isEaten() == 0) {
                     iterator.remove();
+                    System.out.println("grass par" + entity.x + " " + entity.y);
+                }
                 else if (entity instanceof Grass)
                     ((Grass) entity).decreaseEaten();
                 else if (entity instanceof Item && ((Item) entity).isTakenByCat())

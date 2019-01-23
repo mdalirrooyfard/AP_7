@@ -54,63 +54,66 @@ public abstract class Animal extends Entity {
     }
     public void move()
     {
-        int dir = (int)(Math.random() * 8 + 1);
-        while ( !canMoveInThisDirection(dir) )
-            dir = (dir + 1) % 8 + 1;
-        switch (dir)
-        {
-            case 7:
-                previousX = x;
-                previousY = y;
-                x += Constants.scale;
-                y -= Constants.scale;
-                direction = DIRECTION.UP_RIGHT;
-                break;
-            case 6:
-                previousX = x;
-                previousY = y;
-                x -= Constants.scale;
-                y += Constants.scale;
-                direction = DIRECTION.DOWN_LEFT;
-                break;
-            case 5:
-                previousX = x;
-                previousY = y;
-                x -= Constants.scale;
-                y -= Constants.scale;
-                direction = DIRECTION.UP_LEFT;
-                break;
-            case 8:
-                previousX = x;
-                previousY = y;
-                x += Constants.scale;
-                y += Constants.scale;
-                direction = DIRECTION.DOWN_RIGHT;
-                break;
-            case 1:
-                previousX = x;
-                previousY = y;
-                y -= Constants.scale;
-                direction = DIRECTION.UP;
-                break;
-            case 3:
-                previousX = x;
-                previousY = y;
-                y += Constants.scale;
-                direction = DIRECTION.DOWN;
-                break;
-            case 4:
-                previousX = x;
-                previousY = y;
-                x -= Constants.scale;
-                direction = DIRECTION.LEFT;
-                break;
-            case 2:
-                previousX = x;
-                previousY = y;
-                x += Constants.scale;
-                direction = DIRECTION.RIGHT;
-                break;
+        try {
+            int dir = (int) (Math.random() * 8 + 1);
+            while (!canMoveInThisDirection(dir))
+                dir = (dir + 1) % 8 + 1;
+            switch (dir) {
+                case 7:
+                    previousX = x;
+                    previousY = y;
+                    x += Constants.scale;
+                    y -= Constants.scale;
+                    direction = DIRECTION.UP_RIGHT;
+                    break;
+                case 6:
+                    previousX = x;
+                    previousY = y;
+                    x -= Constants.scale;
+                    y += Constants.scale;
+                    direction = DIRECTION.DOWN_LEFT;
+                    break;
+                case 5:
+                    previousX = x;
+                    previousY = y;
+                    x -= Constants.scale;
+                    y -= Constants.scale;
+                    direction = DIRECTION.UP_LEFT;
+                    break;
+                case 8:
+                    previousX = x;
+                    previousY = y;
+                    x += Constants.scale;
+                    y += Constants.scale;
+                    direction = DIRECTION.DOWN_RIGHT;
+                    break;
+                case 1:
+                    previousX = x;
+                    previousY = y;
+                    y -= Constants.scale;
+                    direction = DIRECTION.UP;
+                    break;
+                case 3:
+                    previousX = x;
+                    previousY = y;
+                    y += Constants.scale;
+                    direction = DIRECTION.DOWN;
+                    break;
+                case 4:
+                    previousX = x;
+                    previousY = y;
+                    x -= Constants.scale;
+                    direction = DIRECTION.LEFT;
+                    break;
+                case 2:
+                    previousX = x;
+                    previousY = y;
+                    x += Constants.scale;
+                    direction = DIRECTION.RIGHT;
+                    break;
+            }
+        }catch(StackOverflowError e){
+
         }
     }
 
