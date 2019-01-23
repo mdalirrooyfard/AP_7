@@ -54,6 +54,9 @@ public class View
     private Menu menu;
     private ArrayList<ImageView> currentEntities = new ArrayList<>();
 
+    private HashMap<String, Integer[]> widthAndHeight = new HashMap<>();
+    private HashMap<String, Integer[]> colsAndRows = new HashMap<>();
+
     public Scene getScene()
     {
         return scene;
@@ -74,12 +77,30 @@ public class View
     {
         this.farm = farm;
         stage.setScene(scene);
+        loadSize();
         loadImages();
         showWorkshops();
         showServices();
         showMap();
         showFixedAnimal();
         //showTimer();
+    }
+
+    private void loadSize(){
+        widthAndHeight.put("bear", new Integer[]{480, 648});
+        colsAndRows.put("bear", new Integer[]{4, 6});
+        widthAndHeight.put("cat", new Integer[]{288, 480});
+        colsAndRows.put("cat", new Integer[]{4, 6});
+        widthAndHeight.put("cow", new Integer[]{536, 864});
+        colsAndRows.put("cow", new Integer[]{3, 8});
+        widthAndHeight.put("dog", new Integer[]{648, 334});
+        colsAndRows.put("dog", new Integer[]{6, 4});
+        widthAndHeight.put("hen", new Integer[]{480, 336});
+        colsAndRows.put("hen", new Integer[]{6, 4});
+        widthAndHeight.put("lion", new Integer[]{824, 540});
+        colsAndRows.put("lion", new Integer[]{6, 4});
+        widthAndHeight.put("sheep", new Integer[]{780, 384});
+        colsAndRows.put("sheep", new Integer[]{6, 4});
     }
 
     private void showWorkshops()
