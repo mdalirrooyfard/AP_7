@@ -37,7 +37,12 @@ public abstract class Domestic extends Animal {
         }
         else {
             DIRECTION direction = map.findNearestGrass((int)this.x , (int)this.y);
-            super.smartMove(direction);
+            try {
+                super.smartMove(direction);
+            }
+            catch (StackOverflowError e){
+
+            }
         }
     }
 
