@@ -207,17 +207,19 @@ public class View
                 }
                 imageView.setFitWidth(Constants.ANIMAL_SIZE);
                 imageView.setFitHeight(Constants.ANIMAL_SIZE);
+                int col = colsAndRows.get(((Animal) e).getName())[0];
+                int row = colsAndRows.get(((Animal) e).getName())[1];
+                int width = widthAndHeight.get(((Animal) e).getName())[0];
+                int height = widthAndHeight.get(((Animal) e).getName())[1];
                 if (direction != DIRECTION.NONE) {
                     imageView.setX(((Animal) e).getPreviousX());
                     imageView.setY(((Animal) e).getPreviousY());
-                    imageView.setFitWidth(Constants.ANIMAL_SIZE);
-                    imageView.setFitHeight(Constants.ANIMAL_SIZE);
                     group.getChildren().add(imageView);
                     currentEntities.add(imageView);
                     AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView,1,false, 6, 4, 24,
-                            (int)imageView.getImage().getWidth() / 6,
-                            (int)imageView.getImage().getHeight() / 4, 24
+                            imageView,1,false, col, row, col * row,
+                            width / col,
+                            height / row, row * col
                     );
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(imageView, ((Animal) e).getPreviousX(),
@@ -232,8 +234,10 @@ public class View
                     imageView.setY(e.getShowY());
                     group.getChildren().add(imageView);
                     currentEntities.add(imageView);
-                    final AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView,1 ,false,4, 6, 24, 120, 108, 24
+                    AnimationTimer animationTimer = new ImageViewSprite(
+                            imageView,1,false, col, row, col * row,
+                            width / col,
+                            height / row, row * col
                     );
                     animationTimer.start();
                 }
