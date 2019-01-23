@@ -6,6 +6,8 @@ import Model.Items.Item;
 import Model.Workshops.CustomFactory;
 import Model.Workshops.Workshop;
 import View.Graphic.Menu;
+import View.Graphic.OrderPage;
+import View.Graphic.SellPage;
 import View.Graphic.Start;
 import View.ImageViewSprite;
 import View.MoveTransition;
@@ -40,7 +42,7 @@ public class Controller
     private Farm farm = new Farm();
     private String path = null;
     private Player player;
-    private int level;
+    private int level , height , itemNumber;
     private ArrayList<Player> players;
     private Menu menu;
     private Stage stage;
@@ -62,13 +64,16 @@ public class Controller
     private HashMap<String, Image> animalsFixed = new HashMap<>();
     private HashMap<String, Image> wildCaged = new HashMap<>();
     private HashMap<String, Image> items = new HashMap<>();
-    private Image fixedWell;
-    private Image movingWell;
-    private Image fixedHelicopter , leftHelicopter , rightHelicopter , fixedTruck , leftTruck , rightTruck , cage , map;
+    private ImageView fixedWell , movingWell;
+    private ImageView fixedHelicopter , leftHelicopter , rightHelicopter;
+    private ImageView fixedTruck , leftTruck , rightTruck , map;
+    private Image cage;
     private Image[] grass = new Image[4];
     private HashMap<String, Integer[]> widthAndHeight = new HashMap<>();
     private HashMap<String, Integer[]> colsAndRows = new HashMap<>();
     private ArrayList<ImageView> currentEntities = new ArrayList<>();
+    private OrderPage orderPage;
+    private SellPage sellPage;
 
     public Controller(Stage stage)
     {
@@ -83,68 +88,6 @@ public class Controller
         menu.setMenu(menu);
         menu.passMenuInstance(menu);
     }
-
-    private void buyHandler(String animalName) throws Exception
-    {
-        boolean isBought = false;
-        switch (animalName)
-        {
-            case "sheep":isBought = farm.addSheep(true);break;
-            case "cow": isBought = farm.addCow(true);break;
-            case "hen": isBought = farm.addHen(true);break;
-            case "cat": isBought = farm.addCat(true);break;
-            case "dog": isBought = farm.addDog(true);break;
-        }
-        if( !isBought )
-            throw new Exception("Not Enough Money! :'( ");
-    }
-
-    private void pickUpHandler(double x , double y) throws Exception
-    {
-        if(!farm.pickUp(x,y))
-            throw new Exception("Warehouse is full! :'(");
-    }
-
-    private void cageHandler(double x , double y) throws Exception
-    {
-        if(!farm.putCage(x,y))
-            throw new Exception("No wild animal is here!");
-    }
-
-    private void plantHandler(double x , double y) throws Exception
-    {
-        if(!farm.plantGrass(x,y))
-            throw new Exception("Well is empty! :'( ");
-    }
-
-    private void upgradeHandler(String entityName) throws Exception
-    {
-        int result = farm.upgrade(entityName);
-        if( result == 1 )
-            throw new Exception("Not Enough Money! :'( ");
-        else if( result == 2 )
-            throw new Exception(entityName+" is at maximum level!");
-        else if( result == 3 )
-            throw new Exception(entityName+" doesn't exits");
-    }
-
-    /*private void loadCustomHandler(String path) throws Exception
-    {
-        try(InputStream inputStream = new FileInputStream(path+"\\custom.txt"))
-        {
-            this.path = path;
-            Scanner scanner = new Scanner(inputStream);
-            String name = scanner.next() , input = scanner.nextLine().substring(8) , output = scanner.next();
-            ArrayList<String> inputs = new ArrayList<>();
-            for( String s : input.split(" ") )
-                inputs.add(s);
-            farm.makeCustomWorkshop(name,inputs,output);
-        }
-        catch ( Exception e )
-        {
-            throw new Exception("No such directory exists!");
-        }
-    }*/
 
     private void runHandler() throws Exception
     {
@@ -206,6 +149,8 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
+            orderPage = new OrderPage(view,farm);
+            sellPage = new SellPage(view,farm.getTruck());
             turnHandler();
         }
         catch ( FileNotFoundException e )
@@ -320,72 +265,14 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
+            orderPage = new OrderPage(view,farm);
+            sellPage = new SellPage(view,farm.getTruck());
             turnHandler();
         }
         catch ( IOException e )
         {
             throw new Exception("No such directory exsits!");
         }
-    }
-
-    private void addToTransportationHandler(boolean  vehicle , String name_count) throws Exception
-    {
-        String[] tmp = name_count.split(" ");
-        int count = Integer.parseInt(tmp[tmp.length - 1]);
-        String name = "";
-        for( int  i = 0 ; i < tmp.length - 2 ; i++ )
-            name = name.concat(tmp[i] + " ");
-        name = name.concat(tmp[tmp.length - 2]);
-        if (vehicle)
-        {
-            int c = farm.addToTruck(name,count);
-            if( c == -1 )
-                throw new Exception("Truck is moving right now!");
-            else if( c < count )
-                throw new Exception("More than truck capacity!      "+Integer.toString(c)+" is added.");
-        }
-        else
-        {
-            int c = farm.addToHelicopter(name,count);
-            if( c == -1 )
-                throw new Exception("Helicopter is moving right now!");
-            else if( c < count )
-                throw new Exception("More than helicopter capacity!      "+Integer.toString(c)+" is added.");
-        }
-    }
-
-    private void clearFromTransportationHandler(boolean vehicle) throws Exception
-    {
-        if (vehicle)
-        {
-            if( !farm.clearTruckBeforeGo() )
-                throw new Exception("Truck is moving right now!");
-        }
-        else
-            if( !farm.clearHelicopterBeforeGo() )
-                throw new Exception("Helicopter is moving right now!");
-    }
-
-    private void goHandler(boolean vehicle) throws Exception
-    {
-        if( !farm.goTransportation(vehicle) )
-        {
-            if( vehicle )
-                throw new Exception("Truck is moving right now!");
-            else
-                throw new Exception("Helicopter is moving right now!");
-        }
-    }
-
-    private void startWorkShopHandler(String name) throws Exception
-    {
-        int result = farm.startWorkShop(name);
-        if( result == -2 )
-            throw new Exception("This workshop is working now!");
-        else if( result == -1 )
-            throw new Exception("This workshop doesn't exist!");
-        else if( result == 0 )
-            throw new Exception("Inputs of this workshop don't exist in warehouse");
     }
 
     private void loadPlayers()
@@ -585,7 +472,7 @@ public class Controller
             timerView.setY(Constants.HEIGHT - 100);
 
             Label timeLabel = new Label("");
-            timeLabel.relocate(Constants.WIDTH - 160,Constants.HEIGHT - 80);
+            timeLabel.relocate(Constants.WIDTH - 140,Constants.HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
             timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
             if( farm.getTimer() / 3600 < 10 )
@@ -644,7 +531,11 @@ public class Controller
                 {
                     try
                     {
-                        buyHandler("cow");
+                        if(!farm.addCow(true))
+                        {
+
+                        }
+                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -657,7 +548,11 @@ public class Controller
                 {
                     try
                     {
-                        buyHandler("hen");
+                        if(!farm.addHen(true))
+                        {
+
+                        }
+                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -670,7 +565,11 @@ public class Controller
                 {
                     try
                     {
-                        buyHandler("cat");
+                        if(!farm.addCat(true))
+                        {
+
+                        }
+                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -683,7 +582,11 @@ public class Controller
                 {
                     try
                     {
-                        buyHandler("sheep");
+                        if(!farm.addSheep(true))
+                        {
+
+                        }
+                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -696,7 +599,11 @@ public class Controller
                 {
                     try
                     {
-                        buyHandler("dog");
+                        if(!farm.addDog(true))
+                        {
+
+                        }
+                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -1183,29 +1090,37 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void truckIcon()
+    private void truckIconHandler()
     {
-
+        fixedTruck.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                aTimer.stop();
+                stage.setScene(sellPage.getScene());
+            }
+        });
     }
 
-    private void helicopterIcon()
+    private void helicopterIconHandler()
     {
-        try
+        fixedHelicopter.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
-            Image order = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\order"
-                    +farm.getHelicopter().getLevel()+".png"), Menu.WIDTH, Menu.HEIGHT, false, true);
-            ImageView oderView = new ImageView(order);
-        }
-        catch ( Exception e ) { e.printStackTrace(); }
+            @Override
+            public void handle(MouseEvent event)
+            {
+                aTimer.stop();
+                stage.setScene(orderPage.getScene());
+            }
+        });
     }
 
     private void wellIcon()
     {
-        ImageView fixedWellView = new ImageView(fixedWell);
-        fixedWellView.setX(farm.getWell().getShowX());
-        fixedWellView.setY(farm.getWell().getShowY());
-        view.getGroup().getChildren().add(fixedWellView);
-        fixedWellView.setOnMouseClicked(new EventHandler<MouseEvent>()
+        fixedWell.setX(farm.getWell().getShowX());
+        fixedWell.setY(farm.getWell().getShowY());
+        fixedWell.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent event)
@@ -1214,12 +1129,11 @@ public class Controller
                 //todo if result == -1 dance the money
                 if (result == 1)
                 {
-                    view.getGroup().getChildren().remove(fixedWellView);
-                    ImageView movingWellView = new ImageView(movingWell);
-                    movingWellView.setX(farm.getWell().getShowX());
-                    movingWellView.setY(farm.getWell().getShowY());
-                    view.getGroup().getChildren().add(movingWellView);
-                    AnimationTimer imageViewSprite = new ImageViewSprite(movingWellView,
+                    view.getGroup().getChildren().remove(fixedWell);
+                    movingWell.setX(farm.getWell().getShowX());
+                    movingWell.setY(farm.getWell().getShowY());
+                    view.getGroup().getChildren().add(movingWell);
+                    AnimationTimer imageViewSprite = new ImageViewSprite(movingWell,
                             20,true,4, 4, 16, 200, 200, 16);
                     imageViewSprite.start();
                 }
@@ -1229,11 +1143,10 @@ public class Controller
 
     private void showBackground()
     {
-        ImageView backgroundView = new ImageView(map);
-        backgroundView.setX(0);
-        backgroundView.setY(0);
-        view.getGroup().getChildren().addAll(backgroundView);
-        backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>()
+        map.setX(0);
+        map.setY(0);
+        view.getGroup().getChildren().addAll(map);
+        map.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent event)
@@ -1256,6 +1169,9 @@ public class Controller
         buyIcons();
         menuIcon();
         wellIcon();
+        workshopsIcons();
+        servicesIcons();
+        helicopterIconHandler();
     }
 
     private void loadImages()
@@ -1272,8 +1188,9 @@ public class Controller
     {
         try
         {
-            map = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH, Menu.HEIGHT,
-                    false, true);
+            map = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH, Menu.HEIGHT,
+                    false, true));
+
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
@@ -1387,30 +1304,30 @@ public class Controller
     {
         try
         {
-            fixedTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
+            fixedTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    200, 200, false, true);
-            leftTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
+                    200, 200, false, true));
+            leftTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            rightTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
+                    50, 50, false, true));
+            rightTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            fixedHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
+                    50, 50, false, true));
+            fixedHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    220, 220, false, true);
-            leftHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
+                    220, 220, false, true));
+            leftHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            rightHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
+                    50, 50, false, true));
+            rightHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
                     +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true);
-            fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
+                    50, 50, false, true));
+            fixedWell = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
                     + Integer.toString(farm.getWell().getLevel()) + ".png"),
-                    200, 200, false, true);
-            movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
+                    200, 200, false, true));
+            movingWell = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
                     + Integer.toString(farm.getWell().getLevel()) + ".png"),
-                    800, 800, false, true);
+                    800, 800, false, true));
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
         }
@@ -1435,7 +1352,7 @@ public class Controller
         colsAndRows.put("sheep", new Integer[]{6, 4});
     }
 
-    private void showWorkshops()
+    private void workshopsIcons()
     {
         for(Workshop w : farm.getWorkshops())
             if (w != null)
@@ -1445,13 +1362,11 @@ public class Controller
             }
     }
 
-    private void showServices()
+    private void servicesIcons()
     {
-        ImageView imageView;
-        imageView = new ImageView(fixedTruck);
-        show(imageView , farm.getTruck());
-        imageView = new ImageView(fixedHelicopter);
-        show(imageView , farm.getHelicopter());
+        show(fixedTruck , farm.getTruck());
+        show(fixedHelicopter , farm.getHelicopter());
+        show(fixedWell , farm.getWell());
         //todo show(wareHouse)
     }
 
@@ -1562,6 +1477,15 @@ public class Controller
         translateTransition.setToY(e.getShowY());
         view.getGroup().getChildren().add(iView);
         translateTransition.play();
+    }
+
+    private int numberOfItem( String item )
+    {
+        int number = 0;
+        for( Item i : farm.getWareHouse().getCollectedItems() )
+            if( i.getKind().equals(item) )
+                number++;
+        return number;
     }
 
 }
