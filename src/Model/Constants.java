@@ -4,11 +4,11 @@ import javafx.stage.Screen;
 
 public class Constants
 {
-    public static final int ANIMAL_SHOW_SCALE = 10;
+    public static final int ANIMAL_SHOW_SCALE = 20;
     public static final double ANIMAL_DISPLACEMENT_Y = Screen.getPrimary().getVisualBounds().getHeight()/ 3.75;
     public static final double ANIMAL_DISPLACEMENT_X = Screen.getPrimary().getVisualBounds().getWidth() / 4;
     public static final int ANIMAL_SIZE = 90;
-    public static final double scale = 5;
+    public static final double scale = 3;
     public static final int WELL_CAPACITY = 7;
     public static final int WAREHOUSE_VOLUME = 100;
     public static final int WELL_BASE_MONEY = 20;

@@ -24,8 +24,8 @@ import java.util.Iterator;
 
 public class Farm {
     private Map map;
-    private final int mapLength = (int) (Screen.getPrimary().getVisualBounds().getHeight() / 22);
-    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth() / 24);
+    private final int mapLength = (int) (Screen.getPrimary().getVisualBounds().getHeight() / 44);
+    private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth() / 48);
     private ArrayList<Entity> stuffs = new ArrayList<>();
     private int time;
     private long timer = 0;
@@ -404,28 +404,30 @@ public class Farm {
     }
 
     public boolean turn() {
-        time = time + 1;
-        checkMoves();
-        updateMap();
-        removeGrassAndItem();
-        updateMap();
-        checkCollision();
-        updateMap();
-        if (time % 10 == 0) {   //wild animals come
-            shootWildAnimal();
+        synchronized (stuffs) {
+            time = time + 1;
+            checkMoves();
             updateMap();
-            shootWildAnimalTime = time;
-        }
-        if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
-            stuffs.removeIf((Entity entity) -> entity instanceof Wild);
-            shootWildAnimalTime = -1;
+            removeGrassAndItem();
             updateMap();
+            checkCollision();
+            updateMap();
+            if (time % 10 == 0) {   //wild animals come
+                shootWildAnimal();
+                updateMap();
+                shootWildAnimalTime = time;
+            }
+            if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
+                stuffs.removeIf((Entity entity) -> entity instanceof Wild);
+                shootWildAnimalTime = -1;
+                updateMap();
+            }
+            checkTransportation();
+            updateMap();
+            checkWorkShops();
+            updateMap();
+            return isLevelFinished();
         }
-        checkTransportation();
-        updateMap();
-        checkWorkShops();
-        updateMap();
-        return isLevelFinished();
     }
 
     public void shootWildAnimal() {
@@ -478,7 +480,6 @@ public class Farm {
                 int isEating = ((Domestic) entity).isEating();
                 if (((Domestic) entity).getSatiety() == 0) {
                     iterator.remove();
-                    //System.out.println("mord");
                     continue;
                 }else if(isEating == Constants.MAX_DOMESTIC_SATIETY){
                     ((Domestic) entity).setEating(0);

@@ -238,8 +238,10 @@ public class Controller
                 if (time % 3 == 0)
                 {
                     finish = farm.turn();
-                    showMap();
-                    showMovingAnimals();
+                    synchronized (farm.getStuffs()) {
+                        showMap();
+                        showMovingAnimals();
+                    }
                     time = 31;
                     lastTime = 0;
                 }
@@ -1011,7 +1013,9 @@ public class Controller
                         saveGameHandler();
                         stage.setScene(start.getScene());
                     }
-                    catch ( Exception e ) {}
+                    catch ( Exception e ) {
+                        e.printStackTrace();
+                    }
                 }
             });
 

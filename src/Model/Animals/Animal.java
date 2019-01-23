@@ -185,11 +185,11 @@ public abstract class Animal extends Entity {
         switch (dir)
         {
             case 7: //up_right
-                if( (int)x + Constants.scale < 53 && (int)y - Constants.scale >= 0 )
+                if( (int)x + Constants.scale < map.getWidth() && (int)y - Constants.scale >= 0 )
                     return true;
                 break;
             case 6: //down_left
-                if( (int)x - Constants.scale >= 0 && (int)y + Constants.scale < 30 )
+                if( (int)x - Constants.scale >= 0 && (int)y + Constants.scale < map.getLength() )
                     return true;
                 break;
             case 5: //up_left
@@ -197,7 +197,7 @@ public abstract class Animal extends Entity {
                     return true;
                 break;
             case 8: //down_right
-                if( (int)x + Constants.scale < 53 && (int)y + Constants.scale < 30 )
+                if( (int)x + Constants.scale < map.getWidth() && (int)y + Constants.scale < map.getLength() )
                     return true;
                 break;
             case 1: //up
@@ -205,7 +205,7 @@ public abstract class Animal extends Entity {
                     return true;
                 break;
             case 3: //down
-                if( (int)y + Constants.scale < 30 )
+                if( (int)y + Constants.scale < map.getLength() )
                     return true;
                 break;
             case 4: //left
@@ -213,7 +213,7 @@ public abstract class Animal extends Entity {
                     return true;
                 break;
             case 2: //right
-                if( (int)x + Constants.scale < 53 )
+                if( (int)x + Constants.scale < map.getWidth() )
                     return true;
                 break;
         }
