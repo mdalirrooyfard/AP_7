@@ -111,10 +111,6 @@ public abstract class Animal extends Entity {
                 x += Constants.scale;
                 direction = DIRECTION.RIGHT;
                 break;
-            default:
-                previousX = x;
-                previousY = y;
-                direction = DIRECTION.NONE;
         }
     }
 
