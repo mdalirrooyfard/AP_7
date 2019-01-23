@@ -602,6 +602,17 @@ public class Farm {
         return true;
     }
 
+    public void clearOneItemFromHelicopter(String kind){
+        Iterator<Item> iterator = helicopter.getItems().iterator();
+        while(iterator.hasNext()){
+            Item item = iterator.next();
+            if (item.getKind().equals(kind)){
+                increaseMoney(item.getBuyCost());
+                iterator.remove();
+                return;
+            }
+        }
+    }
     public boolean clearHelicopterBeforeGo(){
         if (helicopter.isMoving())
             return false;
