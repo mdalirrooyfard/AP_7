@@ -149,7 +149,7 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
-            orderPage = new OrderPage(view,farm);
+            orderPage = new OrderPage(stage,view,farm,items);
             sellPage = new SellPage(view,farm.getTruck());
             turnHandler();
         }
@@ -265,7 +265,7 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
-            orderPage = new OrderPage(view,farm);
+            orderPage = new OrderPage(stage,view,farm,items);
             sellPage = new SellPage(view,farm.getTruck());
             turnHandler();
         }

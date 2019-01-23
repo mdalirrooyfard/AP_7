@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class OrderPage
         return scene;
     }
 
-    public OrderPage(View view, Farm farm, HashMap<String , Image> items)
+    public OrderPage(Stage stage , View view, Farm farm, HashMap<String , Image> items)
     {
         try
         {
@@ -40,16 +41,16 @@ public class OrderPage
             orderView.setX(0);
             orderView.setY(0);
             Image back = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\backButton.png")
-                    , 100, 100, false, true);
+                    , 80, 80, false, true);
             ImageView backView = new ImageView(back);
             backView.setX(Constants.WIDTH - 200);
-            backView.setY(Constants.HEIGHT - 150);
+            backView.setY(Constants.HEIGHT - 100);
             Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
                     150, 79, false, true);
             ImageView okView = new ImageView(ok);
             okView.setX(Constants.WIDTH - 400);
             okView.setY(Constants.HEIGHT - 100);
-            view.getGroup().getChildren().addAll(orderView,backView,okView);
+            group.getChildren().addAll(orderView,backView,okView);
             for( String item : Constants.ITEM_NAMES )
             {
                 height = 1;
@@ -71,7 +72,7 @@ public class OrderPage
                     plusView.setY(50 * height + 90);
                     minusView.setX(190);
                     minusView.setY(50 * height + 90);
-                    view.getGroup().getChildren().addAll(itemView,plusView,minusView);
+                    group.getChildren().addAll(itemView,plusView,minusView);
                     plusView.setOnMouseClicked(new EventHandler<MouseEvent>()
                     {
                         @Override
@@ -89,7 +90,7 @@ public class OrderPage
                                 itemView.setFitWidth(50);
                                 number.setTextFill(Color.rgb(54,16,0));
                                 number.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
-                                view.getGroup().getChildren().addAll(itemView,number);
+                                group.getChildren().addAll(itemView,number);
                             }
                         }
                     });
@@ -101,11 +102,11 @@ public class OrderPage
                             if( itemNumber > 0 )
                             {
                                 itemNumber--;
-
+                                farm.clearOneItemFromHelicopter(item);
                                 Label number = new Label(Integer.toString(itemNumber));
                                 number.setTextFill(Color.rgb(54,16,0));
                                 number.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
-                                view.getGroup().getChildren().addAll(number);
+                                group.getChildren().addAll(number);
                             }
                         }
                     });
@@ -118,7 +119,7 @@ public class OrderPage
                 public void handle(MouseEvent event)
                 {
                     farm.clearHelicopterBeforeGo();
-                    view.getGroup().getChildren().removeAll(orderView,backView,okView);
+                    stage.setScene(view.getScene());
                 }
             });
         }
