@@ -1,13 +1,18 @@
 package Controller;
 
-import Model.Constants;
-import Model.Farm;
-import Model.Player;
+import Model.Animals.Animal;
+import Model.*;
+import Model.Items.Item;
+import Model.Workshops.CustomFactory;
+import Model.Workshops.Workshop;
 import View.Graphic.Menu;
 import View.Graphic.Start;
+import View.ImageViewSprite;
+import View.MoveTransition;
 import View.View;
 import com.gilecode.yagson.YaGson;
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -19,20 +24,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-
-import View.ImageViewSprite;
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class Controller
 {
     private View view;
     private Farm farm = new Farm();
     private String path = null;
-    private boolean isLevelFinished = false;
     private Player player;
     private int level;
     private ArrayList<Player> players;
@@ -41,24 +47,39 @@ public class Controller
     private Start start;
     private ArrayList<ImageView> levels = new ArrayList<>();
     private AnimationTimer aTimer;
-
-
-
-    private Image movingWell;
+    private HashMap<String, Image> fixedWorkshops = new HashMap<>();
+    private HashMap<String, Image> movingWorkshops = new HashMap<>();
+    private HashMap<String, Image> animalsLeft = new HashMap<>();
+    private HashMap<String, Image> animalsRight = new HashMap<>();
+    private HashMap<String, Image> animalsUp = new HashMap<>();
+    private HashMap<String, Image> animalsDown = new HashMap<>();
+    private HashMap<String, Image> animalsDeath = new HashMap<>();
+    private HashMap<String, Image> domesticEat = new HashMap<>();
+    private HashMap<String, Image> animalsDownLeft = new HashMap<>();
+    private HashMap<String, Image> animalsDownRight = new HashMap<>();
+    private HashMap<String, Image> animalsUpLeft = new HashMap<>();
+    private HashMap<String, Image> animalsUpRight = new HashMap<>();
+    private HashMap<String, Image> animalsFixed = new HashMap<>();
+    private HashMap<String, Image> wildCaged = new HashMap<>();
+    private HashMap<String, Image> items = new HashMap<>();
     private Image fixedWell;
-
+    private Image movingWell;
+    private Image fixedHelicopter , leftHelicopter , rightHelicopter , fixedTruck , leftTruck , rightTruck , cage , map;
+    private Image[] grass = new Image[4];
+    private HashMap<String, Integer[]> widthAndHeight = new HashMap<>();
+    private HashMap<String, Integer[]> colsAndRows = new HashMap<>();
+    private ArrayList<ImageView> currentEntities = new ArrayList<>();
 
     public Controller(Stage stage)
     {
-        this.stage = stage;
+        loadSize();
         loadPlayers();
+        this.stage = stage;
         this.start = new Start(stage);
         loadLevels();
         this.menu = new Menu(stage,players,start);
         this.start.setMenu(menu);
-        view = new View(stage,menu);
-        view.loadImages();
-        //loadImage();
+        view = new View();
         menu.setMenu(menu);
         menu.passMenuInstance(menu);
     }
@@ -107,7 +128,7 @@ public class Controller
             throw new Exception(entityName+" doesn't exits");
     }
 
-    private void loadCustomHandler(String path) throws Exception
+    /*private void loadCustomHandler(String path) throws Exception
     {
         try(InputStream inputStream = new FileInputStream(path+"\\custom.txt"))
         {
@@ -123,7 +144,7 @@ public class Controller
         {
             throw new Exception("No such directory exists!");
         }
-    }
+    }*/
 
     private void runHandler() throws Exception
     {
@@ -182,9 +203,9 @@ public class Controller
                 farm.makeAchievements();
             }
             farm.makeWorkShops();
-            view.play(farm);
-            iconsHandler();
-            loadImage();
+            stage.setScene(view.getScene());
+            loadImages();
+            makeScene();
             turnHandler();
         }
         catch ( FileNotFoundException e )
@@ -217,47 +238,52 @@ public class Controller
                 if (time % 3 == 0)
                 {
                     finish = farm.turn();
-                    view.showMap();
-                    view.showMovingAnimals();
+                    showMap();
+                    showMovingAnimals();
                     time = 31;
                     lastTime = 0;
                 }
                if (finish)
                {
                    this.stop();
-                   try
-                   {
-                       Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
-                       rectangle.setFill(Color.rgb(54,16,0));
-                       rectangle.setOpacity(0.7);
-
-                       Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\winningMessage.png")
-                               , 800, 300, false, true);
-                       ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
-                       playerHasNotBeenChosenMessageView.setY(Menu.HEIGHT / 2 - 150);
-                       playerHasNotBeenChosenMessageView.setX(Menu.WIDTH / 2 - 400);
-
-                       Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
-                               , 200, 79, false, true);
-                       ImageView okView = new ImageView(ok);
-                       okView.setY(Menu.HEIGHT / 2 + 150);
-                       okView.setX(Menu.WIDTH / 2 - 100);
-                       okView.setOnMouseClicked(new EventHandler<MouseEvent>()
-                       {
-                           @Override
-                           public void handle(MouseEvent event)
-                           {
-                               stage.setScene(start.getScene());
-                           }
-                       });
-
-                       start.getGroup().getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
-                   }
-                   catch ( Exception e ) { e.printStackTrace(); }
+                   winHandler();
                }
             }
         };
         aTimer.start();
+    }
+
+    private void winHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\winningMessage.png")
+                    , 800, 300, false, true);
+            ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
+            playerHasNotBeenChosenMessageView.setY(Menu.HEIGHT / 2 - 150);
+            playerHasNotBeenChosenMessageView.setX(Menu.WIDTH / 2 - 400);
+
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    stage.setScene(start.getScene());
+                }
+            });
+
+            start.getGroup().getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
 
     private void saveGameHandler() throws Exception
@@ -289,8 +315,9 @@ public class Controller
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
             farm = yaGson.fromJson(savedFarm,Farm.class);
-            view.play(farm);
-            iconsHandler();
+            stage.setScene(view.getScene());
+            loadImages();
+            makeScene();
             turnHandler();
         }
         catch ( IOException e )
@@ -574,13 +601,7 @@ public class Controller
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void iconsHandler()
-    {
-        buyIconHandler();
-        menuIconHandler();
-    }
-
-    private void buyIconHandler()
+    private void buyIcons()
     {
         try
         {
@@ -684,7 +705,7 @@ public class Controller
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void menuIconHandler()
+    private void menuIcon()
     {
         try
         {
@@ -1158,78 +1179,385 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void truckIconHandler()
+    private void truckIcon()
     {
 
     }
 
-
-    private void helicopterIconHandler()
+    private void helicopterIcon()
     {
-
+        try
+        {
+            Image order = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\order"
+                    +farm.getHelicopter().getLevel()+".png"), Menu.WIDTH, Menu.HEIGHT, false, true);
+            ImageView oderView = new ImageView(order);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void loadWell(){
-        try {
+    private void wellIcon()
+    {
+        ImageView fixedWellView = new ImageView(fixedWell);
+        fixedWellView.setX(farm.getWell().getShowX());
+        fixedWellView.setY(farm.getWell().getShowY());
+        view.getGroup().getChildren().add(fixedWellView);
+        fixedWellView.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                int result = farm.fullWell();
+                //todo if result == -1 dance the money
+                if (result == 1)
+                {
+                    view.getGroup().getChildren().remove(fixedWellView);
+                    ImageView movingWellView = new ImageView(movingWell);
+                    movingWellView.setX(farm.getWell().getShowX());
+                    movingWellView.setY(farm.getWell().getShowY());
+                    view.getGroup().getChildren().add(movingWellView);
+                    AnimationTimer imageViewSprite = new ImageViewSprite(movingWellView,
+                            20,true,4, 4, 16, 200, 200, 16);
+                    imageViewSprite.start();
+                }
+            }
+        });
+    }
+
+    private void showBackground()
+    {
+        ImageView backgroundView = new ImageView(map);
+        backgroundView.setX(0);
+        backgroundView.setY(0);
+        view.getGroup().getChildren().addAll(backgroundView);
+        backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                double x = event.getX() - Constants.ANIMAL_DISPLACEMENT_X;
+                double y = event.getY() - Constants.ANIMAL_DISPLACEMENT_Y;
+                if (x >= 0 && x <= farm.getMapWidth()*Constants.ANIMAL_SHOW_SCALE &&
+                    y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE)
+                {
+                    boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
+                            //todo flesh be chah
+                }
+            }
+        });
+    }
+
+    private void makeScene()
+    {
+        showBackground();
+        buyIcons();
+        menuIcon();
+        wellIcon();
+    }
+
+    private void loadImages()
+    {
+        loadImageOfMap();
+        loadImagesOfItems();
+        loadImagesOfWorkshops();
+        loadImageOfServices();
+        loadImagesOfGrass();
+        loadImagesOfAnimals();
+    }
+
+    private void loadImageOfMap()
+    {
+        try
+        {
+            map = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH, Menu.HEIGHT,
+                    false, true);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void loadImagesOfAnimals()
+    {
+        try
+        {
+            Image image;
+            for (String s : Constants.ANIMAL)
+            {
+                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep"))
+                {
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
+                            "death" + ".png"));
+                    animalsDeath.put(s.toLowerCase(), image);
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                            "eat"+".png"));
+                    domesticEat.put(s.toLowerCase(), image);
+                }
+                if (s.equals("Bear") || s.equals("Lion"))
+                {
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
+                            "caged" + ".png"));
+                    wildCaged.put(s.toLowerCase(), image);
+                }
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "fixed"+".png"));
+                animalsFixed.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down"+".png"));
+                animalsDown.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down_left"+".png"));
+                animalsDownLeft.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "down_right"+".png"));
+                animalsDownRight.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "right"+".png"));
+                animalsRight.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "left"+".png"));
+                animalsLeft.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up"+".png"));
+                animalsUp.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up_right"+".png"));
+                animalsUpRight.put(s.toLowerCase(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\"+s+"\\"+
+                        "up_left"+".png"));
+                animalsUpLeft.put(s.toLowerCase(),image);
+            }
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+    }
+
+    private void loadImagesOfGrass()
+    {
+        try
+        {
+            for (int i = 0; i < 4; i++)
+                grass[i] = new Image(new FileInputStream("src\\Resources\\Graphic\\Grass\\grass"+
+                        Integer.toString(i+1)+".png"),
+                        50, 50, false, true);
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+    }
+
+    private void loadImagesOfItems()
+    {
+        try
+        {
+            Image image;
+            for (String item : Constants.ITEM_NAMES)
+            {
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
+                        50, 50, false, true);
+                items.put(item, image);
+            }
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+    }
+
+    private void loadImagesOfWorkshops()
+    {
+        try
+        {
+            Image image;
+            for (Workshop w : farm.getWorkshops())
+            {
+                if (w != null)
+                {
+                    String name = w instanceof CustomFactory ? "customFactory" : w.getWorkShopName();
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
+                            + Integer.toString(w.getLevel()) + ".png"),
+                            200, 200, false, true);
+                    fixedWorkshops.put(w.getWorkShopName(), image);
+                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
+                            + Integer.toString(w.getLevel()) + ".png"),
+                            200, 200, false, true);
+                    movingWorkshops.put(w.getWorkShopName(), image);
+                }
+            }
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+    }
+
+    private void loadImageOfServices()
+    {
+        try
+        {
+            fixedTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    200, 200, false, true);
+            leftTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            rightTruck = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            fixedHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    220, 220, false, true);
+            leftHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
+            rightHelicopter = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
+                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
+                    50, 50, false, true);
             fixedWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
                     + Integer.toString(farm.getWell().getLevel()) + ".png"),
                     200, 200, false, true);
             movingWell = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
                     + Integer.toString(farm.getWell().getLevel()) + ".png"),
                     800, 800, false, true);
-            ImageView fixedWellView = new ImageView(fixedWell);
-            fixedWellView.setX(farm.getWell().getShowX());
-            fixedWellView.setY(farm.getWell().getShowY());
-            view.getGroup().getChildren().add(fixedWellView);
-            fixedWellView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    int result = farm.fullWell();
-                    //todo if result == -1 dance the money
-                    if (result == 1){
-                        view.getGroup().getChildren().remove(fixedWellView);
-                        ImageView movingWellView = new ImageView(movingWell);
-                        movingWellView.setX(farm.getWell().getShowX());
-                        movingWellView.setY(farm.getWell().getShowY());
-                        view.getGroup().getChildren().add(movingWellView);
-                        AnimationTimer imageViewSprite = new ImageViewSprite(movingWellView,
-                                25,true,4, 4, 16, 200, 200, 16);
-                        imageViewSprite.start();
-                    }
-                }
-            });
-        }catch (IOException e){
-            e.printStackTrace();
+            cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
+                    50, 50, false, true);
         }
+        catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void loadMap(){
-        try
+    private void loadSize()
+    {
+        widthAndHeight.put("bear", new Integer[]{480, 648});
+        colsAndRows.put("bear", new Integer[]{4, 6});
+        widthAndHeight.put("cat", new Integer[]{288, 480});
+        colsAndRows.put("cat", new Integer[]{4, 6});
+        widthAndHeight.put("cow", new Integer[]{536, 864});
+        colsAndRows.put("cow", new Integer[]{3, 8});
+        widthAndHeight.put("dog", new Integer[]{648, 334});
+        colsAndRows.put("dog", new Integer[]{6, 4});
+        widthAndHeight.put("hen", new Integer[]{480, 336});
+        colsAndRows.put("hen", new Integer[]{6, 4});
+        widthAndHeight.put("lion", new Integer[]{824, 540});
+        colsAndRows.put("lion", new Integer[]{6, 4});
+        widthAndHeight.put("sheep", new Integer[]{780, 384});
+        colsAndRows.put("sheep", new Integer[]{6, 4});
+    }
+
+    private void showWorkshops()
+    {
+        for(Workshop w : farm.getWorkshops())
+            if (w != null)
+            {
+                ImageView imageView = new ImageView(fixedWorkshops.get(w.getWorkShopName()));
+                show(imageView, w);
+            }
+    }
+
+    private void showServices()
+    {
+        ImageView imageView;
+        imageView = new ImageView(fixedTruck);
+        show(imageView , farm.getTruck());
+        imageView = new ImageView(fixedHelicopter);
+        show(imageView , farm.getHelicopter());
+        //todo show(wareHouse)
+    }
+
+    private void showMap()
+    {
+        view.getGroup().getChildren().removeAll(currentEntities);
+        currentEntities.clear();
+        for(int j = 0; j < farm.getMapLength(); j++)
+            for (int i = 0; i < farm.getMapWidth(); i++)
+            {
+                int numberOfGrass = 0;
+                ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
+                for (Entity e : stuffs)
+                {
+                    ImageView imageView = null;
+                    if(e instanceof Item)
+                        imageView = new ImageView(items.get(((Item) e).getKind()));
+                    else if(e instanceof Grass)
+                    {
+                        numberOfGrass ++;
+                        if (numberOfGrass <= 3)
+                            imageView = new ImageView(grass[numberOfGrass - 1]);
+                        else
+                            imageView = new ImageView(grass[3]);
+                    }
+                    if (imageView != null) {
+                        currentEntities.add(imageView);
+                        showFixed(imageView, e);
+                    }
+                }
+            }
+    }
+
+    private void showFixed(ImageView iView, Entity e)
+    {
+        iView.setX(e.getShowX());
+        iView.setY(e.getShowY());
+        view.getGroup().getChildren().add(iView);
+    }
+
+    private void showMovingAnimals()
+    {
+        ImageView imageView = null;
+        ArrayList<Entity> stuffs = farm.getStuffs();
+        for(Entity e : stuffs)
         {
-            Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH,
-                    Menu.HEIGHT, false, true);
-            ImageView backgroundView = new ImageView(background);
-            backgroundView.setX(0);
-            backgroundView.setY(0);
-            view.getGroup().getChildren().addAll(backgroundView);
-            backgroundView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    double x = event.getX() - Constants.ANIMAL_DISPLACEMENT_X;
-                    double y = event.getY() - Constants.ANIMAL_DISPLACEMENT_Y;
-                    if (x >= 0 && x <= farm.getMapWidth()*Constants.ANIMAL_SHOW_SCALE &&
-                        y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE){
-                            boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
-                            //todo flesh be chah
-                    }
+            if(e instanceof Animal)
+            {
+                DIRECTION direction = ((Animal) e).getDirection();
+                switch (direction)
+                {
+                    case UP: imageView = new ImageView(animalsUp.get(((Animal) e).getName())); break;
+                    case RIGHT: imageView = new ImageView(animalsRight.get(((Animal) e).getName())); break;
+                    case LEFT: imageView = new ImageView(animalsLeft.get(((Animal) e).getName())); break;
+                    case DOWN: imageView = new ImageView(animalsDown.get(((Animal) e).getName())); break;
+                    case UP_LEFT: imageView = new ImageView(animalsUpLeft.get(((Animal) e).getName())); break;
+                    case DOWN_LEFT: imageView = new ImageView(animalsDownLeft.get(((Animal) e).getName())); break;
+                    case DOWN_RIGHT: imageView = new ImageView(animalsDownRight.get(((Animal) e).getName())); break;
+                    case UP_RIGHT: imageView = new ImageView(animalsUpRight.get(((Animal) e).getName())); break;
+                    case NONE: imageView = new ImageView(domesticEat.get(((Animal) e).getName())); break;
                 }
-            });
+                imageView.setFitWidth(Constants.ANIMAL_SIZE);
+                imageView.setFitHeight(Constants.ANIMAL_SIZE);
+                int col = colsAndRows.get(((Animal) e).getName())[0];
+                int row = colsAndRows.get(((Animal) e).getName())[1];
+                int width = widthAndHeight.get(((Animal) e).getName())[0];
+                int height = widthAndHeight.get(((Animal) e).getName())[1];
+                if (direction != DIRECTION.NONE)
+                {
+                    imageView.setX(((Animal) e).getPreviousX());
+                    imageView.setY(((Animal) e).getPreviousY());
+                    view.getGroup().getChildren().add(imageView);
+                    currentEntities.add(imageView);
+                    AnimationTimer animationTimer = new ImageViewSprite(
+                            imageView,1,false, col, row, col * row,
+                            width / col,
+                            height / row, row * col
+                    );
+                    animationTimer.start();
+                    MoveTransition pathTransition = new MoveTransition(imageView, ((Animal) e).getPreviousX(),
+                            ((Animal) e).getPreviousY(), e.getShowX(), e.getShowY(), 3000);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+
+                }
+                else
+                {
+                    imageView.setX(e.getShowX());
+                    imageView.setY(e.getShowY());
+                    view.getGroup().getChildren().add(imageView);
+                    currentEntities.add(imageView);
+                    AnimationTimer animationTimer = new ImageViewSprite(
+                            imageView,1,false, col, row, col * row,
+                            width / col,
+                            height / row, row * col
+                    );
+                    animationTimer.start();
+                }
+            }
         }
-        catch ( Exception e ){}
     }
 
-    private void loadImage(){
-        loadMap();
-        loadWell();
+    private void show(ImageView iView, Entity e)
+    {
+        iView.setTranslateX(e.getShowX());
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(e.getShowY()*3) , iView);
+        translateTransition.setToY(e.getShowY());
+        view.getGroup().getChildren().add(iView);
+        translateTransition.play();
     }
+
 }
