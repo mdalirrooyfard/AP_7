@@ -604,6 +604,16 @@ public class Farm {
         return true;
     }
 
+    public void clearOneItemFromTruck(String kind){
+        Iterator<Item> iterator = truck.getItems().iterator();
+        while (iterator.hasNext()){
+            Item item = iterator.next();
+            if (item.getKind().equals(kind)){
+                iterator.remove();
+                return;
+            }
+        }
+    }
     public void clearOneItemFromHelicopter(String kind){
         Iterator<Item> iterator = helicopter.getItems().iterator();
         while(iterator.hasNext()){
