@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Animals.Animal;
+import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
 import Model.Workshops.*;
@@ -64,16 +65,10 @@ public class Controller
     private HashMap<String, Image> items = new HashMap<>();
     private HashMap<String, Image> wareHouseItems = new HashMap<>();
     private HashMap<String, ImageView> fixedWorkShopsImageViews = new HashMap<>();
-    private ImageView movingCakeBakery;
-    private ImageView movingCookieBakery;
-    private ImageView movingEggPowderPlant;
-    private ImageView movingSewingFactory;
-    private ImageView movingSpinnery;
-    private ImageView movingWeavingFactory;
-    private ImageView movingCustomFactory;
-    private ImageView fixedWell , movingWell;
-    private ImageView fixedHelicopter , leftHelicopter , rightHelicopter;
-    private ImageView fixedTruck , leftTruck , rightTruck , map , wareHouse;
+    private ImageView movingCakeBakery , movingCookieBakery , movingEggPowderPlant , movingSewingFactory , movingSpinnery ,
+            movingWeavingFactory , movingCustomFactory , fixedWell , movingWell ,fixedHelicopter , leftHelicopter ,
+            rightHelicopter , fixedTruck , leftTruck , rightTruck , map , wareHouse;
+    private ImageView[] wildAnimals = new ImageView[2];
     private Image cage;
     private Image[] grass = new Image[4];
     private HashMap<String, Integer[]> widthAndHeight = new HashMap<>();
@@ -207,7 +202,7 @@ public class Controller
                         showMovingAnimals();
                         checkWell();
                         checkWareHouse();
-                        checkHelicopter();
+                        checkTransportation();
                         checkWorkShops();
                     }
                     time = 31;
@@ -520,31 +515,31 @@ public class Controller
             Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyGuineaHenButton.png"),
                     60, 60, false, true);
             ImageView henIconView = new ImageView(henIcon);
-            henIconView.setX(5);
+            henIconView.setX(Constants.WIDTH - 335);
             henIconView.setY(10);
 
             Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCowButton.png"),
                     60, 60, false, true);
             ImageView cowIconView = new ImageView(cowIcon);
-            cowIconView.setX(80);
+            cowIconView.setX(Constants.WIDTH - 270);
             cowIconView.setY(10);
 
             Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buySheepButton.png"),
                     60, 60, false, true);
             ImageView sheepIconView = new ImageView(sheepIcon);
-            sheepIconView.setX(145);
+            sheepIconView.setX(Constants.WIDTH - 205);
             sheepIconView.setY(10);
 
             Image dogIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyDogButton.png"),
                     60, 60, false, true);
             ImageView dogIconView = new ImageView(dogIcon);
-            dogIconView.setX(210);
+            dogIconView.setX(Constants.WIDTH - 140);
             dogIconView.setY(10);
 
             Image catIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCatButton.png"),
                     60, 60, false, true);
             ImageView catIconView = new ImageView(catIcon);
-            catIconView.setX(275);
+            catIconView.setX(Constants.WIDTH - 85);
             catIconView.setY(10);
 
             cowIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -1390,7 +1385,8 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void loadImageViewsOfMovingWorkShops(){
+    private void loadImageViewsOfMovingWorkShops()
+    {
         movingCakeBakery = new ImageView(movingWorkshops.get("cakeBakery"));
         movingCookieBakery = new ImageView(movingWorkshops.get("cookieBakery"));
         movingEggPowderPlant = new ImageView(movingWorkshops.get("eggPowderPlant"));
@@ -1581,58 +1577,55 @@ public class Controller
 
     private void showMovingAnimals()
     {
-        ImageView imageView = null;
-        ArrayList<Entity> stuffs = farm.getStuffs();
-        for(Entity e : stuffs)
+        ImageView animalView = null;
+        for(Entity e : farm.getStuffs())
         {
             if(e instanceof Animal && !e.isDead())
             {
-                DIRECTION direction = ((Animal) e).getDirection();
-                switch (direction)
+                switch (((Animal) e).getDirection())
                 {
-                    case UP: imageView = new ImageView(animalsUp.get(((Animal) e).getName())); break;
-                    case RIGHT: imageView = new ImageView(animalsRight.get(((Animal) e).getName())); break;
-                    case LEFT: imageView = new ImageView(animalsLeft.get(((Animal) e).getName())); break;
-                    case DOWN: imageView = new ImageView(animalsDown.get(((Animal) e).getName())); break;
-                    case UP_LEFT: imageView = new ImageView(animalsUpLeft.get(((Animal) e).getName())); break;
-                    case DOWN_LEFT: imageView = new ImageView(animalsDownLeft.get(((Animal) e).getName())); break;
-                    case DOWN_RIGHT: imageView = new ImageView(animalsDownRight.get(((Animal) e).getName())); break;
-                    case UP_RIGHT: imageView = new ImageView(animalsUpRight.get(((Animal) e).getName())); break;
-                    case NONE: imageView = new ImageView(domesticEat.get(((Animal) e).getName())); break;
+                    case UP: animalView = new ImageView(animalsUp.get(((Animal) e).getName())); break;
+                    case RIGHT: animalView = new ImageView(animalsRight.get(((Animal) e).getName())); break;
+                    case LEFT: animalView = new ImageView(animalsLeft.get(((Animal) e).getName())); break;
+                    case DOWN: animalView = new ImageView(animalsDown.get(((Animal) e).getName())); break;
+                    case UP_LEFT: animalView = new ImageView(animalsUpLeft.get(((Animal) e).getName())); break;
+                    case DOWN_LEFT: animalView = new ImageView(animalsDownLeft.get(((Animal) e).getName())); break;
+                    case DOWN_RIGHT: animalView = new ImageView(animalsDownRight.get(((Animal) e).getName())); break;
+                    case UP_RIGHT: animalView = new ImageView(animalsUpRight.get(((Animal) e).getName())); break;
+                    case NONE: animalView = new ImageView(domesticEat.get(((Animal) e).getName())); break;
                 }
-                imageView.setFitWidth(Constants.ANIMAL_SIZE);
-                imageView.setFitHeight(Constants.ANIMAL_SIZE);
+                animalView.setFitWidth(Constants.ANIMAL_SIZE);
+                animalView.setFitHeight(Constants.ANIMAL_SIZE);
                 int col = colsAndRows.get(((Animal) e).getName())[0];
                 int row = colsAndRows.get(((Animal) e).getName())[1];
                 int width = widthAndHeight.get(((Animal) e).getName())[0];
                 int height = widthAndHeight.get(((Animal) e).getName())[1];
-                if (direction != DIRECTION.NONE)
+                if (((Animal) e).getDirection() != DIRECTION.NONE)
                 {
-                    imageView.setX(((Animal) e).getPreviousX());
-                    imageView.setY(((Animal) e).getPreviousY());
-                    view.getGroup().getChildren().add(imageView);
-                    currentEntities.add(imageView);
+                    animalView.setX(((Animal) e).getPreviousX());
+                    animalView.setY(((Animal) e).getPreviousY());
+                    view.getGroup().getChildren().add(animalView);
+                    currentEntities.add(animalView);
                     AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView,1,false, col, row, col * row,
+                            animalView,1,false, col, row, col * row,
                             width / col,
                             height / row, row * col
                     );
                     animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(imageView, ((Animal) e).getPreviousX(),
+                    MoveTransition pathTransition = new MoveTransition(animalView, ((Animal) e).getPreviousX(),
                             ((Animal) e).getPreviousY(), e.getShowX(), e.getShowY(), 3000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
-
                 }
                 else
                 {
-                    imageView.setX(e.getShowX());
-                    imageView.setY(e.getShowY());
-                    view.getGroup().getChildren().add(imageView);
-                    currentEntities.add(imageView);
+                    animalView.setX(e.getShowX());
+                    animalView.setY(e.getShowY());
+                    view.getGroup().getChildren().add(animalView);
+                    currentEntities.add(animalView);
                     AnimationTimer animationTimer = new ImageViewSprite(
-                            imageView,1,false, col, row, col * row,
+                            animalView,1,false, col, row, col * row,
                             width / col,
                             height / row, row * col
                     );
@@ -1640,6 +1633,58 @@ public class Controller
                 }
             }
         }
+    }
+
+    private void showMovingWildAnimals()
+    {
+        view.getGroup().getChildren().removeAll(wildAnimals);
+        int i = 0;
+        for(Entity e : farm.getStuffs())
+        {
+            if(e instanceof Wild && !e.isDead())
+            {
+                switch (((Wild) e).getDirection())
+                {
+                    case UP: wildAnimals[i] = new ImageView(animalsUp.get(((Wild) e).getName())); break;
+                    case RIGHT: wildAnimals[i] = new ImageView(animalsRight.get(((Wild) e).getName())); break;
+                    case LEFT: wildAnimals[i] = new ImageView(animalsLeft.get(((Wild) e).getName())); break;
+                    case DOWN: wildAnimals[i] = new ImageView(animalsDown.get(((Wild) e).getName())); break;
+                    case UP_LEFT: wildAnimals[i] = new ImageView(animalsUpLeft.get(((Wild) e).getName())); break;
+                    case DOWN_LEFT: wildAnimals[i] = new ImageView(animalsDownLeft.get(((Wild) e).getName())); break;
+                    case DOWN_RIGHT: wildAnimals[i] = new ImageView(animalsDownRight.get(((Wild) e).getName())); break;
+                    case UP_RIGHT: wildAnimals[i] = new ImageView(animalsUpRight.get(((Wild) e).getName())); break;
+                }
+                wildAnimals[i].setFitWidth(Constants.ANIMAL_SIZE);
+                wildAnimals[i].setFitHeight(Constants.ANIMAL_SIZE);
+                int col = colsAndRows.get(((Wild) e).getName())[0];
+                int row = colsAndRows.get(((Wild) e).getName())[1];
+                int width = widthAndHeight.get(((Wild) e).getName())[0];
+                int height = widthAndHeight.get(((Wild) e).getName())[1];
+                wildAnimals[i].setX(((Wild) e).getPreviousX());
+                wildAnimals[i].setY(((Wild) e).getPreviousY());
+                view.getGroup().getChildren().add(wildAnimals[i]);
+                currentEntities.add(wildAnimals[i]);
+                AnimationTimer animationTimer = new ImageViewSprite(
+                        wildAnimals[i],1,false, col, row, col * row,
+                        width / col, height / row, row * col);
+                animationTimer.start();
+                MoveTransition pathTransition = new MoveTransition(wildAnimals[i], ((Wild) e).getPreviousX(),
+                        ((Wild) e).getPreviousY(), e.getShowX(), e.getShowY(), 3000);
+                pathTransition.setAutoReverse(false);
+                pathTransition.setCycleCount(1);
+                pathTransition.play();
+                wildAnimals[i].setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        ImageView cageView = new ImageView(cage);
+
+                    }
+                });
+            }
+        }
+        view.getGroup().getChildren().addAll(wildAnimals);
     }
 
     private void show(ImageView iView, Entity e)
@@ -1651,25 +1696,27 @@ public class Controller
         translateTransition.play();
     }
 
-    private void checkHelicopter()
-    {
-        if ( farm.getHelicopter().isMoving() )
-        {
-            if( farm.getHelicopter().getCurrentTime() > 0 )
-                farm.getHelicopter().decreaseCurrentTime(1);
-            if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
-            {
-                /*view.getGroup().getChildren().remove(rightHelicopter);
-                view.getGroup().getChildren().add(leftHelicopter);*/
-                view.goHelicopter(leftHelicopter,fixedHelicopter,true);
-            }
+    private void checkTransportation() {
+        if (farm.getTruck().isMoving()) {
+            if (farm.getTruck().getCurrentTime() > 0)
+                farm.getTruck().decreaseCurrentTime(1);
             else
-            {
+                farm.clearFromTruck();
+        }
+        if (farm.getHelicopter().isMoving()) {
+            if (farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime()) {
+                view.goHelicopter(fixedHelicopter);
+                farm.getHelicopter().decreaseCurrentTime(1);
+            }
+            else if (farm.getHelicopter().getCurrentTime() > 0)
+                farm.getHelicopter().decreaseCurrentTime(1);
+            else{
                 farm.getHelicopter().setMoving(false);
-                /*view.getGroup().getChildren().remove(leftHelicopter);*/
-                //view.getGroup().getChildren().add(fixedHelicopter);
+                fixedHelicopter.setFitHeight(220);
+                fixedHelicopter.setFitWidth(220);
                 fixedHelicopter.setY(farm.getHelicopter().getShowY());
                 fixedHelicopter.setX(farm.getHelicopter().getShowX());
+                farm.clearFromHelicopter();
             }
         }
     }

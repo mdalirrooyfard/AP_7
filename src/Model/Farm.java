@@ -424,8 +424,6 @@ public class Farm {
                 shootWildAnimalTime = -1;
                 updateMap();
             }
-            checkTransportation();
-            updateMap();
             return isLevelFinished();
         }
     }
@@ -569,7 +567,8 @@ public class Farm {
         helicopter.setMoving(false);
         Iterator<Item> iterator = helicopter.getItems().iterator();
         while (iterator.hasNext()) {
-            stuffs.add(iterator.next());
+            Item item = iterator.next();
+            stuffs.add(item);
             iterator.remove();
         }
         updateMap();
@@ -612,17 +611,20 @@ public class Farm {
             }
         }
     }
+
     public void clearOneItemFromHelicopter(String kind){
         Iterator<Item> iterator = helicopter.getItems().iterator();
         while(iterator.hasNext()){
             Item item = iterator.next();
             if (item.getKind().equals(kind)){
                 increaseMoney(item.getBuyCost());
+                helicopter.increaseCurrentVolume(item.getVolume());
                 iterator.remove();
                 return;
             }
         }
     }
+
     public boolean clearHelicopterBeforeGo(){
         if (helicopter.isMoving())
             return false;
@@ -690,20 +692,7 @@ public class Farm {
         return true;
     }
 
-    public void checkTransportation() {
-        if (truck.isMoving()) {
-            if (truck.getCurrentTime() > 0)
-                truck.decreaseCurrentTime(1);
-            else
-                clearFromTruck();
-        }
-        if (helicopter.isMoving()) {
-            if (helicopter.getCurrentTime() > 0)
-                helicopter.decreaseCurrentTime(1);
-            else
-                clearFromHelicopter();
-        }
-    }
+
 
     //print methods
     public String printLevel() {
