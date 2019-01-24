@@ -18,8 +18,8 @@ public class Constants
     public static final int WELL_BASE_UPGRADE_COST = 100;
     public static final int WAREHOUSE_BASE_UPGRADE_COST = 100;
     public static final int CAT_BASE_UPGRADE_COST = 100;
-    public static final int HELICOPTER_WORKING_TIME = 100 ;
-    public static final int TRUCK_WORKING_TIME = 100 ;
+    public static final int HELICOPTER_WORKING_TIME = 10 ;
+    public static final int TRUCK_WORKING_TIME = 10 ;
     public static final int TRUCK_BASE_UPGRADE_COST = 100;
     public static final int HELICOPTER_BASE_UPGRADE_COST = 100;
     public static final String[] ITEM_NAMES = {"souvenir","egg","wool",

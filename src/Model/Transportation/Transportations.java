@@ -20,6 +20,7 @@ public class Transportations extends Entity {
         return items;
     }
 
+
     public void decreaseCurrentTime(int amount){
         this.currentTime -= amount;
     }

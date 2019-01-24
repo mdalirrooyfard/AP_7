@@ -41,7 +41,7 @@ public class Controller
     private Farm farm = new Farm();
     private String path = null;
     private Player player;
-    private int level , height , itemNumber;
+    private int level;
     private ArrayList<Player> players;
     private Menu menu;
     private Stage stage;
@@ -157,8 +157,8 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
-            orderPage = new OrderPage(stage,view,farm,items);
-            sellPage = new SellPage(view,farm.getTruck());
+            orderPage = new OrderPage();
+            sellPage = new SellPage(stage,view,farm,items);
             turnHandler();
         }
         catch ( FileNotFoundException e )
@@ -184,18 +184,20 @@ public class Controller
                     lastTime = now;
                 if (now > lastTime + second )
                 {
-                    time += 1;
+                    time++;
                     farm.increaseTimer();
                     lastTime = now;
                 }
                 if (time % 3 == 0)
                 {
                     finish = farm.turn();
-                    synchronized (farm.getStuffs()) {
+                    synchronized (farm.getStuffs())
+                    {
                         showMap();
                         showMovingAnimals();
                         checkWell();
                         checkWareHouse();
+                        checkHelicopter();
                         checkWorkShops();
                     }
                     time = 31;
@@ -276,8 +278,8 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
-            orderPage = new OrderPage(stage,view,farm,items);
-            sellPage = new SellPage(view,farm.getTruck());
+            orderPage = new OrderPage();
+            sellPage = new SellPage(stage,view,farm,items);
             turnHandler();
         }
         catch ( IOException e )
@@ -1122,7 +1124,7 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 aTimer.stop();
-                stage.setScene(orderPage.getScene());
+                stage.setScene(orderPage.getScene(stage,view,farm,items,rightHelicopter,fixedHelicopter,aTimer));
             }
         });
     }
@@ -1154,7 +1156,8 @@ public class Controller
             }
     }
 
-    private void checkWareHouse(){
+    private void checkWareHouse()
+    {
         ArrayList<Item> items = farm.getWareHouse().getCollectedItems();
         int i = 0;
         double firstShow_X = Constants.WIDTH/2 - 70;
@@ -1199,12 +1202,14 @@ public class Controller
         });
     }
 
-    public void checkWell(){
-        if (farm.getWell().isWorking()){
-            if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume()){
+    private void checkWell()
+    {
+        if (farm.getWell().isWorking())
+        {
+            if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume())
                 farm.getWell().increase(1);
-            }
-            else{
+            else
+            {
                 farm.getWell().setWorking(false);
                 view.getGroup().getChildren().remove(movingWell);
                 view.getGroup().getChildren().add(fixedWell);
@@ -1398,9 +1403,9 @@ public class Controller
             fixedHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
                     +farm.getTruck().getLevel() +".png"), 220, 220, false, true));
             leftHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
-                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png"), 144, 96, false, true));
             rightHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
-                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png"), 144, 96, false, true));
             fixedWell = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
                     + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
             movingWell = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
@@ -1601,13 +1606,27 @@ public class Controller
         translateTransition.play();
     }
 
-    private int numberOfItem( String item )
+    private void checkHelicopter()
     {
-        int number = 0;
-        for( Item i : farm.getWareHouse().getCollectedItems() )
-            if( i.getKind().equals(item) )
-                number++;
-        return number;
+        if ( farm.getHelicopter().isMoving() )
+        {
+            if( farm.getHelicopter().getCurrentTime() > 0 )
+                farm.getHelicopter().decreaseCurrentTime(1);
+            if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
+            {
+                /*view.getGroup().getChildren().remove(rightHelicopter);
+                view.getGroup().getChildren().add(leftHelicopter);*/
+                view.goHelicopter(leftHelicopter,fixedHelicopter,true);
+            }
+            else
+            {
+                farm.getHelicopter().setMoving(false);
+                /*view.getGroup().getChildren().remove(leftHelicopter);*/
+                //view.getGroup().getChildren().add(fixedHelicopter);
+                fixedHelicopter.setY(farm.getHelicopter().getShowY());
+                fixedHelicopter.setX(farm.getHelicopter().getShowX());
+            }
+        }
     }
 
 }

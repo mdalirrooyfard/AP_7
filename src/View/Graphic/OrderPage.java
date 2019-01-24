@@ -2,8 +2,8 @@ package View.Graphic;
 
 import Model.Constants;
 import Model.Farm;
-import Model.Items.Item;
 import View.View;
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -24,15 +24,13 @@ public class OrderPage
 {
     Group group = new Group();
     Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
-    int height = 1 , itemNumber = 0;
+    int height = 0 , itemNumber = 0 , width = 0;
 
-    public Scene getScene()
+    public Scene getScene(Stage stage,View view,Farm farm,HashMap<String ,Image> items,ImageView leftHelicopter,ImageView fixedHelicopter,AnimationTimer aTimer)
     {
-        return scene;
-    }
-
-    public OrderPage(Stage stage , View view, Farm farm, HashMap<String , Image> items)
-    {
+        height = 0;
+        itemNumber = 0;
+        width = 0;
         try
         {
             Image order = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\order"
@@ -40,98 +38,149 @@ public class OrderPage
             ImageView orderView = new ImageView(order);
             orderView.setX(0);
             orderView.setY(0);
+            group.getChildren().addAll(orderView);
+            insertBack(farm,stage,view);
+            insertOk(farm,stage,view,leftHelicopter,fixedHelicopter,aTimer);
+            insertItems(farm,items);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+        return scene;
+    }
+
+    private void insertBack(Farm farm , Stage stage , View view)
+    {
+        try
+        {
             Image back = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\backButton.png")
                     , 80, 80, false, true);
             ImageView backView = new ImageView(back);
             backView.setX(Constants.WIDTH - 200);
             backView.setY(Constants.HEIGHT - 100);
-            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
-                    150, 79, false, true);
-            ImageView okView = new ImageView(ok);
-            okView.setX(Constants.WIDTH - 400);
-            okView.setY(Constants.HEIGHT - 100);
-            group.getChildren().addAll(orderView,backView,okView);
-            for( String item : Constants.ITEM_NAMES )
-            {
-                height = 1;
-                itemNumber = 0;
-                if( numberOfItem(farm,item) > 0 )
-                {
-                    ImageView itemView = new ImageView(items.get(item));
-                    itemView.setX(30);
-                    itemView.setY(50 * height + 100);
-                    itemView.setFitHeight(50);
-                    itemView.setFitWidth(50);
-                    ImageView plusView = new ImageView(
-                            new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\plusButton.png")
-                                    , 70, 70, false, true));
-                    ImageView minusView = new ImageView(
-                            new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\minusButton.png")
-                                    , 70, 70, false, true));
-                    plusView.setX(100);
-                    plusView.setY(50 * height + 90);
-                    minusView.setX(190);
-                    minusView.setY(50 * height + 90);
-                    group.getChildren().addAll(itemView,plusView,minusView);
-                    plusView.setOnMouseClicked(new EventHandler<MouseEvent>()
-                    {
-                        @Override
-                        public void handle(MouseEvent event)
-                        {
-                            if( farm.getHelicopter().getCurrentVolume() < farm.getHelicopter().getVolume() )
-                            {
-                                itemNumber++;
-                                farm.addToHelicopter(item,1);
-                                ImageView itemView = new ImageView(items.get(item));
-                                Label number = new Label(Integer.toString(itemNumber));
-                                itemView.setX(450);
-                                itemView.setY(50 * height + 100);
-                                itemView.setFitHeight(50);
-                                itemView.setFitWidth(50);
-                                number.setTextFill(Color.rgb(54,16,0));
-                                number.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
-                                group.getChildren().addAll(itemView,number);
-                            }
-                        }
-                    });
-                    minusView.setOnMouseClicked(new EventHandler<MouseEvent>()
-                    {
-                        @Override
-                        public void handle(MouseEvent event)
-                        {
-                            if( itemNumber > 0 )
-                            {
-                                itemNumber--;
-                                farm.clearOneItemFromHelicopter(item);
-                                Label number = new Label(Integer.toString(itemNumber));
-                                number.setTextFill(Color.rgb(54,16,0));
-                                number.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
-                                group.getChildren().addAll(number);
-                            }
-                        }
-                    });
-                    height++;
-                }
-            }
             backView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
                 public void handle(MouseEvent event)
                 {
                     farm.clearHelicopterBeforeGo();
+                    group.getChildren().clear();
                     stage.setScene(view.getScene());
                 }
             });
+            group.getChildren().addAll(backView);
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private int numberOfItem( Farm farm , String item )
+    private void insertOk(Farm farm,Stage stage,View view,ImageView rightHelicopter,ImageView fixedHelicopter,AnimationTimer aTimer)
     {
-        int number = 0;
-        for( Item i : farm.getWareHouse().getCollectedItems() )
-            if( i.getKind().equals(item) )
-                number++;
-        return number;
+        try
+        {
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
+                    150, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setX(Constants.WIDTH - 400);
+            okView.setY(Constants.HEIGHT - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    farm.goTransportation(false);
+                    /*view.getGroup().getChildren().remove(fixedHelicopter);*/
+                    /*view.getGroup().getChildren().add(rightHelicopter);*/
+                    view.goHelicopter(rightHelicopter,fixedHelicopter,false);
+                    aTimer.start();
+                    stage.setScene(view.getScene());
+                }
+            });
+            group.getChildren().addAll(okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
+
+    private void insertItems(Farm farm,HashMap<String,Image> items)
+    {
+        try
+        {
+            height = 0;
+            double scale = ( Constants.HEIGHT - 80 ) / 18;
+            for( String item : Constants.ITEM_NAMES )
+            {
+                height++;
+                if( height > 17 )
+                {
+                    height = 1;
+                    width = 1;
+                }
+                itemNumber = 0;
+                ImageView itemView = new ImageView(items.get(item));
+                itemView.setX(30 + width * ( 3 * scale + 100));
+                itemView.setY(scale * ( height - 1 ) + 85);
+                itemView.setFitHeight(scale);
+                itemView.setFitWidth(scale);
+                ImageView plusView = new ImageView(
+                        new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\plusButton.png")
+                                , scale, scale, false, true));
+                ImageView minusView = new ImageView(
+                        new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\minusButton.png")
+                                , scale, scale, false, true));
+                plusView.setX(50 + width * ( 3 * scale + 100) + scale);
+                plusView.setY(scale * ( height - 1 ) + 80);
+                minusView.setX(2 * scale + 60 + width * ( 3 * scale + 100));
+                minusView.setY(scale * ( height - 1 ) + 80);
+                group.getChildren().addAll(itemView,plusView,minusView);
+
+                ImageView itemView1 = new ImageView(items.get(item));
+                Label number = new Label("");
+                itemView1.setX(500 + width * ( 3 * scale + 100));
+                itemView1.setY(scale * ( height - 1 ) + 80);
+                itemView1.setFitHeight(scale);
+                itemView1.setFitWidth(scale);
+                number.setTextFill(Color.rgb(54,16,0));
+                number.relocate(520 + scale + width * ( 3 * scale + 100) ,scale * ( height - 1 ) + 80);
+                number.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
+                plusView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        if( farm.getHelicopter().getCurrentVolume() > 0 )
+                        {
+                            group.getChildren().removeAll(itemView1,number);
+                            if( farm.addToHelicopter(item,1) == 1 )
+                            {
+                                itemNumber++;
+                                number.setText(Integer.toString(itemNumber));
+                                group.getChildren().addAll(itemView1,number);
+                            }
+                        }
+                    }
+                });
+                minusView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        if( itemNumber > 1 )
+                        {
+                            group.getChildren().removeAll(itemView1,number);
+                            itemNumber--;
+                            farm.clearOneItemFromHelicopter(item);
+                            number.setText(Integer.toString(itemNumber));
+                            group.getChildren().addAll(itemView1,number);
+                        }
+                        else if( itemNumber == 1 )
+                        {
+                            farm.clearOneItemFromHelicopter(item);
+                            group.getChildren().removeAll(number,itemView1);
+                            itemNumber = 0;
+                        }
+                    }
+                });
+            }
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+
 }
