@@ -64,6 +64,7 @@ public class Controller
     private HashMap<String, Image> animalsFixed = new HashMap<>();
     private HashMap<String, Image> wildCaged = new HashMap<>();
     private HashMap<String, Image> items = new HashMap<>();
+    private HashMap<String, Image> wareHouseItems = new HashMap<>();
     private ImageView fixedWell , movingWell;
     private ImageView fixedHelicopter , leftHelicopter , rightHelicopter;
     private ImageView fixedTruck , leftTruck , rightTruck , map , wareHouse;
@@ -187,6 +188,7 @@ public class Controller
                         showMap();
                         showMovingAnimals();
                         checkWell();
+                        checkWareHouse();
                     }
                     time = 31;
                     lastTime = 0;
@@ -1117,6 +1119,26 @@ public class Controller
         });
     }
 
+    private void checkWareHouse(){
+        ArrayList<Item> items = farm.getWareHouse().getCollectedItems();
+        int i = 0;
+        double firstShow_X = Constants.WIDTH/2 - 70;
+        double firstShow_y = Constants.HEIGHT - 50;
+        double disPlaceMent= 18;
+        for (Item item : items){
+            ImageView imageView = new ImageView(wareHouseItems.get(item.getKind()));
+            imageView.setX(firstShow_X + i * disPlaceMent);
+            imageView.setLayoutY(firstShow_y);
+            i++;
+            if (i == 10){
+                i = 0;
+                firstShow_y -= disPlaceMent;
+            }
+            view.getGroup().getChildren().add(imageView);
+            currentEntities.add(imageView);
+        }
+    }
+
     private void wellIcon()
     {
         fixedWell.setX(0);
@@ -1285,6 +1307,9 @@ public class Controller
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
                         Constants.ITEM_SIZE, Constants.ITEM_SIZE, false, true);
                 items.put(item, image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\wareHouseItems\\"
+                +item+".png"));
+                wareHouseItems.put(item, image);
             }
         }
         catch ( Exception e ){ e.printStackTrace(); }
