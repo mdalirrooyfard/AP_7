@@ -4,10 +4,7 @@ import Model.Animals.Animal;
 import Model.*;
 import Model.Items.Item;
 import Model.Workshops.*;
-import View.Graphic.Menu;
-import View.Graphic.OrderPage;
-import View.Graphic.SellPage;
-import View.Graphic.Start;
+import View.Graphic.*;
 import View.ImageViewSprite;
 import View.MoveTransition;
 import View.View;
@@ -20,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -98,6 +96,16 @@ public class Controller
         menu.passMenuInstance(menu);
     }
 
+    public void zoom(){
+        Zoom zoom = new Zoom();
+        map.setOnScroll(new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                zoom.zoomStarter(view.getGroup());
+            }
+        });
+    }
+
     private void runHandler() throws Exception
     {
         try(InputStream inputStream = new FileInputStream(path))
@@ -170,6 +178,7 @@ public class Controller
 
     private void turnHandler()
     {
+        zoom();
         aTimer = new AnimationTimer()
         {
             private long time = 0;
