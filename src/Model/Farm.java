@@ -426,8 +426,6 @@ public class Farm {
             }
             checkTransportation();
             updateMap();
-            checkWorkShops();
-            updateMap();
             return isLevelFinished();
         }
     }
@@ -475,9 +473,7 @@ public class Farm {
     }
 
     public void checkMoves() {
-        Iterator<Entity> iterator = stuffs.iterator();
-        while (iterator.hasNext()) {
-            Entity entity = iterator.next();
+        for (Entity entity : stuffs) {
             if (!entity.isDead()) {
                 boolean doMove = true;
                 if (entity instanceof Domestic) {
@@ -493,6 +489,7 @@ public class Farm {
                         ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
                         doMove = false;
                     } else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                        System.out.println(entity.getX()+ " "+ entity.getY());
                         doMove = !checkEatingGrass(entity.getY(), entity.getX(),
                                 Constants.MAX_DOMESTIC_SATIETY - 1 - ((Domestic) entity).getSatiety());
                         if (!doMove) {
@@ -854,16 +851,8 @@ public class Farm {
         return min;
     }
 
-    public void checkWorkShops() {
-        for (Workshop w : workshops)
-            if (w != null && w.isWorking())
-            {
-                if (w.getCurrentTime() > 0)
-                    w.currentTimeDecrease(1);
-                else
-                    endWorkShop(w);
-            }
-    }
+
+
 
     public void endWorkShop(Workshop workshop) {
         workshop.setWorking(false);

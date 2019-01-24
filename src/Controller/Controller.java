@@ -65,6 +65,8 @@ public class Controller
     private HashMap<String, Image> wildCaged = new HashMap<>();
     private HashMap<String, Image> items = new HashMap<>();
     private HashMap<String, Image> wareHouseItems = new HashMap<>();
+    private HashMap<String, ImageView> fixedWorkShopsImageViews = new HashMap<>();
+    private HashMap<String, ImageView> movingWorkShopsImageViews = new HashMap<>();
     private ImageView fixedWell , movingWell;
     private ImageView fixedHelicopter , leftHelicopter , rightHelicopter;
     private ImageView fixedTruck , leftTruck , rightTruck , map , wareHouse;
@@ -189,6 +191,7 @@ public class Controller
                         showMovingAnimals();
                         checkWell();
                         checkWareHouse();
+                        checkWorkShops();
                     }
                     time = 31;
                     lastTime = 0;
@@ -1119,6 +1122,20 @@ public class Controller
         });
     }
 
+    private void checkWorkShops() {
+        for (Workshop w : farm.getWorkshops())
+            if (w != null && w.isWorking())
+            {
+                if (w.getCurrentTime() > 0)
+                    w.currentTimeDecrease(1);
+                else {
+                    farm.endWorkShop(w);
+                    view.getGroup().getChildren().remove(movingWorkShopsImageViews.get(w.getWorkShopName()));
+                    view.getGroup().getChildren().add(fixedWorkShopsImageViews.get(w.getWorkShopName()));
+                }
+            }
+    }
+
     private void checkWareHouse(){
         ArrayList<Item> items = farm.getWareHouse().getCollectedItems();
         int i = 0;
@@ -1130,7 +1147,7 @@ public class Controller
             imageView.setX(firstShow_X + i * disPlaceMent);
             imageView.setLayoutY(firstShow_y);
             i++;
-            if (i == 10){
+            if (i == 9){
                 i = 0;
                 firstShow_y -= disPlaceMent;
             }
@@ -1331,7 +1348,7 @@ public class Controller
                     fixedWorkshops.put(w.getWorkShopName(), image);
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
                             + Integer.toString(w.getLevel()) + ".png"),
-                            200, 200, false, true);
+                            800, 800, false, true);
                     movingWorkshops.put(w.getWorkShopName(), image);
                 }
             }
@@ -1392,6 +1409,24 @@ public class Controller
             if (w != null)
             {
                 ImageView imageView = new ImageView(fixedWorkshops.get(w.getWorkShopName()));
+                fixedWorkShopsImageViews.put(w.getWorkShopName(), imageView);
+                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        int result = farm.startWorkShop(w.getWorkShopName());
+                        if (result > 0){
+                            view.getGroup().getChildren().remove(imageView);
+                            ImageView imageView1 = movingWorkShopsImageViews.get(w.getWorkShopName());
+                            imageView1.setX(w.getShowX());
+                            imageView1.setY(w.getItem_y());
+                            view.getGroup().getChildren().add(imageView1);
+                            AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
+                                    4, 4, 16, 200,200, 16);
+                            imageViewSprite.start();
+                        }
+                    }
+                });
+                //todo harekat item as warehouse
                 show(imageView, w);
             }
     }
@@ -1416,7 +1451,7 @@ public class Controller
                 for (Entity e : stuffs)
                 {
                     ImageView imageView = null;
-                    if(e instanceof Item) {
+                    if(e instanceof Item && !e.isDead()) {
                         imageView = new ImageView(items.get(((Item) e).getKind()));
                         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                             @Override
@@ -1428,7 +1463,7 @@ public class Controller
                             }
                         });
                     }
-                    else if(e instanceof Grass)
+                    else if(e instanceof Grass && !e.isDead())
                     {
                         numberOfGrass ++;
                         if (numberOfGrass <= 3)
