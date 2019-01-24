@@ -95,19 +95,20 @@ public class Item extends Entity {
                 break;
             }
 
-            case "sewing":{
-                this.setVolume(Constants.SEWING_VOLUME);
-                this.setBuyCost(Constants.SEWING_BUY_COST);
-                this.setSellCost(Constants.SEWING_SALE_COST);
+            case "string":{
+                this.setVolume(Constants.STRING_VOLUME);
+                this.setBuyCost(Constants.STRING_BUY_COST);
+                this.setSellCost(Constants.STRING_SALE_COST);
                 break;
             }
 
-            case "fabric":{
-                this.setVolume(Constants.FABRIC_VOLUME);
-                this.setBuyCost(Constants.FABRIC_BUY_COST);
-                this.setSellCost(Constants.FABRIC_SALE_COST);
+            case "cloth":{
+                this.setVolume(Constants.CLOTH_VOLUME);
+                this.setBuyCost(Constants.CLOTH_BUY_COST);
+                this.setSellCost(Constants.CLOTH_SALE_COST);
                 break;
             }
+
             case "carnivalDress":{
                 this.setVolume(Constants.CARNIVAL_DRESS_VOLUME);
                 this.setBuyCost(Constants.CARNIVAL_DRESS_BUY_COST);
@@ -117,8 +118,8 @@ public class Item extends Entity {
 
             case "sourCream":{
                 this.setVolume(Constants.SOUR_CREAM_VOLUME);
-                this.setBuyCost(Constants.SOUVENIR_BUY_COST);
-                this.setSellCost(Constants.SOUVENIR_SALE_COST);
+                this.setBuyCost(Constants.SOUR_CREAM_BUY_COST);
+                this.setSellCost(Constants.SOUR_CREAM_SALE_COST);
                 break;
             }
 
