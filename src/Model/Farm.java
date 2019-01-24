@@ -380,11 +380,12 @@ public class Farm {
         for (int i = 0; i < mapLength; i++)
             for (int j = 0; j < mapWidth; j++) {
                 Cell cell = map.getCells()[i][j];
-                if (cell.status()[0]) //has wild animal
-                    if (cell.status()[4]) //has dog
+                if (cell.status()[0]) {
+                    if (cell.status()[4])
                         killDogAndWild(i, j);
                     else if (cell.status()[1] || cell.status()[2])
                         killDomesticAndItems(i, j);
+                }
             }
     }
 
@@ -398,8 +399,9 @@ public class Farm {
     public void killDomesticAndItems(int y, int x) {
         ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Item || entity instanceof Domestic)
+            if (entity instanceof Item || entity instanceof Domestic) {
                 entity.setDead(true);
+            }
     }
 
     public boolean turn() {
