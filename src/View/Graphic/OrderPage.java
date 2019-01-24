@@ -86,11 +86,9 @@ public class OrderPage
                 public void handle(MouseEvent event)
                 {
                     farm.goTransportation(false);
-                    /*view.getGroup().getChildren().remove(fixedHelicopter);*/
-                    /*view.getGroup().getChildren().add(rightHelicopter);*/
-                    view.goHelicopter(rightHelicopter,fixedHelicopter,false);
                     aTimer.start();
                     stage.setScene(view.getScene());
+                    view.goHelicopter(fixedHelicopter,false);
                 }
             });
             group.getChildren().addAll(okView);
@@ -153,6 +151,8 @@ public class OrderPage
                                 number.setText(Integer.toString(itemNumber));
                                 group.getChildren().addAll(itemView1,number);
                             }
+                            else if( itemNumber > 0 )
+                                group.getChildren().addAll(itemView1,number);
                         }
                     }
                 });

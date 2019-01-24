@@ -21,18 +21,17 @@ public class View
         return group;
     }
 
-    public void goHelicopter(ImageView movingHelicopter,ImageView fixedHelicopter,boolean back)
+    public void goHelicopter(ImageView fixedHelicopter,boolean back)
     {
-        /*AnimationTimer animationTimer = new ImageViewSprite(movingHelicopter,1,false, 3, 2,
-                6, 48, 48, 6);
-        animationTimer.start();**/
-        double x1 = 500,x2 = 600;
+        fixedHelicopter.setFitWidth(40);
+        fixedHelicopter.setFitHeight(40);
+        double x1 = -300,x2 = 0;
         if( back )
         {
-            x1 = 600;
-            x2 = 500;
+            x1 = 0;
+            x2 = -300;
         }
-        MoveTransition pathTransition = new MoveTransition(fixedHelicopter, x1, 10, x2, 10, 30000);
+        MoveTransition pathTransition = new MoveTransition(fixedHelicopter, x1, 5, x2, 5, 15000);
         pathTransition.setAutoReverse(false);
         pathTransition.setCycleCount(1);
         pathTransition.play();
