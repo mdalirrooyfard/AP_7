@@ -4,7 +4,7 @@ import javafx.stage.Screen;
 
 public class Constants
 {
-    public static final int ITEM_SIZE = 30;
+    public static final int ITEM_SIZE = 50;
     public static final double GRASS_DISPLACEMENT_Y = Screen.getPrimary().getVisualBounds().getHeight()/ 3;
     public static final double GRASS_DISPLACEMENT_X = Screen.getPrimary().getVisualBounds().getWidth()/ 4;
     public static final int ANIMAL_SHOW_SCALE = 20;

@@ -3,8 +3,7 @@ package Controller;
 import Model.Animals.Animal;
 import Model.*;
 import Model.Items.Item;
-import Model.Workshops.CustomFactory;
-import Model.Workshops.Workshop;
+import Model.Workshops.*;
 import View.Graphic.Menu;
 import View.Graphic.OrderPage;
 import View.Graphic.SellPage;
@@ -66,7 +65,13 @@ public class Controller
     private HashMap<String, Image> items = new HashMap<>();
     private HashMap<String, Image> wareHouseItems = new HashMap<>();
     private HashMap<String, ImageView> fixedWorkShopsImageViews = new HashMap<>();
-    private HashMap<String, ImageView> movingWorkShopsImageViews = new HashMap<>();
+    private ImageView movingCakeBakery;
+    private ImageView movingCookieBakery;
+    private ImageView movingEggPowderPlant;
+    private ImageView movingSewingFactory;
+    private ImageView movingSpinnery;
+    private ImageView movingWeavingFactory;
+    private ImageView movingCustomFactory;
     private ImageView fixedWell , movingWell;
     private ImageView fixedHelicopter , leftHelicopter , rightHelicopter;
     private ImageView fixedTruck , leftTruck , rightTruck , map , wareHouse;
@@ -1130,7 +1135,20 @@ public class Controller
                     w.currentTimeDecrease(1);
                 else {
                     farm.endWorkShop(w);
-                    view.getGroup().getChildren().remove(movingWorkShopsImageViews.get(w.getWorkShopName()));
+                    if (w instanceof CakeBakery)
+                        view.getGroup().getChildren().remove(movingCakeBakery);
+                    else if (w instanceof CookieBakery)
+                        view.getGroup().getChildren().remove(movingCookieBakery);
+                    else if (w instanceof CustomFactory)
+                        view.getGroup().getChildren().remove(movingCustomFactory);
+                    else if (w instanceof EggPowderPlant)
+                        view.getGroup().getChildren().remove(movingEggPowderPlant);
+                    else if(w instanceof SewingFactory)
+                        view.getGroup().getChildren().remove(movingSewingFactory);
+                    else if (w instanceof Spinnery)
+                        view.getGroup().getChildren().remove(movingSpinnery);
+                    else if (w instanceof WeavingFactory)
+                        view.getGroup().getChildren().remove(movingWeavingFactory);
                     view.getGroup().getChildren().add(fixedWorkShopsImageViews.get(w.getWorkShopName()));
                 }
             }
@@ -1352,8 +1370,19 @@ public class Controller
                     movingWorkshops.put(w.getWorkShopName(), image);
                 }
             }
+            loadImageViewsOfMovingWorkShops();
         }
         catch ( Exception e ){ e.printStackTrace(); }
+    }
+
+    private void loadImageViewsOfMovingWorkShops(){
+        movingCakeBakery = new ImageView(movingWorkshops.get("cakeBakery"));
+        movingCookieBakery = new ImageView(movingWorkshops.get("cookieBakery"));
+        movingEggPowderPlant = new ImageView(movingWorkshops.get("eggPowderPlant"));
+        movingSewingFactory = new ImageView(movingWorkshops.get("sewingFactory"));
+        movingSpinnery = new ImageView(movingWorkshops.get("spinnery"));
+        movingWeavingFactory = new ImageView(movingWorkshops.get("weavingFactory"));
+        //todo custom
     }
 
     private void loadImageOfServices()
@@ -1416,9 +1445,23 @@ public class Controller
                         int result = farm.startWorkShop(w.getWorkShopName());
                         if (result > 0){
                             view.getGroup().getChildren().remove(imageView);
-                            ImageView imageView1 = movingWorkShopsImageViews.get(w.getWorkShopName());
+                            ImageView imageView1;
+                            if (w instanceof CakeBakery)
+                                imageView1 = movingCakeBakery;
+                            else if (w instanceof CookieBakery)
+                                imageView1 = movingCookieBakery;
+                            else if (w instanceof CustomFactory)
+                                imageView1 = movingCustomFactory;
+                            else if (w instanceof EggPowderPlant)
+                                imageView1 = movingEggPowderPlant;
+                            else if(w instanceof SewingFactory)
+                                imageView1 = movingSewingFactory;
+                            else if (w instanceof Spinnery)
+                                imageView1 = movingSpinnery;
+                            else
+                                imageView1 = movingWeavingFactory;
                             imageView1.setX(w.getShowX());
-                            imageView1.setY(w.getItem_y());
+                            imageView1.setY(w.getShowY());
                             view.getGroup().getChildren().add(imageView1);
                             AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
                                     4, 4, 16, 200,200, 16);
