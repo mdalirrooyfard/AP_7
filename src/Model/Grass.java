@@ -5,11 +5,11 @@ public class Grass extends Entity{
     private boolean eatenAlready = false;
     @Override
     public double getShowX() {
-        return getX()*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_X;
+        return getX()*Constants.ANIMAL_SHOW_SCALE + Constants.GRASS_DISPLACEMENT_X;
     }
     @Override
     public double getShowY() {
-        return getY()*Constants.ANIMAL_SHOW_SCALE + Constants.ANIMAL_DISPLACEMENT_Y;
+        return getY()*Constants.ANIMAL_SHOW_SCALE + Constants.GRASS_DISPLACEMENT_Y;
     }
     public int isEaten() {
         return isEaten;

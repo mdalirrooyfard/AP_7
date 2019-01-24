@@ -19,6 +19,8 @@ public class WareHouse extends Entity{
     private int currentVolume ;
 
     public WareHouse (int volume){
+        this.x = Constants.WIDTH/2 - 110;
+        this.y = Constants.HEIGHT - 150;
         this.setVolume(volume);
         this.currentVolume = getVolume();
         this.setUpgradeCost(Constants.WAREHOUSE_BASE_UPGRADE_COST);

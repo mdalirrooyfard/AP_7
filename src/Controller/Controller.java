@@ -66,7 +66,7 @@ public class Controller
     private HashMap<String, Image> items = new HashMap<>();
     private ImageView fixedWell , movingWell;
     private ImageView fixedHelicopter , leftHelicopter , rightHelicopter;
-    private ImageView fixedTruck , leftTruck , rightTruck , map;
+    private ImageView fixedTruck , leftTruck , rightTruck , map , wareHouse;
     private Image cage;
     private Image[] grass = new Image[4];
     private HashMap<String, Integer[]> widthAndHeight = new HashMap<>();
@@ -1135,7 +1135,7 @@ public class Controller
                     movingWell.setY(farm.getWell().getShowY());
                     view.getGroup().getChildren().add(movingWell);
                     AnimationTimer imageViewSprite = new ImageViewSprite(movingWell,
-                            20,true,4, 4, 16, 200, 200, 16);
+                            20,false ,4, 4, 16, 200, 200, 16);
                     imageViewSprite.start();
                 }
             }
@@ -1165,8 +1165,8 @@ public class Controller
             @Override
             public void handle(MouseEvent event)
             {
-                double x = event.getX() - Constants.ANIMAL_DISPLACEMENT_X;
-                double y = event.getY() - Constants.ANIMAL_DISPLACEMENT_Y;
+                double x = event.getX() - Constants.GRASS_DISPLACEMENT_X;
+                double y = event.getY() - Constants.GRASS_DISPLACEMENT_Y;
                 if (x >= 0 && x <= farm.getMapWidth()*Constants.ANIMAL_SHOW_SCALE &&
                     y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE)
                 {
@@ -1319,31 +1319,26 @@ public class Controller
         try
         {
             fixedTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    200, 200, false, true));
+                    +farm.getTruck().getLevel() +".png"), 200, 200, false, true));
             leftTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
             rightTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
             fixedHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    220, 220, false, true));
+                    +farm.getTruck().getLevel() +".png"), 220, 220, false, true));
             leftHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
             rightHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"right"
-                    +Integer.toString(farm.getTruck().getLevel()) +".png"),
-                    50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
             fixedWell = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
-                    + Integer.toString(farm.getWell().getLevel()) + ".png"),
-                    200, 200, false, true));
+                    + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
             movingWell = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
-                    + Integer.toString(farm.getWell().getLevel()) + ".png"),
-                    800, 800, false, true));
+                    + farm.getWell().getLevel() + ".png"), 800, 800, false, true));
             cage = new Image(new FileInputStream("src\\Resources\\Graphic\\Cages\\cage.png"),
                     50, 50, false, true);
+            wareHouse = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Depot\\" +
+                    farm.getWareHouse().getLevel() +".png") , 250 , 150 , false , true));
+
         }
         catch ( Exception e ){ e.printStackTrace(); }
     }
@@ -1381,7 +1376,7 @@ public class Controller
         show(fixedTruck , farm.getTruck());
         show(fixedHelicopter , farm.getHelicopter());
         show(fixedWell , farm.getWell());
-        //todo show(wareHouse)
+        show(wareHouse , farm.getWareHouse());
     }
 
     private void showMap()
