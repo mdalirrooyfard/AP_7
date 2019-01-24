@@ -1,6 +1,7 @@
 package Model;
 
 public abstract class Entity {
+    protected boolean isDead = false;
     protected double x;
     protected double y;
     protected int level = 1;
@@ -10,6 +11,14 @@ public abstract class Entity {
     protected int upgradeCost;
     public abstract double getShowX();
     public abstract double getShowY();
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
 
     public int getVolume() {
         return volume;

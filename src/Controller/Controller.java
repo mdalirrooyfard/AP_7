@@ -1406,8 +1406,6 @@ public class Controller
 
     private void showMap()
     {
-        view.getGroup().getChildren().removeAll(currentEntities);
-        currentEntities.clear();
         for(int j = 0; j < farm.getMapLength(); j++)
             for (int i = 0; i < farm.getMapWidth(); i++)
             {
@@ -1437,7 +1435,8 @@ public class Controller
                             imageView = new ImageView(grass[3]);
                     }
                     if (imageView != null) {
-                        currentEntities.add(imageView);
+                        if(e.isDead())
+                            imageView.setOpacity(1);
                         showFixed(imageView, e);
                     }
                 }
@@ -1478,6 +1477,8 @@ public class Controller
                 int row = colsAndRows.get(((Animal) e).getName())[1];
                 int width = widthAndHeight.get(((Animal) e).getName())[0];
                 int height = widthAndHeight.get(((Animal) e).getName())[1];
+                if(e.isDead())
+                    imageView.setOpacity(1);
                 if (direction != DIRECTION.NONE)
                 {
                     imageView.setX(((Animal) e).getPreviousX());

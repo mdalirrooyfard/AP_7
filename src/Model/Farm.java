@@ -306,7 +306,7 @@ public class Farm {
                 if (entity.getVolume() <= wareHouse.getCurrentVolume()) {
                     wareHouse.decreaseCurrentVolume(entity.getVolume());
                     wareHouse.add((Item)entity);
-                    stuffs.remove(entity);
+                    entity.setDead(true);
                 } else {
                     cellRemainItems.add(entity);
                     isEveryThingPickedUp = false;
@@ -330,12 +330,10 @@ public class Farm {
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
             if (entity instanceof Bear) {
-                iterator.remove();
-                stuffs.remove(entity);
+                entity.setDead(true);
                 numberOfBears++;
             } else if (entity instanceof Lion) {
-                iterator.remove();
-                stuffs.remove(entity);
+                entity.setDead(true);
                 numberOfLions++;
             }
         }
@@ -394,14 +392,14 @@ public class Farm {
         ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Dog || entity instanceof Wild)
-                stuffs.remove(entity);
+                entity.setDead(true);
     }
 
     public void killDomesticAndItems(int y, int x) {
         ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Item || entity instanceof Domestic)
-                stuffs.remove(entity);
+                entity.setDead(true);
     }
 
     public boolean turn() {
@@ -419,7 +417,10 @@ public class Farm {
                 shootWildAnimalTime = time;
             }
             if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
-                stuffs.removeIf((Entity entity) -> entity instanceof Wild);
+                for (Entity entity : stuffs){
+                    if (entity instanceof Wild)
+                        entity.setDead(true);
+                }
                 shootWildAnimalTime = -1;
                 updateMap();
             }
@@ -477,40 +478,39 @@ public class Farm {
         Iterator<Entity> iterator = stuffs.iterator();
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
-            boolean doMove = true;
-            if (entity instanceof Domestic) {
-                int isEating = ((Domestic) entity).isEating();
-                if (((Domestic) entity).getSatiety() == 0) {
-                    iterator.remove();
-                    continue;
-                }else if(isEating == Constants.MAX_DOMESTIC_SATIETY){
-                    ((Domestic) entity).setEating(0);
-                    produceItem((Domestic) entity);
-                }else if (isEating != 0 && isEating < Constants.MAX_DOMESTIC_SATIETY) {
-                    ((Domestic) entity).increaseSatiety(1);
-                    ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
-                    doMove = false;
-                }else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
-                    doMove = !checkEatingGrass(entity.getY(), entity.getX(),
-                            Constants.MAX_DOMESTIC_SATIETY - 1 - ((Domestic) entity).getSatiety());
-                    if (!doMove) {
+            if (!entity.isDead()) {
+                boolean doMove = true;
+                if (entity instanceof Domestic) {
+                    int isEating = ((Domestic) entity).isEating();
+                    if (((Domestic) entity).getSatiety() == 0) {
+                        entity.setDead(true);
+                        continue;
+                    } else if (isEating == Constants.MAX_DOMESTIC_SATIETY) {
+                        ((Domestic) entity).setEating(0);
+                        produceItem((Domestic) entity);
+                    } else if (isEating != 0 && isEating < Constants.MAX_DOMESTIC_SATIETY) {
                         ((Domestic) entity).increaseSatiety(1);
                         ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
+                        doMove = false;
+                    } else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                        doMove = !checkEatingGrass(entity.getY(), entity.getX(),
+                                Constants.MAX_DOMESTIC_SATIETY - 1 - ((Domestic) entity).getSatiety());
+                        if (!doMove) {
+                            ((Domestic) entity).increaseSatiety(1);
+                            ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
+                        }
                     }
-                }
-            }
-            else if (entity instanceof Cat)
-                catCollect(entity.getY(), entity.getX());
-            if (entity instanceof Animal && doMove) {
-                ((Animal) entity).move();
-                if (entity instanceof Domestic)
-                    ((Domestic) entity).decreaseSatiety(1);
-            }
-            else if (entity instanceof Animal)
-                ((Animal) entity).setDirection(DIRECTION.NONE);
+                } else if (entity instanceof Cat)
+                    catCollect(entity.getY(), entity.getX());
+                if (entity instanceof Animal && doMove) {
+                    ((Animal) entity).move();
+                    if (entity instanceof Domestic)
+                        ((Domestic) entity).decreaseSatiety(1);
+                } else if (entity instanceof Animal)
+                    ((Animal) entity).setDirection(DIRECTION.NONE);
 
+            }
         }
-
     }
     public void produceItem(Domestic entity){
         Item item;
@@ -530,12 +530,12 @@ public class Farm {
             while (iterator.hasNext()) {
                 Entity entity = iterator.next();
                 if (entity instanceof Grass && ((Grass) entity).isEatenAlready() && ((Grass) entity).isEaten() == 0) {
-                    iterator.remove();
+                    entity.setDead(true);
                 }
                 else if (entity instanceof Grass && ((Grass) entity).isEatenAlready())
                     ((Grass) entity).decreaseEaten();
                 else if (entity instanceof Item && ((Item) entity).isTakenByCat())
-                    iterator.remove();
+                    entity.setDead(true);
             }
         }
         updateMap();
