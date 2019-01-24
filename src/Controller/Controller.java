@@ -14,6 +14,7 @@ import View.View;
 import com.gilecode.yagson.YaGson;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -1470,13 +1471,48 @@ public class Controller
                             view.getGroup().getChildren().add(imageView1);
                             AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
                                     4, 4, 16, 200,200, 16);
+                            flyingItems(w.getInputs(), result , w);
                             imageViewSprite.start();
                         }
                     }
                 });
-                //todo harekat item as warehouse
                 show(imageView, w);
             }
+    }
+
+    private void flyingItems(ArrayList<String> items , int count , Workshop workshop){
+        ArrayList<ImageView> movingItems = new ArrayList<>();
+        int counter = 0;
+        double startX = Constants.WIDTH/2 - 100;
+        double startY = Constants.HEIGHT - 50;
+        double displacement = 18;
+        for (String s : items) {
+            for (int i = 0; i < count ; i++) {
+                ImageView imageView = new ImageView(wareHouseItems.get(s));
+                imageView.setX(startX);
+                imageView.setY(startY + counter * displacement);
+                movingItems.add(imageView);
+                counter ++;
+                if(counter == 4){
+                    counter = 0;
+                    startX -= displacement;
+                }
+                view.getGroup().getChildren().add(imageView);
+            }
+        }
+        for (ImageView m : movingItems) {
+            TranslateTransition translateTransition = new TranslateTransition(Duration.millis(3000) , m);
+            translateTransition.setToX(-1000);
+            translateTransition.setToY(-1000);
+            //todo fix this guy! destination
+            translateTransition.play();
+            translateTransition.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    view.getGroup().getChildren().remove(m);
+                }
+            });
+        }
     }
 
     private void servicesIcons()
