@@ -21,18 +21,13 @@ public class View
         return group;
     }
 
-    public void goHelicopter(ImageView fixedHelicopter,boolean back)
+    public void goHelicopter(ImageView fixedHelicopter)
     {
         fixedHelicopter.setFitWidth(40);
         fixedHelicopter.setFitHeight(40);
         double x1 = -300,x2 = 0;
-        if( back )
-        {
-            x1 = 0;
-            x2 = -300;
-        }
         MoveTransition pathTransition = new MoveTransition(fixedHelicopter, x1, 5, x2, 5, 15000);
-        pathTransition.setAutoReverse(false);
+        pathTransition.setAutoReverse(true);
         pathTransition.setCycleCount(1);
         pathTransition.play();
     }

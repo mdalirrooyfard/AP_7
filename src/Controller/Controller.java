@@ -193,7 +193,7 @@ public class Controller
                         showMovingAnimals();
                         checkWell();
                         checkWareHouse();
-                        checkHelicopter();
+                        checkTransportation();
                         checkWorkShops();
                     }
                     time = 31;
@@ -1687,21 +1687,27 @@ public class Controller
         translateTransition.play();
     }
 
-    private void checkHelicopter()
-    {
-        if ( farm.getHelicopter().isMoving() )
-        {
-            if( farm.getHelicopter().getCurrentTime() > 0 )
-                farm.getHelicopter().decreaseCurrentTime(1);
-            if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
-                view.goHelicopter(fixedHelicopter,true);
+    private void checkTransportation() {
+        if (farm.getTruck().isMoving()) {
+            if (farm.getTruck().getCurrentTime() > 0)
+                farm.getTruck().decreaseCurrentTime(1);
             else
-            {
+                farm.clearFromTruck();
+        }
+        if (farm.getHelicopter().isMoving()) {
+            if (farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime()) {
+                view.goHelicopter(fixedHelicopter);
+                farm.getHelicopter().decreaseCurrentTime(1);
+            }
+            else if (farm.getHelicopter().getCurrentTime() > 0)
+                farm.getHelicopter().decreaseCurrentTime(1);
+            else{
                 farm.getHelicopter().setMoving(false);
                 fixedHelicopter.setFitHeight(220);
                 fixedHelicopter.setFitWidth(220);
                 fixedHelicopter.setY(farm.getHelicopter().getShowY());
                 fixedHelicopter.setX(farm.getHelicopter().getShowX());
+                farm.clearFromHelicopter();
             }
         }
     }

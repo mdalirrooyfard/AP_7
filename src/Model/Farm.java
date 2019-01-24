@@ -424,8 +424,6 @@ public class Farm {
                 shootWildAnimalTime = -1;
                 updateMap();
             }
-            checkTransportation();
-            updateMap();
             return isLevelFinished();
         }
     }
@@ -571,7 +569,6 @@ public class Farm {
         while (iterator.hasNext()) {
             Item item = iterator.next();
             stuffs.add(item);
-            System.out.println(item.getKind());
             iterator.remove();
         }
         updateMap();
@@ -695,20 +692,7 @@ public class Farm {
         return true;
     }
 
-    public void checkTransportation() {
-        if (truck.isMoving()) {
-            if (truck.getCurrentTime() > 0)
-                truck.decreaseCurrentTime(1);
-            else
-                clearFromTruck();
-        }
-        if (helicopter.isMoving()) {
-            if (helicopter.getCurrentTime() > 0)
-                helicopter.decreaseCurrentTime(1);
-            else
-                clearFromHelicopter();
-        }
-    }
+
 
     //print methods
     public String printLevel() {

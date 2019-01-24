@@ -88,7 +88,7 @@ public class OrderPage
                     farm.goTransportation(false);
                     aTimer.start();
                     stage.setScene(view.getScene());
-                    view.goHelicopter(fixedHelicopter,false);
+                    view.goHelicopter(fixedHelicopter);
                 }
             });
             group.getChildren().addAll(okView);
