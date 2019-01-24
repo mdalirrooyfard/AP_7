@@ -15,6 +15,7 @@ import View.View;
 import com.gilecode.yagson.YaGson;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -25,6 +26,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -186,6 +188,7 @@ public class Controller
                     synchronized (farm.getStuffs()) {
                         showMap();
                         showMovingAnimals();
+                        checkWell();
                     }
                     time = 31;
                     lastTime = 0;
@@ -1118,8 +1121,8 @@ public class Controller
 
     private void wellIcon()
     {
-        fixedWell.setX(farm.getWell().getShowX());
-        fixedWell.setY(farm.getWell().getShowY());
+        fixedWell.setX(0);
+        fixedWell.setY(10);
         fixedWell.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
@@ -1139,6 +1142,19 @@ public class Controller
                 }
             }
         });
+    }
+
+    public void checkWell(){
+        if (farm.getWell().isWorking()){
+            if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume()){
+                farm.getWell().increase(1);
+            }
+            else{
+                farm.getWell().setWorking(false);
+                view.getGroup().getChildren().remove(movingWell);
+                view.getGroup().getChildren().add(fixedWell);
+            }
+        }
     }
 
     private void showBackground()
@@ -1386,6 +1402,7 @@ public class Controller
                         imageView = new ImageView(items.get(((Item) e).getKind()));
                     else if(e instanceof Grass)
                     {
+                        System.out.println("grass ezafe "+e.getX() + " "+e.getY());
                         numberOfGrass ++;
                         if (numberOfGrass <= 3)
                             imageView = new ImageView(grass[numberOfGrass - 1]);

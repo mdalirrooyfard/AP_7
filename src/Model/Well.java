@@ -8,6 +8,7 @@ import static Model.Constants.WELL_BASE_UPGRADE_COST;
 public class Well extends Entity
 {
     private int currentVolume;
+    private boolean isWorking = false;
 
     public Well(int volume)
     {
@@ -37,12 +38,20 @@ public class Well extends Entity
         this.currentVolume = currentVolume;
     }
 
-    public void decrease (int amount){
-        currentVolume -= amount ;
+    public void increase (int amount){
+        currentVolume += amount ;
     }
 
     public void full (){
         currentVolume = this.getVolume() ;
+    }
+
+    public boolean isWorking() {
+        return isWorking;
+    }
+
+    public void setWorking(boolean working) {
+        isWorking = working;
     }
 
     @Override

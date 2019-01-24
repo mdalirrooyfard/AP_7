@@ -176,7 +176,7 @@ public class Farm {
     }
 
     public boolean plantGrass(double x, double y) {
-        if (well.getCurrentVolume() == 0)
+        if (well.getCurrentVolume() == 0 || well.isWorking())
             return false;
         well.setCurrentVolume(well.getCurrentVolume() - 1);
         int centerX = (int) x;
@@ -357,7 +357,8 @@ public class Farm {
             return 0;
         if (well.getBuyCost() <= money) {
             money -= well.getBuyCost();
-            well.full();
+            well.setWorking(true);
+            well.increase(1);
             return 1;
         }
         return -1;
@@ -449,8 +450,9 @@ public class Farm {
         int Y = (int) y;
         ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
-            if (entity instanceof Grass && ((Grass) entity).isEaten()== 8) {
+            if (entity instanceof Grass && !((Grass) entity).isEatenAlready()) {
                 ((Grass) entity).setEaten(max);
+                ((Grass) entity).setEatenAlready(true);
                 return true;
             }
         return false;
@@ -527,11 +529,11 @@ public class Farm {
             Iterator<Entity> iterator = stuffs.iterator();
             while (iterator.hasNext()) {
                 Entity entity = iterator.next();
-                if (entity instanceof Grass && ((Grass) entity).isEaten() == 0) {
+                if (entity instanceof Grass && ((Grass) entity).isEatenAlready() && ((Grass) entity).isEaten() == 0) {
                     iterator.remove();
-                    System.out.println("grass par" + entity.x + " " + entity.y);
+                    System.out.println("grass par "+entity.getX() + " "+entity.getY());
                 }
-                else if (entity instanceof Grass)
+                else if (entity instanceof Grass && ((Grass) entity).isEatenAlready())
                     ((Grass) entity).decreaseEaten();
                 else if (entity instanceof Item && ((Item) entity).isTakenByCat())
                     iterator.remove();
