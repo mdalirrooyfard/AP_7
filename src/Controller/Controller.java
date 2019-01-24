@@ -15,7 +15,6 @@ import View.View;
 import com.gilecode.yagson.YaGson;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -26,7 +25,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -1285,7 +1283,7 @@ public class Controller
             for (String item : Constants.ITEM_NAMES)
             {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Products\\"+item+".png"),
-                        50, 50, false, true);
+                        Constants.ITEM_SIZE, Constants.ITEM_SIZE, false, true);
                 items.put(item, image);
             }
         }
@@ -1398,11 +1396,20 @@ public class Controller
                 for (Entity e : stuffs)
                 {
                     ImageView imageView = null;
-                    if(e instanceof Item)
+                    if(e instanceof Item) {
                         imageView = new ImageView(items.get(((Item) e).getKind()));
+                        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent event) {
+                                double x = e.getX();
+                                double y = e.getY();
+                                boolean result = farm.pickUp(x, y);
+                                //todo if result == false flesh be warehouse;
+                            }
+                        });
+                    }
                     else if(e instanceof Grass)
                     {
-                        System.out.println("grass ezafe "+e.getX() + " "+e.getY());
                         numberOfGrass ++;
                         if (numberOfGrass <= 3)
                             imageView = new ImageView(grass[numberOfGrass - 1]);

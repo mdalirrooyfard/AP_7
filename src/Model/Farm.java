@@ -531,7 +531,6 @@ public class Farm {
                 Entity entity = iterator.next();
                 if (entity instanceof Grass && ((Grass) entity).isEatenAlready() && ((Grass) entity).isEaten() == 0) {
                     iterator.remove();
-                    System.out.println("grass par "+entity.getX() + " "+entity.getY());
                 }
                 else if (entity instanceof Grass && ((Grass) entity).isEatenAlready())
                     ((Grass) entity).decreaseEaten();
