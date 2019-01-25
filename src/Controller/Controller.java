@@ -78,6 +78,8 @@ public class Controller
     private OrderPage orderPage;
     private SellPage sellPage;
     private Label moneyLabel = new Label();
+    private Vector<String[]> goals = new Vector<>();
+    private ConcurrentHashMap<String, Label> acheivements = new ConcurrentHashMap<>();
     public Controller(Stage stage)
     {
         loadSize();
@@ -206,18 +208,73 @@ public class Controller
                         checkTransportation();
                         checkWorkShops();
                         updateMoney();
+                        updateAchievement();
                     }
                     time = 31;
                     lastTime = 0;
                 }
                if (finish)
                {
-                   this.stop();
                    winHandler();
+                   this.stop();
                }
             }
         };
         aTimer.start();
+    }
+
+    private void loadGoals(){
+        ConcurrentHashMap<String, Integer> farmGoals = farm.getGoals();
+        int i = 0;
+        for (String s : farmGoals.keySet()){
+            goals.add(new String[]{s, Integer.toString(farm.getGoals().get(s))});
+            Image image;
+            if (s.equals("hen") || s.equals("sheep") || s.equals("cow")){
+                image = animalsFixed.get(s);
+            }
+            else{
+                image = items.get(s);
+            }
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(40);
+            imageView.setFitWidth(40);
+            imageView.setY(Constants.HEIGHT - 100);
+            imageView.setX(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50 - 20);
+            Label fixed = new Label(Integer.toString(farm.getGoals().get(s))) ;
+            Label variable = new Label(Integer.toString(farm.getAchievements().get(s)));
+            Label of = new Label("of");
+            acheivements.put(s, variable);
+            fixed.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
+            fixed.relocate(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50,Constants.HEIGHT - 50);
+            of.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
+            of.relocate(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50,Constants.HEIGHT - 60);
+            variable.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
+            variable.relocate(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50,Constants.HEIGHT - 70);
+            view.getGroup().getChildren().addAll(imageView, fixed, variable, of);
+            i++;
+        }
+    }
+
+    private void updateAchievement(){
+        ConcurrentHashMap<String, Integer> hashMap = farm.getAchievements();
+        for (String s : hashMap.keySet()){
+            acheivements.get(s).setText(Integer.toString(farm.getAchievements().get(s)));
+        }
+    }
+
+    private void showGoals(){
+        try {
+            Image box = new Image (new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"));
+            ImageView boxView = new ImageView(box);
+            boxView.setFitWidth(farm.getGoals().keySet().size() * 50);
+            boxView.setFitHeight(80);
+            boxView.setX(Constants.WIDTH - farm.getGoals().keySet().size() * 50 - 20);
+            boxView.setY(Constants.HEIGHT - 100);
+            view.getGroup().getChildren().add(boxView);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void winHandler()
@@ -228,11 +285,11 @@ public class Controller
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
 
-            Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\winningMessage.png")
+            Image winningMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\winningMessage.png")
                     , 800, 300, false, true);
-            ImageView playerHasNotBeenChosenMessageView = new ImageView(playerHasNotBeenChosenMessage);
-            playerHasNotBeenChosenMessageView.setY(Menu.HEIGHT / 2 - 150);
-            playerHasNotBeenChosenMessageView.setX(Menu.WIDTH / 2 - 400);
+            ImageView winningMessageView = new ImageView(winningMessage);
+            winningMessageView.setY(Menu.HEIGHT / 2 - 150);
+            winningMessageView.setX(Menu.WIDTH / 2 - 400);
 
             Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
                     , 200, 79, false, true);
@@ -248,7 +305,7 @@ public class Controller
                 }
             });
 
-            start.getGroup().getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
+            view.getGroup().getChildren().addAll(rectangle,winningMessageView,okView);
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
@@ -490,7 +547,6 @@ public class Controller
             ImageView timerView = new ImageView(timer);
             timerView.setX(90);
             timerView.setY(Constants.HEIGHT - 95);
-
             Label timeLabel = new Label("");
             timeLabel.relocate(135,Constants.HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
@@ -1306,6 +1362,8 @@ public class Controller
         workshopsIcons();
         servicesIcons();
         helicopterIconHandler();
+        showGoals();
+        loadGoals();
     }
 
     private void loadImages()
@@ -1336,7 +1394,7 @@ public class Controller
             Image image;
             for (String s : Constants.ANIMAL)
             {
-                if (s.equals("Hen") || s.equals("Cow") || s.equals("Sheep"))
+                if (s.equals("hen") || s.equals("cow") || s.equals("sheep"))
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "death" + ".png"));
@@ -1345,7 +1403,7 @@ public class Controller
                             "eat"+".png"));
                     domesticEat.put(s.toLowerCase(), image);
                 }
-                if (s.equals("Bear") || s.equals("Lion"))
+                if (s.equals("bear") || s.equals("lion"))
                 {
                     image = new Image(new FileInputStream("src\\Resources\\Graphic\\Animals\\" + s + "\\" +
                             "caged" + ".png"));

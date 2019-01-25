@@ -29,8 +29,7 @@ public class Constants
             "spruceBrownBear","spruceWhiteBear","spruceGrizzly","spruceJaguar"};
     public static final String[] WORKSHOP_NAMES = {"cakeBakery" , "cookieBakery" , "eggPowderPlant" , "sewingFactory"
             , "spinnery" , "weavingFactory"};
-    public static final String[] ANIMAL = {"Hen" , "Cow" , "Sheep" , "Dog" , "Cat" , "Bear" , "Lion"};
-    public static final String[] DOMESTIC = {"Hen" , "Cow" , "Sheep"};
+    public static final String[] ANIMAL = {"hen" , "cow" , "sheep" , "dog" , "cat" , "bear" , "lion"};
     public static final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
     public static final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
 
