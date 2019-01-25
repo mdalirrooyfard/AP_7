@@ -5,7 +5,6 @@ import javafx.stage.Screen;
 
 public class Truck extends Transportations
 {
-    private int spentMoney = 0;
 
     public Truck(int volume)
     {
@@ -17,15 +16,5 @@ public class Truck extends Transportations
         this.setUpgradeCost(Constants.TRUCK_BASE_UPGRADE_COST);
     }
 
-    public int getSpentMoney() {
-        return spentMoney;
-    }
 
-    public void setSpentMoney(int spentMoney) {
-        this.spentMoney = spentMoney;
-    }
-
-    public void increaseSpentMoney (int amount){
-        this.spentMoney += amount;
-    }
 }
