@@ -3,8 +3,10 @@ package Model.Transportation;
 import Model.Constants;
 import javafx.stage.Screen;
 
-public class Helicopter extends Transportations{
-    public Helicopter(int volume){
+public class Helicopter extends Transportations
+{
+    public Helicopter(int volume)
+    {
         this.setVolume(volume);
         this.setCurrentVolume(volume);
         this.x = Screen.getPrimary().getVisualBounds().getWidth() / 2 + 180;

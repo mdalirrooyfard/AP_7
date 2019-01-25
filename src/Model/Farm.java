@@ -623,6 +623,7 @@ public class Farm {
             return false;
         truck.setMoving(false);
         truck.getItems().clear();
+        truck.getItems().clear();
         increaseMoney(truck.getSpentMoney());
         truck.setSpentMoney(0);
         truck.setCurrentVolume(truck.getVolume());

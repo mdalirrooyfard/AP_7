@@ -71,7 +71,7 @@ public class OrderPage
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void insertOk(Farm farm,Stage stage,View view,ImageView fixedHelicopter,AnimationTimer aTimer)
+    private void insertOk(Farm farm,Stage stage,View view,ImageView fixedHelicopter,AnimationTimer animationTimer)
     {
         try
         {
@@ -88,14 +88,14 @@ public class OrderPage
                     if( farm.getHelicopter().getSpentMoney() > 0 )
                     {
                         farm.goTransportation(false);
-                        aTimer.start();
-                        stage.setScene(view.getScene());
-                        farm.getHelicopter().setPrevMovingX(Constants.WIDTH * 645 / 800);
-                        farm.getHelicopter().setNextMovingX(Constants.WIDTH * 645 / 800 - Constants.movingScale);
+                        farm.getHelicopter().setPrevMovingX(0);
+                        farm.getHelicopter().setNextMovingX(-Constants.movingScale);
                         fixedHelicopter.setFitWidth(100);
                         fixedHelicopter.setFitHeight(100);
-                        fixedHelicopter.setX(Constants.WIDTH * 645 / 800);
-                        fixedHelicopter.setY(20);
+                        fixedHelicopter.setX(Constants.WIDTH * 245 / 800 - 180);
+                        fixedHelicopter.setY(200 - Constants.HEIGHT);
+                        animationTimer.start();
+                        stage.setScene(view.getScene());
                     }
                 }
             });
@@ -150,7 +150,7 @@ public class OrderPage
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        if( farm.getHelicopter().contains(item) )
+                        if( !farm.getHelicopter().contains(item) )
                             itemNumber = 0;
                         if( farm.getHelicopter().getCurrentVolume() > 0 )
                         {
