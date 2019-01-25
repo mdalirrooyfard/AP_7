@@ -547,11 +547,11 @@ public class Controller
                 ImageView upgradeCat = new ImageView(upgradeButton);
                 upgradeCat.setFitWidth(50);
                 upgradeCat.setFitHeight(30);
-                upgradeCat.setX(Constants.WIDTH - 80);
+                upgradeCat.setX(280);
                 upgradeCat.setY(75);
                 Label label = new Label(Integer.toString(Constants.CAT_BASE_UPGRADE_COST));
                 label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,10));
-                label.relocate(Constants.WIDTH - 60, 80);
+                label.relocate(300, 80);
                 view.getGroup().getChildren().addAll(upgradeCat, label);
                 upgradeCat.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
