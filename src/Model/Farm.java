@@ -17,8 +17,6 @@ import Model.Transportation.Truck;
 import Model.Workshops.*;
 import javafx.stage.Screen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -798,7 +796,7 @@ public class Farm {
         workshops[5] = new Spinnery(mapWidth - 1, 0);
     }
 
-    public void makeCustomWorkshop(String name, ArrayList<String> inputs, String output) {
+    public void makeCustomWorkshop(String name, Vector<String> inputs, String output) {
         workshops[6] = new CustomFactory(name, inputs, output, (int)mapWidth/2, mapLength - 1);
     }
 

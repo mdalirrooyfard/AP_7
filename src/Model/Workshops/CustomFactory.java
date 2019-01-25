@@ -1,9 +1,9 @@
 package Model.Workshops;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 public class CustomFactory extends Workshop{
-    public CustomFactory(String name , ArrayList<String> inputs , String output, int item_x, int item_y){
+    public CustomFactory(String name , Vector<String> inputs , String output, int item_x, int item_y){
         this.workShopName = name;
         this.output = output;
         this.inputs = inputs;
