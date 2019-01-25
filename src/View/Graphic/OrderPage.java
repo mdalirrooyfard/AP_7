@@ -26,7 +26,7 @@ public class OrderPage
     Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
     int height = 0 , itemNumber = 0 , width = 0;
 
-    public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView leftHelicopter, ImageView fixedHelicopter, AnimationTimer aTimer)
+    public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView fixedHelicopter, AnimationTimer aTimer)
     {
         height = 0;
         itemNumber = 0;
@@ -40,7 +40,7 @@ public class OrderPage
             orderView.setY(0);
             group.getChildren().addAll(orderView);
             insertBack(farm,stage,view);
-            insertOk(farm,stage,view,leftHelicopter,fixedHelicopter,aTimer);
+            insertOk(farm,stage,view,fixedHelicopter,aTimer);
             insertItems(farm,items);
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -71,7 +71,7 @@ public class OrderPage
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void insertOk(Farm farm,Stage stage,View view,ImageView rightHelicopter,ImageView fixedHelicopter,AnimationTimer aTimer)
+    private void insertOk(Farm farm,Stage stage,View view,ImageView fixedHelicopter,AnimationTimer aTimer)
     {
         try
         {
@@ -85,10 +85,18 @@ public class OrderPage
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    farm.goTransportation(false);
-                    aTimer.start();
-                    stage.setScene(view.getScene());
-                    view.goHelicopter(fixedHelicopter);
+                    if( farm.getHelicopter().getSpentMoney() > 0 )
+                    {
+                        farm.goTransportation(false);
+                        aTimer.start();
+                        stage.setScene(view.getScene());
+                        farm.getHelicopter().setPrevMovingX(Constants.WIDTH * 645 / 800);
+                        farm.getHelicopter().setNextMovingX(Constants.WIDTH * 645 / 800 - Constants.movingScale);
+                        fixedHelicopter.setFitWidth(100);
+                        fixedHelicopter.setFitHeight(100);
+                        fixedHelicopter.setX(Constants.WIDTH * 645 / 800);
+                        fixedHelicopter.setY(20);
+                    }
                 }
             });
             group.getChildren().addAll(okView);
@@ -142,6 +150,8 @@ public class OrderPage
                     @Override
                     public void handle(MouseEvent event)
                     {
+                        if( farm.getHelicopter().contains(item) )
+                            itemNumber = 0;
                         if( farm.getHelicopter().getCurrentVolume() > 0 )
                         {
                             group.getChildren().removeAll(itemView1,number);
@@ -181,6 +191,4 @@ public class OrderPage
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
-
-
 }

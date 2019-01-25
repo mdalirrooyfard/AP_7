@@ -3,15 +3,34 @@ package Model.Transportation;
 import Model.Entity;
 import Model.Items.Item;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
-public class Transportations extends Entity {
+public class Transportations extends Entity
+{
     private Vector<Item> items = new Vector<>();
     private boolean isMoving = false ;
-    private int workingTime ;
-    private int currentTime ;
-    private int spentMoney = 0;
+    private int workingTime , currentTime , spentMoney = 0;
+    private double prevMovingX , nextMovingX;
+
+    public double getPrevMovingX()
+    {
+        return prevMovingX;
+    }
+
+    public void setPrevMovingX(double prevMovingX)
+    {
+        this.prevMovingX = prevMovingX;
+    }
+
+    public double getNextMovingX()
+    {
+        return nextMovingX;
+    }
+
+    public void setNextMovingX(double nextMovingX)
+    {
+        this.nextMovingX = nextMovingX;
+    }
 
     public int getSpentMoney() {
         return spentMoney;
@@ -98,5 +117,13 @@ public class Transportations extends Entity {
 
     public void setMoving(boolean moving) {
         isMoving = moving;
+    }
+
+    public boolean contains( String item )
+    {
+        for( Item i : items )
+            if( i.getKind().equals(item) )
+                return true;
+        return false;
     }
 }

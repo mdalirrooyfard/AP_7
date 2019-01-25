@@ -75,7 +75,7 @@ public class Controller
     private ConcurrentHashMap<String, Integer[]> widthAndHeight = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Integer[]> colsAndRows = new ConcurrentHashMap<>();
     private Vector<ImageView> currentEntities = new Vector<>();
-    private OrderPage orderPage;
+    private OrderPage orderPage = new OrderPage();;
     private SellPage sellPage;
     private Label moneyLabel = new Label();
     private Vector<String[]> goals = new Vector<>();
@@ -94,9 +94,11 @@ public class Controller
         menu.passMenuInstance(menu);
     }
 
-    public void zoom(){
+    private void zoom()
+    {
         Zoom zoom = new Zoom();
-        map.setOnScroll(new EventHandler<ScrollEvent>() {
+        map.setOnScroll(new EventHandler<ScrollEvent>()
+        {
             @Override
             public void handle(ScrollEvent event) {
                 zoom.zoomStarter(view.getGroup());
@@ -164,7 +166,7 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
-            orderPage = new OrderPage();
+
             sellPage = new SellPage(stage,view,farm,items);
             turnHandler();
         }
@@ -342,7 +344,6 @@ public class Controller
             stage.setScene(view.getScene());
             loadImages();
             makeScene();
-            orderPage = new OrderPage();
             sellPage = new SellPage(stage,view,farm,items);
             turnHandler();
         }
@@ -354,10 +355,8 @@ public class Controller
 
     private void loadPlayers()
     {
-        InputStream inputStream;
-        try
+        try( InputStream inputStream = new FileInputStream("src\\Resources\\Players.txt") )
         {
-            inputStream = new FileInputStream("src\\Resources\\Players.txt");
             Scanner scanner = new Scanner(inputStream);
             YaGson yaGson = new YaGson();
             if(scanner.hasNext())
@@ -375,16 +374,13 @@ public class Controller
 
     public static void savePlayers( Vector<Player> players )
     {
-        OutputStream outputStream;
-        try
+        try( OutputStream outputStream = new FileOutputStream("src\\Resources\\Players.txt"))
         {
-            outputStream = new FileOutputStream("src\\Resources\\Players.txt");
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
             String savedPlayers = yaGson.toJson(players);
             formatter.format(savedPlayers);
             formatter.flush();
-            outputStream.close();
         }
         catch ( IOException e ){ e.printStackTrace(); }
     }
@@ -1208,18 +1204,20 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 aTimer.stop();
-                stage.setScene(orderPage.getScene(stage,view,farm,items,rightHelicopter,fixedHelicopter,aTimer));
+                stage.setScene(orderPage.getScene(stage,view,farm,items,fixedHelicopter,aTimer));
             }
         });
     }
 
-    private void checkWorkShops() {
+    private void checkWorkShops()
+    {
         for (Workshop w : farm.getWorkshops())
             if (w != null && w.isWorking())
             {
                 if (w.getCurrentTime() > 0)
                     w.currentTimeDecrease(1);
-                else {
+                else
+                {
                     farm.endWorkShop(w);
                     if (w instanceof CakeBakery)
                         view.getGroup().getChildren().remove(movingCakeBakery);
@@ -1242,17 +1240,18 @@ public class Controller
 
     private void checkWareHouse()
     {
-        Vector<Item> items = farm.getWareHouse().getCollectedItems();
         int i = 0;
-        double firstShow_X = Constants.WIDTH/2 - 70;
+        double firstShow_X = Constants.WIDTH / 2 - 70;
         double firstShow_y = Constants.HEIGHT - 50;
         double disPlaceMent= 18;
-        for (Item item : items){
-            ImageView imageView = new ImageView(wareHouseItems.get(item.getKind()));
-            imageView.setX(firstShow_X + i * disPlaceMent);
-            imageView.setLayoutY(firstShow_y);
+        for ( Item item : farm.getWareHouse().getCollectedItems() )
+        {
+            ImageView imageView = new ImageView( wareHouseItems.get( item.getKind() ) );
+            imageView.setX( firstShow_X + i * disPlaceMent );
+            imageView.setLayoutY( firstShow_y );
             i++;
-            if (i == 9){
+            if ( i == 9 )
+            {
                 i = 0;
                 firstShow_y -= disPlaceMent;
             }
@@ -1305,8 +1304,6 @@ public class Controller
                                 + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
                         movingWell.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
                                 + farm.getWell().getLevel() + ".png"), 800, 800, false, true));
-                        if (farm.getWell().getLevel() == 4)
-                            view.getGroup().getChildren().removeAll(label, upgrade);
                     }catch (IOException e){
                         e.printStackTrace();
                     }
@@ -1382,7 +1379,6 @@ public class Controller
         {
             map = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH, Menu.HEIGHT,
                     false, true));
-
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
@@ -1643,9 +1639,11 @@ public class Controller
             {
                 ImageView imageView = new ImageView(fixedWorkshops.get(w.getWorkShopName()));
                 fixedWorkShopsImageViews.put(w.getWorkShopName(), imageView);
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
+                    public void handle(MouseEvent event)
+                    {
                         int result = farm.startWorkShop(w.getWorkShopName());
                         if (result > 0){
                             view.getGroup().getChildren().remove(imageView);
@@ -1680,23 +1678,29 @@ public class Controller
                 Label label = new Label(Integer.toString(w.getUpgradeCost()));
                 label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
                 show(imageView, w);
-                if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof  CakeBakery) {
+                if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof  CakeBakery)
+                {
                     label.relocate(w.getShowX() + 5, w.getShowY() + 40);
                     upgrade.setX(w.getShowX() - 30);
                     upgrade.setY(w.getShowY() + 40);
                 }
-                else{
+                else
+                {
                     label.relocate(w.getShowX() + 235, w.getShowY() + 70);
                     upgrade.setX(w.getShowX() + 200);
                     upgrade.setY(w.getShowY() + 70);
                 }
-                upgrade.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                upgrade.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
+                    public void handle(MouseEvent event)
+                    {
                         int result = farm.upgrade(w.getWorkShopName());
                         //todo danse the money result == 1
-                        if (result == 0){
-                            try {
+                        if (result == 0)
+                        {
+                            try
+                            {
                                 label.setText(Integer.toString(w.getUpgradeCost()));
                                 Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "fixed"
                                         + Integer.toString(w.getLevel()) + ".png"),
@@ -1786,21 +1790,25 @@ public class Controller
         double startX = Constants.WIDTH/2 - 100;
         double startY = Constants.HEIGHT - 50;
         double displacement = 18;
-        for (String s : items) {
-            for (int i = 0; i < count ; i++) {
+        for (String s : items)
+        {
+            for (int i = 0; i < count ; i++)
+            {
                 ImageView imageView = new ImageView(wareHouseItems.get(s));
                 imageView.setX(startX);
                 imageView.setY(startY + counter * displacement);
                 movingItems.add(imageView);
                 counter ++;
-                if(counter == 4){
+                if(counter == 4)
+                {
                     counter = 0;
                     startX -= displacement;
                 }
                 view.getGroup().getChildren().add(imageView);
             }
         }
-        for (ImageView m : movingItems) {
+        for (ImageView m : movingItems)
+        {
             TranslateTransition translateTransition = new TranslateTransition(Duration.millis(3000) , m);
             translateTransition.setToX(-1000);
             translateTransition.setToY(-1000);
@@ -1994,21 +2002,36 @@ public class Controller
         translateTransition.play();
     }
 
-    private void checkTransportation() {
-        if (farm.getTruck().isMoving()) {
-            if (farm.getTruck().getCurrentTime() > 0)
-                farm.getTruck().decreaseCurrentTime(1);
-            else
-                farm.clearFromTruck();
-        }
-        if (farm.getHelicopter().isMoving()) {
-            if (farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime()) {
-                view.goHelicopter(fixedHelicopter);
+    private void checkTransportation()
+    {
+        if (farm.getHelicopter().isMoving())
+        {
+            if( farm.getHelicopter().getCurrentTime() > 0 )
+            {
+                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 2 )
+                {
+                    MoveTransition pathTransition = new MoveTransition(fixedHelicopter, farm.getHelicopter().getPrevMovingX()
+                            , 20, farm.getHelicopter().getNextMovingX(), 20, 3000);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+                    farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - Constants.movingScale);
+                }
+                else
+                {
+                    MoveTransition pathTransition = new MoveTransition(fixedHelicopter, farm.getHelicopter().getPrevMovingX()
+                            , 20, farm.getHelicopter().getNextMovingX(), 20, 3000);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+                    farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                }
                 farm.getHelicopter().decreaseCurrentTime(1);
             }
-            else if (farm.getHelicopter().getCurrentTime() > 0)
-                farm.getHelicopter().decreaseCurrentTime(1);
-            else{
+            else
+            {
                 farm.getHelicopter().setMoving(false);
                 fixedHelicopter.setFitHeight(220);
                 fixedHelicopter.setFitWidth(220);
