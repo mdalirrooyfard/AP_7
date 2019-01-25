@@ -17,7 +17,6 @@ import Model.Transportation.Truck;
 import Model.Workshops.*;
 import javafx.stage.Screen;
 
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -324,11 +323,9 @@ public class Farm {
         if (!map.getCells()[currentY][currentX].status()[0])
             return false;
         Vector<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
-        Iterator<Entity> iterator = cellItems.iterator();
         int numberOfBears = 0;
         int numberOfLions = 0;
-        while (iterator.hasNext()) {
-            Entity entity = iterator.next();
+        for (Entity entity : cellItems) {
             if (entity instanceof Bear) {
                 entity.setDead(true);
                 numberOfBears++;
@@ -379,46 +376,85 @@ public class Farm {
             return;
         for (int i = 0; i < mapLength; i++)
             for (int j = 0; j < mapWidth; j++) {
+                Vector<Integer[]> places = new Vector<>();
+                places.add(new Integer[]{i,j});
+                if (i - 1 >= 0)
+                    places.add(new Integer[]{j, i - 1}); //up
+                if (i + 1 <= mapLength - 1)
+                    places.add(new Integer[]{j, i + 1});   //down
+                if (j - 1 >= 0) {
+                    places.add(new Integer[]{j - 1, i});   //left
+                    if (i - 1 >= 0)
+                        places.add(new Integer[]{j - 1, i - 1}); //up left
+                    if (i + 1 <= mapLength - 1)
+                        places.add(new Integer[]{j - 1, i + 1}); //down left
+                }
+                if (j + 1 <= mapWidth - 1) {
+                    places.add(new Integer[]{j + 1, i}); //right
+                    if (i - 1 >= 0)
+                        places.add(new Integer[]{j + 1, i - 1}); //up right
+                    if (i + 1 <= mapLength - 1)
+                        places.add(new Integer[]{j + 1, i + 1}); //down right
+                }
                 Cell cell = map.getCells()[i][j];
                 if (cell.status()[0]) {
-                    if (cell.status()[4])
-                        killDogAndWild(i, j);
-                    else if (cell.status()[1] || cell.status()[2])
-                        killDomesticAndItems(i, j);
+                    if (cell.status()[4]) {
+                        killDogAndWild(places);
+                    }
+                    else if (cell.status()[1] || cell.status()[2]) {
+                        killDomesticAndItems(places);
+                    }
                 }
             }
     }
 
-    public void killDogAndWild(int y, int x) {
-        Vector<Entity> entities = map.getCells()[y][x].getStuffs();
-        for (Entity entity : entities)
-            if (entity instanceof Dog || entity instanceof Wild)
-                entity.setDead(true);
+    public void killDogAndWild(Vector<Integer[]> places) {
+        for (Entity entity : stuffs){
+            if ( !entity.isDead() && (entity instanceof Wild || entity instanceof Dog)){
+                Integer[] animalPlace = new Integer[]{(int)entity.getY(), (int)entity.getX()};
+                if (vectorContains(places, animalPlace)) {
+                    entity.setDead(true);
+                    System.out.println("mord as dog");
+                }
+            }
+        }
     }
 
-    public void killDomesticAndItems(int y, int x) {
-        Vector<Entity> entities = map.getCells()[y][x].getStuffs();
-        for (Entity entity : entities)
-            if (entity instanceof Item || entity instanceof Domestic) {
-                entity.setDead(true);
+    public void killDomesticAndItems(Vector<Integer[]> places) {
+        for (Entity entity : stuffs){
+            if ( !entity.isDead() && (entity instanceof Domestic || entity instanceof Item)){
+                Integer[] animalPlace = new Integer[]{(int)entity.getY(), (int)entity.getX()};
+                if (vectorContains(places, animalPlace)) {
+                    entity.setDead(true);
+                    System.out.println("mord as wild");
+                }
             }
+        }
+    }
+
+    public boolean vectorContains(Vector<Integer[]> places, Integer[] place){
+        for (Integer[] i : places){
+            if (i[0].equals(place[0]) && i[1].equals(place[1]))
+                return true;
+        }
+        return false;
     }
 
     public boolean turn() {
         synchronized (stuffs) {
-            time = time + 1;
+            time ++;
             checkMoves();
             updateMap();
             removeGrassAndItem();
             updateMap();
             checkCollision();
             updateMap();
-            if (time % 10 == 0) {   //wild animals come
+            if (time % 20 == 0) {   //wild animals come
                 shootWildAnimal();
                 updateMap();
                 shootWildAnimalTime = time;
             }
-            if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 5) { //if there as any wild animal will leave
+            if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 10) { //if there as any wild animal will leave
                 for (Entity entity : stuffs){
                     if (entity instanceof Wild)
                         entity.setDead(true);
@@ -525,9 +561,7 @@ public class Farm {
 
     public void removeGrassAndItem() {
         if (map.isThereGrass() || map.isThereItem()) {
-            Iterator<Entity> iterator = stuffs.iterator();
-            while (iterator.hasNext()) {
-                Entity entity = iterator.next();
+            for (Entity entity : stuffs) {
                 if (entity instanceof Grass && ((Grass) entity).isEatenAlready() && ((Grass) entity).isEaten() == 0) {
                     entity.setDead(true);
                 }
@@ -569,11 +603,10 @@ public class Farm {
         if (helicopter.isMoving())
             return false;
         helicopter.setMoving(false);
-        Iterator<Item> iterator = helicopter.getItems().iterator();
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
+        Vector<Item> items = helicopter.getItems();
+        for (Item item : items) {
             stuffs.add(item);
-            iterator.remove();
+            items.remove(item);
         }
         updateMap();
         helicopter.setCurrentVolume(helicopter.getVolume());
@@ -594,36 +627,33 @@ public class Farm {
     public boolean clearTruckBeforeGo(){
         if (truck.isMoving())
             return false;
-        Iterator<Item> iterator = truck.getItems().iterator();
-        while (iterator.hasNext()){
-            Item item = iterator.next();
+        Vector<Item> items = truck.getItems();
+        for (Item item : items){
             wareHouse.add(item);
             wareHouse.decreaseCurrentVolume(item.getVolume());
-            iterator.remove();
+            items.remove(item);
         }
         truck.setCurrentVolume(truck.getVolume());
         return true;
     }
 
     public void clearOneItemFromTruck(String kind){
-        Iterator<Item> iterator = truck.getItems().iterator();
-        while (iterator.hasNext()){
-            Item item = iterator.next();
+        Vector<Item> items = truck.getItems();
+        for (Item item : items){
             if (item.getKind().equals(kind)){
-                iterator.remove();
+                items.remove(item);
                 return;
             }
         }
     }
 
     public void clearOneItemFromHelicopter(String kind){
-        Iterator<Item> iterator = helicopter.getItems().iterator();
-        while(iterator.hasNext()){
-            Item item = iterator.next();
+        Vector<Item> items = helicopter.getItems();
+        for (Item item : items){
             if (item.getKind().equals(kind)){
                 increaseMoney(item.getBuyCost());
                 helicopter.increaseCurrentVolume(item.getVolume());
-                iterator.remove();
+                items.remove(item);
                 return;
             }
         }
@@ -632,10 +662,10 @@ public class Farm {
     public boolean clearHelicopterBeforeGo(){
         if (helicopter.isMoving())
             return false;
-        Iterator<Item> iterator = helicopter.getItems().iterator();
-        while (iterator.hasNext()) {
-            increaseMoney(iterator.next().getBuyCost());
-            iterator.remove();
+        Vector<Item> items = helicopter.getItems();
+        for (Item item : items) {
+            increaseMoney(item.getBuyCost());
+            items.remove(item);
         }
         helicopter.setCurrentVolume(helicopter.getVolume());
         return true;
@@ -645,16 +675,16 @@ public class Farm {
         if (truck.isMoving())
             return -1;
         int result = 0;
-        Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
-        while (iterator.hasNext() && result < count) {
-            Item item = iterator.next();
+        Vector<Item> collectedItems = wareHouse.getCollectedItems();
+        for (int j = 0; j < collectedItems.size() && result < count; j++) {
+            Item item = collectedItems.get(j);
             if (item.getKind().equals(itemName)) {
                 if (item.getVolume() <= truck.getCurrentVolume()) {
                     truck.decreaseCurrentVolume(item.getVolume());
                     truck.increaseSpentMoney(item.getSellCost());
                     truck.add(item);
                     wareHouse.increaseCurrentVolume(item.getVolume());
-                    iterator.remove();
+                    collectedItems.remove(item);
                     result++;
                 } else
                     return result;
@@ -814,12 +844,12 @@ public class Farm {
         workshop.setCount(availableInputCount(workshop.getInputs(), workshop.getLevel()));
         if (workshop.getCount() > 0) {
             for (String s : workshop.getInputs()) {
-                Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
+                Vector<Item> collectedItems = wareHouse.getCollectedItems();
                 int count = 0;
-                while (iterator.hasNext() && count < workshop.getCount()) {
-                    Item item = iterator.next();
+                for (int j = 0; j < collectedItems.size() && count < workshop.getCount(); j++) {
+                    Item item = collectedItems.get(j);
                     if (item.getKind().equals(s)) {
-                        iterator.remove();
+                        collectedItems.remove(item);
                         count++;
                     }
                 }
