@@ -17,6 +17,7 @@ import Model.Transportation.Truck;
 import Model.Workshops.*;
 import javafx.stage.Screen;
 
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -844,12 +845,12 @@ public class Farm {
         workshop.setCount(availableInputCount(workshop.getInputs(), workshop.getLevel()));
         if (workshop.getCount() > 0) {
             for (String s : workshop.getInputs()) {
-                Vector<Item> collectedItems = wareHouse.getCollectedItems();
+                Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
                 int count = 0;
-                for (int j = 0; j < collectedItems.size() && count < workshop.getCount(); j++) {
-                    Item item = collectedItems.get(j);
+                while (iterator.hasNext() && count < workshop.getCount()) {
+                    Item item = iterator.next();
                     if (item.getKind().equals(s)) {
-                        collectedItems.remove(item);
+                        iterator.remove();
                         count++;
                     }
                 }

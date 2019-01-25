@@ -1,5 +1,5 @@
 startOfMap
-money 100
+money 10000
 well 7
 wareHouse 100
 truck 80

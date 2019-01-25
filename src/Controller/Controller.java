@@ -68,6 +68,7 @@ public class Controller
             rightHelicopter , fixedTruck , leftTruck , rightTruck , map , wareHouse;
     private ImageView[] wildAnimals = new ImageView[2];
     private Image cage;
+    private Image upgradeButton;
     private Image[] grass = new Image[4];
     private ConcurrentHashMap<String, Integer[]> widthAndHeight = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Integer[]> colsAndRows = new ConcurrentHashMap<>();
@@ -1418,7 +1419,7 @@ public class Controller
                     50, 50, false, true);
             wareHouse = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Depot\\" +
                     farm.getWareHouse().getLevel() +".png") , 250 , 150 , false , true));
-
+            upgradeButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\upgradeButton.png"));
         }
         catch ( Exception e ){ e.printStackTrace(); }
     }
@@ -1479,7 +1480,59 @@ public class Controller
                         }
                     }
                 });
+                ImageView upgrade = new ImageView(upgradeButton);
+                upgrade.setFitHeight(39);
+                upgrade.setFitWidth(100);
+                Label label = new Label(Integer.toString(w.getUpgradeCost()));
+                label.setFont(new Font(20));
                 show(imageView, w);
+                if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof  CakeBakery) {
+                    label.relocate(w.getShowX() - 100, w.getShowY() + 100);
+                    upgrade.setX(w.getShowX() - 30);
+                    upgrade.setY(w.getShowY() + 40);
+                }
+                else{
+                    label.relocate(w.getShowX() - 100, w.getShowY() + 100);
+                    upgrade.setX(w.getShowX() + 200);
+                    upgrade.setY(w.getShowY() + 70);
+                }
+                upgrade.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        int result = farm.upgrade(w.getWorkShopName());
+                        //todo danse the money result == 1
+                        if (result == 0){
+                            try {
+                                label.setText(Integer.toString(w.getUpgradeCost()));
+                                Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "fixed"
+                                        + Integer.toString(w.getLevel()) + ".png"),
+                                        200, 200, false, true);
+                                fixedWorkshops.replace(w.getWorkShopName(), image);
+                                imageView.setImage(fixedWorkshops.get(w.getWorkShopName()));
+                                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "moving"
+                                        + Integer.toString(w.getLevel()) + ".png"),
+                                        800, 800, false, true);
+                                movingWorkshops.replace(w.getWorkShopName(), image);
+                                if (w instanceof CakeBakery)
+                                    movingCakeBakery = new ImageView(movingWorkshops.get("cakeBakery"));
+                                else if (w instanceof CookieBakery)
+                                    movingCookieBakery = new ImageView(movingWorkshops.get("cookieBakery"));
+                                else if (w instanceof EggPowderPlant)
+                                    movingEggPowderPlant = new ImageView(movingWorkshops.get("eggPowderPlant"));
+                                else if(w instanceof SewingFactory)
+                                    movingSewingFactory = new ImageView(movingWorkshops.get("sewingFactory"));
+                                else if (w instanceof Spinnery)
+                                    movingSpinnery = new ImageView(movingWorkshops.get("spinnery"));
+                                else if (w instanceof WeavingFactory)
+                                    movingWeavingFactory = new ImageView(movingWorkshops.get("weavingFactory"));
+
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                view.getGroup().getChildren().addAll(upgrade, label);
             }
     }
 
