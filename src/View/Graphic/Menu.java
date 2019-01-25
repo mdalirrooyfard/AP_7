@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Vector;
 
 
 public class Menu
@@ -37,7 +37,7 @@ public class Menu
     private Group group = new Group();
     private Scene scene = new Scene(group, WIDTH, HEIGHT);
     private Player player = new Player("",0);
-    private ArrayList<Player> players;
+    private Vector<Player> players;
     private boolean muteMusic = false , muteSound = false , fullScreen = true;
     private MediaPlayer mediaPlayer;
     private Menu menu;
@@ -101,7 +101,7 @@ public class Menu
         return scene;
     }
 
-    public Menu(Stage stage , ArrayList<Player> players , Start startScene )
+    public Menu(Stage stage , Vector<Player> players , Start startScene )
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);

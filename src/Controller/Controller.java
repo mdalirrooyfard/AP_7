@@ -30,10 +30,8 @@ import javafx.util.Duration;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Controller
 {
@@ -42,38 +40,38 @@ public class Controller
     private String path = null;
     private Player player;
     private int level;
-    private ArrayList<Player> players;
+    private Vector<Player> players;
     private Menu menu;
     private Stage stage;
     private Start start;
-    private ArrayList<ImageView> levels = new ArrayList<>();
+    private Vector<ImageView> levels = new Vector<>();
     private AnimationTimer aTimer;
-    private HashMap<String, Image> fixedWorkshops = new HashMap<>();
-    private HashMap<String, Image> movingWorkshops = new HashMap<>();
-    private HashMap<String, Image> animalsLeft = new HashMap<>();
-    private HashMap<String, Image> animalsRight = new HashMap<>();
-    private HashMap<String, Image> animalsUp = new HashMap<>();
-    private HashMap<String, Image> animalsDown = new HashMap<>();
-    private HashMap<String, Image> animalsDeath = new HashMap<>();
-    private HashMap<String, Image> domesticEat = new HashMap<>();
-    private HashMap<String, Image> animalsDownLeft = new HashMap<>();
-    private HashMap<String, Image> animalsDownRight = new HashMap<>();
-    private HashMap<String, Image> animalsUpLeft = new HashMap<>();
-    private HashMap<String, Image> animalsUpRight = new HashMap<>();
-    private HashMap<String, Image> animalsFixed = new HashMap<>();
-    private HashMap<String, Image> wildCaged = new HashMap<>();
-    private HashMap<String, Image> items = new HashMap<>();
-    private HashMap<String, Image> wareHouseItems = new HashMap<>();
-    private HashMap<String, ImageView> fixedWorkShopsImageViews = new HashMap<>();
+    private ConcurrentHashMap<String, Image> fixedWorkshops = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> movingWorkshops = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsLeft = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsRight = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsUp = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsDown = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsDeath = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> domesticEat = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsDownLeft = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsDownRight = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsUpLeft = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsUpRight = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> animalsFixed = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> wildCaged = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> items = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Image> wareHouseItems = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, ImageView> fixedWorkShopsImageViews = new ConcurrentHashMap<>();
     private ImageView movingCakeBakery , movingCookieBakery , movingEggPowderPlant , movingSewingFactory , movingSpinnery ,
             movingWeavingFactory , movingCustomFactory , fixedWell , movingWell ,fixedHelicopter , leftHelicopter ,
             rightHelicopter , fixedTruck , leftTruck , rightTruck , map , wareHouse;
     private ImageView[] wildAnimals = new ImageView[2];
     private Image cage;
     private Image[] grass = new Image[4];
-    private HashMap<String, Integer[]> widthAndHeight = new HashMap<>();
-    private HashMap<String, Integer[]> colsAndRows = new HashMap<>();
-    private ArrayList<ImageView> currentEntities = new ArrayList<>();
+    private ConcurrentHashMap<String, Integer[]> widthAndHeight = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Integer[]> colsAndRows = new ConcurrentHashMap<>();
+    private Vector<ImageView> currentEntities = new Vector<>();
     private OrderPage orderPage;
     private SellPage sellPage;
 
@@ -304,7 +302,7 @@ public class Controller
             if(scanner.hasNext())
             {
                 String savedPlayers = scanner.nextLine();
-                players = yaGson.fromJson(savedPlayers,ArrayList.class);
+                players = yaGson.fromJson(savedPlayers,Vector.class);
             }
             for( Player p : players )
                 if( p.isLastPlayer() )
@@ -314,7 +312,7 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    public static void savePlayers( ArrayList<Player> players )
+    public static void savePlayers( Vector<Player> players )
     {
         OutputStream outputStream;
         try
@@ -1163,7 +1161,7 @@ public class Controller
 
     private void checkWareHouse()
     {
-        ArrayList<Item> items = farm.getWareHouse().getCollectedItems();
+        Vector<Item> items = farm.getWareHouse().getCollectedItems();
         int i = 0;
         double firstShow_X = Constants.WIDTH/2 - 70;
         double firstShow_y = Constants.HEIGHT - 50;
@@ -1485,8 +1483,8 @@ public class Controller
             }
     }
 
-    private void flyingItems(ArrayList<String> items , int count , Workshop workshop){
-        ArrayList<ImageView> movingItems = new ArrayList<>();
+    private void flyingItems(Vector<String> items , int count , Workshop workshop){
+        Vector<ImageView> movingItems = new Vector<>();
         int counter = 0;
         double startX = Constants.WIDTH/2 - 100;
         double startY = Constants.HEIGHT - 50;
@@ -1536,7 +1534,7 @@ public class Controller
             for (int i = 0; i < farm.getMapWidth(); i++)
             {
                 int numberOfGrass = 0;
-                ArrayList<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
+                Vector<Entity> stuffs = farm.getMap().getCells()[j][i].getStuffs();
                 for (Entity e : stuffs)
                 {
                     ImageView imageView = null;

@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
+import java.util.Vector;
 
 public class ChoosePlayer
 {
@@ -46,7 +46,7 @@ public class ChoosePlayer
         return scene;
     }
 
-    public ChoosePlayer(Stage stage , Menu menu , ArrayList<Player> players)
+    public ChoosePlayer(Stage stage , Menu menu , Vector<Player> players)
     {
         this.stage = stage;
         this.menu = menu;
@@ -77,7 +77,7 @@ public class ChoosePlayer
         catch ( Exception e ){}
     }
 
-    private void writePlayers(ArrayList<Player> players)
+    private void writePlayers(Vector<Player> players)
     {
         try
         {
@@ -123,7 +123,7 @@ public class ChoosePlayer
         catch ( Exception e ){}
     }
 
-    private void insertNewPlayer(ArrayList<Player> players)
+    private void insertNewPlayer(Vector<Player> players)
     {
         try
         {
@@ -243,7 +243,7 @@ public class ChoosePlayer
 
     }
 
-    private void insertPlayer(ArrayList<Player> players)
+    private void insertPlayer(Vector<Player> players)
     {
         Label playerName = new Label("");
         playerName.setTextFill(Color.rgb(54,16,0));

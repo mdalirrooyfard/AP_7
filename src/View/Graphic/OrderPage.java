@@ -18,7 +18,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OrderPage
 {
@@ -26,7 +26,7 @@ public class OrderPage
     Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
     int height = 0 , itemNumber = 0 , width = 0;
 
-    public Scene getScene(Stage stage,View view,Farm farm,HashMap<String ,Image> items,ImageView leftHelicopter,ImageView fixedHelicopter,AnimationTimer aTimer)
+    public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView leftHelicopter, ImageView fixedHelicopter, AnimationTimer aTimer)
     {
         height = 0;
         itemNumber = 0;
@@ -96,7 +96,7 @@ public class OrderPage
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void insertItems(Farm farm,HashMap<String,Image> items)
+    private void insertItems(Farm farm,ConcurrentHashMap<String,Image> items)
     {
         try
         {
