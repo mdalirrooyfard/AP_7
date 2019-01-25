@@ -833,7 +833,7 @@ public class Farm {
         return workshop.getCount();
     }
 
-    public int availableInputCount(ArrayList<String> inputs, int initial) {
+    public int availableInputCount(Vector<String> inputs, int initial) {
         int min = initial;
         for (String s : inputs) {
             int count = 0;
