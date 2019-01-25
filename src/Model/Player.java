@@ -36,4 +36,8 @@ public class Player
         isLastPlayer = lastPlayer;
     }
 
+    public void increaseLevel()
+    {
+        lastLevel++;
+    }
 }
