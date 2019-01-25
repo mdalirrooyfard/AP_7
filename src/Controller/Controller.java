@@ -1478,6 +1478,7 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
+
     private void showUpgradeTruck(){
         ImageView upgradeTruck = new ImageView(upgradeButton);
         upgradeTruck.setX(farm.getTruck().getShowX() - 10);
@@ -1506,6 +1507,37 @@ public class Controller
                 }
             }
         });
+    }
+
+    private void showUpgradeHelicopter(){
+        ImageView upgradeHelicopter = new ImageView(upgradeButton);
+        upgradeHelicopter.setX(farm.getHelicopter().getShowX() - 30);
+        upgradeHelicopter.setY(farm.getHelicopter().getShowY() + 160);
+        upgradeHelicopter.setFitHeight(30);
+        upgradeHelicopter.setFitWidth(90);
+        Label label = new Label(Integer.toString(farm.getHelicopter().getUpgradeCost()));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,15));
+        label.relocate(farm.getHelicopter().getShowX() + 5, farm.getHelicopter().getShowY() + 160);
+        view.getGroup().getChildren().addAll(upgradeHelicopter, label);
+        upgradeHelicopter.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int result = farm.upgrade("helicopter");
+                //todo result == 1 dance the money
+                if (result == 0){
+                    try {
+                        label.setText(Integer.toString(farm.getHelicopter().getUpgradeCost()));
+                        fixedHelicopter.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\" + "fixed"
+                                + farm.getHelicopter().getLevel() + ".png"), 200, 200, false, true));
+                        if (farm.getHelicopter().getLevel() == 4)
+                            view.getGroup().getChildren().removeAll(label, upgradeHelicopter);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
 
     private void loadSize()
@@ -1732,6 +1764,7 @@ public class Controller
         show(fixedWell , farm.getWell());
         show(wareHouse , farm.getWareHouse());
         showUpgradeTruck();
+        showUpgradeHelicopter();
         showUpgradeWareHouse();
     }
 
