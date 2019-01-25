@@ -1580,8 +1580,8 @@ public class Controller
         for (ImageView m : movingItems)
         {
             TranslateTransition translateTransition = new TranslateTransition(Duration.millis(3000) , m);
-            translateTransition.setToX(-1000);
-            translateTransition.setToY(-1000);
+            translateTransition.setToX(- m.getX() + workshop.getShowX() + 100);
+            translateTransition.setToY(- m.getY() + workshop.getShowY() + 100);
             //todo fix this guy! destination
             translateTransition.play();
             translateTransition.setOnFinished(new EventHandler<ActionEvent>()
