@@ -1183,6 +1183,15 @@ public class Controller
 
     private void wellIcon()
     {
+        ImageView upgrade = new ImageView(upgradeButton);
+        upgrade.setFitHeight(39);
+        upgrade.setFitWidth(100);
+        Label label = new Label(Integer.toString(farm.getWell().getUpgradeCost()));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+        label.relocate(farm.getWell().getShowX() - 55, farm.getWell().getShowY() + 110);
+        upgrade.setX(farm.getWell().getShowX() - 90);
+        upgrade.setY(farm.getWell().getShowY() + 110);
+        view.getGroup().getChildren().addAll(upgrade, label);
         fixedWell.setX(0);
         fixedWell.setY(10);
         fixedWell.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -1201,6 +1210,24 @@ public class Controller
                     AnimationTimer imageViewSprite = new ImageViewSprite(movingWell,
                             20,false ,4, 4, 16, 200, 200, 16);
                     imageViewSprite.start();
+                }
+            }
+        });
+        upgrade.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int result = farm.upgrade("well");
+                //result == 1 dance the money
+                if (result == 0){
+                    try {
+                        label.setText(Integer.toString(farm.getWell().getUpgradeCost()));
+                        fixedWell.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
+                                + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
+                        movingWell.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
+                                + farm.getWell().getLevel() + ".png"), 800, 800, false, true));
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
             }
         });
