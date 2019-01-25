@@ -11,6 +11,24 @@ public class Transportations extends Entity {
     private boolean isMoving = false ;
     private int workingTime ;
     private int currentTime ;
+    private int spentMoney = 0;
+
+    public int getSpentMoney() {
+        return spentMoney;
+    }
+
+    public void setSpentMoney(int spentMoney) {
+        this.spentMoney = spentMoney;
+    }
+
+    public void increaseSpentMoney (int amount){
+        this.spentMoney += amount;
+    }
+
+    public void decreaseSpentMoney(int amount){
+        this.spentMoney -= amount;
+    }
+
     @Override
     public double getShowX() {
         return getX();

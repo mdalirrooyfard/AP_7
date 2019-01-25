@@ -604,12 +604,10 @@ public class Farm {
         if (helicopter.isMoving())
             return false;
         helicopter.setMoving(false);
-        Vector<Item> items = helicopter.getItems();
-        for (Item item : items) {
-            stuffs.add(item);
-            items.remove(item);
-        }
+        stuffs.addAll(helicopter.getItems());
+        helicopter.getItems().clear();
         updateMap();
+        helicopter.setSpentMoney(0);
         helicopter.setCurrentVolume(helicopter.getVolume());
         return true;
     }
@@ -628,12 +626,9 @@ public class Farm {
     public boolean clearTruckBeforeGo(){
         if (truck.isMoving())
             return false;
-        Vector<Item> items = truck.getItems();
-        for (Item item : items){
-            wareHouse.add(item);
-            wareHouse.decreaseCurrentVolume(item.getVolume());
-            items.remove(item);
-        }
+        wareHouse.getCollectedItems().addAll(truck.getItems());
+        wareHouse.decreaseCurrentVolume(truck.getVolume() - truck.getCurrentVolume());
+        truck.setSpentMoney(0);
         truck.setCurrentVolume(truck.getVolume());
         return true;
     }
@@ -642,6 +637,8 @@ public class Farm {
         Vector<Item> items = truck.getItems();
         for (Item item : items){
             if (item.getKind().equals(kind)){
+                truck.decreaseSpentMoney(item.getBuyCost());
+                truck.increaseCurrentVolume(item.getVolume());
                 items.remove(item);
                 return;
             }
@@ -653,6 +650,7 @@ public class Farm {
         for (Item item : items){
             if (item.getKind().equals(kind)){
                 increaseMoney(item.getBuyCost());
+                helicopter.decreaseSpentMoney(item.getBuyCost());
                 helicopter.increaseCurrentVolume(item.getVolume());
                 items.remove(item);
                 return;
@@ -663,11 +661,9 @@ public class Farm {
     public boolean clearHelicopterBeforeGo(){
         if (helicopter.isMoving())
             return false;
-        Vector<Item> items = helicopter.getItems();
-        for (Item item : items) {
-            increaseMoney(item.getBuyCost());
-            items.remove(item);
-        }
+        helicopter.getItems().clear();
+        increaseMoney(helicopter.getSpentMoney());
+        helicopter.setSpentMoney(0);
         helicopter.setCurrentVolume(helicopter.getVolume());
         return true;
     }
@@ -703,6 +699,7 @@ public class Farm {
             if (item.getVolume() <= helicopter.getCurrentVolume()
                     && item.getBuyCost() <= money) {
                 decreaseMoney(item.getBuyCost());
+                helicopter.increaseSpentMoney(item.getBuyCost());
                 helicopter.decreaseCurrentVolume(item.getVolume());
                 helicopter.add(item);
                 result++;
