@@ -1249,6 +1249,8 @@ public class Controller
                                 + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
                         movingWell.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
                                 + farm.getWell().getLevel() + ".png"), 800, 800, false, true));
+                        if (farm.getWell().getLevel() == 4)
+                            view.getGroup().getChildren().removeAll(label, upgrade);
                     }catch (IOException e){
                         e.printStackTrace();
                     }
@@ -1615,19 +1617,34 @@ public class Controller
                                         + Integer.toString(w.getLevel()) + ".png"),
                                         800, 800, false, true);
                                 movingWorkshops.replace(w.getWorkShopName(), image);
-                                if (w instanceof CakeBakery)
+                                boolean isUpgradeFinished = false;
+                                if (w instanceof CakeBakery) {
                                     movingCakeBakery = new ImageView(movingWorkshops.get("cakeBakery"));
-                                else if (w instanceof CookieBakery)
+                                    if (farm.getWorkshops()[0].getLevel() == 4)
+                                        isUpgradeFinished = true;
+                                }else if (w instanceof CookieBakery) {
                                     movingCookieBakery = new ImageView(movingWorkshops.get("cookieBakery"));
-                                else if (w instanceof EggPowderPlant)
+                                    if (farm.getWorkshops()[1].getLevel() == 4)
+                                        isUpgradeFinished = true;
+                                }else if (w instanceof EggPowderPlant) {
                                     movingEggPowderPlant = new ImageView(movingWorkshops.get("eggPowderPlant"));
-                                else if(w instanceof SewingFactory)
+                                    if (farm.getWorkshops()[2].getLevel() == 4)
+                                        isUpgradeFinished = true;
+                                }else if(w instanceof SewingFactory) {
                                     movingSewingFactory = new ImageView(movingWorkshops.get("sewingFactory"));
-                                else if (w instanceof Spinnery)
+                                    if (farm.getWorkshops()[3].getLevel() == 4)
+                                        isUpgradeFinished = true;
+                                }else if (w instanceof Spinnery) {
                                     movingSpinnery = new ImageView(movingWorkshops.get("spinnery"));
-                                else if (w instanceof WeavingFactory)
+                                    if (farm.getWorkshops()[5].getLevel() == 4)
+                                        isUpgradeFinished = true;
+                                }else if (w instanceof WeavingFactory) {
                                     movingWeavingFactory = new ImageView(movingWorkshops.get("weavingFactory"));
-
+                                    if (farm.getWorkshops()[4].getLevel() == 4)
+                                        isUpgradeFinished = true;
+                                }
+                                if (isUpgradeFinished)
+                                    view.getGroup().getChildren().removeAll(label, upgrade);
                             }catch (IOException e){
                                 e.printStackTrace();
                             }
