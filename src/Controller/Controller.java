@@ -30,7 +30,9 @@ import javafx.util.Duration;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Formatter;
+import java.util.Scanner;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Controller
@@ -75,7 +77,7 @@ public class Controller
     private Vector<ImageView> currentEntities = new Vector<>();
     private OrderPage orderPage;
     private SellPage sellPage;
-
+    private Label moneyLabel = new Label();
     public Controller(Stage stage)
     {
         loadSize();
@@ -203,6 +205,7 @@ public class Controller
                         checkWareHouse();
                         checkTransportation();
                         checkWorkShops();
+                        updateMoney();
                     }
                     time = 31;
                     lastTime = 0;
@@ -514,31 +517,31 @@ public class Controller
             Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyGuineaHenButton.png"),
                     60, 60, false, true);
             ImageView henIconView = new ImageView(henIcon);
-            henIconView.setX(Constants.WIDTH - 335);
+            henIconView.setX(15);
             henIconView.setY(10);
 
             Image cowIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCowButton.png"),
                     60, 60, false, true);
             ImageView cowIconView = new ImageView(cowIcon);
-            cowIconView.setX(Constants.WIDTH - 270);
+            cowIconView.setX(80);
             cowIconView.setY(10);
 
             Image sheepIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buySheepButton.png"),
                     60, 60, false, true);
             ImageView sheepIconView = new ImageView(sheepIcon);
-            sheepIconView.setX(Constants.WIDTH - 205);
+            sheepIconView.setX(145);
             sheepIconView.setY(10);
 
             Image dogIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyDogButton.png"),
                     60, 60, false, true);
             ImageView dogIconView = new ImageView(dogIcon);
-            dogIconView.setX(Constants.WIDTH - 140);
+            dogIconView.setX(210);
             dogIconView.setY(10);
 
             Image catIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyCatButton.png"),
                     60, 60, false, true);
             ImageView catIconView = new ImageView(catIcon);
-            catIconView.setX(Constants.WIDTH - 85);
+            catIconView.setX(275);
             catIconView.setY(10);
             if (!farm.isAreCatsUpgraded()) {
                 ImageView upgradeCat = new ImageView(upgradeButton);
@@ -1297,6 +1300,7 @@ public class Controller
         buyIcons();
         menuIcon();
         wellIcon();
+        showMoneyIcon();
         workshopsIcons();
         servicesIcons();
         helicopterIconHandler();
@@ -1490,6 +1494,26 @@ public class Controller
         colsAndRows.put("sheep", new Integer[]{6, 4});
     }
 
+    private void showMoneyIcon(){
+        try {
+            Image moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
+            ImageView moneyView = new ImageView(moneyIcon);
+            moneyView.setFitWidth(150);
+            moneyView.setFitHeight(50);
+            moneyView.setX(Constants.WIDTH - 150);
+            moneyView.setY(10);
+            moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            moneyLabel.relocate(Constants.WIDTH - 95, 15);
+            view.getGroup().getChildren().addAll(moneyView , moneyLabel);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateMoney(){
+        moneyLabel.setText(Integer.toString(farm.getMoney()));
+
+    }
     private void workshopsIcons()
     {
         for(Workshop w : farm.getWorkshops())
