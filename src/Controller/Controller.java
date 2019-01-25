@@ -1655,6 +1655,41 @@ public class Controller
             }
     }
 
+    private void  showUpgradeWareHouse(){
+        ImageView button =  new ImageView(upgradeButton);
+        button.setFitWidth(90);
+        button.setFitHeight(30);
+        button.setX(farm.getWareHouse().getShowX() - 70);
+        button.setY(farm.getWareHouse().getShowY() + 95);
+        Label label = new Label(Integer.toString(farm.getWareHouse().getUpgradeCost()));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,15));
+        label.relocate(farm.getWareHouse().getShowX() - 40, farm.getWareHouse().getShowY() + 95);
+        view.getGroup().getChildren().addAll(button , label);
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int result = farm.upgrade("wareHouse");
+                if(result == 0){
+                    try {
+                        label.setText(Integer.toString(farm.getWareHouse().getUpgradeCost()));
+                        wareHouse.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Depot\\" +
+                                farm.getWareHouse().getLevel() + ".png"), 250 , 150 , false , true));
+                        if(farm.getWareHouse().getLevel() == 4){
+                            view.getGroup().getChildren().removeAll(button , label);
+                        }
+
+                    }catch (Exception e){
+                        e.getStackTrace();
+                    }
+                }
+                if(result == 1){
+                    //todo dance the money
+                }
+            }
+
+        });
+    }
+
     private void flyingItems(Vector<String> items , int count , Workshop workshop){
         Vector<ImageView> movingItems = new Vector<>();
         int counter = 0;
@@ -1697,6 +1732,7 @@ public class Controller
         show(fixedWell , farm.getWell());
         show(wareHouse , farm.getWareHouse());
         showUpgradeTruck();
+        showUpgradeWareHouse();
     }
 
     private void showMap()

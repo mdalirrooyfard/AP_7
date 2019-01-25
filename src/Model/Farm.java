@@ -269,7 +269,7 @@ public class Farm {
             case "helicopter": {
                 return upgradeEntity(helicopter);
             }
-            case "warehouse": {
+            case "wareHouse": {
                 return upgradeEntity(wareHouse);
             }
             default: { //workshops
