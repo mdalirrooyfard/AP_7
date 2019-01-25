@@ -1472,6 +1472,36 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
+    private void showUpgradeTruck(){
+        ImageView upgradeTruck = new ImageView(upgradeButton);
+        upgradeTruck.setX(farm.getTruck().getShowX() - 10);
+        upgradeTruck.setY(farm.getTruck().getShowY() + 140);
+        upgradeTruck.setFitHeight(30);
+        upgradeTruck.setFitWidth(90);
+        Label label = new Label(Integer.toString(farm.getTruck().getUpgradeCost()));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,15));
+        label.relocate(farm.getTruck().getShowX() + 25, farm.getTruck().getShowY() + 140);
+        view.getGroup().getChildren().addAll(upgradeTruck, label);
+        upgradeTruck.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int result = farm.upgrade("truck");
+                //todo result == 1 dance the money
+                if (result == 0){
+                    try {
+                        label.setText(Integer.toString(farm.getTruck().getUpgradeCost()));
+                        fixedTruck.setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\" + "fixed"
+                                + farm.getTruck().getLevel() + ".png"), 200, 200, false, true));
+                        if (farm.getTruck().getLevel() == 4)
+                            view.getGroup().getChildren().removeAll(label, upgradeTruck);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     private void loadSize()
     {
         widthAndHeight.put("bear", new Integer[]{480, 648});
@@ -1625,6 +1655,7 @@ public class Controller
         show(fixedHelicopter , farm.getHelicopter());
         show(fixedWell , farm.getWell());
         show(wareHouse , farm.getWareHouse());
+        showUpgradeTruck();
     }
 
     private void showMap()
