@@ -41,6 +41,10 @@ public class Farm {
     private boolean areCatsUpgraded = false;
     private Workshop[] workshops = new Workshop[7];
 
+    public boolean isAreCatsUpgraded() {
+        return areCatsUpgraded;
+    }
+
     public Vector<Entity> getStuffs() {
         return stuffs;
     }
@@ -243,6 +247,8 @@ public class Farm {
     public int upgrade(String entityName) {
         switch (entityName) {
             case "cat": {
+                if (catCount() == 0)
+                    return 3;
                 if (areCatsUpgraded)
                     return 2;
                 if (money < catCount() * Constants.CAT_BASE_UPGRADE_COST)

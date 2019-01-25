@@ -540,6 +540,27 @@ public class Controller
             ImageView catIconView = new ImageView(catIcon);
             catIconView.setX(Constants.WIDTH - 85);
             catIconView.setY(10);
+            if (!farm.isAreCatsUpgraded()) {
+                ImageView upgradeCat = new ImageView(upgradeButton);
+                upgradeCat.setFitWidth(50);
+                upgradeCat.setFitHeight(30);
+                upgradeCat.setX(Constants.WIDTH - 80);
+                upgradeCat.setY(75);
+                Label label = new Label(Integer.toString(Constants.CAT_BASE_UPGRADE_COST));
+                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,10));
+                label.relocate(Constants.WIDTH - 60, 80);
+                view.getGroup().getChildren().addAll(upgradeCat, label);
+                upgradeCat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                         int result = farm.upgrade("cat");
+                         //todo result == 1 dance the money
+                         if (result == 0){
+                             view.getGroup().getChildren().removeAll(upgradeCat, label);
+                         }
+                    }
+                });
+            }
 
             cowIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
