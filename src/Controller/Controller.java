@@ -486,15 +486,15 @@ public class Controller
         try
         {
             Image timer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\timer.png"),
-                    150, 79, false, true);
+                    120, 60, false, true);
             ImageView timerView = new ImageView(timer);
-            timerView.setX(Constants.WIDTH - 200);
-            timerView.setY(Constants.HEIGHT - 100);
+            timerView.setX(90);
+            timerView.setY(Constants.HEIGHT - 95);
 
             Label timeLabel = new Label("");
-            timeLabel.relocate(Constants.WIDTH - 140,Constants.HEIGHT - 80);
+            timeLabel.relocate(135,Constants.HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
-            timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
+            timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,12.5));
             if( farm.getTimer() / 3600 < 10 )
                 timeLabel.setText(timeLabel.getText()+"0");
             timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() / 3600)+":");
