@@ -1484,15 +1484,15 @@ public class Controller
                 upgrade.setFitHeight(39);
                 upgrade.setFitWidth(100);
                 Label label = new Label(Integer.toString(w.getUpgradeCost()));
-                label.setFont(new Font(20));
+                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
                 show(imageView, w);
                 if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof  CakeBakery) {
-                    label.relocate(w.getShowX() - 100, w.getShowY() + 100);
+                    label.relocate(w.getShowX() + 5, w.getShowY() + 40);
                     upgrade.setX(w.getShowX() - 30);
                     upgrade.setY(w.getShowY() + 40);
                 }
                 else{
-                    label.relocate(w.getShowX() - 100, w.getShowY() + 100);
+                    label.relocate(w.getShowX() + 235, w.getShowY() + 70);
                     upgrade.setX(w.getShowX() + 200);
                     upgrade.setY(w.getShowY() + 70);
                 }
