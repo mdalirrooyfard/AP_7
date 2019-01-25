@@ -3,12 +3,13 @@ package Model.Workshops;
 import Model.Entity;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Workshop extends Entity {
     protected int item_x;
     protected int item_y;
     protected int count;
-    protected ArrayList<String> inputs = new ArrayList<>();
+    protected Vector<String> inputs = new Vector<>();
     protected String output;
     protected int workingTime = 10;
     protected int currentTime;
@@ -57,7 +58,7 @@ public class Workshop extends Entity {
         return item_y;
     }
 
-    public ArrayList<String> getInputs() {
+    public Vector<String> getInputs() {
         return inputs;
     }
 

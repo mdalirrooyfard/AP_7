@@ -20,13 +20,15 @@ import javafx.stage.Screen;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class Farm {
     private Map map;
     private final int mapLength = (int) (Screen.getPrimary().getVisualBounds().getHeight() / 44);
     private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth() / 48);
-    private ArrayList<Entity> stuffs = new ArrayList<>();
+    private Vector<Entity> stuffs = new Vector<>();
     private int time;
     private long timer = 0;
     private Helicopter helicopter;
@@ -35,13 +37,13 @@ public class Farm {
     private Well well;
     private int money;
     private int shootWildAnimalTime = -1;
-    private HashMap<String, Integer> goals = new HashMap<>();
-    private ArrayList<String> achievementsNames = new ArrayList<>();
-    private ArrayList<Integer> achievementsCounts = new ArrayList<>();
+    private ConcurrentHashMap<String, Integer> goals = new ConcurrentHashMap<>();
+    private Vector<String> achievementsNames = new Vector<>();
+    private Vector<Integer> achievementsCounts = new Vector<>();
     private boolean areCatsUpgraded = false;
     private Workshop[] workshops = new Workshop[7];
 
-    public ArrayList<Entity> getStuffs() {
+    public Vector<Entity> getStuffs() {
         return stuffs;
     }
 
@@ -91,8 +93,8 @@ public class Farm {
         }
     }
 
-    public HashMap<String, Integer> getAchievements() {
-        HashMap<String, Integer> achievements = new HashMap<>();
+    public ConcurrentHashMap<String, Integer> getAchievements() {
+        ConcurrentHashMap<String, Integer> achievements = new ConcurrentHashMap<>();
         for( String s : achievementsNames )
         {
             achievements.put(s,achievementsCounts.get(achievementsNames.indexOf(s)));
@@ -104,7 +106,7 @@ public class Farm {
         return workshops;
     }
 
-    public HashMap<String, Integer> getGoals() {
+    public ConcurrentHashMap<String, Integer> getGoals() {
         return goals;
     }
 
@@ -298,8 +300,8 @@ public class Farm {
     public boolean pickUp(double x, double y) {
         int currentX = (int)x;
         int currentY = (int)y;
-        ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
-        ArrayList<Entity> cellRemainItems = new ArrayList<>();
+        Vector<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
+        Vector<Entity> cellRemainItems = new Vector<>();
         boolean isEveryThingPickedUp = true;
         for (Entity entity : cellItems) {
             if (entity instanceof Item)
@@ -323,7 +325,7 @@ public class Farm {
         int currentY = (int) y;
         if (!map.getCells()[currentY][currentX].status()[0])
             return false;
-        ArrayList<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
+        Vector<Entity> cellItems = map.getCells()[currentY][currentX].getStuffs();
         Iterator<Entity> iterator = cellItems.iterator();
         int numberOfBears = 0;
         int numberOfLions = 0;
@@ -390,14 +392,14 @@ public class Farm {
     }
 
     public void killDogAndWild(int y, int x) {
-        ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
+        Vector<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Dog || entity instanceof Wild)
                 entity.setDead(true);
     }
 
     public void killDomesticAndItems(int y, int x) {
-        ArrayList<Entity> entities = map.getCells()[y][x].getStuffs();
+        Vector<Entity> entities = map.getCells()[y][x].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Item || entity instanceof Domestic) {
                 entity.setDead(true);
@@ -447,7 +449,7 @@ public class Farm {
     public boolean checkEatingGrass(double y, double x, int max) {
         int X = (int) x;
         int Y = (int) y;
-        ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
+        Vector<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Grass && !((Grass) entity).isEatenAlready()) {
                 ((Grass) entity).setEaten(max);
@@ -461,7 +463,7 @@ public class Farm {
         int X = (int) x;
         int Y = (int) y;
         boolean result = false;
-        ArrayList<Entity> entities = map.getCells()[Y][X].getStuffs();
+        Vector<Entity> entities = map.getCells()[Y][X].getStuffs();
         for (Entity entity : entities)
             if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume() && !((Item) entity).isTakenByCat()) {
                 wareHouse.decreaseCurrentVolume(entity.getVolume());
@@ -509,6 +511,7 @@ public class Farm {
             }
         }
     }
+
     public void produceItem(Domestic entity){
         Item item;
         if (entity instanceof Hen)
@@ -521,6 +524,7 @@ public class Farm {
         stuffs.add(item);
         updateMap();
     }
+
     public void removeGrassAndItem() {
         if (map.isThereGrass() || map.isThereItem()) {
             Iterator<Entity> iterator = stuffs.iterator();

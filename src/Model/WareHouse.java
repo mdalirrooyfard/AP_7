@@ -4,10 +4,11 @@ package Model;
 import Model.Items.Item;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class WareHouse extends Entity{
 
-    private ArrayList<Item> collectedItems = new ArrayList<>();
+    private Vector<Item> collectedItems = new Vector<>();
     @Override
     public double getShowX() {
         return getX();
@@ -42,7 +43,7 @@ public class WareHouse extends Entity{
     }
 
 
-    public ArrayList<Item> getCollectedItems() {
+    public Vector<Item> getCollectedItems() {
         return collectedItems;
     }
 

@@ -4,6 +4,7 @@ import Model.Items.*;
 import Model.Animals.Wild.*;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Map
 {
@@ -42,7 +43,7 @@ public class Map
                 cells[i][j].clear();
     }
 
-    public void updateCells(ArrayList<Entity> stuffs )
+    public void updateCells(Vector<Entity> stuffs )
     {
         clearCells();
         for( Entity e : stuffs )

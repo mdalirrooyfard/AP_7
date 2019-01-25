@@ -4,9 +4,10 @@ import Model.Entity;
 import Model.Items.Item;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Transportations extends Entity {
-    private ArrayList<Item> items = new ArrayList<>();
+    private Vector<Item> items = new Vector<>();
     private boolean isMoving = false ;
     private int workingTime ;
     private int currentTime ;
@@ -16,7 +17,7 @@ public class Transportations extends Entity {
     }
     @Override
     public double getShowY() { return getY(); }
-    public ArrayList<Item> getItems() {
+    public Vector<Item> getItems() {
         return items;
     }
 

@@ -6,11 +6,12 @@ import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Cell
 {
-    private ArrayList<Entity> stuffs = new ArrayList<>();
-    public ArrayList<Entity> getStuffs()
+    private Vector<Entity> stuffs = new Vector<>();
+    public Vector<Entity> getStuffs()
     {
         return stuffs;
     }
@@ -47,7 +48,7 @@ public class Cell
         }
         return stuffs;
     }
-    public void update( ArrayList<Entity> stuffs )
+    public void update( Vector<Entity> stuffs )
     {
         this.stuffs.clear();
         this.stuffs = stuffs;
