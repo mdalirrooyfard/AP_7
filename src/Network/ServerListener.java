@@ -8,14 +8,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ServerListener implements Runnable{
-    private Client client;
     private Socket socket;
+    private ServerSender serverSender;
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
-    public ServerListener(Client client){
-        this.client = client;
-        this.socket = client.getSocket();
+    public ServerListener(Socket socket, ServerSender serverSender){
+        this.socket = socket;
+        this.serverSender = serverSender;
         try {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -37,7 +37,7 @@ public class ServerListener implements Runnable{
                         break;
                     case SEND_PLAYER:
                         Player player = (Player) command.getContent();
-                        client.setPlayer(player);
+                        //client.setPlayer(player);
                         break;
                     case SELL_TO_MARKET:
                         break;
