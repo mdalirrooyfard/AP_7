@@ -66,14 +66,12 @@ public class Constants
     public static final int SPRUCE_WILD_VOLUME = 25;
 
     /* BUY COST */
-    public static final int FABRIC_BUY_COST = 400;
-    public static final int SEWING_BUY_COST = 300;
     public static final int FLOURYCAKE_BUY_COST = 400;
     public static final int DRIEDEGGS_BUY_COST = 100;
     public static final int HEN_BUY_COST = 100;
     public static final int SHEEP_BUY_COST = 1000;
-    public static final int COW_BUY_COST = 100;
-    public static final int DOG_BUY_COST = 2600;
+    public static final int COW_BUY_COST = 10000;
+    public static final int DOG_BUY_COST = 2500;
     public static final int CAT_BUY_COST = 2500;
     public static final int EGG_BUY_COST = 20;
     public static final int WOOL_BUY_COST = 200;
