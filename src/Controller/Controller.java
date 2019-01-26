@@ -1334,7 +1334,14 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                         ImageView cageView = new ImageView(loader.getCage());
-
+                        boolean result = farm.putCage(event.getX() , event.getY());
+                        if(result){
+                            cageView.setX(e.getShowX());
+                            cageView.setY(e.getShowY());
+                            cageView.setFitWidth(Constants.ANIMAL_SIZE);
+                            cageView.setFitHeight(Constants.ANIMAL_SIZE);
+                            view.getGroup().getChildren().addAll(cageView);
+                        }
                     }
                 });
             }
