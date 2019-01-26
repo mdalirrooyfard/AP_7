@@ -8,12 +8,14 @@ import java.util.ArrayList;
 public class Server {
     private ServerSocket serverSocket;
     private int myPort;
-    private ArrayList<Client> clients = new ArrayList<>();
-    private ServerSender serverSender = new ServerSender();
+    private ArrayList<Socket> Sockets = new ArrayList<>();
+    private ServerSender serverSender;
+    private ServerGui serverGui = new ServerGui();
 
     public Server(ServerSocket serverSocket , int myPort){
         this.serverSocket = serverSocket ;
         this.myPort = myPort;
+        this.serverSender = new ServerSender(serverGui);
     }
 
     public void start(){
@@ -22,10 +24,9 @@ public class Server {
             public void run() {
                 try {
                     Socket socket = serverSocket.accept();
-                    Client client = new Client(socket);
-                    clients.add(client);
-                    serverSender.addClient(client);
-                    Thread listener = new Thread(new ServerListener(client));
+                    Sockets.add(socket);
+                    serverSender.addSocket(socket);
+                    Thread listener = new Thread(new ServerListener(socket, serverSender));
                     listener.start();
 
                 } catch (IOException e) {

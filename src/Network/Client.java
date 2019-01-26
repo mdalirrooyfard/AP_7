@@ -11,7 +11,7 @@ public class Client {
 
     public  Client(Socket socket){
         this.socket = socket;
-        this.clientListener = new ClientListener(socket);
+        //this.clientListener = new ClientListener(socket);
     }
 
     public void setPlayer(Player player){
