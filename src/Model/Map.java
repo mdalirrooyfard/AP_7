@@ -1,9 +1,8 @@
 package Model;
 
-import Model.Items.*;
-import Model.Animals.Wild.*;
+import Model.Animals.Wild.Wild;
+import Model.Items.Item;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class Map
@@ -237,7 +236,7 @@ public class Map
         for( Cell[] c : cells )
             for( Cell cell : c )
                 for( Entity e : cell.getStuffs() )
-                    if( e instanceof Item )
+                    if( e instanceof Item && !e.isDead() )
                         return true;
         return false;
     }
@@ -247,7 +246,7 @@ public class Map
         for( Cell[] c : cells )
             for( Cell cell : c )
                 for( Entity e : cell.getStuffs() )
-                    if( e instanceof Grass )
+                    if( e instanceof Grass && !e.isDead() )
                         return true;
         return false;
     }
@@ -257,7 +256,7 @@ public class Map
         for( Cell[] c : cells )
             for( Cell cell : c )
                 for( Entity e : cell.getStuffs() )
-                    if( e instanceof Wild )
+                    if( e instanceof Wild && !e.isDead() )
                         return true;
         return false;
     }

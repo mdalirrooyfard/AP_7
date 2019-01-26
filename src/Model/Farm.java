@@ -27,6 +27,7 @@ public class Farm {
     private final int mapLength = (int) (Screen.getPrimary().getVisualBounds().getHeight() / 44);
     private final int mapWidth = (int) (Screen.getPrimary().getVisualBounds().getWidth() / 48);
     private Vector<Entity> stuffs = new Vector<>();
+    private Vector<Item> addedItems = new Vector<>();
     private int time;
     private long timer = 0;
     private Helicopter helicopter;
@@ -83,9 +84,11 @@ public class Farm {
     public Truck getTruck(){
         return truck;
     }
+
     public Helicopter getHelicopter(){
         return helicopter;
     }
+
     public void makeAchievements()
     {
         for( String s : goals.keySet() )
@@ -447,30 +450,34 @@ public class Farm {
         return false;
     }
 
-    public boolean turn() {
-        synchronized (stuffs) {
-            time ++;
-            checkMoves();
+    public boolean turn()
+    {
+        time ++;
+        checkMoves();
+        stuffs.addAll(addedItems);
+        addedItems.clear();
+        updateMap();
+        removeGrassAndItem();
+        updateMap();
+        checkCollision();
+        updateMap();
+        if (time % 20 == 0)
+        {   //wild animals come
+            shootWildAnimal();
             updateMap();
-            removeGrassAndItem();
-            updateMap();
-            checkCollision();
-            updateMap();
-            if (time % 20 == 0) {   //wild animals come
-                shootWildAnimal();
-                updateMap();
-                shootWildAnimalTime = time;
-            }
-            if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 10) { //if there as any wild animal will leave
-                for (Entity entity : stuffs){
-                    if (entity instanceof Wild)
-                        entity.setDead(true);
-                }
-                shootWildAnimalTime = -1;
-                updateMap();
-            }
-            return isLevelFinished();
+            shootWildAnimalTime = time;
         }
+        if (shootWildAnimalTime != -1 && time - shootWildAnimalTime == 10)
+        { //if there as any wild animal will leave
+            for (Entity entity : stuffs)
+            {
+                if (entity instanceof Wild)
+                    entity.setDead(true);
+            }
+            shootWildAnimalTime = -1;
+            updateMap();
+        }
+        return isLevelFinished();
     }
 
     public void shootWildAnimal() {
@@ -515,45 +522,61 @@ public class Farm {
         return result;
     }
 
-    public void checkMoves() {
-        for (Entity entity : stuffs) {
-            if (!entity.isDead()) {
+    public void checkMoves()
+    {
+        for (Entity entity : stuffs)
+        {
+            if (!entity.isDead())
+            {
                 boolean doMove = true;
-                if (entity instanceof Domestic) {
+                if (entity instanceof Domestic)
+                {
                     int isEating = ((Domestic) entity).isEating();
-                    if (((Domestic) entity).getSatiety() == 0) {
+                    if (((Domestic) entity).getSatiety() == 0)
+                    {
                         entity.setDead(true);
                         continue;
-                    } else if (isEating == Constants.MAX_DOMESTIC_SATIETY) {
+                    }
+                    else if (isEating == Constants.MAX_DOMESTIC_SATIETY)
+                    {
                         ((Domestic) entity).setEating(0);
                         produceItem((Domestic) entity);
-                    } else if (isEating != 0 && isEating < Constants.MAX_DOMESTIC_SATIETY) {
+                    }
+                    else if (isEating != 0 && isEating < Constants.MAX_DOMESTIC_SATIETY)
+                    {
                         ((Domestic) entity).increaseSatiety(1);
                         ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
                         doMove = false;
-                    } else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY) {
+                    }
+                    else if (((Domestic) entity).getSatiety() < Constants.LEAST_DOMESTIC_SATIETY)
+                    {
                         System.out.println(entity.getX()+ " "+ entity.getY());
                         doMove = !checkEatingGrass(entity.getY(), entity.getX(),
                                 Constants.MAX_DOMESTIC_SATIETY - 1 - ((Domestic) entity).getSatiety());
-                        if (!doMove) {
+                        if (!doMove)
+                        {
                             ((Domestic) entity).increaseSatiety(1);
                             ((Domestic) entity).setEating(((Domestic) entity).getSatiety());
                         }
                     }
-                } else if (entity instanceof Cat)
+                }
+                else if (entity instanceof Cat)
                     catCollect(entity.getY(), entity.getX());
-                if (entity instanceof Animal && doMove) {
+                if (entity instanceof Animal && doMove)
+                {
                     ((Animal) entity).move();
                     if (entity instanceof Domestic)
                         ((Domestic) entity).decreaseSatiety(1);
-                } else if (entity instanceof Animal)
+                }
+                else if (entity instanceof Animal)
                     ((Animal) entity).setDirection(DIRECTION.NONE);
 
             }
         }
     }
 
-    public void produceItem(Domestic entity){
+    public void produceItem(Domestic entity)
+    {
         Item item;
         if (entity instanceof Hen)
             item = new Item(entity.getX(), entity.getY(), "egg");
@@ -562,7 +585,7 @@ public class Farm {
         else
             item = new Item(entity.getX(), entity.getY(), "wool");
         updateAchievement(item.getKind());
-        stuffs.add(item);
+        addedItems.add(item);
         updateMap();
     }
 
@@ -731,8 +754,6 @@ public class Farm {
         return true;
     }
 
-
-
     //print methods
     public String printLevel() {
         String string = goals.toString();
@@ -879,9 +900,6 @@ public class Farm {
         return min;
     }
 
-
-
-
     public void endWorkShop(Workshop workshop) {
         workshop.setWorking(false);
         for (int i = 0; i < workshop.getCount(); i++) {
@@ -890,5 +908,4 @@ public class Farm {
             updateAchievement(item.getKind());
         }
     }
-
 }
