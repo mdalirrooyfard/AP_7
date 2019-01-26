@@ -7,11 +7,13 @@ import java.net.Socket;
 
 public class ClientListener {
     private Socket socket;
+    private ClientGui clientGui;
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
-    public ClientListener(Socket socket){
+    public ClientListener(Socket socket, ClientGui clientGui){
         this.socket = socket;
+        this.clientGui = clientGui;
         try {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());

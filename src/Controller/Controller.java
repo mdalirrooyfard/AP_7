@@ -806,6 +806,8 @@ public class Controller
                                 + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
                         loader.getMovingWell().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "moving"
                                 + farm.getWell().getLevel() + ".png"), 800, 800, false, true));
+                        if (farm.getWell().getLevel() == 4)
+                            view.getGroup().getChildren().removeAll(label, upgrade);
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -1151,7 +1153,6 @@ public class Controller
             TranslateTransition translateTransition = new TranslateTransition(Duration.millis(3000) , m);
             translateTransition.setToX(- m.getX() + workshop.getShowX() + 100);
             translateTransition.setToY(- m.getY() + workshop.getShowY() + 100);
-            //todo fix this guy! destination
             translateTransition.play();
             translateTransition.setOnFinished(new EventHandler<ActionEvent>()
             {
