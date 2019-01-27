@@ -5,6 +5,7 @@ import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
 import Model.Workshops.*;
+import Network.*;
 import View.Graphic.*;
 import View.ImageViewSprite;
 import View.MoveTransition;
@@ -33,6 +34,9 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.net.Inet4Address;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Formatter;
@@ -58,12 +62,16 @@ public class Controller
     private AnimationTimer animationTimer;
     private OrderPage orderPage = new OrderPage();;
     private SellPage sellPage;
-    private HostMenu hostMenu = new HostMenu();
+    private HostMenu hostMenu;
     private Label moneyLabel = new Label();
     private Vector<String[]> goals = new Vector<>();
     private ConcurrentHashMap<String, Label> achievements = new ConcurrentHashMap<>();
     private Loader loader = new Loader();
     private Vector<ImageView> levels = new Vector<>();
+    private boolean isMultiPlayer = false;
+    private ClientSender clientSender;
+    private ClientListener clientListener;
+    private ClientGui clientGui;
 
     public Controller(Stage stage)
     {
@@ -870,12 +878,39 @@ public class Controller
         buyIcons();
         menuIcon();
         wellIcon();
+        showChatRoomIcon();
         showMoneyIcon();
         workshopsIcons();
         servicesIcons();
         helicopterIconHandler();
         showGoals();
         loadGoals();
+    }
+
+    private void showChatRoomIcon(){
+        if (isMultiPlayer){
+            try {
+                Image image  = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\Game UI\\chatButton.png"), 77, 73, false, true);
+                ImageView chatView = new ImageView(image);
+                chatView.setX(5);
+                chatView.setY(Constants.HEIGHT - 200);
+                view.getGroup().getChildren().add(chatView);
+                chatView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        try {
+                            Stage chatStage = new Stage();
+                            clientGui.start(chatStage);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void showUpgradeTruck()
@@ -1942,8 +1977,16 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    stage.setScene(hostMenu.getScene());
-                    player.setClient(false);
+                    try {
+                        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port.getText()));
+                        Server server = new Server(serverSocket, Integer.parseInt(port.getText()));
+                        server.start();
+                        hostMenu = new HostMenu(server);
+                        stage.setScene(hostMenu.getScene());
+                        player.setClient(false);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -2059,9 +2102,27 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    //if( clientPort.getText().equals("") )
-                    stage.setScene(menu.getScene());
-                    player.setClient(true);
+                    try {
+                        if (!serverIP.getText().equals("") && !serverPort.getText().equals("")) {
+                            Socket socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
+                            clientSender = new ClientSender(socket);
+                            clientGui = new ClientGui(clientSender, player);
+                            clientListener = new ClientListener(socket, clientGui);
+                            clientSender.sendPlayer(player);
+                            player.setSocket(socket);
+                            clientListener.start();
+                            isMultiPlayer = true;
+                            stage.setScene(menu.getScene());
+                            player.setClient(true);
+                        } else {
+                            //todo error haye zahra!:D
+                        }
+                        //if( clientPort.getText().equals("") )
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 

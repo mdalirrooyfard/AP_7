@@ -1,19 +1,24 @@
 package Model;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 
-public class Player
+public class Player implements Serializable
 {
     private String name,userName;
     private Socket socket;
     private int lastLevel , id , money;
     private boolean isLastPlayer , isClient;
+
     public Player( String name, int id)
     {
         this.name = name;
         this.id = id;
         lastLevel = 1;
     }
+
 
     public void setName(String name)
     {
