@@ -11,8 +11,7 @@ import View.ImageViewSprite;
 import View.MoveTransition;
 import View.View;
 import com.gilecode.yagson.YaGson;
-import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -72,6 +71,17 @@ public class Controller
     private ClientSender clientSender;
     private ClientListener clientListener;
     private ClientGui clientGui;
+    private Image moneyIcon;
+
+    {
+        try {
+            moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ImageView moneyView = new ImageView(moneyIcon);
 
     public Controller(Stage stage)
     {
@@ -540,7 +550,17 @@ public class Controller
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
-
+    private void danceTheMoney(){
+        KeyValue kvHieght = new KeyValue(moneyView.fitHeightProperty() , moneyView.getFitHeight() - 10);
+        KeyValue kvWidth = new KeyValue(moneyView.fitWidthProperty() , moneyView.getFitWidth() - 25);
+        KeyValue kvX = new KeyValue(moneyView.xProperty() , moneyView.getX() + 12.5);
+        KeyValue kvY = new KeyValue(moneyView.yProperty() , moneyView.getY() +5);
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(500), kvHieght , kvWidth , kvX , kvY);
+        Timeline timeline = new Timeline(keyFrame);
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(6);
+        timeline.play();
+    }
     private void buyIcons()
     {
         try
@@ -587,7 +607,8 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                          int result = farm.upgrade("cat");
-                         //todo result == 1 dance the money
+                         if(result == 1)
+                             danceTheMoney();
                          if (result == 0)
                              view.getGroup().getChildren().removeAll(upgradeCat, label);
                     }
@@ -602,9 +623,8 @@ public class Controller
                     {
                         if(!farm.addCow(true))
                         {
-
+                            danceTheMoney();
                         }
-                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -618,9 +638,8 @@ public class Controller
                     {
                         if(!farm.addHen(true))
                         {
-
+                            danceTheMoney();
                         }
-                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -634,9 +653,8 @@ public class Controller
                     {
                         if(!farm.addCat(true))
                         {
-
+                            danceTheMoney();
                         }
-                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -650,9 +668,8 @@ public class Controller
                     {
                         if(!farm.addSheep(true))
                         {
-
+                            danceTheMoney();
                         }
-                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -666,9 +683,8 @@ public class Controller
                     {
                         if(!farm.addDog(true))
                         {
-
+                            danceTheMoney();
                         }
-                        //TODO dance the money
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
                 }
@@ -797,7 +813,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 int result = farm.fullWell();
-                //todo if result == -1 dance the money
+                if (result == -1)
+                    danceTheMoney();
                 if (result == 1)
                 {
                     view.getGroup().getChildren().remove(loader.getFixedWell());
@@ -816,7 +833,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 int result = farm.upgrade("well");
-                //result == 1 dance the money
+                if (result == 1)
+                    danceTheMoney();
                 if (result == 0)
                 {
                     try
@@ -930,7 +948,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 int result = farm.upgrade("truck");
-                //todo result == 1 dance the money
+                if (result == 1)
+                    danceTheMoney();
                 if (result == 0)
                 {
                     try
@@ -964,7 +983,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 int result = farm.upgrade("helicopter");
-                //todo result == 1 dance the money
+                if (result == 1)
+                    danceTheMoney();
                 if (result == 0)
                 {
                     try
@@ -984,10 +1004,6 @@ public class Controller
 
     private void showMoneyIcon()
     {
-        try
-        {
-            Image moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
-            ImageView moneyView = new ImageView(moneyIcon);
             moneyView.setFitWidth(150);
             moneyView.setFitHeight(50);
             moneyView.setX(WIDTH - 150);
@@ -995,8 +1011,6 @@ public class Controller
             moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
             moneyLabel.relocate(WIDTH - 95, 15);
             view.getGroup().getChildren().addAll(moneyView , moneyLabel);
-        }
-        catch (FileNotFoundException e) { e.printStackTrace(); }
     }
 
     private void updateMoney()
@@ -1068,7 +1082,9 @@ public class Controller
                     public void handle(MouseEvent event)
                     {
                         int result = farm.upgrade(w.getWorkShopName());
-                        //todo danse the money result == 1
+                        if (result == 1){
+                            danceTheMoney();
+                        }
                         if (result == 0)
                         {
                             try
@@ -1164,7 +1180,7 @@ public class Controller
                 }
                 if(result == 1)
                 {
-                    //todo dance the money
+                    danceTheMoney();
                 }
             }
 

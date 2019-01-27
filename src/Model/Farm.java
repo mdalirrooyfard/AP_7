@@ -219,7 +219,6 @@ public class Farm {
             decreaseMoney(Constants.DOG_BUY_COST);
         }
         Dog dog = new Dog(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
-        decreaseMoney(dog.getBuyCost());
         stuffs.add(dog);
         updateAchievement("dog");
         map.getCells()[(int) dog.getY()][(int) dog.getX()].add(dog);
@@ -240,7 +239,6 @@ public class Farm {
         Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         if (areCatsUpgraded)
             cat.setLevel(2);
-        decreaseMoney(cat.getBuyCost());
         stuffs.add(cat);
         updateAchievement("cat");
         map.getCells()[(int) cat.getY()][(int) cat.getX()].add(cat);
