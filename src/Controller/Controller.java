@@ -71,17 +71,18 @@ public class Controller
     private ClientSender clientSender;
     private ClientListener clientListener;
     private ClientGui clientGui;
-    private Image moneyIcon;
+    private Image moneyIcon ,  arrow;
 
     {
         try {
             moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
+            arrow = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\arrow.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-
     private ImageView moneyView = new ImageView(moneyIcon);
+    ImageView arrowView = new ImageView(arrow);
 
     public Controller(Stage stage)
     {
@@ -817,10 +818,12 @@ public class Controller
                     danceTheMoney();
                 if (result == 1)
                 {
+                    view.getGroup().getChildren().remove(arrowView);
                     view.getGroup().getChildren().remove(loader.getFixedWell());
                     loader.getMovingWell().setX(farm.getWell().getShowX());
                     loader.getMovingWell().setY(farm.getWell().getShowY());
                     view.getGroup().getChildren().add(loader.getMovingWell());
+                    view.getGroup().getChildren().remove(arrowView);
                     AnimationTimer imageViewSprite = new ImageViewSprite(loader.getMovingWell(),
                             20,false ,4, 4, 16, 200, 200, 16);
                     imageViewSprite.start();
@@ -884,12 +887,19 @@ public class Controller
                     y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE)
                 {
                     boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
-                            //todo flesh be chah
+                    if(!result){
+                        arrowView.setX(farm.getWell().getShowX() + loader.getFixedWell().getFitWidth() + 150);
+                        arrowView.setY(farm.getWell().getShowY() + loader.getFixedWell().getFitHeight() +20);
+                        if(!view.getGroup().getChildren().contains(arrowView))
+                            view.getGroup().getChildren().add(arrowView);
+                        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 5 , false , 4 , 2 , 8 ,
+                                52 , 52 , 8);
+                        imageViewSprite.start();
+                    }
                 }
             }
         });
     }
-
     private void makeScene()
     {
         showBackground();
@@ -1259,7 +1269,14 @@ public class Controller
                                 double x = e.getX();
                                 double y = e.getY();
                                 boolean result = farm.pickUp(x, y);
-                                //todo if result == false flesh be warehouse;
+                                /*if (!result){
+                                    arrowView.setX(loader.getFixedWell().getX());
+                                    arrowView.setY(loader.getFixedWell().getY());
+                                    view.getGroup().getChildren().add(arrowView);
+                                    ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 1 , true , 4 , 2 , 8 ,
+                                            52 , 52 , 8);
+                                    imageViewSprite.start();
+                                }*/
                             }
                         });
                     }
