@@ -5,17 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientListener {
+public class ClientListener{
     private Socket socket;
     private ClientGui clientGui;
-    private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
     public ClientListener(Socket socket, ClientGui clientGui){
         this.socket = socket;
         this.clientGui = clientGui;
         try {
-            this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,11 +24,41 @@ public class ClientListener {
         return socket;
     }
 
-    public ObjectOutputStream getObjectOutputStream() {
-        return objectOutputStream;
-    }
-
     public ObjectInputStream getObjectInputStream() {
         return objectInputStream;
     }
+
+    public void start(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Command command = (Command) objectInputStream.readObject();
+                    //todo fill this switch
+                    switch (command.getType()){
+                        case SEND_MASSAGE:
+                            clientGui.putInCharArea((String) command.getContent());
+                            break;
+                        case SEND_LIST:
+                            break;
+                        case SEND_LEADER_BOARD:
+                            break;
+                        case UPDATE_MARKET:
+                            break;
+                        case SELL_TO_MARKET:
+                            break;
+                        case BUY_FROM_MARKET:
+                            break;
+                        default:
+                    }
+                }catch (IOException e){
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+    }
+
 }

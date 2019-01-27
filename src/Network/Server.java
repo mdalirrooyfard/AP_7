@@ -18,6 +18,10 @@ public class Server {
         this.serverSender = new ServerSender(serverGui);
     }
 
+    public ServerGui getServerGui() {
+        return serverGui;
+    }
+
     public void start(){
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -34,6 +38,7 @@ public class Server {
                 }
             }
         });
+        thread.start();
     }
 
 }

@@ -42,12 +42,12 @@ public class ServerListener implements Runnable{
                     case SELL_TO_MARKET:
                         break;
                     case SEND_LIST:
-                        serverSender.sendList(command.getPort());
+                        serverSender.sendList(socket);
                         break;
                     case UPDATE_MARKET:
                         break;
                     case SEND_LEADER_BOARD:
-                        serverSender.sendLeaderBoard(command.getPort());
+                        serverSender.sendLeaderBoard(socket);
                         break;
                     default:
                 }

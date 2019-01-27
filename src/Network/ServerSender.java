@@ -37,15 +37,15 @@ public class ServerSender {
         }
     }
 
-    public void sendIndividual(int port, String message){
+    public void sendIndividual(Socket socket){
         //todo get the destination client and sent the message to him
     }
 
-    public void sendLeaderBoard(int port){
+    public void sendLeaderBoard(Socket socket){
 
     }
 
-    public void sendList(int port){
+    public void sendList(Socket socket){
 
     }
 }
