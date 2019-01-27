@@ -345,7 +345,7 @@ public class Farm {
             }
         }
         for (int i = 0; i < numberOfBears; i++) {
-            Item item = new Item(currentX, currentY, "cagedBrownBear");
+            Item item = new Item(currentX, currentY, "cagedGrizzly");
             stuffs.add(item);
             cellItems.add(item);
         }

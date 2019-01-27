@@ -101,7 +101,7 @@ public class Menu
         return scene;
     }
 
-    public Menu(Stage stage , Vector<Player> players , Start startScene )
+    public Menu(Stage stage , Vector<Player> players , Start startScene , Multiplayer multiplayer )
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);
@@ -201,6 +201,16 @@ public class Menu
                             }
                         });
 
+                        ImageView multiPlayerView = insertMultiplayer();
+                        multiPlayerView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                stage.setScene(multiplayer.getScene());
+                            }
+                        });
+
                         ImageView optionsView = insertOptions();
                         optionsView.setOnMouseClicked(new EventHandler<MouseEvent>()
                         {
@@ -221,7 +231,8 @@ public class Menu
                             }
                         });
                         Label playerName = insertPlayer();
-                        group.getChildren().addAll(rectangle,menuBackgroundView,startView,choosePlayerView,optionsView,exitView,playerName);
+                        group.getChildren().addAll(rectangle,menuBackgroundView,startView,choosePlayerView,multiPlayerView
+                                ,optionsView,exitView,playerName);
                     }
                     catch ( Exception e ){}
                 }
@@ -254,7 +265,7 @@ public class Menu
         playerName.setTextFill(Color.rgb(54,16,0));
         playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
         playerName.setLayoutX(Menu.WIDTH - 470);
-        playerName.setLayoutY(Menu.HEIGHT / 6);
+        playerName.setLayoutY(Menu.HEIGHT / 7);
         if( player != null && player.getId() > 0 )
             playerName.setText("Player : "+player.getName());
         else
@@ -269,7 +280,7 @@ public class Menu
             Image start = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\startButton.png")
                     , 250,81, false, true);
             ImageView startView = new ImageView(start);
-            startView.setY(HEIGHT / 3);
+            startView.setY(HEIGHT * 2 / 7);
             startView.setX(WIDTH - 400);
             return startView;
         }
@@ -284,9 +295,24 @@ public class Menu
             Image choosePlayer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\choosePlayerButton.png")
                     , 250, 81, false, true);
             ImageView choosePlayerView = new ImageView(choosePlayer);
-            choosePlayerView.setY(HEIGHT / 2);
+            choosePlayerView.setY(HEIGHT * 3 / 7);
             choosePlayerView.setX(WIDTH - 400);
             return choosePlayerView;
+        }
+        catch ( Exception e ){}
+        return null;
+    }
+
+    private ImageView insertMultiplayer()
+    {
+        try
+        {
+            Image multiplayer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\multiplayerButton.png")
+                    , 250, 81, false, true);
+            ImageView multiplayerView = new ImageView(multiplayer);
+            multiplayerView.setY(HEIGHT * 4 / 7);
+            multiplayerView.setX(WIDTH - 400);
+            return multiplayerView;
         }
         catch ( Exception e ){}
         return null;
@@ -299,7 +325,7 @@ public class Menu
             Image options = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png")
                     , 250, 81, false, true);
             ImageView optionsView = new ImageView(options);
-            optionsView.setY(HEIGHT * 2 / 3);
+            optionsView.setY(HEIGHT * 5 / 7);
             optionsView.setX(WIDTH - 400);
             return optionsView;
         }
@@ -314,7 +340,7 @@ public class Menu
             Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\exitButton.png")
                     , 250, 81, false, true);
             ImageView exitView = new ImageView(exit);
-            exitView.setY(HEIGHT * 5 / 6);
+            exitView.setY(HEIGHT * 6 / 7);
             exitView.setX(WIDTH - 400);
             return exitView;
         }
@@ -369,10 +395,17 @@ public class Menu
                     group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
                 }
             });
+            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(rectangle,exitMessageView,yesView,noView);
+                }
+            });
             group.getChildren().addAll(rectangle,exitMessageView,yesView,noView);
         }
         catch ( Exception e ){}
     }
-
 }
 
