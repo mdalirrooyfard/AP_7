@@ -1,5 +1,6 @@
 package Network;
 
+import Model.Player;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -16,16 +17,17 @@ public class ClientGui extends Application
 {
     private TextArea chatArea = new TextArea();
     private ClientSender clientSender;
-
-    public ClientGui(ClientSender clientSender){
+    private Player player;
+    public ClientGui(ClientSender clientSender, Player player){
         this.clientSender = clientSender;
+        this.player = player;
     }
+
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //primaryStage.setTitle(client.getName()+(isGroup?" in group":" pv to "+ friend));
-        //todo figure out how to put the name of player here
+        primaryStage.setTitle(player.getName() + " in chatRoom");
         TextField textField = new TextField();
         Button button = new Button("send");
         chatArea.setFont(new Font(25));
@@ -39,8 +41,7 @@ public class ClientGui extends Application
             public void handle(MouseEvent event) {
                 String data = textField.getText();
                 if (!data.equals("")){
-                    clientSender.sendMessage(data);
-                    //todo esm player ham bayad bashe inja
+                    clientSender.sendMessage(player.getName()+": "+data);
                 }
                 textField.setText("");
             }
