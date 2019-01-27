@@ -33,18 +33,20 @@ public class Cell
         boolean[] stuffs = new boolean[6];
         for( Entity e : this.stuffs )
         {
-            if( e instanceof Wild )
-                stuffs[0] = true;
-            else if( e instanceof Item )
-                stuffs[1] = true;
-            else if( e instanceof Domestic )
-                stuffs[2] = true;
-            else if( e instanceof Grass )
-                stuffs[3] = true;
-            else if( e instanceof Dog )
-                stuffs[4] = true;
-            else if( e instanceof Cat )
-                stuffs[5] = true;
+            if (!e.isDead()) {
+                if (e instanceof Wild)
+                    stuffs[0] = true;
+                else if (e instanceof Item)
+                    stuffs[1] = true;
+                else if (e instanceof Domestic)
+                    stuffs[2] = true;
+                else if (e instanceof Grass)
+                    stuffs[3] = true;
+                else if (e instanceof Dog)
+                    stuffs[4] = true;
+                else if (e instanceof Cat)
+                    stuffs[5] = true;
+            }
         }
         return stuffs;
     }

@@ -81,8 +81,12 @@ public class Loader
         this.movingCustomFactory = movingCustomFactory;
     }
 
-    public void setWildAnimal( int i , ImageView wildAnimals)
+    public void setWildAnimal( int i , Image wildAnimals)
     {
+        this.wildAnimals[i].setImage(wildAnimals);
+    }
+
+    public void setNullWildAnimals(int i, ImageView wildAnimals){
         this.wildAnimals[i] = wildAnimals;
     }
 

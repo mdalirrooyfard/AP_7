@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Animals.Animal;
+import Model.Animals.Domestic.Domestic;
 import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
@@ -54,7 +55,6 @@ public class Controller
     private ConcurrentHashMap<String, Label> achievements = new ConcurrentHashMap<>();
     private Loader loader = new Loader();
     private Vector<ImageView> levels = new Vector<>();
-
     public Controller(Stage stage)
     {
         loader.loadSize();
@@ -188,6 +188,7 @@ public class Controller
                     {
                         showMap();
                         showMovingAnimals();
+                        showMovingWildAnimals();
                         checkWell();
                         checkWareHouse();
                         checkTransportation();
@@ -1228,7 +1229,7 @@ public class Controller
         ImageView animalView = null;
         for(Entity e : farm.getStuffs())
         {
-            if(e instanceof Animal && !e.isDead())
+            if(e instanceof Animal && !(e instanceof Wild) && !e.isDead())
             {
                 switch (((Animal) e).getDirection())
                 {
@@ -1285,31 +1286,38 @@ public class Controller
 
     private void showMovingWildAnimals()
     {
-        view.getGroup().getChildren().removeAll(loader.getWildAnimals());
         int i = 0;
         for(Entity e : farm.getStuffs())
         {
             if(e instanceof Wild && !e.isDead())
             {
+                Image image;
                 switch (((Wild) e).getDirection())
                 {
                     case UP:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsUp().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsUp().get(((Wild) e).getName()); break;
                     case RIGHT:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsRight().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsRight().get(((Wild) e).getName()); break;
                     case LEFT:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsLeft().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsLeft().get(((Wild) e).getName()); break;
                     case DOWN:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsDown().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsDown().get(((Wild) e).getName()); break;
                     case UP_LEFT:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsUpLeft().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsUpLeft().get(((Wild) e).getName()); break;
                     case DOWN_LEFT:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsDownLeft().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsDownLeft().get(((Wild) e).getName()); break;
                     case DOWN_RIGHT:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsDownRight().get(((Wild) e).getName()))); break;
-                    case UP_RIGHT:
-                        loader.setWildAnimal(i,new ImageView(loader.getAnimalsUpRight().get(((Wild) e).getName()))); break;
+                        image = loader.getAnimalsDownRight().get(((Wild) e).getName()); break;
+                    default: //up_right
+                        image = loader.getAnimalsUpRight().get(((Wild) e).getName()); break;
                 }
+                if (loader.getWildAnimals()[i] == null){
+                    loader.getWildAnimals()[i] = new ImageView(image);
+                }
+                else{
+                    loader.getWildAnimals()[i].setImage(image);
+                }
+
                 loader.getWildAnimals()[i].setFitWidth(Constants.ANIMAL_SIZE);
                 loader.getWildAnimals()[i].setFitHeight(Constants.ANIMAL_SIZE);
                 int col = loader.getColsAndRows().get(((Wild) e).getName())[0];
@@ -1334,13 +1342,13 @@ public class Controller
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        ImageView cageView = new ImageView(loader.getCage());
-
+                        boolean result = farm.putCage(e.getX(), e.getY());
                     }
                 });
+            i++;
             }
+
         }
-        view.getGroup().getChildren().addAll(loader.getWildAnimals());
     }
 
     private void show(ImageView iView, Entity e)
