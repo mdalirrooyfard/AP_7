@@ -83,8 +83,8 @@ public class Controller
         }
     }
     private ImageView moneyView = new ImageView(moneyIcon);
-    ImageView arrowViewWell = new ImageView(arrow);
-    ImageView arrowViewWareHouse = new ImageView(arrow);
+    private ImageView arrowViewWell = new ImageView(arrow);
+    private ImageView arrowViewWareHouse = new ImageView(arrow);
 
     public Controller(Stage stage)
     {
@@ -1065,6 +1065,8 @@ public class Controller
                         int result = farm.startWorkShop(w.getWorkShopName());
                         if (result > 0){
                             view.getGroup().getChildren().remove(imageView);
+                            flagWareHouse = 0;
+                            view.getGroup().getChildren().remove(arrowViewWareHouse);
                             ImageView imageView1;
                             if (w instanceof CakeBakery)
                                 imageView1 = loader.getMovingCakeBakery();
@@ -1292,7 +1294,8 @@ public class Controller
                                 double y = e.getY();
                                 boolean result = farm.pickUp(x, y);
                                 if (!result){
-                                    arrowTo(farm.getWareHouse().getShowX() , farm.getWareHouse().getShowY() ,
+                                    arrowTo(farm.getWareHouse().getShowX() + 180
+                                            , farm.getWareHouse().getShowY() - 50 ,
                                             arrowViewWareHouse , false);
                                 }else{
                                     flagWareHouse = 0;
