@@ -33,13 +33,21 @@ public class ServerListener implements Runnable{
                     case BUY_FROM_MARKET:
                         break;
                     case SEND_MASSAGE:
-                        //todo we know what to do!
+                        serverSender.sendGroup(command);
                         break;
                     case SEND_PLAYER:
                         Player player = (Player) command.getContent();
-                        //client.setPlayer(player);
+                        serverSender.setPlayer(player);
                         break;
                     case SELL_TO_MARKET:
+                        break;
+                    case SEND_LIST:
+                        serverSender.sendList(command.getPort());
+                        break;
+                    case UPDATE_MARKET:
+                        break;
+                    case SEND_LEADER_BOARD:
+                        serverSender.sendLeaderBoard(command.getPort());
                         break;
                     default:
                 }

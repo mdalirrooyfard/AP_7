@@ -5,5 +5,7 @@ public enum CommandTypes {
     SELL_TO_MARKET,
     SEND_MASSAGE,
     SEND_PLAYER,
-    UPDATE_MARKET
+    UPDATE_MARKET,
+    SEND_LEADER_BOARD,
+    SEND_LIST;
 }
