@@ -71,7 +71,6 @@ public class ChoosePlayer
 
             writePlayers(players);
             insertNewPlayer(players);
-            insertDelete();
             insertBack();
         }
         catch ( Exception e ){}
@@ -236,11 +235,6 @@ public class ChoosePlayer
 
         }
         catch ( Exception e ){}
-    }
-
-    private void insertDelete()
-    {
-
     }
 
     private void insertPlayer(Vector<Player> players)

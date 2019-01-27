@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Animals.Animal;
-import Model.Animals.Domestic.Domestic;
 import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
@@ -13,9 +12,13 @@ import View.View;
 import com.gilecode.yagson.YaGson;
 import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,12 +32,16 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Formatter;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static Model.Constants.HEIGHT;
+import static Model.Constants.WIDTH;
 
 public class Controller
 {
@@ -47,6 +54,7 @@ public class Controller
     private Menu menu;
     private Stage stage;
     private Start start;
+    private Multiplayer multiplayer = new Multiplayer();
     private AnimationTimer animationTimer;
     private OrderPage orderPage = new OrderPage();;
     private SellPage sellPage;
@@ -57,13 +65,14 @@ public class Controller
     private Vector<ImageView> levels = new Vector<>();
     public Controller(Stage stage)
     {
+        makeMultiplayerScene();
         loader.loadSize();
         players = loader.loadPlayers();
         findLastPlayer();
         this.stage = stage;
         this.start = new Start(stage);
         loadLevels();
-        this.menu = new Menu(stage,players,start);
+        this.menu = new Menu(stage,players,start,multiplayer);
         this.start.setMenu(menu);
         view = new View();
         menu.setMenu(menu);
@@ -227,18 +236,18 @@ public class Controller
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(40);
             imageView.setFitWidth(40);
-            imageView.setY(Constants.HEIGHT - 100);
-            imageView.setX(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50 - 20);
+            imageView.setY(HEIGHT - 100);
+            imageView.setX(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50 - 20);
             Label fixed = new Label(Integer.toString(farm.getGoals().get(s))) ;
             Label variable = new Label(Integer.toString(farm.getAchievements().get(s)));
             Label of = new Label("of");
             achievements.put(s, variable);
             fixed.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
-            fixed.relocate(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50,Constants.HEIGHT - 50);
+            fixed.relocate(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50, HEIGHT - 50);
             of.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
-            of.relocate(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50,Constants.HEIGHT - 60);
+            of.relocate(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50, HEIGHT - 60);
             variable.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
-            variable.relocate(Constants.WIDTH - farm.getGoals().keySet().size() * 50 + i * 50,Constants.HEIGHT - 70);
+            variable.relocate(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50, HEIGHT - 70);
             view.getGroup().getChildren().addAll(imageView, fixed, variable, of);
             i++;
         }
@@ -259,8 +268,8 @@ public class Controller
             ImageView boxView = new ImageView(box);
             boxView.setFitWidth(farm.getGoals().keySet().size() * 50);
             boxView.setFitHeight(80);
-            boxView.setX(Constants.WIDTH - farm.getGoals().keySet().size() * 50 - 20);
-            boxView.setY(Constants.HEIGHT - 100);
+            boxView.setX(WIDTH - farm.getGoals().keySet().size() * 50 - 20);
+            boxView.setY(HEIGHT - 100);
             view.getGroup().getChildren().add(boxView);
 
         } catch (Exception e) { e.printStackTrace(); }
@@ -502,9 +511,9 @@ public class Controller
                     120, 60, false, true);
             ImageView timerView = new ImageView(timer);
             timerView.setX(90);
-            timerView.setY(Constants.HEIGHT - 95);
+            timerView.setY(HEIGHT - 95);
             Label timeLabel = new Label("");
-            timeLabel.relocate(135,Constants.HEIGHT - 80);
+            timeLabel.relocate(135, HEIGHT - 80);
             timeLabel.setTextFill(Color.rgb(54,16,0));
             timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,12.5));
             if( farm.getTimer() / 3600 < 10 )
@@ -667,7 +676,7 @@ public class Controller
                     77, 73, false, true);
             ImageView menuView = new ImageView(menuIcon);
             menuView.setX(5);
-            menuView.setY(Constants.HEIGHT - 100);
+            menuView.setY(HEIGHT - 100);
             menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -740,8 +749,8 @@ public class Controller
     private void checkWareHouse()
     {
         int i = 0;
-        double firstShow_X = Constants.WIDTH / 2 - 70;
-        double firstShow_y = Constants.HEIGHT - 50;
+        double firstShow_X = WIDTH / 2 - 70;
+        double firstShow_y = HEIGHT - 50;
         double disPlaceMent= 18;
         for ( Item item : farm.getWareHouse().getCollectedItems() )
         {
@@ -944,10 +953,10 @@ public class Controller
             ImageView moneyView = new ImageView(moneyIcon);
             moneyView.setFitWidth(150);
             moneyView.setFitHeight(50);
-            moneyView.setX(Constants.WIDTH - 150);
+            moneyView.setX(WIDTH - 150);
             moneyView.setY(10);
             moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            moneyLabel.relocate(Constants.WIDTH - 95, 15);
+            moneyLabel.relocate(WIDTH - 95, 15);
             view.getGroup().getChildren().addAll(moneyView , moneyLabel);
         }
         catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -1129,8 +1138,8 @@ public class Controller
     {
         Vector<ImageView> movingItems = new Vector<>();
         int counter = 0;
-        double startX = Constants.WIDTH/2 - 100;
-        double startY = Constants.HEIGHT - 50;
+        double startX = WIDTH/2 - 100;
+        double startY = HEIGHT - 50;
         double displacement = 18;
         for (String s : items)
         {
@@ -1369,8 +1378,8 @@ public class Controller
                 if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 2 )
                 {
                     MoveTransition pathTransition = new MoveTransition(loader.getFixedHelicopter()
-                            , farm.getHelicopter().getPrevMovingX() , 200 - Constants.HEIGHT,
-                            farm.getHelicopter().getNextMovingX(), 200 - Constants.HEIGHT, 3000);
+                            , farm.getHelicopter().getPrevMovingX() , 200 - HEIGHT,
+                            farm.getHelicopter().getNextMovingX(), 200 - HEIGHT, 3000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1380,8 +1389,8 @@ public class Controller
                 else
                 {
                     MoveTransition pathTransition = new MoveTransition(loader.getFixedHelicopter(),
-                            farm.getHelicopter().getPrevMovingX(), 200 - Constants.HEIGHT,
-                            farm.getHelicopter().getNextMovingX(), 200 - Constants.HEIGHT, 3000);
+                            farm.getHelicopter().getPrevMovingX(), 200 - HEIGHT,
+                            farm.getHelicopter().getNextMovingX(), 200 - HEIGHT, 3000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1406,14 +1415,14 @@ public class Controller
     {
         try
         {
-            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            Rectangle rectangle = new Rectangle(0,0, WIDTH, HEIGHT);
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
             Image menuBackground = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMenuBackground.png"),
                     300, 480, false, true);
             ImageView menuBackgroundView = new ImageView(menuBackground);
-            menuBackgroundView.setX(Constants.WIDTH / 2 - 150);
-            menuBackgroundView.setY(Constants.HEIGHT / 2 - 240);
+            menuBackgroundView.setX(WIDTH / 2 - 150);
+            menuBackgroundView.setY(HEIGHT / 2 - 240);
             ImageView continueView = insertContinue();
             ImageView menuView = insertMainMenu();
             ImageView restartView = insertRestart();
@@ -1474,8 +1483,8 @@ public class Controller
             Image continueButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueButton.png"),
                     150, 60, false, true);
             ImageView continueView = new ImageView(continueButton);
-            continueView.setX(Constants.WIDTH / 2 - 75);
-            continueView.setY(Constants.HEIGHT / 2 - 210);
+            continueView.setX(WIDTH / 2 - 75);
+            continueView.setY(HEIGHT / 2 - 210);
             return continueView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -1489,8 +1498,8 @@ public class Controller
             Image menuButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMainMenuButton.png"),
                     150, 60, false, true);
             ImageView menuView = new ImageView(menuButton);
-            menuView.setX(Constants.WIDTH / 2 - 75);
-            menuView.setY(Constants.HEIGHT / 2 - 120);
+            menuView.setX(WIDTH / 2 - 75);
+            menuView.setY(HEIGHT / 2 - 120);
             return menuView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -1504,8 +1513,8 @@ public class Controller
             Image restartButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\restartButton.png"),
                     150, 60, false, true);
             ImageView restartView = new ImageView(restartButton);
-            restartView.setX(Constants.WIDTH / 2 - 75);
-            restartView.setY(Constants.HEIGHT / 2 - 30);
+            restartView.setX(WIDTH / 2 - 75);
+            restartView.setY(HEIGHT / 2 - 30);
             return restartView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -1519,8 +1528,8 @@ public class Controller
             Image levelsButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelsButton.png"),
                     150, 60, false, true);
             ImageView levelsView = new ImageView(levelsButton);
-            levelsView.setX(Constants.WIDTH / 2 - 75);
-            levelsView.setY(Constants.HEIGHT / 2 + 60);
+            levelsView.setX(WIDTH / 2 - 75);
+            levelsView.setY(HEIGHT / 2 + 60);
             return levelsView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -1534,8 +1543,8 @@ public class Controller
             Image optionsButton = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png"),
                     150, 60, false, true);
             ImageView optionsView = new ImageView(optionsButton);
-            optionsView.setX(Constants.WIDTH / 2 - 75);
-            optionsView.setY(Constants.HEIGHT / 2 + 150);
+            optionsView.setX(WIDTH / 2 - 75);
+            optionsView.setY(HEIGHT / 2 + 150);
             return optionsView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -1546,19 +1555,19 @@ public class Controller
     {
         try
         {
-            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            Rectangle rectangle = new Rectangle(0,0, WIDTH, HEIGHT);
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
             Image quitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\quitMessageBox.png")
                     , 800, 300, false, true);
             ImageView quitMessageView = new ImageView(quitMessage);
-            quitMessageView.setY(Constants.HEIGHT / 2 - 150);
-            quitMessageView.setX(Constants.WIDTH / 2 - 400);
+            quitMessageView.setY(HEIGHT / 2 - 150);
+            quitMessageView.setX(WIDTH / 2 - 400);
             Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
                     , 153, 145, false, true);
             ImageView yesView = new ImageView(yes);
-            yesView.setY(Constants.HEIGHT / 2 + 150);
-            yesView.setX(Constants.WIDTH / 2 - 200);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
             yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1576,8 +1585,8 @@ public class Controller
             Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
                     , 153, 146, false, true);
             ImageView noView = new ImageView(no);
-            noView.setY(Constants.HEIGHT / 2 + 150 );
-            noView.setX(Constants.WIDTH / 2 + 47);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
             noView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1595,19 +1604,19 @@ public class Controller
     {
         try
         {
-            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            Rectangle rectangle = new Rectangle(0,0, WIDTH, HEIGHT);
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
             Image restartMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\restartMessageBox.png")
                     , 800, 300, false, true);
             ImageView restartMessageView = new ImageView(restartMessage);
-            restartMessageView.setY(Constants.HEIGHT / 2 - 150);
-            restartMessageView.setX(Constants.WIDTH / 2 - 400);
+            restartMessageView.setY(HEIGHT / 2 - 150);
+            restartMessageView.setX(WIDTH / 2 - 400);
             Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
                     , 153, 145, false, true);
             ImageView yesView = new ImageView(yes);
-            yesView.setY(Constants.HEIGHT / 2 + 150);
-            yesView.setX(Constants.WIDTH / 2 - 200);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
             yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1627,8 +1636,8 @@ public class Controller
             Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
                     , 153, 146, false, true);
             ImageView noView = new ImageView(no);
-            noView.setY(Constants.HEIGHT / 2 + 150 );
-            noView.setX(Constants.WIDTH / 2 + 47);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
             noView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1646,19 +1655,19 @@ public class Controller
     {
         try
         {
-            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            Rectangle rectangle = new Rectangle(0,0, WIDTH, HEIGHT);
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
             Image quitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\goToLevelsMessageBox.png")
                     , 800, 300, false, true);
             ImageView quitMessageView = new ImageView(quitMessage);
-            quitMessageView.setY(Constants.HEIGHT / 2 - 150);
-            quitMessageView.setX(Constants.WIDTH / 2 - 400);
+            quitMessageView.setY(HEIGHT / 2 - 150);
+            quitMessageView.setX(WIDTH / 2 - 400);
             Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
                     , 153, 145, false, true);
             ImageView yesView = new ImageView(yes);
-            yesView.setY(Constants.HEIGHT / 2 + 150);
-            yesView.setX(Constants.WIDTH / 2 - 200);
+            yesView.setY(HEIGHT / 2 + 150);
+            yesView.setX(WIDTH / 2 - 200);
             yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1677,8 +1686,8 @@ public class Controller
             Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
                     , 153, 146, false, true);
             ImageView noView = new ImageView(no);
-            noView.setY(Constants.HEIGHT / 2 + 150 );
-            noView.setX(Constants.WIDTH / 2 + 47);
+            noView.setY(HEIGHT / 2 + 150 );
+            noView.setX(WIDTH / 2 + 47);
             noView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -1696,14 +1705,14 @@ public class Controller
     {
         try
         {
-            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            Rectangle rectangle = new Rectangle(0,0, WIDTH, HEIGHT);
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\gameMenuBackground.png")
                     , 500, 600, false, true);
             ImageView backgroundView = new ImageView(background);
-            backgroundView.setY(Constants.HEIGHT / 2 - 300);
-            backgroundView.setX(Constants.WIDTH / 2 - 250);
+            backgroundView.setY(HEIGHT / 2 - 300);
+            backgroundView.setX(WIDTH / 2 - 250);
             Label sound = new Label("Sound On/Off : ");
             sound.setLayoutY(Menu.HEIGHT / 2 - 150);
             sound.setLayoutX(Menu.WIDTH / 2 - 200);
@@ -1833,4 +1842,135 @@ public class Controller
         catch ( Exception e ){ e.printStackTrace(); }
     }
 
+    private void makeMultiplayerScene()
+    {
+        try
+        {
+            Image host = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\hostButton.png")
+                    , 300, 118, false, true);
+            ImageView hostView = new ImageView(host);
+            hostView.setY(HEIGHT / 2);
+            hostView.setX(WIDTH / 2 - 150);
+            hostView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    hostHandler();
+                }
+            });
+
+            Image client = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\clientButton.png")
+                    , 300, 118, false, true);
+            ImageView clientView = new ImageView(client);
+            clientView.setY(HEIGHT / 2 + 126.5 );
+            clientView.setX(WIDTH / 2 - 150);
+            clientView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+
+                }
+            });
+
+            multiplayer.getGroup().getChildren().addAll(hostView,clientView);
+        }
+        catch ( Exception e ){}
+    }
+
+    private void hostHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+
+            Image hostInfo = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png")
+                    , 300, 300, false, true);
+            ImageView hostInfoView = new ImageView(hostInfo);
+            hostInfoView.setY(Constants.HEIGHT / 2 - 150);
+            hostInfoView.setX(Constants.WIDTH / 2 - 150);
+
+            Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                    , 100, 100, false, true);
+            ImageView exitView = new ImageView(exit);
+            exitView.setY(Constants.HEIGHT / 2 - 150);
+            exitView.setX(Constants.WIDTH / 2 + 100);
+
+            Label message = new Label("Port: ");
+            message.setTextFill(Color.rgb(54,16,0));
+            message.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            message.setLayoutX(Constants.WIDTH / 2 - 110);
+            message.setLayoutY(Constants.HEIGHT / 2 - 110);
+
+            Label ipAdress = new Label("IP : "+ InetAddress.getLocalHost().getHostAddress());
+            ipAdress.setTextFill(Color.rgb(54,16,0));
+            ipAdress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            ipAdress.setLayoutX(Constants.WIDTH / 2 - 110);
+            ipAdress.setLayoutY(Constants.HEIGHT / 2 - 50);
+
+            TextField port = new TextField();
+            port.setText("8050");
+            port.setStyle("-fx-text-fill : gray");
+            port.setAlignment(Pos.CENTER);
+            port.setLayoutX(Constants.WIDTH / 2 - 40);
+            port.setLayoutY(Constants.HEIGHT / 2 - 110);
+            port.setPrefSize(150,40);
+            port.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+
+            port.textProperty().addListener(new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+                {
+                    port.setStyle("-fx-text-fill : black");
+                }
+            });
+
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 150, 59, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Constants.HEIGHT / 2 + 150);
+            okView.setX(Constants.WIDTH / 2 - 75);
+
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    player.setClient(false);
+                }
+            });
+
+            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    multiplayer.getGroup().getChildren().removeAll(rectangle,hostInfoView,message,port,ipAdress,okView);
+                    makeMultiplayerScene();
+                }
+            });
+
+            exitView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    multiplayer.getGroup().getChildren().removeAll(rectangle,hostInfoView,message,port,ipAdress,okView);
+                    makeMultiplayerScene();
+                }
+            });
+
+            multiplayer.getGroup().getChildren().addAll(rectangle,hostInfoView,message,port,ipAdress,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void clientHandler()
+    {
+
+    }
 }
