@@ -1329,13 +1329,13 @@ public class Controller
                 pathTransition.setAutoReverse(false);
                 pathTransition.setCycleCount(1);
                 pathTransition.play();
+                ImageView cageView = new ImageView(loader.getCage());
                 loader.getWildAnimals()[i].setOnMouseClicked(new EventHandler<MouseEvent>()
                 {
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        ImageView cageView = new ImageView(loader.getCage());
-                        boolean result = farm.putCage(event.getX() , event.getY());
+                        boolean result = farm.putCage(e.getX() , e.getY());
                         if(result){
                             cageView.setX(e.getShowX());
                             cageView.setY(e.getShowY());
