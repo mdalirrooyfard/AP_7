@@ -71,6 +71,7 @@ public class Controller
     private ClientSender clientSender;
     private ClientListener clientListener;
     private ClientGui clientGui;
+    private  int flagWell = 0 , flagWareHouse = 0;
     private Image moneyIcon ,  arrow;
 
     {
@@ -82,7 +83,8 @@ public class Controller
         }
     }
     private ImageView moneyView = new ImageView(moneyIcon);
-    ImageView arrowView = new ImageView(arrow);
+    ImageView arrowViewWell = new ImageView(arrow);
+    ImageView arrowViewWareHouse = new ImageView(arrow);
 
     public Controller(Stage stage)
     {
@@ -818,12 +820,14 @@ public class Controller
                     danceTheMoney();
                 if (result == 1)
                 {
-                    view.getGroup().getChildren().remove(arrowView);
+                    flagWell = 0;
+                    view.getGroup().getChildren().remove(arrowViewWell);
                     view.getGroup().getChildren().remove(loader.getFixedWell());
                     loader.getMovingWell().setX(farm.getWell().getShowX());
                     loader.getMovingWell().setY(farm.getWell().getShowY());
                     view.getGroup().getChildren().add(loader.getMovingWell());
-                    view.getGroup().getChildren().remove(arrowView);
+                    flagWell = 0;
+                    view.getGroup().getChildren().remove(arrowViewWell);
                     AnimationTimer imageViewSprite = new ImageViewSprite(loader.getMovingWell(),
                             20,false ,4, 4, 16, 200, 200, 16);
                     imageViewSprite.start();
@@ -860,8 +864,10 @@ public class Controller
     {
         if (farm.getWell().isWorking())
         {
-            if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume())
+            if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume()) {
                 farm.getWell().increase(1);
+                view.getGroup().getChildren().remove(arrowViewWell);
+            }
             else
             {
                 farm.getWell().setWorking(false);
@@ -888,17 +894,33 @@ public class Controller
                 {
                     boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
                     if(!result){
-                        arrowView.setX(farm.getWell().getShowX() + loader.getFixedWell().getFitWidth() + 150);
-                        arrowView.setY(farm.getWell().getShowY() + loader.getFixedWell().getFitHeight() +20);
-                        if(!view.getGroup().getChildren().contains(arrowView))
-                            view.getGroup().getChildren().add(arrowView);
-                        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 5 , false , 4 , 2 , 8 ,
-                                52 , 52 , 8);
-                        imageViewSprite.start();
+                        arrowTo(farm.getWell().getShowX() + loader.getFixedWell().getFitWidth() + 150 ,
+                                farm.getWell().getShowY() + loader.getFixedWell().getFitHeight() + 20 ,
+                                arrowViewWell , true);
                     }
                 }
             }
         });
+    }
+
+    private void arrowTo(double x , double y , ImageView arrowView , boolean kind){
+        arrowView.setX(x);
+        arrowView.setY(y);
+        if(!view.getGroup().getChildren().contains(arrowView))
+            view.getGroup().getChildren().add(arrowView);
+        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 5 , false , 4 , 2 , 8 ,
+                52 , 52 , 8);
+        if(kind) {
+            if(flagWell == 0 && !farm.getWell().isWorking()) {
+                flagWell = 1;
+                imageViewSprite.start();
+            }
+        }else{
+            if(flagWareHouse == 0){
+                flagWareHouse = 1;
+                imageViewSprite.start();
+            }
+        }
     }
     private void makeScene()
     {
@@ -1269,14 +1291,13 @@ public class Controller
                                 double x = e.getX();
                                 double y = e.getY();
                                 boolean result = farm.pickUp(x, y);
-                                /*if (!result){
-                                    arrowView.setX(loader.getFixedWell().getX());
-                                    arrowView.setY(loader.getFixedWell().getY());
-                                    view.getGroup().getChildren().add(arrowView);
-                                    ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 1 , true , 4 , 2 , 8 ,
-                                            52 , 52 , 8);
-                                    imageViewSprite.start();
-                                }*/
+                                if (!result){
+                                    arrowTo(farm.getWareHouse().getShowX() , farm.getWareHouse().getShowY() ,
+                                            arrowViewWareHouse , false);
+                                }else{
+                                    flagWareHouse = 0;
+                                    view.getGroup().getChildren().remove(arrowViewWareHouse);
+                                }
                             }
                         });
                     }
