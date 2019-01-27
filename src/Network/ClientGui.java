@@ -18,6 +18,7 @@ public class ClientGui extends Application
     private TextArea chatArea = new TextArea();
     private ClientSender clientSender;
     private Player player;
+
     public ClientGui(ClientSender clientSender, Player player){
         this.clientSender = clientSender;
         this.player = player;
