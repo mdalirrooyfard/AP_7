@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
-import java.net.InetAddress;
+import java.net.Inet4Address;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Formatter;
@@ -58,11 +58,13 @@ public class Controller
     private AnimationTimer animationTimer;
     private OrderPage orderPage = new OrderPage();;
     private SellPage sellPage;
+    private HostMenu hostMenu = new HostMenu();
     private Label moneyLabel = new Label();
     private Vector<String[]> goals = new Vector<>();
     private ConcurrentHashMap<String, Label> achievements = new ConcurrentHashMap<>();
     private Loader loader = new Loader();
     private Vector<ImageView> levels = new Vector<>();
+
     public Controller(Stage stage)
     {
         makeMultiplayerScene();
@@ -1870,7 +1872,7 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-
+                    clientHandler();
                 }
             });
 
@@ -1905,7 +1907,7 @@ public class Controller
             message.setLayoutX(Constants.WIDTH / 2 - 110);
             message.setLayoutY(Constants.HEIGHT / 2 - 110);
 
-            Label ipAdress = new Label("IP : "+ InetAddress.getLocalHost().getHostAddress());
+            Label ipAdress = new Label("IP : "+ Inet4Address.getLocalHost().getHostAddress());
             ipAdress.setTextFill(Color.rgb(54,16,0));
             ipAdress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
             ipAdress.setLayoutX(Constants.WIDTH / 2 - 110);
@@ -1940,6 +1942,7 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
+                    stage.setScene(hostMenu.getScene());
                     player.setClient(false);
                 }
             });
@@ -1949,7 +1952,7 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    multiplayer.getGroup().getChildren().removeAll(rectangle,hostInfoView,message,port,ipAdress,okView);
+                    multiplayer.getGroup().getChildren().removeAll(rectangle,hostInfoView,exitView,message,port,ipAdress,okView);
                     makeMultiplayerScene();
                 }
             });
@@ -1971,6 +1974,122 @@ public class Controller
 
     private void clientHandler()
     {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
 
+            Image clientInfo = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png")
+                    , 500, 500, false, true);
+            ImageView clientInfoView = new ImageView(clientInfo);
+            clientInfoView.setY(Constants.HEIGHT / 2 - 250);
+            clientInfoView.setX(Constants.WIDTH / 2 - 250);
+
+            Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
+                    , 50, 50, false, true);
+            ImageView exitView = new ImageView(exit);
+            exitView.setY(Constants.HEIGHT / 2 - 225);
+            exitView.setX(Constants.WIDTH / 2 + 215);
+
+            Label clientPortLabel = new Label("Client Port: ");
+            clientPortLabel.setTextFill(Color.rgb(54,16,0));
+            clientPortLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            clientPortLabel.setLayoutX(Constants.WIDTH / 2 - 210);
+            clientPortLabel.setLayoutY(Constants.HEIGHT / 2 - 220);
+
+            TextField clientPort = new TextField();
+            clientPort.setText("8060");
+            clientPort.setStyle("-fx-text-fill : gray");
+            clientPort.setAlignment(Pos.CENTER);
+            clientPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            clientPort.setLayoutY(Constants.HEIGHT / 2 - 220);
+            clientPort.setPrefSize(150,40);
+            clientPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+
+            Label clientIPAddress = new Label("Client IP : "+Inet4Address.getLocalHost().getHostAddress());
+            clientIPAddress.setTextFill(Color.rgb(54,16,0));
+            clientIPAddress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 210);
+            clientIPAddress.setLayoutY(Constants.HEIGHT / 2 - 140);
+
+            Label serverPortLabel = new Label("Server Port: ");
+            serverPortLabel.setTextFill(Color.rgb(54,16,0));
+            serverPortLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 210);
+            serverPortLabel.setLayoutY(Constants.HEIGHT / 2 - 60);
+
+            TextField serverPort = new TextField();
+            serverPort.setAlignment(Pos.CENTER);
+            serverPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            serverPort.setLayoutY(Constants.HEIGHT / 2 - 60);
+            serverPort.setPrefSize(150,40);
+            serverPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+
+            Label serverIPAddress = new Label("Server IP : ");
+            serverIPAddress.setTextFill(Color.rgb(54,16,0));
+            serverIPAddress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            serverIPAddress.setLayoutX(Constants.WIDTH / 2 - 190);
+            serverIPAddress.setLayoutY(Constants.HEIGHT / 2);
+
+            TextField serverIP = new TextField();
+            serverIP.setAlignment(Pos.CENTER);
+            serverIP.setLayoutX(Constants.WIDTH / 2 - 120);
+            serverIP.setLayoutY(Constants.HEIGHT / 2);
+            serverIP.setPrefSize(150,40);
+            serverIP.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+
+            clientPort.textProperty().addListener(new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+                {
+                    clientPort.setStyle("-fx-text-fill : black");
+                }
+            });
+
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 150, 59, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Constants.HEIGHT / 2 + 250);
+            okView.setX(Constants.WIDTH / 2 - 75);
+
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    //if( clientPort.getText().equals("") )
+                    stage.setScene(menu.getScene());
+                    player.setClient(true);
+                }
+            });
+
+            rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    multiplayer.getGroup().getChildren().removeAll(rectangle,clientInfoView,exitView,clientPortLabel,
+                            clientPort,clientIPAddress,serverIPAddress,serverPort,okView,serverIP,serverPortLabel);
+                    makeMultiplayerScene();
+                }
+            });
+
+            exitView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    multiplayer.getGroup().getChildren().removeAll(rectangle,clientInfoView,exitView,clientPortLabel,
+                            clientPort,clientIPAddress,serverIPAddress,serverPort,okView,serverIP,serverPortLabel);
+                    makeMultiplayerScene();
+                }
+            });
+
+            multiplayer.getGroup().getChildren().addAll(rectangle,clientInfoView,exitView,clientPortLabel,clientPort,
+                    clientIPAddress,serverIPAddress,serverPort,okView,serverIP,serverPortLabel);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
 }
