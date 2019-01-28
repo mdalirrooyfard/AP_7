@@ -147,10 +147,10 @@ public class Farm {
             if (Constants.HEN_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.HEN_BUY_COST);
+            updateAchievement("hen");
         }
         Hen hen = new Hen(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(hen);
-        updateAchievement("hen");
         map.getCells()[(int) hen.getY()][(int) hen.getX()].add(hen);
         return true;
     }
@@ -160,10 +160,10 @@ public class Farm {
             if (Constants.COW_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.COW_BUY_COST);
+            updateAchievement("cow");
         }
         Cow cow = new Cow(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(cow);
-        updateAchievement("cow");
         map.getCells()[(int) cow.getY()][(int) cow.getX()].add(cow);
         return true;
     }
@@ -173,10 +173,10 @@ public class Farm {
             if (Constants.SHEEP_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.SHEEP_BUY_COST);
+            updateAchievement("sheep");
         }
         Sheep sheep = new Sheep(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(sheep);
-        updateAchievement("sheep");
         map.getCells()[(int) sheep.getY()][(int) sheep.getX()].add(sheep);
         return true;
     }
@@ -216,10 +216,10 @@ public class Farm {
             if (Constants.DOG_BUY_COST > money)
                 return false;
             decreaseMoney(Constants.DOG_BUY_COST);
+            updateAchievement("dog");
         }
         Dog dog = new Dog(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         stuffs.add(dog);
-        updateAchievement("dog");
         map.getCells()[(int) dog.getY()][(int) dog.getX()].add(dog);
         return true;
     }
@@ -234,12 +234,12 @@ public class Farm {
             if (cost > money)
                 return false;
             decreaseMoney(cost);
+            updateAchievement("cat");
         }
         Cat cat = new Cat(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map);
         if (areCatsUpgraded)
             cat.setLevel(2);
         stuffs.add(cat);
-        updateAchievement("cat");
         map.getCells()[(int) cat.getY()][(int) cat.getX()].add(cat);
         return true;
     }

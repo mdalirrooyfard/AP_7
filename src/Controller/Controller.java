@@ -1045,6 +1045,10 @@ public class Controller
                         label.setText(Integer.toString(farm.getHelicopter().getUpgradeCost()));
                         loader.getFixedHelicopter().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\" + "fixed"
                                 + farm.getHelicopter().getLevel() + ".png"), 200, 200, false, true));
+                        loader.getLeftHelicopter().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\" + "left"
+                                + farm.getHelicopter().getLevel() + ".png"), 144, 96, false, true));
+                        loader.getRightHelicopter().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\" + "right"
+                                + farm.getHelicopter().getLevel() + ".png"), 144, 96, false, true));
                         if (farm.getHelicopter().getLevel() == 4)
                             view.getGroup().getChildren().removeAll(label, upgradeHelicopter);
                     }
@@ -1494,18 +1498,16 @@ public class Controller
         {
             if( farm.getHelicopter().getCurrentTime() > 0 )
             {
-                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 2 )
+                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 1.8 )
                 {
                     loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX());
-                    loader.getLeftHelicopter().setY(200 - Constants.HEIGHT);
-                    view.getGroup().getChildren().add(loader.getLeftHelicopter());
-                    loader.getCurrentEntities().add(loader.getLeftHelicopter());
+                    loader.getLeftHelicopter().setY(loader.getFixedHelicopter().getY());
                     AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(), 1,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
-                            farm.getHelicopter().getPrevMovingX(), 200 - Constants.HEIGHT,
-                            farm.getHelicopter().getNextMovingX(), 200 - Constants.HEIGHT, 3000);
+                            farm.getHelicopter().getPrevMovingX(), loader.getFixedHelicopter().getY(),
+                            farm.getHelicopter().getNextMovingX(), loader.getFixedHelicopter().getY(), 2000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1517,18 +1519,18 @@ public class Controller
                     if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
                     {
                         view.getGroup().getChildren().remove(loader.getLeftHelicopter());
-                        loader.getCurrentEntities().remove(loader.getLeftHelicopter());
+                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
                     }
                     loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX());
-                    loader.getRightHelicopter().setY(200 - Constants.HEIGHT);
-                    view.getGroup().getChildren().add(loader.getRightHelicopter());
-                    loader.getCurrentEntities().add(loader.getRightHelicopter());
+                    loader.getRightHelicopter().setY(loader.getFixedHelicopter().getY());
+                    if (!view.getGroup().getChildren().contains(loader.getRightHelicopter()))
+                        view.getGroup().getChildren().add(loader.getRightHelicopter());
                     AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(),2,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
-                            farm.getHelicopter().getPrevMovingX(), 200 - Constants.HEIGHT,
-                            farm.getHelicopter().getNextMovingX(), 200 - Constants.HEIGHT, 3000);
+                            farm.getHelicopter().getPrevMovingX(), loader.getFixedHelicopter().getY(),
+                            farm.getHelicopter().getNextMovingX(), loader.getFixedHelicopter().getY(), 2000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1544,6 +1546,8 @@ public class Controller
                 loader.getFixedHelicopter().setFitWidth(220);
                 loader.getFixedHelicopter().setY(0);
                 loader.getFixedHelicopter().setX(0);
+                view.getGroup().getChildren().removeAll(loader.getLeftHelicopter(), loader.getRightHelicopter());
+                view.getGroup().getChildren().add(loader.getFixedHelicopter());
                 farm.clearFromHelicopter();
             }
         }

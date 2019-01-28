@@ -90,12 +90,8 @@ public class OrderPage
                     if( farm.getHelicopter().getSpentMoney() > 0 )
                     {
                         farm.goTransportation(false);
-                        farm.getHelicopter().setPrevMovingX(0);
-                        farm.getHelicopter().setNextMovingX(-Constants.movingScale);
-                        leftHelicopter.setFitWidth(100);
-                        leftHelicopter.setFitHeight(100);
-                        leftHelicopter.setX(Constants.WIDTH * 245 / 800 - 180);
-                        leftHelicopter.setY(200 - Constants.HEIGHT);
+                        farm.getHelicopter().setPrevMovingX(300 * Constants.WIDTH / 800);
+                        farm.getHelicopter().setNextMovingX(300 * Constants.WIDTH / 800 - Constants.movingScale);
                         view.getGroup().getChildren().remove(fixedHelicopter);
                         view.getGroup().getChildren().add(leftHelicopter);
                         animationTimer.start();
