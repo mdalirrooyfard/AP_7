@@ -1,16 +1,18 @@
 package Model.Workshops;
 
-import java.util.Vector;
+import Model.Constants;
 
-public class CustomFactory extends Workshop{
-    public CustomFactory(String name , Vector<String> inputs , String output, int item_x, int item_y){
-        this.workShopName = name;
-        this.output = output;
-        this.inputs = inputs;
+public class CustomFactory extends Workshop
+{
+    public CustomFactory(int item_x, int item_y)
+    {
         upgradeCost = 100;
-        this.x = 500;
-        this.y = 600;
+        this.x = Constants.WIDTH / 2;
+        this.y = 30;
         this.item_x = item_x;
         this.item_y = item_y;
+        this.workShopName = "customFactory";
     }
+
+
 }

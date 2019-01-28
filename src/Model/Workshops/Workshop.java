@@ -2,7 +2,6 @@ package Model.Workshops;
 
 import Model.Entity;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class Workshop extends Entity {
@@ -15,12 +14,27 @@ public class Workshop extends Entity {
     protected int currentTime;
     protected boolean isWorking;
     protected String workShopName;
-    //todo workshop places
+
+    public void setInputs(Vector<String> inputs)
+    {
+        this.inputs = inputs;
+    }
+
+    public void setOutput(String output)
+    {
+        this.output = output;
+    }
+
+    public void setWorkShopName(String workShopName)
+    {
+        this.workShopName = workShopName;
+    }
 
     @Override
     public double getShowX() {
         return getX();
     }
+
     @Override
     public double getShowY() {
         return getY();
@@ -33,11 +47,13 @@ public class Workshop extends Entity {
     public void setCount(int count) {
         this.count = count;
     }
+
     public void upgrade (){
         super.upgrade();
         workingTime = (int)(workingTime * 0.8);
         upgradeCost = (int)(upgradeCost * 1.5);
     }
+
     public void currentTimeDecrease(int amount){
         currentTime -= amount;
     }

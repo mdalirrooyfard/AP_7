@@ -309,7 +309,7 @@ public class Loader
     {
         try
         {
-            map = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\map.png"), Menu.WIDTH, Menu.HEIGHT,
+            map = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\back2.png"), Menu.WIDTH, Menu.HEIGHT,
                     false, true));
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -406,18 +406,15 @@ public class Loader
             Image image;
             for (Workshop w : workshops)
             {
-                if (w != null)
-                {
-                    String name = w instanceof CustomFactory ? "customFactory" : w.getWorkShopName();
-                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
-                            + Integer.toString(w.getLevel()) + ".png"),
-                            200, 200, false, true);
-                    fixedWorkshops.put(w.getWorkShopName(), image);
-                    image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
-                            + Integer.toString(w.getLevel()) + ".png"),
-                            800, 800, false, true);
-                    movingWorkshops.put(w.getWorkShopName(), image);
-                }
+                String name = w instanceof CustomFactory ? "customFactory" : w.getWorkShopName();
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "fixed"
+                        + Integer.toString(w.getLevel()) + ".png"),
+                        200, 200, false, true);
+                fixedWorkshops.put(w.getWorkShopName(), image);
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + name + "\\" + "moving"
+                        + Integer.toString(w.getLevel()) + ".png"),
+                        800, 800, false, true);
+                movingWorkshops.put(w.getWorkShopName(), image);
             }
             loadImageViewsOfMovingWorkShops();
         }
@@ -432,7 +429,7 @@ public class Loader
         movingSewingFactory = new ImageView(movingWorkshops.get("sewingFactory"));
         movingSpinnery = new ImageView(movingWorkshops.get("spinnery"));
         movingWeavingFactory = new ImageView(movingWorkshops.get("weavingFactory"));
-        //todo custom
+        movingCustomFactory = new ImageView(movingWorkshops.get("customFactory"));
     }
 
     private void loadImageOfServices(Farm farm)

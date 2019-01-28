@@ -26,7 +26,8 @@ public class OrderPage
     Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
     int height = 0 , itemNumber = 0 , width = 0;
 
-    public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView fixedHelicopter, AnimationTimer aTimer)
+    public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView leftHelicopter
+            , ImageView fixedHelicopter, AnimationTimer aTimer)
     {
         height = 0;
         itemNumber = 0;
@@ -40,7 +41,7 @@ public class OrderPage
             orderView.setY(0);
             group.getChildren().addAll(orderView);
             insertBack(farm,stage,view);
-            insertOk(farm,stage,view,fixedHelicopter,aTimer);
+            insertOk(farm,stage,view,leftHelicopter,fixedHelicopter,aTimer);
             insertItems(farm,items);
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -71,7 +72,8 @@ public class OrderPage
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void insertOk(Farm farm,Stage stage,View view,ImageView fixedHelicopter,AnimationTimer animationTimer)
+    private void insertOk(Farm farm,Stage stage,View view,ImageView leftHelicopter, ImageView fixedHelicopter
+            ,AnimationTimer animationTimer)
     {
         try
         {
@@ -90,10 +92,12 @@ public class OrderPage
                         farm.goTransportation(false);
                         farm.getHelicopter().setPrevMovingX(0);
                         farm.getHelicopter().setNextMovingX(-Constants.movingScale);
-                        fixedHelicopter.setFitWidth(100);
-                        fixedHelicopter.setFitHeight(100);
-                        fixedHelicopter.setX(Constants.WIDTH * 245 / 800 - 180);
-                        fixedHelicopter.setY(200 - Constants.HEIGHT);
+                        leftHelicopter.setFitWidth(100);
+                        leftHelicopter.setFitHeight(100);
+                        leftHelicopter.setX(Constants.WIDTH * 245 / 800 - 180);
+                        leftHelicopter.setY(200 - Constants.HEIGHT);
+                        view.getGroup().getChildren().remove(fixedHelicopter);
+                        view.getGroup().getChildren().add(leftHelicopter);
                         animationTimer.start();
                         stage.setScene(view.getScene());
                     }

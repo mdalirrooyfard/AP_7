@@ -5,7 +5,10 @@ import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
 import Model.Workshops.*;
-import Network.*;
+import Network.ClientGui;
+import Network.ClientListener;
+import Network.ClientSender;
+import Network.Server;
 import View.Graphic.*;
 import View.ImageViewSprite;
 import View.MoveTransition;
@@ -224,7 +227,7 @@ public class Controller
                         showMovingWildAnimals();
                         checkWell();
                         checkWareHouse();
-                        checkTransportation();
+                        checkHelicopter();
                         checkWorkShops();
                         updateMoney();
                         updateAchievement();
@@ -742,7 +745,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 animationTimer.stop();
-                stage.setScene(orderPage.getScene(stage,view,farm,loader.getItems(),loader.getFixedHelicopter(), animationTimer));
+                stage.setScene(orderPage.getScene(stage,view,farm,loader.getItems(),loader.getLeftHelicopter()
+                        ,loader.getFixedHelicopter(), animationTimer));
             }
         });
     }
@@ -1054,132 +1058,136 @@ public class Controller
     private void workshopsIcons()
     {
         for(Workshop w : farm.getWorkshops())
-            if (w != null)
+        {
+            ImageView imageView = new ImageView(loader.getFixedWorkshops().get(w.getWorkShopName()));
+            loader.getFixedWorkShopsImageViews().put(w.getWorkShopName(), imageView);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                ImageView imageView = new ImageView(loader.getFixedWorkshops().get(w.getWorkShopName()));
-                loader.getFixedWorkShopsImageViews().put(w.getWorkShopName(), imageView);
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                @Override
+                public void handle(MouseEvent event)
                 {
-                    @Override
-                    public void handle(MouseEvent event)
+                    if( w instanceof CustomFactory )
                     {
-                        int result = farm.startWorkShop(w.getWorkShopName());
-                        if (result > 0){
-                            view.getGroup().getChildren().remove(imageView);
-                            flagWareHouse = 0;
-                            view.getGroup().getChildren().remove(arrowViewWareHouse);
-                            ImageView imageView1;
-                            if (w instanceof CakeBakery)
-                                imageView1 = loader.getMovingCakeBakery();
-                            else if (w instanceof CookieBakery)
-                                imageView1 = loader.getMovingCookieBakery();
-                            else if (w instanceof CustomFactory)
-                                imageView1 = loader.getMovingCustomFactory();
-                            else if (w instanceof EggPowderPlant)
-                                imageView1 = loader.getMovingEggPowderPlant();
-                            else if(w instanceof SewingFactory)
-                                imageView1 = loader.getMovingSewingFactory();
-                            else if (w instanceof Spinnery)
-                                imageView1 = loader.getMovingSpinnery();
-                            else
-                                imageView1 = loader.getMovingWeavingFactory();
-                            imageView1.setX(w.getShowX());
-                            imageView1.setY(w.getShowY());
-                            view.getGroup().getChildren().add(imageView1);
-                            AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
-                                    4, 4, 16, 200,200, 16);
-                            flyingItems(w.getInputs(), result , w);
-                            imageViewSprite.start();
-                        }
+
                     }
-                });
-                ImageView upgrade = new ImageView(loader.getUpgradeButton());
-                upgrade.setFitHeight(39);
-                upgrade.setFitWidth(100);
-                Label label = new Label(Integer.toString(w.getUpgradeCost()));
-                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-                show(imageView, w);
-                if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof  CakeBakery)
-                {
-                    label.relocate(w.getShowX() + 5, w.getShowY() + 40);
-                    upgrade.setX(w.getShowX() - 30);
-                    upgrade.setY(w.getShowY() + 40);
-                }
-                else
-                {
-                    label.relocate(w.getShowX() + 235, w.getShowY() + 70);
-                    upgrade.setX(w.getShowX() + 200);
-                    upgrade.setY(w.getShowY() + 70);
-                }
-                upgrade.setOnMouseClicked(new EventHandler<MouseEvent>()
-                {
-                    @Override
-                    public void handle(MouseEvent event)
+                    int result = farm.startWorkShop(w.getWorkShopName());
+                    if (result > 0)
                     {
-                        int result = farm.upgrade(w.getWorkShopName());
-                        if (result == 1){
-                            danceTheMoney();
-                        }
-                        if (result == 0)
-                        {
-                            try
-                            {
-                                label.setText(Integer.toString(w.getUpgradeCost()));
-                                Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "fixed"
-                                        + Integer.toString(w.getLevel()) + ".png"),
-                                        200, 200, false, true);
-                                loader.getFixedWorkshops().replace(w.getWorkShopName(), image);
-                                imageView.setImage(loader.getFixedWorkshops().get(w.getWorkShopName()));
-                                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "moving"
-                                        + Integer.toString(w.getLevel()) + ".png"),
-                                        800, 800, false, true);
-                                loader.getMovingWorkshops().replace(w.getWorkShopName(), image);
-                                boolean isUpgradeFinished = false;
-                                if (w instanceof CakeBakery)
-                                {
-                                    loader.setMovingCakeBakery(new ImageView(loader.getMovingWorkshops().get("cakeBakery")));
-                                    if (farm.getWorkshops()[0].getLevel() == 4)
-                                        isUpgradeFinished = true;
-                                }
-                                else if (w instanceof CookieBakery)
-                                {
-                                    loader.setMovingCookieBakery(new ImageView(loader.getMovingWorkshops().get("cookieBakery")));
-                                    if (farm.getWorkshops()[1].getLevel() == 4)
-                                        isUpgradeFinished = true;
-                                }
-                                else if (w instanceof EggPowderPlant)
-                                {
-                                    loader.setMovingEggPowderPlant(new ImageView(loader.getMovingWorkshops().get("eggPowderPlant")));
-                                    if (farm.getWorkshops()[2].getLevel() == 4)
-                                        isUpgradeFinished = true;
-                                }
-                                else if(w instanceof SewingFactory)
-                                {
-                                    loader.setMovingSewingFactory(new ImageView(loader.getMovingWorkshops().get("sewingFactory")));
-                                    if (farm.getWorkshops()[3].getLevel() == 4)
-                                        isUpgradeFinished = true;
-                                }
-                                else if (w instanceof Spinnery)
-                                {
-                                    loader.setMovingSpinnery(new ImageView(loader.getMovingWorkshops().get("spinnery")));
-                                    if (farm.getWorkshops()[5].getLevel() == 4)
-                                        isUpgradeFinished = true;
-                                }
-                                else if (w instanceof WeavingFactory)
-                                {
-                                    loader.setMovingWeavingFactory(new ImageView(loader.getMovingWorkshops().get("weavingFactory")));
-                                    if (farm.getWorkshops()[4].getLevel() == 4)
-                                        isUpgradeFinished = true;
-                                }
-                                if (isUpgradeFinished)
-                                    view.getGroup().getChildren().removeAll(label, upgrade);
-                            }
-                            catch ( Exception e ) { e.printStackTrace(); }
-                        }
+                        view.getGroup().getChildren().remove(imageView);
+                        flagWareHouse = 0;
+                        view.getGroup().getChildren().remove(arrowViewWareHouse);
+                        ImageView imageView1;
+                        if (w instanceof CakeBakery)
+                            imageView1 = loader.getMovingCakeBakery();
+                        else if (w instanceof CookieBakery)
+                            imageView1 = loader.getMovingCookieBakery();
+                        else if (w instanceof CustomFactory)
+                            imageView1 = loader.getMovingCustomFactory();
+                        else if (w instanceof EggPowderPlant)
+                            imageView1 = loader.getMovingEggPowderPlant();
+                        else if(w instanceof SewingFactory)
+                            imageView1 = loader.getMovingSewingFactory();
+                        else if (w instanceof Spinnery)
+                            imageView1 = loader.getMovingSpinnery();
+                        else
+                            imageView1 = loader.getMovingWeavingFactory();
+                        imageView1.setX(w.getShowX());
+                        imageView1.setY(w.getShowY());
+                        view.getGroup().getChildren().add(imageView1);
+                        AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
+                                4, 4, 16, 200,200, 16);
+                        flyingItems(w.getInputs(), result , w);
+                        imageViewSprite.start();
                     }
-                });
-                view.getGroup().getChildren().addAll(upgrade, label);
+                }
+            });
+            ImageView upgrade = new ImageView(loader.getUpgradeButton());
+            upgrade.setFitHeight(39);
+            upgrade.setFitWidth(100);
+            Label label = new Label(Integer.toString(w.getUpgradeCost()));
+            label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            show(imageView, w);
+            if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof  CakeBakery)
+            {
+                label.relocate(w.getShowX() + 5, w.getShowY() + 40);
+                upgrade.setX(w.getShowX() - 30);
+                upgrade.setY(w.getShowY() + 40);
             }
+            else
+            {
+                label.relocate(w.getShowX() + 235, w.getShowY() + 70);
+                upgrade.setX(w.getShowX() + 200);
+                upgrade.setY(w.getShowY() + 70);
+            }
+            upgrade.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    int result = farm.upgrade(w.getWorkShopName());
+                    if (result == 1){
+                        danceTheMoney();
+                    }
+                    if (result == 0)
+                    {
+                        try
+                        {
+                            label.setText(Integer.toString(w.getUpgradeCost()));
+                            Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "fixed"
+                                    + Integer.toString(w.getLevel()) + ".png"),
+                                    200, 200, false, true);
+                            loader.getFixedWorkshops().replace(w.getWorkShopName(), image);
+                            imageView.setImage(loader.getFixedWorkshops().get(w.getWorkShopName()));
+                            image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "moving"
+                                    + Integer.toString(w.getLevel()) + ".png"),
+                                    800, 800, false, true);
+                            loader.getMovingWorkshops().replace(w.getWorkShopName(), image);
+                            boolean isUpgradeFinished = false;
+                            if (w instanceof CakeBakery)
+                            {
+                                loader.setMovingCakeBakery(new ImageView(loader.getMovingWorkshops().get("cakeBakery")));
+                                if (farm.getWorkshops()[0].getLevel() == 4)
+                                    isUpgradeFinished = true;
+                            }
+                            else if (w instanceof CookieBakery)
+                            {
+                                loader.setMovingCookieBakery(new ImageView(loader.getMovingWorkshops().get("cookieBakery")));
+                                if (farm.getWorkshops()[1].getLevel() == 4)
+                                    isUpgradeFinished = true;
+                            }
+                            else if (w instanceof EggPowderPlant)
+                            {
+                                loader.setMovingEggPowderPlant(new ImageView(loader.getMovingWorkshops().get("eggPowderPlant")));
+                                if (farm.getWorkshops()[2].getLevel() == 4)
+                                    isUpgradeFinished = true;
+                            }
+                            else if(w instanceof SewingFactory)
+                            {
+                                loader.setMovingSewingFactory(new ImageView(loader.getMovingWorkshops().get("sewingFactory")));
+                                if (farm.getWorkshops()[3].getLevel() == 4)
+                                    isUpgradeFinished = true;
+                            }
+                            else if (w instanceof Spinnery)
+                            {
+                                loader.setMovingSpinnery(new ImageView(loader.getMovingWorkshops().get("spinnery")));
+                                if (farm.getWorkshops()[5].getLevel() == 4)
+                                    isUpgradeFinished = true;
+                            }
+                            else if (w instanceof WeavingFactory)
+                            {
+                                loader.setMovingWeavingFactory(new ImageView(loader.getMovingWorkshops().get("weavingFactory")));
+                                if (farm.getWorkshops()[4].getLevel() == 4)
+                                    isUpgradeFinished = true;
+                            }
+                            if (isUpgradeFinished)
+                                view.getGroup().getChildren().removeAll(label, upgrade);
+                        }
+                        catch ( Exception e ) { e.printStackTrace(); }
+                    }
+                }
+            });
+            view.getGroup().getChildren().addAll(upgrade, label);
+        }
     }
 
     private void  showUpgradeWareHouse()
@@ -1464,7 +1472,7 @@ public class Controller
         translateTransition.play();
     }
 
-    private void checkTransportation()
+    private void checkHelicopter()
     {
         if (farm.getHelicopter().isMoving())
         {
@@ -1472,9 +1480,16 @@ public class Controller
             {
                 if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 2 )
                 {
-                    MoveTransition pathTransition = new MoveTransition(loader.getFixedHelicopter()
-                            , farm.getHelicopter().getPrevMovingX() , 200 - HEIGHT,
-                            farm.getHelicopter().getNextMovingX(), 200 - HEIGHT, 3000);
+                    loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getLeftHelicopter().setY(200 - Constants.HEIGHT);
+                    view.getGroup().getChildren().add(loader.getLeftHelicopter());
+                    loader.getCurrentEntities().add(loader.getLeftHelicopter());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(), 1,
+                            false, 3, 2, 6, 48, 48, 6);
+                    animationTimer.start();
+                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(), 200 - Constants.HEIGHT,
+                            farm.getHelicopter().getNextMovingX(), 200 - Constants.HEIGHT, 3000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1483,9 +1498,21 @@ public class Controller
                 }
                 else
                 {
-                    MoveTransition pathTransition = new MoveTransition(loader.getFixedHelicopter(),
-                            farm.getHelicopter().getPrevMovingX(), 200 - HEIGHT,
-                            farm.getHelicopter().getNextMovingX(), 200 - HEIGHT, 3000);
+                    if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
+                    {
+                        view.getGroup().getChildren().remove(loader.getLeftHelicopter());
+                        loader.getCurrentEntities().remove(loader.getLeftHelicopter());
+                    }
+                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getRightHelicopter().setY(200 - Constants.HEIGHT);
+                    view.getGroup().getChildren().add(loader.getRightHelicopter());
+                    loader.getCurrentEntities().add(loader.getRightHelicopter());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(),2,
+                            false, 3, 2, 6, 48, 48, 6);
+                    animationTimer.start();
+                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(), 200 - Constants.HEIGHT,
+                            farm.getHelicopter().getNextMovingX(), 200 - Constants.HEIGHT, 3000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1499,8 +1526,8 @@ public class Controller
                 farm.getHelicopter().setMoving(false);
                 loader.getFixedHelicopter().setFitHeight(220);
                 loader.getFixedHelicopter().setFitWidth(220);
-                loader.getFixedHelicopter().setY(-600);
-                loader.getFixedHelicopter().setX(-600);
+                loader.getFixedHelicopter().setY(0);
+                loader.getFixedHelicopter().setX(0);
                 farm.clearFromHelicopter();
             }
         }

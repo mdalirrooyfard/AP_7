@@ -12,7 +12,6 @@ import Model.Animals.Wild.Lion;
 import Model.Animals.Wild.Wild;
 import Model.Items.Item;
 import Model.Transportation.Helicopter;
-import Model.Transportation.Transportations;
 import Model.Transportation.Truck;
 import Model.Workshops.*;
 import javafx.stage.Screen;
@@ -752,93 +751,6 @@ public class Farm {
         return true;
     }
 
-    //print methods
-    public String printLevel() {
-        String string = goals.toString();
-        string = string.replace("{", "");
-        string = string.replace("}", "");
-        string = string.replace(", ", "\n");
-        return string;
-    }
-
-    public String printInfo() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("money : ").append(money).append("\n");
-        stringBuilder.append("time : ").append(time);
-        for (String s : goals.keySet()) {
-            stringBuilder.append("\n").append(s).append(" : ");
-            stringBuilder.append(achievementsCounts.get(achievementsNames.indexOf(s))).append(" of ").append(goals.get(s));
-        }
-        return stringBuilder.toString();
-    }
-
-    public String printWell() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("volume : ").append(well.getVolume()).append("\n");
-        stringBuilder.append("current water : ").append(well.getCurrentVolume()).append("\n");
-        stringBuilder.append("cost : ").append(well.getBuyCost()).append("\n");
-        stringBuilder.append("upgrade cost : ").append(well.getUpgradeCost());
-        return stringBuilder.toString();
-    }
-
-    public String printWareHouse() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Item item : wareHouse.getCollectedItems())
-            stringBuilder.append(item.getKind()).append(", ");
-        stringBuilder.append("\nvolume : ").append(wareHouse.getVolume());
-        stringBuilder.append("\ncurrent volume : ").append(wareHouse.getCurrentVolume());
-        stringBuilder.append("\nupgrade cost : ").append(wareHouse.getUpgradeCost());
-        return stringBuilder.toString();
-    }
-
-    public String printMap() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < mapLength; i++) {
-            for (int j = 0; j < mapWidth; j++) {
-                boolean[] status = map.getCells()[i][j].status();
-                for (boolean k : status) {
-                    if (k)
-                        stringBuilder.append(1);
-                    else
-                        stringBuilder.append(0);
-                }
-                stringBuilder.append(" ");
-            }
-            stringBuilder.append("\n");
-        }
-        return stringBuilder.toString();
-    }
-
-    public String printTransportation(boolean vehicle) {
-        Transportations transportations;
-        if (vehicle)
-            transportations = truck;
-        else
-            transportations = helicopter;
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Item item : transportations.getItems())
-            stringBuilder.append(item.getKind()).append(" ");
-        return stringBuilder.toString();
-    }
-
-    public String printWorkshop(String workShopName) {
-        Workshop workshop = null;
-        for (Workshop w : workshops)
-            if (w.getWorkShopName().equals(workShopName)) {
-                workshop = w;
-                break;
-            }
-        if (workshop == null)
-            return "This workShop is not included in this level!";
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("inputs : ");
-        for (String input : workshop.getInputs()) {
-            stringBuilder.append(input).append(" ");
-        }
-        stringBuilder.append("\noutput : ").append(workshop.getOutput());
-        return stringBuilder.toString();
-    }
-
     //workShops
     public void makeWorkShops()
     {
@@ -848,16 +760,15 @@ public class Farm {
         workshops[3] = new SewingFactory(mapWidth - 1, mapLength - 1);
         workshops[4] = new WeavingFactory(mapWidth - 1, (int)mapLength/2);
         workshops[5] = new Spinnery(mapWidth - 1, 0);
+        workshops[6] = new CustomFactory(0,mapWidth / 2);
     }
 
-    public void makeCustomWorkshop(String name, Vector<String> inputs, String output) {
-        workshops[6] = new CustomFactory(name, inputs, output, (int)mapWidth/2, mapLength - 1);
-    }
-
-    public int startWorkShop(String name) {
+    public int startWorkShop(String name)
+    {
         Workshop workshop = null;
         for (Workshop w : workshops)
-            if (w.getWorkShopName().equals(name)) {
+            if (w.getWorkShopName().equals(name))
+            {
                 workshop = w;
                 break;
             }
@@ -866,13 +777,17 @@ public class Farm {
         if (workshop.isWorking())
             return -2;
         workshop.setCount(availableInputCount(workshop.getInputs(), workshop.getLevel()));
-        if (workshop.getCount() > 0) {
-            for (String s : workshop.getInputs()) {
+        if (workshop.getCount() > 0)
+        {
+            for (String s : workshop.getInputs())
+            {
                 Iterator<Item> iterator = wareHouse.getCollectedItems().iterator();
                 int count = 0;
-                while (iterator.hasNext() && count < workshop.getCount()) {
+                while (iterator.hasNext() && count < workshop.getCount())
+                {
                     Item item = iterator.next();
-                    if (item.getKind().equals(s)) {
+                    if (item.getKind().equals(s))
+                    {
                         iterator.remove();
                         count++;
                     }
@@ -885,9 +800,11 @@ public class Farm {
         return workshop.getCount();
     }
 
-    public int availableInputCount(Vector<String> inputs, int initial) {
+    public int availableInputCount(Vector<String> inputs, int initial)
+    {
         int min = initial;
-        for (String s : inputs) {
+        for (String s : inputs)
+        {
             int count = 0;
             for (Item item : wareHouse.getCollectedItems())
                 if (item.getKind().equals(s))
