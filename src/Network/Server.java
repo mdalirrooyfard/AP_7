@@ -28,12 +28,14 @@ public class Server {
             @Override
             public void run() {
                 try {
-                    Socket socket = serverSocket.accept();
-                    Sockets.add(socket);
-                    serverSender.addSocket(socket);
-                    serverSender.addOutPutStream(socket);
-                    Thread listener = new Thread(new ServerListener(socket, serverSender));
-                    listener.start();
+                    while(true) {
+                        Socket socket = serverSocket.accept();
+                        Sockets.add(socket);
+                        serverSender.addSocket(socket);
+                        serverSender.addOutPutStream(socket);
+                        Thread listener = new Thread(new ServerListener(socket, serverSender));
+                        listener.start();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

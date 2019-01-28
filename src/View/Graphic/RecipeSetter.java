@@ -35,10 +35,10 @@ public class RecipeSetter
             rectangle.setOpacity(0.7);
 
             Image recipeBack = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\recipeBack.png")
-                    , 800, 600, false, true);
+                    , 600, 500, false, true);
             ImageView recipeBackView = new ImageView(recipeBack);
-            recipeBackView.setX(Constants.WIDTH - 400);
-            recipeBackView.setY(Constants.HEIGHT - 300);
+            recipeBackView.setX(Constants.WIDTH - 300);
+            recipeBackView.setY(Constants.HEIGHT - 250);
             group.getChildren().addAll(recipeBackView);
             insertBack(farm,stage,view);
             insertOk(farm,stage,view,aTimer);
@@ -107,19 +107,36 @@ public class RecipeSetter
             for( String item : Constants.ITEM_NAMES )
             {
                 height++;
-                if( height > 11 )
+                if( height > 7 )
                 {
                     height = 1;
                     width++;
                 }
-                itemNumber = 0;
+
                 ImageView itemView = new ImageView(items.get(item));
-                itemView.setX(Constants.WIDTH - 380 + width * ( 3 * 30 + 100));
+                itemView.setX(Constants.WIDTH - 330 + width * ( 50 + 100));
                 itemView.setY(30 * ( height - 1 ) + Constants.HEIGHT - 215);
-                itemView.setFitHeight(30);
-                itemView.setFitWidth(30);
+                itemView.setFitHeight(50);
+                itemView.setFitWidth(50);
 
-
+                /*plusView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        if( !farm.getWorkshops()[6].getInputs().contains(item) )
+                            farm.getWorkshops()[6].getInputs().add(item);
+                    }
+                });
+                minusView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        if( farm.getWorkshops()[6].getInputs().contains(item) )
+                            farm.getWorkshops()[6].getInputs().remove(item);
+                    }
+                });*/
             }
         }
         catch ( Exception e ) { e.printStackTrace(); }

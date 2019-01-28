@@ -20,6 +20,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -31,6 +32,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -60,6 +62,7 @@ public class Controller
     private Menu menu;
     private Stage stage;
     private Start start;
+    private ChoosePlayer choosePlayer;
     private Multiplayer multiplayer = new Multiplayer();
     private AnimationTimer animationTimer;
     private OrderPage orderPage = new OrderPage();;
@@ -98,12 +101,16 @@ public class Controller
         findLastPlayer();
         this.stage = stage;
         this.start = new Start(stage);
+        this.choosePlayer = new ChoosePlayer(stage,players);
         loadLevels();
-        this.menu = new Menu(stage,players,start,multiplayer);
+        writePlayers();
+        insertNewPlayer();
+        this.menu = new Menu(stage,players,choosePlayer,start,multiplayer,player);
         this.start.setMenu(menu);
+        this.choosePlayer.setMenu(menu);
         view = new View();
         menu.setMenu(menu);
-        menu.passMenuInstance(menu);
+        menu.passMenuInstance(menu,player);
     }
 
     private void findLastPlayer()
@@ -131,6 +138,7 @@ public class Controller
         try(InputStream inputStream = new FileInputStream(path))
         {
             Scanner scanner = new Scanner(inputStream);
+            farm = new Farm();
             String string = scanner.next();
             while(!string.equals("endOfMap"))
             {
@@ -183,6 +191,7 @@ public class Controller
                 farm.makeAchievements();
             }
             farm.makeWorkShops();
+            view.getGroup().getChildren().clear();
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
@@ -241,6 +250,7 @@ public class Controller
                    winHandler();
                    player.increaseLevel();
                    start.getGroup().getChildren().removeAll(levels);
+                   levels.clear();
                    loadLevels();
                    this.stop();
                }
@@ -338,7 +348,7 @@ public class Controller
 
     private void saveGameHandler() throws Exception
     {
-        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt")) )
+        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName())) )
             Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\"+player.getName()));
         try(OutputStream outputStream = new FileOutputStream(
                 "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"))
@@ -362,9 +372,11 @@ public class Controller
         try(InputStream inputStream = new FileInputStream(path))
         {
             Scanner scanner = new Scanner(inputStream);
+            farm = new Farm();
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
             farm = yaGson.fromJson(savedFarm,Farm.class);
+            view.getGroup().getChildren().clear();
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
@@ -452,7 +464,7 @@ public class Controller
 
     private void chooseOpenLevelHandler( String levelName )
     {
-        int level = Integer.parseInt(Character.toString(levelName.toCharArray()[levelName.length()-1])+1);
+        int level = Integer.parseInt(Character.toString(levelName.toCharArray()[levelName.length()-1]))+1;
         try
         {
             if( wasThisLevelPlayedBefore(level) )
@@ -558,6 +570,7 @@ public class Controller
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
+
     private void danceTheMoney(){
         KeyValue kvHieght = new KeyValue(moneyView.fitHeightProperty() , moneyView.getFitHeight() - 10);
         KeyValue kvWidth = new KeyValue(moneyView.fitWidthProperty() , moneyView.getFitWidth() - 25);
@@ -569,6 +582,7 @@ public class Controller
         timeline.setCycleCount(6);
         timeline.play();
     }
+
     private void buyIcons()
     {
         try
@@ -928,6 +942,7 @@ public class Controller
             }
         }
     }
+
     private void makeScene()
     {
         showBackground();
@@ -946,7 +961,7 @@ public class Controller
     private void showChatRoomIcon(){
         if (isMultiPlayer){
             try {
-                Image image  = new Image(new FileInputStream("C:\\Users\\mahsa\\Desktop\\farm_frenzi_project\\src\\Resources\\Graphic\\Game UI\\chatButton.png"), 77, 73, false, true);
+                Image image  = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\chatButton.png"), 77, 73, false, true);
                 ImageView chatView = new ImageView(image);
                 chatView.setX(5);
                 chatView.setY(Constants.HEIGHT - 200);
@@ -1042,13 +1057,13 @@ public class Controller
 
     private void showMoneyIcon()
     {
-            moneyView.setFitWidth(150);
-            moneyView.setFitHeight(50);
-            moneyView.setX(WIDTH - 150);
-            moneyView.setY(10);
-            moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            moneyLabel.relocate(WIDTH - 95, 15);
-            view.getGroup().getChildren().addAll(moneyView , moneyLabel);
+        moneyView.setFitWidth(150);
+        moneyView.setFitHeight(50);
+        moneyView.setX(WIDTH - 150);
+        moneyView.setY(10);
+        moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+        moneyLabel.relocate(WIDTH - 95, 15);
+        view.getGroup().getChildren().addAll(moneyView , moneyLabel);
     }
 
     private void updateMoney()
@@ -2237,5 +2252,158 @@ public class Controller
                     clientIPAddress,serverIPAddress,serverPort,okView,serverIP,serverPortLabel);
         }
         catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void writePlayers()
+    {
+        try
+        {
+            Image uncheckedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxFalse.png")
+                    , 25, 25, false, true);
+            Image checkedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxTrue.png")
+                    , 25, 25, false, true);
+            for(Node node:choosePlayer.getGroup().getChildren())
+            {
+                if( node instanceof Text)
+                    ((Text) node).setText("");
+                if( node instanceof ImageView && ( ((ImageView) node).getImage() == uncheckedCheckBox
+                        || ((ImageView) node).getImage() == checkedCheckBox)  )
+                    ((ImageView) node).setImage(null);
+            }
+            Text text;
+            int i = 0;
+            for (Player p : players)
+            {
+                i++;
+                text = new Text( Menu.WIDTH - 450, ( Menu.HEIGHT - 150 ) * ( i + 1 ) / (players.size() + 2),p.getName());
+                text.setFill(Color.rgb(54,16,0));
+                text.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+                choosePlayer.getGroup().getChildren().addAll(text);
+                text.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        for( Node node : choosePlayer.getGroup().getChildren() )
+                            if( node instanceof Label )
+                                ((Label) node).setText("");
+                        player = p;
+                        player.setUserName(p.getName());
+                        player.setLastPlayer(true);
+                        for( Player p1 : players )
+                            if( p1.isLastPlayer() && p1 != p )
+                                p1.setLastPlayer(false);
+                        insertPlayer();
+                        menu.setPlayer(player);
+                    }
+                });
+            }
+        }
+        catch ( Exception e ){}
+    }
+
+    private void insertPlayer()
+    {
+        Label playerName = new Label("");
+        playerName.setTextFill(Color.rgb(54,16,0));
+        playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        playerName.setLayoutX(Menu.WIDTH - 400);
+        playerName.setLayoutY((Menu.HEIGHT - 150 ) / (players.size() + 2));
+        if( player != null )
+            playerName.setText("Player : "+player.getName());
+        choosePlayer.getGroup().getChildren().addAll(playerName);
+    }
+
+    private void insertNewPlayer()
+    {
+        try
+        {
+            Image newPlayer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\newPlayerButton.png")
+                    , 200, 78, false, true);
+            ImageView newPlayerView = new ImageView(newPlayer);
+            newPlayerView.setY(Menu.HEIGHT - 150);
+            newPlayerView.setX(Menu.WIDTH - 250);
+            choosePlayer.getGroup().getChildren().addAll(newPlayerView);
+            newPlayerView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                    rectangle.setFill(Color.rgb(54,16,0));
+                    rectangle.setOpacity(0.7);
+                    choosePlayer.getGroup().getChildren().addAll(rectangle);
+                    try
+                    {
+                        Image newPlayer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png")
+                                , 500, 506, false, true);
+                        ImageView newPlayerView = new ImageView(newPlayer);
+                        newPlayerView.setY(Menu.HEIGHT / 2 - 253);
+                        newPlayerView.setX(Menu.WIDTH / 2 - 250);
+
+                        Label message = new Label("Player Name:");
+                        message.setTextFill(Color.rgb(54,16,0));
+                        message.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,40));
+                        message.setLayoutX(Menu.WIDTH / 2 - 150);
+                        message.setLayoutY(Menu.HEIGHT / 2 - 200);
+
+                        TextField playerName = new TextField();
+                        playerName.setAlignment(Pos.CENTER);
+                        playerName.setLayoutX(Menu.WIDTH / 2 - 150);
+                        playerName.setLayoutY(Menu.HEIGHT / 2 - 100);
+                        playerName.setPrefSize(300,100);
+                        playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+
+                        Image add = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\addButton.png")
+                                , 150, 59, false, true);
+                        ImageView addView = new ImageView(add);
+                        addView.setY(Menu.HEIGHT / 2 + 130);
+                        addView.setX(Menu.WIDTH / 2 - 175);
+
+                        Image cancel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\cancelButton.png")
+                                , 150, 59, false, true);
+                        ImageView cancelView = new ImageView(cancel);
+                        cancelView.setY(Menu.HEIGHT / 2 + 130);
+                        cancelView.setX(Menu.WIDTH / 2 + 25);
+
+                        addView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                player = new Player(playerName.getText(),players.size() + 1);
+                                player.setUserName(playerName.getText());
+                                //todo change this!
+                                players.add(player);
+                                player.setLastPlayer(true);
+                                for( Player p1 : players )
+                                    if( p1.isLastPlayer() && p1 != player )
+                                        p1.setLastPlayer(false);
+                                choosePlayer.getGroup().getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
+                                writePlayers();
+                                for( Node node : choosePlayer.getGroup().getChildren() )
+                                    if( node instanceof Label )
+                                        ((Label) node).setText("");
+                                insertPlayer();
+                            }
+                        });
+
+                        cancelView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                choosePlayer.getGroup().getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
+                            }
+                        });
+
+                        choosePlayer.getGroup().getChildren().addAll(newPlayerView,message,playerName,addView,cancelView);
+                    }
+                    catch ( Exception e ){}
+
+                }
+            });
+        }
+        catch ( Exception e ){}
     }
 }

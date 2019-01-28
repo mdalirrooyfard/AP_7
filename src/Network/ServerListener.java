@@ -4,7 +4,6 @@ import Model.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ServerListener implements Runnable{
@@ -37,8 +36,8 @@ public class ServerListener implements Runnable{
                         Player player = (Player) command.getContent();
                         player.setSocket(socket);
                         serverSender.setPlayer(player);
-                        Command sendNewPlayer = new Command(CommandTypes.PLAYER_JOINED, player.getUserName());
-                        serverSender.sendGroup(sendNewPlayer);
+                        //Command sendNewPlayer = new Command(CommandTypes.PLAYER_JOINED, player.getUserName());
+                        //serverSender.sendGroup(sendNewPlayer);
                         break;
                     case VIEW_PROFILE:
                         break;

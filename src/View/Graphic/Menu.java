@@ -101,19 +101,16 @@ public class Menu
         return scene;
     }
 
-    public Menu(Stage stage , Vector<Player> players , Start startScene , Multiplayer multiplayer )
+    public Menu(Stage stage , Vector<Player> players , ChoosePlayer choosePlayer, Start startScene
+            , Multiplayer multiplayer , Player player1 )
     {
         String style = this.getClass().getResource("graphic.css").toExternalForm();
         scene.getStylesheets().add(style);
         this.stage = stage;
         this.players = players;
         this.startScene = startScene;
-        for( Player p : players )
-            if( p.isLastPlayer() )
-            {
-                player = p;
-                break;
-            }
+        this.player = player1;
+        this.choosePlayerScene = choosePlayer;
         try
         {
             music();
@@ -252,16 +249,29 @@ public class Menu
         mediaPlayer.play();
     }
 
-    public void passMenuInstance(Menu menu)
+    public void passMenuInstance(Menu menu,Player player)
     {
         optionsScene = new Options(stage,menu);
-        choosePlayerScene = new ChoosePlayer(stage,menu,players);
         choosePlayerScene.setPlayer(player);
     }
 
     private Label insertPlayer()
     {
         Label playerName = new Label("Player hasn't been chosen!");
+        playerName.setTextFill(Color.rgb(54,16,0));
+        playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+        playerName.setLayoutX(Menu.WIDTH - 470);
+        playerName.setLayoutY(Menu.HEIGHT / 7);
+        if( player != null && player.getId() > 0 )
+            playerName.setText("Player : "+player.getName());
+        else
+            playerName.setText("Player hasn't been chosen!");
+        return playerName;
+    }
+
+    public Label insertPlayer(Player player)
+    {
+        Label playerName = new Label();
         playerName.setTextFill(Color.rgb(54,16,0));
         playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
         playerName.setLayoutX(Menu.WIDTH - 470);
