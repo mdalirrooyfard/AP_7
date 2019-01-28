@@ -32,10 +32,8 @@ public class Server {
                     Sockets.add(socket);
                     serverSender.addSocket(socket);
                     serverSender.addOutPutStream(socket);
-                    //todo join shod
                     Thread listener = new Thread(new ServerListener(socket, serverSender));
                     listener.start();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -481,7 +481,7 @@ public class Loader
 
     public Vector<Player> loadPlayers()
     {
-        Vector<Player> players = null;
+        Vector<Player> players = new Vector<>();
         try( InputStream inputStream = new FileInputStream("src\\Resources\\Players.txt") )
         {
             Scanner scanner = new Scanner(inputStream);

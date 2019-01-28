@@ -38,4 +38,14 @@ public class ClientSender {
             e.printStackTrace();
         }
     }
+
+    public void sendViewProfileRequest(String username){
+        Command command = new Command(CommandTypes.VIEW_PROFILE, username);
+        try {
+            objectOutputStream.writeObject(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

@@ -108,9 +108,10 @@ public class Controller
 
     private void findLastPlayer()
     {
-        for( Player p : players )
-            if( p.isLastPlayer() )
-                player = p;
+        if( players.size() > 0 )
+            for( Player p : players )
+                if( p.isLastPlayer() )
+                    player = p;
     }
 
     private void zoom()

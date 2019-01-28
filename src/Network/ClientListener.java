@@ -1,5 +1,7 @@
 package Network;
 
+import Model.Player;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,8 +38,10 @@ public class ClientListener implements Runnable{
                 //todo fill this switch
                 switch (command.getType()) {
                     case SEND_MASSAGE:
-                        System.out.println((String) command.getContent());
                         clientGui.putInCharArea((String) command.getContent());
+                        break;
+                    case PLAYER_JOINED:
+                        clientGui.playerJoinedMessage((String) command.getContent());
                         break;
                     case SEND_LIST:
                         break;

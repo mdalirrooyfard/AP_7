@@ -10,5 +10,6 @@ public enum CommandTypes {
     SEND_LIST,
     PLAYER_JOINED,
     PLAYER_EXITED,
-    SERVER_EXITED;
+    SERVER_EXITED,
+    VIEW_PROFILE;
 }

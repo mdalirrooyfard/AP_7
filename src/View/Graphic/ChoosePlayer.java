@@ -110,6 +110,7 @@ public class ChoosePlayer
                             if( node instanceof Label )
                                 ((Label) node).setText("");
                         player = p;
+                        player.setUserName(p.getName());
                         player.setLastPlayer(true);
                         for( Player p1 : players )
                             if( p1.isLastPlayer() && p1 != p )
@@ -180,6 +181,8 @@ public class ChoosePlayer
                             public void handle(MouseEvent event)
                             {
                                 player = new Player(playerName.getText(),players.size() + 1);
+                                player.setUserName(playerName.getText());
+                                //todo change this!
                                 players.add(player);
                                 player.setLastPlayer(true);
                                 for( Player p1 : players )
