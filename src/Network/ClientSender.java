@@ -20,10 +20,11 @@ public class ClientSender {
         }
     }
 
-    public void sendMessage(String data){
+    public synchronized void sendMessage(String data){
         Command command = new Command(CommandTypes.SEND_MASSAGE, data);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

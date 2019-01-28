@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public class ServerSender {
     private HashMap<Socket, Player> people = new HashMap<>();
+    private HashMap<Socket, ObjectOutputStream> outPutStreams = new HashMap<>();
     private ServerGui serverGui;
 
     public ServerSender(ServerGui serverGui){
@@ -20,15 +21,24 @@ public class ServerSender {
         people.put(socket, null);
     }
 
+    public void addOutPutStream(Socket socket){
+        try {
+            outPutStreams.put(socket, new ObjectOutputStream(socket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setPlayer(Player player){
         people.replace(player.getSocket(), player);
     }
 
-    public void sendGroup(Command command){
-        for (Socket s : people.keySet()){
+    public synchronized void sendGroup(Command command){
+        for (Socket s : outPutStreams.keySet()){
             try {
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(s.getOutputStream());
+                ObjectOutputStream objectOutputStream = outPutStreams.get(s);
                 objectOutputStream.writeObject(command);
+                objectOutputStream.flush();
                 if (command.getType().equals(CommandTypes.SEND_MASSAGE))
                     serverGui.putInCharArea((String) command.getContent());
             } catch (IOException e) {

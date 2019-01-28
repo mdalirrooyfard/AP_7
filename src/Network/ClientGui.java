@@ -4,10 +4,7 @@ import Model.Player;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -19,10 +16,7 @@ public class ClientGui extends Application
 {
     private ClientSender clientSender;
     private Player player;
-    private VBox vBox = new VBox();
-    private ScrollPane chatArea = new ScrollPane();
-    private Pane pane = new Pane();
-    private int y = 10;
+    private TextArea chatArea = new TextArea();
 
     public ClientGui(ClientSender clientSender, Player player){
         this.clientSender = clientSender;
@@ -36,10 +30,10 @@ public class ClientGui extends Application
         primaryStage.setTitle(player.getName() + " in chatRoom");
         TextField textField = new TextField();
         Button button = new Button("send");
-        chatArea.setContent(pane);
-        HBox hBox = new HBox(textField, button);
-        vBox.getChildren().addAll(chatArea, hBox);
-        Scene scene = new Scene(vBox, 800, 600);
+        HBox hBox = new HBox(20, chatArea);
+        HBox hBox1 = new HBox(20, textField, button);
+        VBox vBox = new VBox(20, hBox1, hBox);
+        Scene scene = new Scene(vBox);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -55,15 +49,7 @@ public class ClientGui extends Application
     }
 
     public  void putInCharArea(String message) {
-        y += 30;
-        Label label = new Label();
-        label.setText(message);
-        label.setFont(new Font(20));
-        if (message.startsWith(player.getName()))
-            label.relocate(400, y);
-        else
-            label.relocate(10, y);
-        pane.getChildren().add(label);
+        chatArea.appendText(message + "\n");
     }
 
 }

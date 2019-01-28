@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientListener{
+public class ClientListener implements Runnable{
     private Socket socket;
     private ClientGui clientGui;
     private ObjectInputStream objectInputStream;
@@ -28,37 +28,35 @@ public class ClientListener{
         return objectInputStream;
     }
 
-    public void start(){
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Command command = (Command) objectInputStream.readObject();
-                    //todo fill this switch
-                    switch (command.getType()){
-                        case SEND_MASSAGE:
-                            clientGui.putInCharArea((String) command.getContent());
-                            break;
-                        case SEND_LIST:
-                            break;
-                        case SEND_LEADER_BOARD:
-                            break;
-                        case UPDATE_MARKET:
-                            break;
-                        case SELL_TO_MARKET:
-                            break;
-                        case BUY_FROM_MARKET:
-                            break;
-                        default:
-                    }
-                }catch (IOException e){
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+    @Override
+    public void run() {
+        try {
+            while(true) {
+                Command command = (Command) objectInputStream.readObject();
+                //todo fill this switch
+                switch (command.getType()) {
+                    case SEND_MASSAGE:
+                        System.out.println((String) command.getContent());
+                        clientGui.putInCharArea((String) command.getContent());
+                        break;
+                    case SEND_LIST:
+                        break;
+                    case SEND_LEADER_BOARD:
+                        break;
+                    case UPDATE_MARKET:
+                        break;
+                    case SELL_TO_MARKET:
+                        break;
+                    case BUY_FROM_MARKET:
+                        break;
+                    default:
                 }
             }
-        });
-        thread.start();
+        }catch (IOException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

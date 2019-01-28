@@ -38,7 +38,6 @@ public class ServerGui extends Application {
                 if (!data.equals("")){
                     Command command = new Command(CommandTypes.SEND_MASSAGE, "server: " + data);
                     serverSender.sendGroup(command);
-                    putInCharArea("server: " + data);
                 }
                 textField.setText("");
             }

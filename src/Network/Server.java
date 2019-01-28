@@ -16,6 +16,7 @@ public class Server {
         this.serverSocket = serverSocket ;
         this.myPort = myPort;
         this.serverSender = new ServerSender(serverGui);
+        serverGui.setServerSender(serverSender);
     }
 
     public ServerGui getServerGui() {
@@ -30,6 +31,8 @@ public class Server {
                     Socket socket = serverSocket.accept();
                     Sockets.add(socket);
                     serverSender.addSocket(socket);
+                    serverSender.addOutPutStream(socket);
+                    //todo join shod
                     Thread listener = new Thread(new ServerListener(socket, serverSender));
                     listener.start();
 

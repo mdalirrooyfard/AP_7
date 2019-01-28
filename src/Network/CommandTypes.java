@@ -7,5 +7,8 @@ public enum CommandTypes {
     SEND_PLAYER,
     UPDATE_MARKET,
     SEND_LEADER_BOARD,
-    SEND_LIST;
+    SEND_LIST,
+    PLAYER_JOINED,
+    PLAYER_EXITED,
+    SERVER_EXITED;
 }

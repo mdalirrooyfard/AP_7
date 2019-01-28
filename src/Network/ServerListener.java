@@ -10,14 +10,12 @@ import java.net.Socket;
 public class ServerListener implements Runnable{
     private Socket socket;
     private ServerSender serverSender;
-    private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
     public ServerListener(Socket socket, ServerSender serverSender){
         this.socket = socket;
         this.serverSender = serverSender;
         try {
-            this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,9 +32,11 @@ public class ServerListener implements Runnable{
                         break;
                     case SEND_MASSAGE:
                         serverSender.sendGroup(command);
+                        System.out.println("ferestad");
                         break;
                     case SEND_PLAYER:
                         Player player = (Player) command.getContent();
+                        player.setSocket(socket);
                         serverSender.setPlayer(player);
                         break;
                     case SELL_TO_MARKET:

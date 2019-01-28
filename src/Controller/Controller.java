@@ -69,10 +69,11 @@ public class Controller
     private Vector<ImageView> levels = new Vector<>();
     private boolean isMultiPlayer = false;
     private ClientSender clientSender;
-    private ClientListener clientListener;
+    private Thread clientListener;
     private ClientGui clientGui;
     private  int flagWell = 0 , flagWareHouse = 0;
     private Image moneyIcon ,  arrow;
+    private Socket socket;
 
     {
         try {
@@ -2161,13 +2162,12 @@ public class Controller
                 {
                     try {
                         if (!serverIP.getText().equals("") && !serverPort.getText().equals("")) {
-                            Socket socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
+                            socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
                             clientSender = new ClientSender(socket);
                             clientGui = new ClientGui(clientSender, player);
-                            clientListener = new ClientListener(socket, clientGui);
-                            clientSender.sendPlayer(player);
-                            player.setSocket(socket);
+                            clientListener = new Thread(new ClientListener(socket, clientGui));
                             clientListener.start();
+                            clientSender.sendPlayer(player);
                             isMultiPlayer = true;
                             stage.setScene(menu.getScene());
                             player.setClient(true);
