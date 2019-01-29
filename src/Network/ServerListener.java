@@ -36,8 +36,8 @@ public class ServerListener implements Runnable{
                         Player player = (Player) command.getContent();
                         player.setSocket(socket);
                         serverSender.setPlayer(player);
-                        //Command sendNewPlayer = new Command(CommandTypes.PLAYER_JOINED, player.getUserName());
-                        //serverSender.sendGroup(sendNewPlayer);
+                        Command sendNewPlayer = new Command(CommandTypes.PLAYER_JOINED, player.getUserName());
+                        serverSender.sendGroup(sendNewPlayer);
                         break;
                     case VIEW_PROFILE:
                         break;

@@ -1,6 +1,7 @@
 package Network;
 
 import Model.Player;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -41,7 +42,12 @@ public class ClientListener implements Runnable{
                         clientGui.putInCharArea((String) command.getContent());
                         break;
                     case PLAYER_JOINED:
-                        clientGui.playerJoinedMessage((String) command.getContent());
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                clientGui.playerJoinedMessage((String) command.getContent());
+                            }
+                        });
                         break;
                     case SEND_LIST:
                         break;
