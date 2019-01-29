@@ -52,6 +52,11 @@ public class Menu
         this.menu = menu;
     }
 
+    public Menu getMenu()
+    {
+        return menu;
+    }
+
     public MediaPlayer getMediaPlayer()
     {
         return mediaPlayer;

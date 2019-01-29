@@ -80,14 +80,13 @@ public class Controller
     private  int flagWell = 0 , flagWareHouse = 0;
     private Image moneyIcon ,  arrow;
     private Socket socket;
-
     {
-        try {
+        try
+        {
             moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
             arrow = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\arrow.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+        catch (FileNotFoundException e) { e.printStackTrace(); }
     }
     private ImageView moneyView = new ImageView(moneyIcon);
     private ImageView arrowViewWell = new ImageView(arrow);
@@ -101,7 +100,7 @@ public class Controller
         findLastPlayer();
         this.stage = stage;
         this.start = new Start(stage);
-        this.choosePlayer = new ChoosePlayer(stage,players);
+        this.choosePlayer = new ChoosePlayer(stage);
         loadLevels();
         writePlayers();
         insertNewPlayer();
@@ -137,6 +136,7 @@ public class Controller
     {
         try(InputStream inputStream = new FileInputStream(path))
         {
+            player.setLastLevel(level);
             Scanner scanner = new Scanner(inputStream);
             farm = new Farm();
             String string = scanner.next();
@@ -371,6 +371,7 @@ public class Controller
     {
         try(InputStream inputStream = new FileInputStream(path))
         {
+            player.setLastLevel(level);
             Scanner scanner = new Scanner(inputStream);
             farm = new Farm();
             YaGson yaGson = new YaGson();
@@ -571,7 +572,8 @@ public class Controller
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void danceTheMoney(){
+    private void danceTheMoney()
+    {
         KeyValue kvHieght = new KeyValue(moneyView.fitHeightProperty() , moneyView.getFitHeight() - 10);
         KeyValue kvWidth = new KeyValue(moneyView.fitWidthProperty() , moneyView.getFitWidth() - 25);
         KeyValue kvX = new KeyValue(moneyView.xProperty() , moneyView.getX() + 12.5);
@@ -958,29 +960,33 @@ public class Controller
         loadGoals();
     }
 
-    private void showChatRoomIcon(){
-        if (isMultiPlayer){
-            try {
-                Image image  = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\chatButton.png"), 77, 73, false, true);
+    private void showChatRoomIcon()
+    {
+        if (isMultiPlayer)
+        {
+            try
+            {
+                Image image  = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\chatButton.png"),
+                        77, 73, false, true);
                 ImageView chatView = new ImageView(image);
                 chatView.setX(5);
                 chatView.setY(Constants.HEIGHT - 200);
                 view.getGroup().getChildren().add(chatView);
-                chatView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                chatView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
-                        try {
+                    public void handle(MouseEvent event)
+                    {
+                        try
+                        {
                             Stage chatStage = new Stage();
                             clientGui.start(chatStage);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        catch (Exception e) { e.printStackTrace(); }
                     }
                 });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
-
+            catch (FileNotFoundException e) { e.printStackTrace(); }
         }
     }
 
@@ -2298,7 +2304,7 @@ public class Controller
                             if( p1.isLastPlayer() && p1 != p )
                                 p1.setLastPlayer(false);
                         insertPlayer();
-                        menu.setPlayer(player);
+                        choosePlayer.setPlayer(player);
                     }
                 });
             }
@@ -2388,7 +2394,7 @@ public class Controller
                                 for( Node node : choosePlayer.getGroup().getChildren() )
                                     if( node instanceof Label )
                                         ((Label) node).setText("");
-                                insertPlayer();
+                                choosePlayer.setPlayer(player);
                             }
                         });
 

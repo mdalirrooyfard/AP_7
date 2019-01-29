@@ -12,7 +12,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
-import java.util.Vector;
 
 public class ChoosePlayer
 {
@@ -32,11 +31,6 @@ public class ChoosePlayer
         return menu;
     }
 
-    public void setMenu(Menu menu)
-    {
-        this.menu = menu;
-    }
-
     public Player getPlayer()
     {
         return player;
@@ -47,16 +41,20 @@ public class ChoosePlayer
         this.player = player;
     }
 
+    public void setMenu(Menu menu)
+    {
+        this.menu = menu;
+    }
+
     public Scene getScene()
     {
         stage.setFullScreen(menu.isFullScreen());
         return scene;
     }
 
-    public ChoosePlayer(Stage stage , Vector<Player> players)
+    public ChoosePlayer(Stage stage)
     {
         this.stage = stage;
-        this.menu = menu;
         try
         {
             Image background = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\background.png")
@@ -96,7 +94,6 @@ public class ChoosePlayer
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    menu.setPlayer(player);
                     stage.setScene(menu.getScene());
                 }
             });
