@@ -80,7 +80,22 @@ public class ServerSender {
     }
 
     public void sendList(Socket socket){
-
+        try {
+            StringBuilder list = new StringBuilder();
+            int numberOfLines = 0;
+            for (Socket s : peopleAndSockets.keySet()) {
+                if (!s.equals(socket)) {
+                    list.append(peopleAndSockets.get(s).getUserName()).append("\n");
+                    numberOfLines++;
+                }
+            }
+            Command command = new Command(CommandTypes.SEND_LIST, list.toString(), numberOfLines);
+            ObjectOutputStream objectOutputStream = outPutStreams.get(socket);
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void openPrivateChat(Socket socket, String destUserName){

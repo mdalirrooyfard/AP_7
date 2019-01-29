@@ -95,6 +95,12 @@ public class ClientListener implements Runnable{
                         });
                         break;
                     case SEND_LIST:
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                clientGui.showList((String)command.getContent(), command.getNumberOfLines());
+                            }
+                        });
                         break;
                     case SEND_LEADER_BOARD:
                         break;

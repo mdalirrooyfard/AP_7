@@ -52,16 +52,17 @@ public class ClientGui extends Application
         primaryStage.setTitle(player.getName() + " in chatRoom");
         primaryStage.setResizable(false);
         TextField textField = new TextField();
-        Button button = new Button("send");
+        Button send = new Button("send");
+        Button list = new Button("list");
         HBox hBox = new HBox(20, chatArea);
-        HBox hBox1 = new HBox(20, textField, button);
+        HBox hBox1 = new HBox(20, textField, send, list);
         VBox vBox = new VBox(20, hBox1, hBox);
         chatArea.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
         chatArea.setWrapText(true);
         chatArea.setMinHeight(560);
         root.getChildren().add(vBox);
         scene = new Scene(root, 800, 600);
-        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        send.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String data = textField.getText();
@@ -69,6 +70,12 @@ public class ClientGui extends Application
                     clientSender.sendMessage(player.getName()+": "+data);
                 }
                 textField.setText("");
+            }
+        });
+        list.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                clientSender.sendListRequest();
             }
         });
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -181,6 +188,37 @@ public class ClientGui extends Application
                 }
             });
             root.getChildren().addAll(messageView, name, userName, level, money, okView, privateChatView);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void showList(String list, int numberOfLines){
+        try {
+            Rectangle rectangle = new Rectangle(0, 0, 800, 600);
+            rectangle.setFill(Color.rgb(54, 16, 0));
+            rectangle.setOpacity(0.7);
+            Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
+                    400, numberOfLines * 50, false, true);
+            ImageView messageView = new ImageView(message);
+            messageView.setX(200);
+            messageView.setY(Constants.HEIGHT/2 - numberOfLines * 25);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
+                    100, 39, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(messageView.getY() + numberOfLines * 50 - 30);
+            okView.setX(450);
+            Label names = new Label(list);
+            names.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            names.setTextFill(Color.rgb(54, 16, 0));
+            names.relocate(250, messageView.getY());
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    root.getChildren().removeAll(rectangle, messageView, names,okView);
+                }
+            });
+            root.getChildren().addAll(rectangle, messageView, names,okView);
         }catch (IOException e){
             e.printStackTrace();
         }

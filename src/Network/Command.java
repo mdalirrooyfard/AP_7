@@ -7,6 +7,7 @@ public class Command implements Serializable {
     private Object content;
     private String receiver;
     private String sender;
+    private int numberOfLines;
 
     public Command(CommandTypes type , Object content){
         this.type = type;
@@ -17,6 +18,19 @@ public class Command implements Serializable {
         this(type, content);
         this.receiver = receiver;
         this.sender = sender;
+    }
+
+    public Command(CommandTypes type, Object content, int numberOfLines){
+        this(type, content);
+        this.numberOfLines = numberOfLines;
+    }
+
+    public int getNumberOfLines(){
+        return numberOfLines;
+    }
+
+    public Command(CommandTypes type){
+        this.type = type;
     }
 
     public String getReceiver(){

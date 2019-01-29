@@ -65,4 +65,14 @@ public class ClientSender {
             e.printStackTrace();
         }
     }
+
+    public void sendListRequest(){
+        Command command = new Command(CommandTypes.SEND_LIST);
+        try {
+            objectOutputStream.writeObject(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
