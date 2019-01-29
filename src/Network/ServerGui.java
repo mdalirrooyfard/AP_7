@@ -10,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class ServerGui extends Application {
@@ -25,12 +27,13 @@ public class ServerGui extends Application {
         primaryStage.setTitle("server in chatRoom");
         TextField textField = new TextField();
         Button button = new Button("send");
-        chatArea.setFont(new Font(25));
+        chatArea.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
         chatArea.setWrapText(true);
         HBox hBox = new HBox(20, chatArea);
         HBox hBox1 = new HBox(20, textField, button);
         VBox vBox = new VBox(20, hBox1, hBox);
-        Scene scene = new Scene(vBox);
+        chatArea.setMinHeight(560);
+        Scene scene = new Scene(vBox, 800, 600);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {

@@ -8,7 +8,7 @@ import java.net.Socket;
 public class Player implements Serializable
 {
     private String name,userName;
-    private Socket socket;
+    //private Socket socket;
     private int lastLevel , id , money;
     private boolean isLastPlayer , isClient;
 
@@ -17,6 +17,7 @@ public class Player implements Serializable
         this.name = name;
         this.id = id;
         lastLevel = 1;
+        money = 0;
     }
 
 
@@ -35,7 +36,7 @@ public class Player implements Serializable
         this.userName = userName;
     }
 
-    public Socket getSocket()
+    /*public Socket getSocket()
     {
         return socket;
     }
@@ -43,7 +44,7 @@ public class Player implements Serializable
     public void setSocket(Socket socket)
     {
         this.socket = socket;
-    }
+    }*/
 
     public void setLastLevel(int lastLevel)
     {

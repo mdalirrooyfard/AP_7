@@ -34,12 +34,13 @@ public class ServerListener implements Runnable{
                         break;
                     case SEND_PLAYER:
                         Player player = (Player) command.getContent();
-                        player.setSocket(socket);
-                        serverSender.setPlayer(player);
-                        //Command sendNewPlayer = new Command(CommandTypes.PLAYER_JOINED, player.getUserName());
-                        //serverSender.sendGroup(sendNewPlayer);
+                        //player.setSocket(socket);
+                        serverSender.setPlayer(socket, player);
+                        Command sendNewPlayer = new Command(CommandTypes.PLAYER_JOINED, player.getUserName());
+                        serverSender.sendGroup(sendNewPlayer);
                         break;
                     case VIEW_PROFILE:
+                        serverSender.sendProfile(socket, (String)command.getContent());
                         break;
                     case SELL_TO_MARKET:
                         break;
