@@ -11,6 +11,7 @@ public class ServerSender {
     private HashMap<Socket, Player> peopleAndSockets = new HashMap<>();
     private HashMap<Socket, ObjectOutputStream> outPutStreams = new HashMap<>();
     private HashMap<String, Player> usenames = new HashMap<>();
+    private HashMap<String, Socket> userNameAndSocket = new HashMap<>();
     private ServerGui serverGui;
 
     public ServerSender(ServerGui serverGui){
@@ -32,6 +33,7 @@ public class ServerSender {
     public void setPlayer(Socket socket, Player player){
         peopleAndSockets.replace(socket, player);
         usenames.put(player.getUserName(), player);
+        userNameAndSocket.put(player.getUserName(), socket);
     }
 
     public synchronized void sendGroup(Command command){
@@ -48,8 +50,17 @@ public class ServerSender {
         }
     }
 
-    public void sendIndividual(Socket socket){
-        //todo get the destination client and sent the message to him
+    public void sendIndividual(Socket socket, Command command){
+        try{
+            ObjectOutputStream sender = outPutStreams.get(socket);
+            sender.writeObject(command);
+            sender.flush();
+            ObjectOutputStream receiver = outPutStreams.get(userNameAndSocket.get(command.getReceiver()));
+            receiver.writeObject(command);
+            receiver.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void sendProfile(Socket socket, String username){
@@ -70,5 +81,20 @@ public class ServerSender {
 
     public void sendList(Socket socket){
 
+    }
+
+    public void openPrivateChat(Socket socket, String destUserName){
+        try{
+            ObjectOutputStream client1 = outPutStreams.get(socket);
+            Command command1 = new Command(CommandTypes.PRIVATE_CHAT, destUserName);
+            client1.writeObject(command1);
+            client1.flush();
+            ObjectOutputStream client2 = outPutStreams.get(userNameAndSocket.get(destUserName));
+            Command command2 = new Command(CommandTypes.PRIVATE_CHAT, peopleAndSockets.get(socket).getUserName());
+            client2.writeObject(command2);
+            client2.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

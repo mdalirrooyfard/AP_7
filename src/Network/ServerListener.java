@@ -42,6 +42,12 @@ public class ServerListener implements Runnable{
                     case VIEW_PROFILE:
                         serverSender.sendProfile(socket, (String)command.getContent());
                         break;
+                    case PRIVATE_CHAT:
+                        serverSender.openPrivateChat(socket, (String)command.getContent());
+                        break;
+                    case SEND_INDIVIDUAL_MESSAGE:
+                        serverSender.sendIndividual(socket, command);
+                        break;
                     case SELL_TO_MARKET:
                         break;
                     case SEND_LIST:

@@ -2,16 +2,19 @@ package Network;
 
 import Model.Player;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class ClientListener implements Runnable{
     private Socket socket;
     private ClientGui clientGui;
     private ObjectInputStream objectInputStream;
+    private HashMap<String, PrivateGui> privateReceivers = new HashMap<>();
 
     public ClientListener(Socket socket, ClientGui clientGui){
         this.socket = socket;
@@ -57,6 +60,27 @@ public class ClientListener implements Runnable{
                                 clientGui.showProfile(player);
                             }
                         });
+                        break;
+                    case PRIVATE_CHAT:
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    PrivateGui privateGui;
+                                    if (!privateReceivers.containsKey((String) command.getContent())) {
+                                        privateGui = new PrivateGui(clientGui.getPlayer(), (String) command.getContent(), clientGui.getClientSender());
+                                        privateReceivers.put((String) command.getContent(), privateGui);
+                                    } else
+                                        privateGui = privateReceivers.get((String) command.getContent());
+                                    Stage stage = new Stage();
+                                    privateGui.start(stage);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        break;
+                    case SEND_INDIVIDUAL_MESSAGE:
                         break;
                     case SEND_LIST:
                         break;

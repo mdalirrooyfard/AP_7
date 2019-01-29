@@ -46,6 +46,14 @@ public class ClientSender {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void sendPrivateChatRequest(String receiver){
+        Command command = new Command(CommandTypes.PRIVATE_CHAT, receiver);
+        try {
+            objectOutputStream.writeObject(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -37,6 +37,13 @@ public class ClientGui extends Application
     }
 
 
+    public Player getPlayer(){
+        return player;
+    }
+
+    public ClientSender getClientSender(){
+        return clientSender;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -94,7 +101,7 @@ public class ClientGui extends Application
                 Label label = new Label(userName+" had joined the chatRoom!");
                 label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
                 label.setTextFill(Color.rgb(54, 16, 0));
-                label.relocate(250, 250);
+                label.relocate(235, 250);
                 okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
@@ -118,17 +125,17 @@ public class ClientGui extends Application
         }
     }
 
-    public void showProfile(Player player){
+    public void showProfile(Player otherPlayer){
         try {
             Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
                     400, 200, false, true);
             ImageView messageView = new ImageView(message);
             messageView.setX(200);
             messageView.setY(200);
-            Label name = new Label("Name : " + player.getName());
-            Label userName = new Label("Username : " + player.getUserName());
-            Label level = new Label("Level : " + Integer.toString(player.getLastLevel()));
-            Label money = new Label("Money : " + Integer.toString(player.getMoney()));
+            Label name = new Label("Name : " + otherPlayer.getName());
+            Label userName = new Label("Username : " + otherPlayer.getUserName());
+            Label level = new Label("Level : " + Integer.toString(otherPlayer.getLastLevel()));
+            Label money = new Label("Money : " + Integer.toString(otherPlayer.getMoney()));
             name.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
             userName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
             level.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
@@ -146,13 +153,25 @@ public class ClientGui extends Application
             ImageView okView = new ImageView(ok);
             okView.setX(500);
             okView.setY(370);
-            root.getChildren().addAll(messageView, name, userName, level, money, okView);
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     root.getChildren().removeAll(messageView, name, userName, level, money, okView);
                 }
             });
+            Image privateChat = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\privateChatButton.png"),
+                    100, 39, false, true);
+            ImageView privateChatView = new ImageView(privateChat);
+            privateChatView.setX(350);
+            privateChatView.setY(370);
+            privateChatView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    clientSender.sendPrivateChatRequest(otherPlayer.getUserName());
+                    root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView);
+                }
+            });
+            root.getChildren().addAll(messageView, name, userName, level, money, okView, privateChatView);
         }catch (IOException e){
             e.printStackTrace();
         }
