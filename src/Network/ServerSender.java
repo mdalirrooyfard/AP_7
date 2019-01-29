@@ -5,12 +5,12 @@ import Model.Player;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerSender {
-    private HashMap<Socket, Player> people = new HashMap<>();
+    private HashMap<Socket, Player> peopleAndSockets = new HashMap<>();
     private HashMap<Socket, ObjectOutputStream> outPutStreams = new HashMap<>();
+    private HashMap<String, Player> usenames = new HashMap<>();
     private ServerGui serverGui;
 
     public ServerSender(ServerGui serverGui){
@@ -18,7 +18,7 @@ public class ServerSender {
     }
 
     public void addSocket(Socket socket){
-        people.put(socket, null);
+        peopleAndSockets.put(socket, null);
     }
 
     public void addOutPutStream(Socket socket){
@@ -29,8 +29,9 @@ public class ServerSender {
         }
     }
 
-    public void setPlayer(Player player){
-        people.replace(player.getSocket(), player);
+    public void setPlayer(Socket socket, Player player){
+        peopleAndSockets.replace(socket, player);
+        usenames.put(player.getUserName(), player);
     }
 
     public synchronized void sendGroup(Command command){
@@ -49,6 +50,18 @@ public class ServerSender {
 
     public void sendIndividual(Socket socket){
         //todo get the destination client and sent the message to him
+    }
+
+    public void sendProfile(Socket socket, String username){
+        try{
+            ObjectOutputStream objectOutputStream = outPutStreams.get(socket);
+            Player player = usenames.get(username);
+            Command command = new Command(CommandTypes.VIEW_PROFILE, player);
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void sendLeaderBoard(Socket socket){

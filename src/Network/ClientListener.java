@@ -49,6 +49,15 @@ public class ClientListener implements Runnable{
                             }
                         });
                         break;
+                    case VIEW_PROFILE:
+                        Player player = (Player)command.getContent();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                clientGui.showProfile(player);
+                            }
+                        });
+                        break;
                     case SEND_LIST:
                         break;
                     case SEND_LEADER_BOARD:
