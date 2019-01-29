@@ -2,6 +2,7 @@ package Network;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -13,10 +14,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ServerGui extends Application {
     private TextArea chatArea = new TextArea();
     private ServerSender serverSender;
+    private Scene scene;
 
     public void setServerSender(ServerSender serverSender) {
         this.serverSender = serverSender;
@@ -33,7 +36,7 @@ public class ServerGui extends Application {
         HBox hBox1 = new HBox(20, textField, button);
         VBox vBox = new VBox(20, hBox1, hBox);
         chatArea.setMinHeight(560);
-        Scene scene = new Scene(vBox, 800, 600);
+        scene = new Scene(vBox, 800, 600);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -45,6 +48,14 @@ public class ServerGui extends Application {
                 textField.setText("");
             }
         });
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Group tempGroup = new Group();
+                scene.setRoot(tempGroup);
+            }
+        });
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }

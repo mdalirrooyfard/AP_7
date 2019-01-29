@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +31,7 @@ public class ClientGui extends Application
     private Player player;
     private TextArea chatArea = new TextArea();
     private Group root = new Group();
+    private Scene scene;
 
     public ClientGui(ClientSender clientSender, Player player){
         this.clientSender = clientSender;
@@ -58,7 +60,7 @@ public class ClientGui extends Application
         chatArea.setWrapText(true);
         chatArea.setMinHeight(560);
         root.getChildren().add(vBox);
-        Scene scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 800, 600);
         button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -67,6 +69,13 @@ public class ClientGui extends Application
                     clientSender.sendMessage(player.getName()+": "+data);
                 }
                 textField.setText("");
+            }
+        });
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Group tempGroup = new Group();
+                scene.setRoot(tempGroup);
             }
         });
         primaryStage.setScene(scene);
