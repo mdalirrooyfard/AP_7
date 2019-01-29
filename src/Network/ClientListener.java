@@ -81,6 +81,18 @@ public class ClientListener implements Runnable{
                         });
                         break;
                     case SEND_INDIVIDUAL_MESSAGE:
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                PrivateGui privateGui;
+                                if (privateReceivers.containsKey(command.getReceiver())){
+                                    privateGui = privateReceivers.get(command.getReceiver());
+                                }
+                                else
+                                    privateGui = privateReceivers.get(command.getSender());
+                                privateGui.putInCharArea((String)command.getContent());
+                            }
+                        });
                         break;
                     case SEND_LIST:
                         break;

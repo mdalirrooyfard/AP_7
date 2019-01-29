@@ -56,4 +56,13 @@ public class ClientSender {
             e.printStackTrace();
         }
     }
+
+    public void sendPrivateMessage(String message, String sender, String receiver){
+        Command command = new Command(CommandTypes.SEND_INDIVIDUAL_MESSAGE, message, sender, receiver);
+        try {
+            objectOutputStream.writeObject(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

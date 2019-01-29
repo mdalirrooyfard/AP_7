@@ -48,7 +48,7 @@ public class ClientGui extends Application
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(player.getName() + " in chatRoom");
-        //primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         TextField textField = new TextField();
         Button button = new Button("send");
         HBox hBox = new HBox(20, chatArea);
