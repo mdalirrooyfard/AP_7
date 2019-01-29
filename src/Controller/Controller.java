@@ -65,7 +65,7 @@ public class Controller
     private ChoosePlayer choosePlayer;
     private Multiplayer multiplayer = new Multiplayer();
     private AnimationTimer animationTimer;
-    private OrderPage orderPage = new OrderPage();;
+    private OrderPage orderPage = new OrderPage();
     private SellPage sellPage;
     private HostMenu hostMenu;
     private Label moneyLabel = new Label();
@@ -79,6 +79,7 @@ public class Controller
     private ClientGui clientGui;
     private  int flagWell = 0 , flagWareHouse = 0;
     private Image moneyIcon ,  arrow;
+    private RecipeSetter recipeSetter = new RecipeSetter();
     private Socket socket;
     {
         try
@@ -925,20 +926,26 @@ public class Controller
         });
     }
 
-    private void arrowTo(double x , double y , ImageView arrowView , boolean kind){
+    private void arrowTo(double x , double y , ImageView arrowView , boolean kind)
+    {
         arrowView.setX(x);
         arrowView.setY(y);
         if(!view.getGroup().getChildren().contains(arrowView))
             view.getGroup().getChildren().add(arrowView);
-        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 5 , false , 4 , 2 , 8 ,
-                52 , 52 , 8);
-        if(kind) {
-            if(flagWell == 0 && !farm.getWell().isWorking()) {
+        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 7 , true , 4 , 2 , 8 ,
+                40 , 40 , 8);
+        if(kind)
+        {
+            if(flagWell == 0 && !farm.getWell().isWorking())
+            {
                 flagWell = 1;
                 imageViewSprite.start();
             }
-        }else{
-            if(flagWareHouse == 0){
+        }
+        else
+        {
+            if(flagWareHouse == 0)
+            {
                 flagWareHouse = 1;
                 imageViewSprite.start();
             }
@@ -1094,36 +1101,40 @@ public class Controller
                 {
                     if( w instanceof CustomFactory )
                     {
-
+                        animationTimer.stop();
+                        recipeSetter.makeScene(view,farm,loader.getItems(),animationTimer);
                     }
-                    int result = farm.startWorkShop(w.getWorkShopName());
-                    if (result > 0)
+                    else
                     {
-                        view.getGroup().getChildren().remove(imageView);
-                        flagWareHouse = 0;
-                        view.getGroup().getChildren().remove(arrowViewWareHouse);
-                        ImageView imageView1;
-                        if (w instanceof CakeBakery)
-                            imageView1 = loader.getMovingCakeBakery();
-                        else if (w instanceof CookieBakery)
-                            imageView1 = loader.getMovingCookieBakery();
-                        else if (w instanceof CustomFactory)
-                            imageView1 = loader.getMovingCustomFactory();
-                        else if (w instanceof EggPowderPlant)
-                            imageView1 = loader.getMovingEggPowderPlant();
-                        else if(w instanceof SewingFactory)
-                            imageView1 = loader.getMovingSewingFactory();
-                        else if (w instanceof Spinnery)
-                            imageView1 = loader.getMovingSpinnery();
-                        else
-                            imageView1 = loader.getMovingWeavingFactory();
-                        imageView1.setX(w.getShowX());
-                        imageView1.setY(w.getShowY());
-                        view.getGroup().getChildren().add(imageView1);
-                        AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
-                                4, 4, 16, 200,200, 16);
-                        flyingItems(w.getInputs(), result , w);
-                        imageViewSprite.start();
+                        int result = farm.startWorkShop(w.getWorkShopName());
+                        if (result > 0)
+                        {
+                            view.getGroup().getChildren().remove(imageView);
+                            flagWareHouse = 0;
+                            view.getGroup().getChildren().remove(arrowViewWareHouse);
+                            ImageView imageView1;
+                            if (w instanceof CakeBakery)
+                                imageView1 = loader.getMovingCakeBakery();
+                            else if (w instanceof CookieBakery)
+                                imageView1 = loader.getMovingCookieBakery();
+                            else if (w instanceof CustomFactory)
+                                imageView1 = loader.getMovingCustomFactory();
+                            else if (w instanceof EggPowderPlant)
+                                imageView1 = loader.getMovingEggPowderPlant();
+                            else if(w instanceof SewingFactory)
+                                imageView1 = loader.getMovingSewingFactory();
+                            else if (w instanceof Spinnery)
+                                imageView1 = loader.getMovingSpinnery();
+                            else
+                                imageView1 = loader.getMovingWeavingFactory();
+                            imageView1.setX(w.getShowX());
+                            imageView1.setY(w.getShowY());
+                            view.getGroup().getChildren().add(imageView1);
+                            AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
+                                    4, 4, 16, 200,200, 16);
+                            flyingItems(w.getInputs(), result , w);
+                            imageViewSprite.start();
+                        }
                     }
                 }
             });
