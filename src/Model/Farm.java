@@ -758,9 +758,9 @@ public class Farm {
         workshops[1] = new CookieBakery(0, mapLength / 2);
         workshops[2] = new EggPowderPlant(0, 0);
         workshops[3] = new SewingFactory(mapWidth - 1, mapLength - 1);
-        workshops[4] = new WeavingFactory(mapWidth - 1, (int)mapLength/2);
+        workshops[4] = new WeavingFactory(mapWidth - 1, mapLength/2);
         workshops[5] = new Spinnery(mapWidth - 1, 0);
-        workshops[6] = new CustomFactory(0,mapWidth / 2);
+        workshops[6] = new CustomFactory(mapWidth / 2 + 1,0);
     }
 
     public int startWorkShop(String name)
