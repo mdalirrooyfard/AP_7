@@ -25,8 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class ClientGui extends Application
-{
+public class ClientGui extends Application {
     private ClientSender clientSender;
     private Player player;
     private TextArea chatArea = new TextArea();
@@ -34,21 +33,21 @@ public class ClientGui extends Application
     private Scene scene;
     private boolean isOpen;
 
-    public ClientGui(ClientSender clientSender, Player player){
+    public ClientGui(ClientSender clientSender, Player player) {
         this.clientSender = clientSender;
         this.player = player;
         this.isOpen = false;
     }
 
-    public boolean getOpen(){
+    public boolean getOpen() {
         return isOpen;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 
-    public ClientSender getClientSender(){
+    public ClientSender getClientSender() {
         return clientSender;
     }
 
@@ -63,7 +62,7 @@ public class ClientGui extends Application
         HBox hBox = new HBox(20, chatArea);
         HBox hBox1 = new HBox(20, textField, send, list);
         VBox vBox = new VBox(20, hBox1, hBox);
-        chatArea.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+        chatArea.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
         chatArea.setWrapText(true);
         chatArea.setMinHeight(560);
         root.getChildren().add(vBox);
@@ -72,8 +71,8 @@ public class ClientGui extends Application
             @Override
             public void handle(MouseEvent event) {
                 String data = textField.getText();
-                if (!data.equals("")){
-                    clientSender.sendMessage(player.getName()+": "+data);
+                if (!data.equals("")) {
+                    clientSender.sendMessage(player.getName() + ": " + data);
                 }
                 textField.setText("");
             }
@@ -96,15 +95,15 @@ public class ClientGui extends Application
         primaryStage.show();
     }
 
-    public  void putInCharArea(String message) {
+    public void putInCharArea(String message) {
         chatArea.appendText(message + "\n");
     }
 
-    public void playerJoinedMessage(String userName){
-        if (!userName.equals(player.getUserName()) && isOpen){
+    public void playerJoinedMessage(String userName) {
+        if (!userName.equals(player.getUserName()) && isOpen) {
             try {
-                Rectangle rectangle = new Rectangle(0,0, 800, 600);
-                rectangle.setFill(Color.rgb(54,16,0));
+                Rectangle rectangle = new Rectangle(0, 0, 800, 600);
+                rectangle.setFill(Color.rgb(54, 16, 0));
                 rectangle.setOpacity(0.7);
                 Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
                         400, 150, false, true);
@@ -117,12 +116,12 @@ public class ClientGui extends Application
                 okView.setY(350);
                 okView.setX(450);
                 Image profile = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\viewProfileButton.png"),
-                        100, 39, false , true);
+                        100, 39, false, true);
                 ImageView profileView = new ImageView(profile);
                 profileView.setY(350);
                 profileView.setX(250);
-                Label label = new Label(userName+" had joined the chatRoom!");
-                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+                Label label = new Label(userName + " had joined the chatRoom!");
+                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
                 label.setTextFill(Color.rgb(54, 16, 0));
                 label.relocate(235, 250);
                 okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -148,7 +147,7 @@ public class ClientGui extends Application
         }
     }
 
-    public void showProfile(Player otherPlayer){
+    public void showProfile(Player otherPlayer) {
         try {
             Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
                     400, 200, false, true);
@@ -159,13 +158,13 @@ public class ClientGui extends Application
             Label userName = new Label("Username : " + otherPlayer.getUserName());
             Label level = new Label("Level : " + Integer.toString(otherPlayer.getLastLevel()));
             Label money = new Label("Money : " + Integer.toString(otherPlayer.getMoney()));
-            name.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            userName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            level.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            money.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            name.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            userName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            level.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            money.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
             name.relocate(250, 230);
             userName.relocate(250, 270);
-            level.relocate(250, 310 );
+            level.relocate(250, 310);
             money.relocate(250, 350);
             name.setTextFill(Color.rgb(54, 16, 0));
             userName.setTextFill(Color.rgb(54, 16, 0));
@@ -176,12 +175,6 @@ public class ClientGui extends Application
             ImageView okView = new ImageView(ok);
             okView.setX(500);
             okView.setY(370);
-            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    root.getChildren().removeAll(messageView, name, userName, level, money, okView);
-                }
-            });
             Image privateChat = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\privateChatButton.png"),
                     100, 39, false, true);
             ImageView privateChatView = new ImageView(privateChat);
@@ -194,41 +187,99 @@ public class ClientGui extends Application
                     root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView);
                 }
             });
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView);
+                }
+            });
+
             root.getChildren().addAll(messageView, name, userName, level, money, okView, privateChatView);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void showList(String list, int numberOfLines){
+    public void showList(String list, int numberOfLines) {
         try {
             Rectangle rectangle = new Rectangle(0, 0, 800, 600);
             rectangle.setFill(Color.rgb(54, 16, 0));
             rectangle.setOpacity(0.7);
             Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
-                    400, numberOfLines * 50, false, true);
+                    400, (numberOfLines + 1) * 50, false, true);
             ImageView messageView = new ImageView(message);
             messageView.setX(200);
-            messageView.setY(Constants.HEIGHT/2 - numberOfLines * 25);
+            messageView.setY(Constants.HEIGHT / 2 - numberOfLines * 25);
             Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
                     100, 39, false, true);
             ImageView okView = new ImageView(ok);
-            okView.setY(messageView.getY() + numberOfLines * 50 - 30);
+            okView.setY(messageView.getY() + numberOfLines * 50 + 20);
             okView.setX(450);
+            TextField someOne = new TextField();
+            someOne.relocate(310, messageView.getY() + numberOfLines * 50 - 10);
+            Image profile = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\viewProfileButton.png"),
+                    100, 39, false, true);
+            ImageView profileView = new ImageView(profile);
+            profileView.setY(messageView.getY() + numberOfLines * 50 + 20);
+            profileView.setX(320);
+            profileView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (!someOne.getText().equals("")){
+                        if (list.contains(someOne.getText())){
+                            clientSender.sendViewProfileRequest(someOne.getText());
+                            someOne.setText("");
+                        }
+                        else{
+                            notSuchUserNameError(someOne.getText());
+                            someOne.setText("");
+                        }
+                    }
+                }
+            });
             Label names = new Label(list);
-            names.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
+            names.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
             names.setTextFill(Color.rgb(54, 16, 0));
             names.relocate(250, messageView.getY());
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    root.getChildren().removeAll(rectangle, messageView, names,okView);
+                    root.getChildren().removeAll(rectangle, messageView, names, okView, someOne, profileView);
                 }
             });
-            root.getChildren().addAll(rectangle, messageView, names,okView);
-        }catch (IOException e){
+            root.getChildren().addAll(rectangle, messageView, names, okView, someOne, profileView);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void notSuchUserNameError(String userName){
+        try {
+            Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
+                    400, 150, false, true);
+            ImageView messageView = new ImageView(message);
+            messageView.setX(200);
+            messageView.setY(200);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
+                    100, 39, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(350);
+            okView.setX(450);
+            Label label = new Label("Username "+userName + " is not available now!");
+            label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+            label.setTextFill(Color.rgb(54, 16, 0));
+            label.relocate(240, 250);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    root.getChildren().removeAll(messageView, okView, label);
+                }
+            });
+            root.getChildren().addAll(messageView, okView, label);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
 }
