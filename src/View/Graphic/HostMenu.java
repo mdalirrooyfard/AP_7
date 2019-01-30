@@ -26,9 +26,11 @@ public class HostMenu
         chatRoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                Stage stage = new Stage();
                 try {
-                    server.getServerGui().start(stage);
+                    if (!server.getServerGui().getOpen()) {
+                        Stage stage = new Stage();
+                        server.getServerGui().start(stage);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

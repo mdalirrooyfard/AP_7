@@ -72,8 +72,10 @@ public class ClientListener implements Runnable{
                                         privateReceivers.put((String) command.getContent(), privateGui);
                                     } else
                                         privateGui = privateReceivers.get((String) command.getContent());
-                                    Stage stage = new Stage();
-                                    privateGui.start(stage);
+                                    if (!privateGui.getOpen()) {
+                                        Stage stage = new Stage();
+                                        privateGui.start(stage);
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

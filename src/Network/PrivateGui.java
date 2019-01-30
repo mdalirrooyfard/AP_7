@@ -23,14 +23,22 @@ public class PrivateGui extends Application {
     private TextArea chatArea = new TextArea();
     private Group root = new Group();
     private Scene scene;
+    private boolean isOpen;
 
     public PrivateGui(Player sender, String receiver, ClientSender clientSender){
         this.sender = sender;
         this.receiver = receiver;
         this.clientSender = clientSender;
+        this.isOpen = false;
     }
+
+    public boolean getOpen(){
+        return isOpen;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+        isOpen = true;
         primaryStage.setTitle(sender.getUserName()+ " to " + receiver);
         primaryStage.setResizable(false);
         javafx.scene.control.TextField textField = new javafx.scene.control.TextField();
@@ -58,6 +66,7 @@ public class PrivateGui extends Application {
             public void handle(WindowEvent event) {
                 Group tempGroup = new Group();
                 scene.setRoot(tempGroup);
+                isOpen = false;
             }
         });
 

@@ -986,8 +986,10 @@ public class Controller
                     {
                         try
                         {
-                            Stage chatStage = new Stage();
-                            clientGui.start(chatStage);
+                            if (!clientGui.getOpen()) {
+                                Stage chatStage = new Stage();
+                                clientGui.start(chatStage);
+                            }
                         }
                         catch (Exception e) { e.printStackTrace(); }
                     }

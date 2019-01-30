@@ -32,12 +32,17 @@ public class ClientGui extends Application
     private TextArea chatArea = new TextArea();
     private Group root = new Group();
     private Scene scene;
+    private boolean isOpen;
 
     public ClientGui(ClientSender clientSender, Player player){
         this.clientSender = clientSender;
         this.player = player;
+        this.isOpen = false;
     }
 
+    public boolean getOpen(){
+        return isOpen;
+    }
 
     public Player getPlayer(){
         return player;
@@ -49,6 +54,7 @@ public class ClientGui extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        isOpen = true;
         primaryStage.setTitle(player.getName() + " in chatRoom");
         primaryStage.setResizable(false);
         TextField textField = new TextField();
@@ -83,6 +89,7 @@ public class ClientGui extends Application
             public void handle(WindowEvent event) {
                 Group tempGroup = new Group();
                 scene.setRoot(tempGroup);
+                isOpen = false;
             }
         });
         primaryStage.setScene(scene);
@@ -94,7 +101,7 @@ public class ClientGui extends Application
     }
 
     public void playerJoinedMessage(String userName){
-        if (!userName.equals(player.getUserName())){
+        if (!userName.equals(player.getUserName()) && isOpen){
             try {
                 Rectangle rectangle = new Rectangle(0,0, 800, 600);
                 rectangle.setFill(Color.rgb(54,16,0));
