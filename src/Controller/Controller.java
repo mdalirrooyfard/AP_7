@@ -2057,7 +2057,7 @@ public class Controller
             hostInfoView.setX(Constants.WIDTH / 2 - 150);
 
             Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
-                    , 100, 100, false, true);
+                    , 50, 50, false, true);
             ImageView exitView = new ImageView(exit);
             exitView.setY(Constants.HEIGHT / 2 - 150);
             exitView.setX(Constants.WIDTH / 2 + 100);
@@ -2136,7 +2136,7 @@ public class Controller
                 }
             });
 
-            multiplayer.getGroup().getChildren().addAll(rectangle,hostInfoView,message,port,ipAdress,okView);
+            multiplayer.getGroup().getChildren().addAll(rectangle,hostInfoView,message,port,ipAdress,okView , exitView);
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }
