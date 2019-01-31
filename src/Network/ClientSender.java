@@ -75,4 +75,13 @@ public class ClientSender {
         }
     }
 
+    public void sendLeaderBoardRequest(){
+        Command command = new Command(CommandTypes.SEND_LEADER_BOARD);
+        try {
+            objectOutputStream.writeObject(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

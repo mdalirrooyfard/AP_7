@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Vector;
 
 public class ClientListener implements Runnable{
     private Socket socket;
@@ -72,8 +73,10 @@ public class ClientListener implements Runnable{
                                         privateReceivers.put((String) command.getContent(), privateGui);
                                     } else
                                         privateGui = privateReceivers.get((String) command.getContent());
-                                    Stage stage = new Stage();
-                                    privateGui.start(stage);
+                                    if (!privateGui.getOpen()) {
+                                        Stage stage = new Stage();
+                                        privateGui.start(stage);
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -103,6 +106,12 @@ public class ClientListener implements Runnable{
                         });
                         break;
                     case SEND_LEADER_BOARD:
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                clientGui.showLeaderBoard((Vector<Player>) command.getContent(), command.getNumberOfLines());
+                            }
+                        });
                         break;
                     case UPDATE_MARKET:
                         break;

@@ -101,8 +101,6 @@ public class RecipeSetter
                         view.getGroup().getChildren().removeAll(items);
                         outputSetter(view, farm, itemsImages, animationTimer , loader);
                     }
-                    else
-                        noInputHandler();
                 }
             });
             view.getGroup().getChildren().addAll(okView);
@@ -226,6 +224,7 @@ public class RecipeSetter
                     {
                         view.getGroup().getChildren().removeAll(rectangle,outputBackView,okView,choose,choose2);
                         view.getGroup().getChildren().removeAll(items);
+                        view.getGroup().getChildren().remove(loader.getFixedWorkShopsImageViews().get("customFactory"));
                         int result = farm.startWorkShop("customFactory");
                         animationTimer.start();
                         ImageView imageView = loader.getMovingCustomFactory();
@@ -237,8 +236,6 @@ public class RecipeSetter
                         flyingItems(farm.getWorkshops()[6].getInputs(), result , farm.getWorkshops()[6] , loader , view);
                         imageViewSprite.start();
                     }
-                    else
-                        noInputHandler();
                 }
             });
             view.getGroup().getChildren().addAll(okView);
@@ -286,10 +283,5 @@ public class RecipeSetter
                 }
             });
         }
-    }
-
-    private void noInputHandler()
-    {
-
     }
 }

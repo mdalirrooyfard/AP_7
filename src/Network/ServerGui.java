@@ -20,6 +20,11 @@ public class ServerGui extends Application {
     private TextArea chatArea = new TextArea();
     private ServerSender serverSender;
     private Scene scene;
+    private boolean isOpen = false;
+
+    public boolean getOpen(){
+        return isOpen;
+    }
 
     public void setServerSender(ServerSender serverSender) {
         this.serverSender = serverSender;
@@ -27,6 +32,7 @@ public class ServerGui extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        isOpen = true;
         primaryStage.setTitle("server in chatRoom");
         TextField textField = new TextField();
         Button button = new Button("send");
@@ -53,6 +59,7 @@ public class ServerGui extends Application {
             public void handle(WindowEvent event) {
                 Group tempGroup = new Group();
                 scene.setRoot(tempGroup);
+                isOpen = false;
             }
         });
 

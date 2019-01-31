@@ -5,7 +5,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
-public class Player implements Serializable
+public class Player implements Serializable,  Comparable<Player>
 {
     private String name,userName;
     //private Socket socket;
@@ -20,6 +20,9 @@ public class Player implements Serializable
         money = 0;
     }
 
+    public void increaseMoney(int amount){
+        money += amount;
+    }
 
     public void setName(String name)
     {
@@ -103,5 +106,10 @@ public class Player implements Serializable
     public void increaseLevel()
     {
         lastLevel++;
+    }
+
+    @Override
+    public int compareTo(Player o) {
+        return this.lastLevel - o.getLastLevel();
     }
 }
