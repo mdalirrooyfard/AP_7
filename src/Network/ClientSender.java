@@ -100,8 +100,8 @@ public class ClientSender {
         }
     }
 
-    public void sendApproveRequest(String userName){
-        Command command = new Command(CommandTypes.APPROVE_REQUEST, userName);
+    public void sendApproveRequest(String sender, String receiver){
+        Command command = new Command(CommandTypes.APPROVE_REQUEST, sender, receiver);
         try {
             objectOutputStream.writeObject(command);
             objectOutputStream.flush();

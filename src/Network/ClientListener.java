@@ -122,6 +122,20 @@ public class ClientListener implements Runnable{
                     case SEND_WILD_ANIMAL:
                         clientGui.sendWildAnimal();
                         break;
+                    case SEND_FRIEND_REQUEST:
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (clientGui.getOpen())
+                                    clientGui.checkNewFriendRequest(command.getSender());
+                                else
+                                    clientGui.addFriendRequest(command.getSender());
+                            }
+                        });
+                        break;
+                    case APPROVE_REQUEST:
+                        clientGui.getPlayer().addFriend(command.getSender());
+                        break;
                     default:
                 }
             }

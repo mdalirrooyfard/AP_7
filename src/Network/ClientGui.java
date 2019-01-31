@@ -160,7 +160,7 @@ public class ClientGui extends Application {
                         @Override
                         public void handle(MouseEvent event) {
                             player.addFriend(s);
-                            clientSender.sendApproveRequest(s);
+                            clientSender.sendApproveRequest( player.getUserName(),s);
                             root.getChildren().removeAll(messageView, yesView, noView, request, approve);
                             if (first == 1)
                                 root.getChildren().remove(rectangle);
@@ -185,8 +185,59 @@ public class ClientGui extends Application {
         }
     }
 
-    public void checkNewFriendRequest(){
+    public void checkNewFriendRequest(String userName){
+        try{
+            Rectangle rectangle = new Rectangle(0, 0, 800, 600);
+            rectangle.setFill(Color.rgb(54, 16, 0));
+            rectangle.setOpacity(0.7);
+            Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
+                    400, 150, false, true);
+            ImageView messageView = new ImageView(message);
+            messageView.setX(200);
+            messageView.setY(200);
+            Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png"),
+                    51, 45, false, true);
+            ImageView yesView = new ImageView(yes);
+            Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png"),
+                    51, 45, false, true);
+            ImageView noView = new ImageView(no);
+            yesView.setX(500);
+            yesView.setY(340);
+            noView.setX(300);
+            noView.setY(340);
+            Label request = new Label(userName + "wants to be friend with you!");
+            Label approve = new Label("Do you accept?");
+            request.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+            request.setTextFill(Color.rgb(54, 16, 0));
+            request.relocate(230, 230);
+            approve.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+            approve.setTextFill(Color.rgb(54, 16, 0));
+            approve.relocate(250, 270);
 
+            yesView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    player.addFriend(userName);
+                    clientSender.sendApproveRequest(player.getUserName(), userName);
+                    root.getChildren().removeAll(messageView, yesView, noView, request, approve);
+                    if (first == 1)
+                        root.getChildren().remove(rectangle);
+                }
+            });
+
+            noView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    root.getChildren().removeAll(messageView, yesView, noView, request, approve);
+                    if (first == 1)
+                        root.getChildren().remove(rectangle);
+                }
+            });
+            root.getChildren().addAll(messageView, yesView, noView, request, approve);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void putInCharArea(String message) {
