@@ -40,7 +40,7 @@ public class OrderPage
             orderView.setX(0);
             orderView.setY(0);
             group.getChildren().addAll(orderView);
-            insertBack(farm,stage,view);
+            insertBack(farm,stage,view , aTimer);
             insertOk(farm,stage,view,leftHelicopter,fixedHelicopter,aTimer);
             insertItems(farm,items);
         }
@@ -48,7 +48,7 @@ public class OrderPage
         return scene;
     }
 
-    private void insertBack(Farm farm , Stage stage , View view)
+    private void insertBack(Farm farm , Stage stage , View view , AnimationTimer animationTimer)
     {
         try
         {
@@ -62,6 +62,7 @@ public class OrderPage
                 @Override
                 public void handle(MouseEvent event)
                 {
+                    animationTimer.start();
                     farm.clearHelicopterBeforeGo();
                     group.getChildren().clear();
                     stage.setScene(view.getScene());

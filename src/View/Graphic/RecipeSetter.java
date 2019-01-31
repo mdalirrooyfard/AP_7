@@ -220,21 +220,23 @@ public class RecipeSetter
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    if( farm.getWorkshops()[6].getInputs().size() > 0 )
+                    if( farm.getWorkshops()[6].getInputs().size() > 0)
                     {
                         view.getGroup().getChildren().removeAll(rectangle,outputBackView,okView,choose,choose2);
                         view.getGroup().getChildren().removeAll(items);
-                        view.getGroup().getChildren().remove(loader.getFixedWorkShopsImageViews().get("customFactory"));
-                        int result = farm.startWorkShop("customFactory");
-                        animationTimer.start();
-                        ImageView imageView = loader.getMovingCustomFactory();
-                        imageView.setX(farm.getWorkshops()[6].getShowX());
-                        imageView.setY(farm.getWorkshops()[6].getShowY());
-                        view.getGroup().getChildren().add(imageView);
-                        AnimationTimer imageViewSprite = new ImageViewSprite(imageView, 1, false,
-                                4, 4, 16, 200,200, 16);
-                        flyingItems(farm.getWorkshops()[6].getInputs(), result , farm.getWorkshops()[6] , loader , view);
-                        imageViewSprite.start();
+                        if(farm.getWareHouse().getCollectedItems().contains(inputs)) {
+                            view.getGroup().getChildren().remove(loader.getFixedWorkShopsImageViews().get("customFactory"));
+                            int result = farm.startWorkShop("customFactory");
+                            animationTimer.start();
+                            ImageView imageView = loader.getMovingCustomFactory();
+                            imageView.setX(farm.getWorkshops()[6].getShowX());
+                            imageView.setY(farm.getWorkshops()[6].getShowY());
+                            view.getGroup().getChildren().add(imageView);
+                            AnimationTimer imageViewSprite = new ImageViewSprite(imageView, 1, false,
+                                    4, 4, 16, 200, 200, 16);
+                            flyingItems(farm.getWorkshops()[6].getInputs(), result, farm.getWorkshops()[6], loader, view);
+                            imageViewSprite.start();
+                        }
                     }
                 }
             });
