@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Animals.Animal;
+import Model.Animals.Domestic.Domestic;
 import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
@@ -92,6 +93,7 @@ public class Controller
     private ImageView moneyView = new ImageView(moneyIcon);
     private ImageView arrowViewWell = new ImageView(arrow);
     private ImageView arrowViewWareHouse = new ImageView(arrow);
+    private ConcurrentHashMap<Integer, Image> animalSatiety = new ConcurrentHashMap<>();
 
     public Controller(Stage stage)
     {
@@ -113,6 +115,17 @@ public class Controller
         menu.passMenuInstance(menu,player);
     }
 
+    private void loadSatietyImages(){
+        try {
+            Image image;
+            for (int i = 1; i < 9 ; i++) {
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Progress\\progress" + i + ".png"));
+                animalSatiety.put(i-1 , image);
+            }
+        }catch (Exception e){
+            e.getStackTrace();
+        }
+    }
     private void findLastPlayer()
     {
         if( players.size() > 0 )
@@ -960,6 +973,7 @@ public class Controller
         menuIcon();
         wellIcon();
         showChatRoomIcon();
+        loadSatietyImages();
         showMoneyIcon();
         workshopsIcons();
         servicesIcons();
@@ -1432,6 +1446,22 @@ public class Controller
                             height / row, row * col
                     );
                     animationTimer.start();
+                }
+                if (e instanceof Domestic){
+                    ImageView satietyView = new ImageView(animalSatiety.get((int)(Math.floor((((Domestic) e).getSatiety())+1)/2)));
+                    satietyView.setX(e.getShowX());
+                    satietyView.setY(e.getShowY());
+                    satietyView.setFitWidth(40);
+                    satietyView.setFitHeight(5);
+                    if(((Domestic) e).getDirection() != DIRECTION.NONE) {
+                        MoveTransition satietyTransition = new MoveTransition(satietyView, ((Animal) e).getPreviousX(),
+                                ((Animal) e).getPreviousY(), e.getShowX(), e.getShowY(), 3000);
+                        satietyTransition.setAutoReverse(false);
+                        satietyTransition.setCycleCount(1);
+                        satietyTransition.play();
+                    }
+                    view.getGroup().getChildren().add(satietyView);
+                    loader.getCurrentEntities().add(satietyView);
                 }
             }
         }
