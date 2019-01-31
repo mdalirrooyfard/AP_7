@@ -110,4 +110,14 @@ public class ClientSender {
         }
     }
 
+    public void sendFriendRequest(String sender, String receiver){
+        Command command = new Command(CommandTypes.SEND_FRIEND_REQUEST, sender, receiver);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

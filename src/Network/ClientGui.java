@@ -127,7 +127,7 @@ public class ClientGui extends Application {
             rectangle.setFill(Color.rgb(54, 16, 0));
             rectangle.setOpacity(0.7);
             for (String s : friendRequests.keySet()) {
-                if (!friendRequests.get(s)) {
+                if (!friendRequests.get(s) && !player.getFriends().contains(s)) {
                     first++;
                     if (first == 1) {
                         root.getChildren().add(rectangle);
@@ -325,21 +325,39 @@ public class ClientGui extends Application {
             ImageView privateChatView = new ImageView(privateChat);
             privateChatView.setX(350);
             privateChatView.setY(370);
+
+            Image friendRequest = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\friendRequest.png")
+            , 100, 39, false, true);
+            ImageView fRequestView = new ImageView(friendRequest);
+            fRequestView.setX(220);
+            fRequestView.setY(370);
+
+            fRequestView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (!player.getFriends().contains(otherPlayer.getUserName()))
+                        clientSender.sendFriendRequest(player.getUserName(), otherPlayer.getUserName());
+                    else {
+                        //todo already friend hast
+                    }
+                }
+            });
+
             privateChatView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     clientSender.sendPrivateChatRequest(otherPlayer.getUserName());
-                    root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView);
+                    root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView, fRequestView);
                 }
             });
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView);
+                    root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView, fRequestView);
                 }
             });
 
-            root.getChildren().addAll(messageView, name, userName, level, money, okView, privateChatView);
+            root.getChildren().addAll(messageView, name, userName, level, money, okView, privateChatView, fRequestView);
         } catch (IOException e) {
             e.printStackTrace();
         }

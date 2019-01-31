@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.Vector;
 
 public class Player implements Serializable,  Comparable<Player>
@@ -12,7 +13,7 @@ public class Player implements Serializable,  Comparable<Player>
     //private Socket socket;
     private int lastLevel , id , money;
     private boolean isLastPlayer , isClient;
-    private Vector<String> friends = new Vector<>();
+    private HashSet<String> friends = new HashSet<>();
 
     public Player( String name, int id)
     {
@@ -30,7 +31,7 @@ public class Player implements Serializable,  Comparable<Player>
         friends.add(username);
     }
 
-    public Vector<String> getFriends() {
+    public HashSet<String> getFriends() {
         return friends;
     }
 
