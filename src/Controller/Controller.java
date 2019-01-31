@@ -210,7 +210,8 @@ public class Controller
             loader.loadImages(farm);
             makeScene();
             sellPage = new SellPage(stage,view,farm,loader.getItems());
-            clientGui.setFarm(farm);
+            if (isMultiPlayer && player.isClient())
+                clientGui.setFarm(farm);
             turnHandler();
         }
         catch ( FileNotFoundException e )
