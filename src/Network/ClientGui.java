@@ -71,8 +71,6 @@ public class ClientGui extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         isOpen = true;
-        first = 0;
-        checkRequests();
         primaryStage.setTitle(player.getName() + " in chatRoom");
         primaryStage.setResizable(false);
         TextField textField = new TextField();
@@ -117,6 +115,8 @@ public class ClientGui extends Application {
                 isOpen = false;
             }
         });
+        first = 0;
+        checkRequests();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -147,7 +147,7 @@ public class ClientGui extends Application {
                     yesView.setY(340);
                     noView.setX(300);
                     noView.setY(340);
-                    Label request = new Label(s + "wants to be friend with you!");
+                    Label request = new Label(s + " wants to be friend with you!");
                     Label approve = new Label("Do you accept?");
                     request.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
                     request.setTextFill(Color.rgb(54, 16, 0));
@@ -205,7 +205,7 @@ public class ClientGui extends Application {
             yesView.setY(340);
             noView.setX(300);
             noView.setY(340);
-            Label request = new Label(userName + "wants to be friend with you!");
+            Label request = new Label(userName + " wants to be friend with you!");
             Label approve = new Label("Do you accept?");
             request.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
             request.setTextFill(Color.rgb(54, 16, 0));
@@ -295,7 +295,7 @@ public class ClientGui extends Application {
     public void showProfile(Player otherPlayer) {
         try {
             Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
-                    400, 200, false, true);
+                    400, 200 + otherPlayer.getFriends().size() * 50, false, true);
             ImageView messageView = new ImageView(message);
             messageView.setX(200);
             messageView.setY(200);
@@ -315,22 +315,31 @@ public class ClientGui extends Application {
             userName.setTextFill(Color.rgb(54, 16, 0));
             level.setTextFill(Color.rgb(54, 16, 0));
             money.setTextFill(Color.rgb(54, 16, 0));
+            Label[] friends = new Label[otherPlayer.getFriends().size()];
+            int i = 0;
+            for (String friend : otherPlayer.getFriends()) {
+                friends[i] = new Label("friend"+Integer.toString(i+1)+ ": "+ friend);
+                friends[i].relocate(250, 350 + (i+1) * 60);
+                friends[i].setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+                friends[i].setTextFill(Color.rgb(54, 16, 0));
+                i ++;
+            }
             Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
                     100, 39, false, true);
             ImageView okView = new ImageView(ok);
             okView.setX(500);
-            okView.setY(370);
+            okView.setY(400 + otherPlayer.getFriends().size() * 50);
             Image privateChat = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\privateChatButton.png"),
                     100, 39, false, true);
             ImageView privateChatView = new ImageView(privateChat);
             privateChatView.setX(350);
-            privateChatView.setY(370);
+            privateChatView.setY(400 + otherPlayer.getFriends().size() * 50);
 
             Image friendRequest = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\friendRequest.png")
             , 100, 39, false, true);
             ImageView fRequestView = new ImageView(friendRequest);
             fRequestView.setX(220);
-            fRequestView.setY(370);
+            fRequestView.setY(400 + otherPlayer.getFriends().size() * 50);
 
             fRequestView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -347,17 +356,19 @@ public class ClientGui extends Application {
                 @Override
                 public void handle(MouseEvent event) {
                     clientSender.sendPrivateChatRequest(otherPlayer.getUserName());
+                    root.getChildren().removeAll(friends);
                     root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView, fRequestView);
                 }
             });
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    root.getChildren().removeAll(friends);
                     root.getChildren().removeAll(messageView, name, userName, level, money, okView, privateChatView, fRequestView);
                 }
             });
-
             root.getChildren().addAll(messageView, name, userName, level, money, okView, privateChatView, fRequestView);
+            root.getChildren().addAll(friends);
         } catch (IOException e) {
             e.printStackTrace();
         }

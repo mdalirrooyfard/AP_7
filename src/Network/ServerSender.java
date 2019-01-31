@@ -144,9 +144,21 @@ public class ServerSender {
         }
     }
 
-    public void sendFriendConnection(Command command, String receiver){
+    public void sendFriendRequest(Command command, String receiver){
         try{
             ObjectOutputStream objectOutputStream = outPutStreams.get(userNameAndSocket.get(receiver));
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendApproveRequest(Command command){
+        try{
+            usenames.get(command.getSender()).addFriend(command.getReceiver());
+            usenames.get(command.getReceiver()).addFriend(command.getSender());
+            ObjectOutputStream objectOutputStream = outPutStreams.get(userNameAndSocket.get(command.getReceiver()));
             objectOutputStream.writeObject(command);
             objectOutputStream.flush();
         }catch (IOException e){

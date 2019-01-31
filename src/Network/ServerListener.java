@@ -61,10 +61,10 @@ public class ServerListener implements Runnable{
                         serverSender.sendWildAnimal((String) command.getContent());
                         break;
                     case SEND_FRIEND_REQUEST:
-                        serverSender.sendFriendConnection(command, command.getReceiver());
+                        serverSender.sendFriendRequest(command, command.getReceiver());
                         break;
                     case APPROVE_REQUEST:
-                        serverSender.sendFriendConnection(command, command.getReceiver());
+                        serverSender.sendApproveRequest(command);
                         break;
                     default:
                 }
