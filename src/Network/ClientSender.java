@@ -34,6 +34,7 @@ public class ClientSender {
         Command command = new Command(CommandTypes.SEND_PLAYER, player);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,6 +44,7 @@ public class ClientSender {
         Command command = new Command(CommandTypes.VIEW_PROFILE, username);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,6 +54,7 @@ public class ClientSender {
         Command command = new Command(CommandTypes.PRIVATE_CHAT, receiver);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +64,7 @@ public class ClientSender {
         Command command = new Command(CommandTypes.SEND_INDIVIDUAL_MESSAGE, message, sender, receiver);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,6 +74,7 @@ public class ClientSender {
         Command command = new Command(CommandTypes.SEND_LIST);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,6 +84,7 @@ public class ClientSender {
         Command command = new Command(CommandTypes.SEND_LEADER_BOARD);
         try {
             objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

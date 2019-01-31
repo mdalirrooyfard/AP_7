@@ -324,21 +324,25 @@ public class ClientGui extends Application {
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    root.getChildren().removeAll(rectangle, messageView, okView, leaderBoard, levelSortView);
+                    root.getChildren().removeAll(rectangle, messageView, okView, leaderBoard, levelSortView, moneySortView);
                 }
             });
 
             levelSortView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    root.getChildren().remove(leaderBoard);
                     Collections.sort(players);
                     leaderBoard = makeLeaderBoard(players, numberOfPeople);
+                    leaderBoard.relocate( 220,Constants.HEIGHT / 2 - numberOfPeople * 45);
+                    root.getChildren().add(leaderBoard);
                 }
             });
 
             moneySortView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    root.getChildren().remove(leaderBoard);
                     players.sort(new Comparator<Player>() {
                         @Override
                         public int compare(Player o1, Player o2) {
@@ -346,9 +350,11 @@ public class ClientGui extends Application {
                         }
                     });
                     leaderBoard = makeLeaderBoard(players, numberOfPeople);
+                    leaderBoard.relocate( 220,Constants.HEIGHT / 2 - numberOfPeople * 45);
+                    root.getChildren().add(leaderBoard);
                 }
             });
-            root.getChildren().addAll(rectangle, messageView, okView, leaderBoard, levelSortView);
+            root.getChildren().addAll(rectangle, messageView, okView, leaderBoard, levelSortView, moneySortView);
 
         }catch (IOException e){
             e.printStackTrace();
