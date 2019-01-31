@@ -59,8 +59,9 @@ public class ClientGui extends Application {
         TextField textField = new TextField();
         Button send = new Button("send");
         Button list = new Button("list");
+        Button leaderBoard = new Button("Leader Board");
         HBox hBox = new HBox(20, chatArea);
-        HBox hBox1 = new HBox(20, textField, send, list);
+        HBox hBox1 = new HBox(20, textField, send, list, leaderBoard);
         VBox vBox = new VBox(20, hBox1, hBox);
         chatArea.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
         chatArea.setWrapText(true);
@@ -81,6 +82,12 @@ public class ClientGui extends Application {
             @Override
             public void handle(MouseEvent event) {
                 clientSender.sendListRequest();
+            }
+        });
+        leaderBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                clientSender.sendLeaderBoardRequest();
             }
         });
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
