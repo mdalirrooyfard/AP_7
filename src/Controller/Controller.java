@@ -94,6 +94,7 @@ public class Controller
     private ImageView arrowViewWell = new ImageView(arrow);
     private ImageView arrowViewWareHouse = new ImageView(arrow);
     private ConcurrentHashMap<Integer, Image> animalSatiety = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Image> wellFullness = new ConcurrentHashMap<>();
 
     public Controller(Stage stage)
     {
@@ -121,6 +122,17 @@ public class Controller
             for (int i = 1; i < 9 ; i++) {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Progress\\progress" + i + ".png"));
                 animalSatiety.put(i-1 , image);
+            }
+        }catch (Exception e){
+            e.getStackTrace();
+        }
+    }
+    private void loadWellFullnessImages(){
+        try {
+            Image image;
+            for (int i = 0 ; i < 6 ; i++) {
+                image = new Image(new FileInputStream("src\\Resources\\Graphic\\Progress\\full" + i + ".png"));
+                wellFullness.put(i , image);
             }
         }catch (Exception e){
             e.getStackTrace();
@@ -884,6 +896,8 @@ public class Controller
                 {
                     try
                     {
+                        flagWell = 0;
+                        view.getGroup().getChildren().remove(arrowViewWell);
                         label.setText(Integer.toString(farm.getWell().getUpgradeCost()));
                         loader.getFixedWell().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Well\\" + "fixed"
                                 + farm.getWell().getLevel() + ".png"), 200, 200, false, true));
@@ -900,6 +914,13 @@ public class Controller
 
     private void checkWell()
     {
+        ImageView wellFullnessView = new ImageView(wellFullness.get(farm.getWell().getCurrentVolume()*5/farm.getWell().getVolume()));
+        wellFullnessView.setX(farm.getWell().getShowX() + 180);
+        wellFullnessView.setY(farm.getWell().getShowY() + 80);
+        wellFullnessView.setFitWidth(20);
+        wellFullnessView.setFitHeight(80);
+        view.getGroup().getChildren().add(wellFullnessView);
+        loader.getCurrentEntities().add(wellFullnessView);
         if (farm.getWell().isWorking())
         {
             if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume()) {
@@ -947,7 +968,7 @@ public class Controller
         arrowView.setY(y);
         if(!view.getGroup().getChildren().contains(arrowView))
             view.getGroup().getChildren().add(arrowView);
-        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 7 , true , 4 , 2 , 8 ,
+        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 10 , false , 4 , 2 , 8 ,
                 52 , 52 , 8);
         if(kind)
         {
@@ -975,6 +996,7 @@ public class Controller
         wellIcon();
         showChatRoomIcon();
         loadSatietyImages();
+        loadWellFullnessImages();
         showMoneyIcon();
         workshopsIcons();
         servicesIcons();
@@ -1452,7 +1474,7 @@ public class Controller
                     ImageView satietyView = new ImageView(animalSatiety.get((int)(Math.floor((((Domestic) e).getSatiety())+1)/2)));
                     satietyView.setX(e.getShowX());
                     satietyView.setY(e.getShowY());
-                    satietyView.setFitWidth(40);
+                    satietyView.setFitWidth(((Domestic) e).getSatiety()*5);
                     satietyView.setFitHeight(5);
                     if(((Domestic) e).getDirection() != DIRECTION.NONE) {
                         MoveTransition satietyTransition = new MoveTransition(satietyView, ((Animal) e).getPreviousX(),
