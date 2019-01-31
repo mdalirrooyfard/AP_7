@@ -292,6 +292,8 @@ public class Farm {
     }
 
     public int upgradeEntity(Entity entity) {
+        if((entity instanceof Well && ((Well) entity).isWorking()) || (entity instanceof Workshop && ((Workshop) entity).isWorking()))
+            return 3;
         if (entity.getLevel() == 4)
             return 2;
         if (entity.getUpgradeCost() > money)
