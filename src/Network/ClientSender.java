@@ -100,4 +100,14 @@ public class ClientSender {
         }
     }
 
+    public void sendApproveRequest(String userName){
+        Command command = new Command(CommandTypes.APPROVE_REQUEST, userName);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class ClientGui extends Application {
@@ -38,11 +39,18 @@ public class ClientGui extends Application {
     private boolean isOpen;
     private VBox leaderBoard;
     private Farm farm;
+    private HashMap<String, Boolean> friendRequests = new HashMap<>();
+    private int first = 0;
+
 
     public ClientGui(ClientSender clientSender, Player player) {
         this.clientSender = clientSender;
         this.player = player;
         this.isOpen = false;
+    }
+
+    public void addFriendRequest(String userName){
+        friendRequests.put(userName, false);
     }
 
     public boolean getOpen() {
@@ -63,6 +71,8 @@ public class ClientGui extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         isOpen = true;
+        first = 0;
+        checkRequests();
         primaryStage.setTitle(player.getName() + " in chatRoom");
         primaryStage.setResizable(false);
         TextField textField = new TextField();
@@ -109,6 +119,74 @@ public class ClientGui extends Application {
         });
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public void checkRequests(){
+        try {
+            Rectangle rectangle = new Rectangle(0, 0, 800, 600);
+            rectangle.setFill(Color.rgb(54, 16, 0));
+            rectangle.setOpacity(0.7);
+            for (String s : friendRequests.keySet()) {
+                if (!friendRequests.get(s)) {
+                    first++;
+                    if (first == 1) {
+                        root.getChildren().add(rectangle);
+                    }
+                    Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
+                            400, 150, false, true);
+                    ImageView messageView = new ImageView(message);
+                    messageView.setX(200);
+                    messageView.setY(200);
+                    Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png"),
+                            51, 45, false, true);
+                    ImageView yesView = new ImageView(yes);
+                    Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png"),
+                            51, 45, false, true);
+                    ImageView noView = new ImageView(no);
+                    yesView.setX(500);
+                    yesView.setY(340);
+                    noView.setX(300);
+                    noView.setY(340);
+                    Label request = new Label(s + "wants to be friend with you!");
+                    Label approve = new Label("Do you accept?");
+                    request.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+                    request.setTextFill(Color.rgb(54, 16, 0));
+                    request.relocate(230, 230);
+                    approve.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+                    approve.setTextFill(Color.rgb(54, 16, 0));
+                    approve.relocate(250, 270);
+
+                    yesView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            player.addFriend(s);
+                            clientSender.sendApproveRequest(s);
+                            root.getChildren().removeAll(messageView, yesView, noView, request, approve);
+                            if (first == 1)
+                                root.getChildren().remove(rectangle);
+                            friendRequests.replace(s, true);
+                        }
+                    });
+
+                    noView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            root.getChildren().removeAll(messageView, yesView, noView, request, approve);
+                            if (first == 1)
+                                root.getChildren().remove(rectangle);
+                            friendRequests.replace(s, true);
+                        }
+                    });
+                    root.getChildren().addAll(messageView, yesView, noView, request, approve);
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void checkNewFriendRequest(){
+
     }
 
     public void putInCharArea(String message) {

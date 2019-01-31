@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.Vector;
 
 public class Player implements Serializable,  Comparable<Player>
 {
@@ -11,6 +12,7 @@ public class Player implements Serializable,  Comparable<Player>
     //private Socket socket;
     private int lastLevel , id , money;
     private boolean isLastPlayer , isClient;
+    private Vector<String> friends = new Vector<>();
 
     public Player( String name, int id)
     {
@@ -22,6 +24,14 @@ public class Player implements Serializable,  Comparable<Player>
 
     public void increaseMoney(int amount){
         money += amount;
+    }
+
+    public void addFriend(String username){
+        friends.add(username);
+    }
+
+    public Vector<String> getFriends() {
+        return friends;
     }
 
     public void setName(String name)
