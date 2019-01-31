@@ -143,4 +143,15 @@ public class ServerSender {
             e.printStackTrace();
         }
     }
+
+    public void sendFriendConnection(Command command, String receiver){
+        try{
+            ObjectOutputStream objectOutputStream = outPutStreams.get(userNameAndSocket.get(receiver));
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }
