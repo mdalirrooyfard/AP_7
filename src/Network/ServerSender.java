@@ -15,6 +15,10 @@ public class ServerSender {
     private HashMap<String, Socket> userNameAndSocket = new HashMap<>();
     private ServerGui serverGui;
 
+    public HashMap<String, Player> getUsenames() {
+        return usenames;
+    }
+
     public ServerSender(ServerGui serverGui){
         this.serverGui = serverGui;
     }

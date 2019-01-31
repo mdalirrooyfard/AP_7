@@ -361,7 +361,7 @@ public class ClientGui extends Application {
         }
     }
 
-    private VBox makeLeaderBoard(Vector<Player> players, int numberOfPeople){
+    public static VBox makeLeaderBoard(Vector<Player> players, int numberOfPeople){
         Label name = new Label("username");
         Label levelTitle = new Label("level");
         Label moneyTitle = new Label("money");
