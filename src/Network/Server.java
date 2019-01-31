@@ -19,6 +19,10 @@ public class Server {
         serverGui.setServerSender(serverSender);
     }
 
+    public ServerSender getServerSender(){
+        return serverSender;
+    }
+
     public ServerGui getServerGui() {
         return serverGui;
     }
