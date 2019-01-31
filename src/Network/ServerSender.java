@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Vector;
 
 public class ServerSender {
     private HashMap<Socket, Player> peopleAndSockets = new HashMap<>();
@@ -76,6 +77,21 @@ public class ServerSender {
     }
 
     public void sendLeaderBoard(Socket socket){
+        try {
+            Vector<Player> players = new Vector<>();
+            int numberOfPeople = 0;
+            for (Socket s : peopleAndSockets.keySet()) {
+                players.add(peopleAndSockets.get(s));
+                numberOfPeople++;
+            }
+            Command command = new Command(CommandTypes.SEND_LEADER_BOARD, players, numberOfPeople);
+            ObjectOutputStream objectOutputStream = outPutStreams.get(socket);
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
 
     }
 
