@@ -1,17 +1,12 @@
 package Model;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.HashSet;
-import java.util.Vector;
 
 public class Player implements Serializable,  Comparable<Player>
 {
     private String name,userName;
-    //private Socket socket;
-    private int lastLevel , id , money;
+    private int lastLevel , id , money , levelThatPlaysNow;
     private boolean isLastPlayer , isClient;
     private HashSet<String> friends = new HashSet<>();
 
@@ -21,6 +16,7 @@ public class Player implements Serializable,  Comparable<Player>
         this.id = id;
         lastLevel = 1;
         money = 0;
+        this.userName = name + id;
     }
 
     public void increaseMoney(int amount){
@@ -34,6 +30,15 @@ public class Player implements Serializable,  Comparable<Player>
     public HashSet<String> getFriends() {
         return friends;
     }
+    public int getLevelThatPlaysNow()
+    {
+        return levelThatPlaysNow;
+    }
+
+    public void setLevelThatPlaysNow(int levelThatPlaysNow)
+    {
+        this.levelThatPlaysNow = levelThatPlaysNow;
+    }
 
     public void setName(String name)
     {
@@ -45,29 +50,9 @@ public class Player implements Serializable,  Comparable<Player>
         return userName;
     }
 
-    public void setUserName(String userName)
-    {
-        this.userName = userName;
-    }
-
-    /*public Socket getSocket()
-    {
-        return socket;
-    }
-
-    public void setSocket(Socket socket)
-    {
-        this.socket = socket;
-    }*/
-
     public void setLastLevel(int lastLevel)
     {
         this.lastLevel = lastLevel;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
     }
 
     public int getMoney()

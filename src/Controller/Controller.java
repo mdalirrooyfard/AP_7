@@ -58,7 +58,6 @@ public class Controller
     private Farm farm = new Farm();
     private String path = null;
     private Player player = new Player("",0);
-    private int level;
     private Vector<Player> players;
     private Menu menu;
     private Stage stage;
@@ -67,7 +66,7 @@ public class Controller
     private Multiplayer multiplayer = new Multiplayer();
     private AnimationTimer animationTimer;
     private OrderPage orderPage = new OrderPage();
-    private SellPage sellPage;
+    private SellPage sellPage = new SellPage();
     private HostMenu hostMenu;
     private Label moneyLabel = new Label();
     private Vector<String[]> goals = new Vector<>();
@@ -167,7 +166,6 @@ public class Controller
     {
         try(InputStream inputStream = new FileInputStream(path))
         {
-            player.setLastLevel(level);
             Scanner scanner = new Scanner(inputStream);
             farm = new Farm();
             String string = scanner.next();
@@ -226,7 +224,6 @@ public class Controller
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
-            sellPage = new SellPage(stage,view,farm,loader.getItems());
             if (isMultiPlayer && player.isClient())
                 clientGui.setFarm(farm);
             turnHandler();
@@ -270,6 +267,7 @@ public class Controller
                         checkWell();
                         checkWareHouse();
                         checkHelicopter();
+                        checkTruck();
                         checkWorkShops();
                         updateMoney();
                         updateAchievement();
@@ -282,6 +280,7 @@ public class Controller
                    winHandler();
                    player.increaseLevel();
                    player.increaseMoney(farm.getMoney());
+                   savePlayers(players);
                    start.getGroup().getChildren().removeAll(levels);
                    levels.clear();
                    loadLevels();
@@ -381,10 +380,10 @@ public class Controller
 
     private void saveGameHandler() throws Exception
     {
-        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName())) )
-            Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\"+player.getName()));
+        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getUserName())) )
+            Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\"+player.getUserName()));
         try(OutputStream outputStream = new FileOutputStream(
-                "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"))
+                "src\\Resources\\Saved Games\\"+player.getUserName()+"\\"+Integer.toString(player.getLevelThatPlaysNow())+".txt"))
         {
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
@@ -404,7 +403,6 @@ public class Controller
     {
         try(InputStream inputStream = new FileInputStream(path))
         {
-            player.setLastLevel(level);
             Scanner scanner = new Scanner(inputStream);
             farm = new Farm();
             YaGson yaGson = new YaGson();
@@ -414,7 +412,6 @@ public class Controller
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
-            sellPage = new SellPage(stage,view,farm,loader.getItems());
             turnHandler();
         }
         catch ( IOException e )
@@ -474,12 +471,11 @@ public class Controller
 
     private boolean wasThisLevelPlayedBefore(int level)
     {
-        return Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt"));
+        return Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getUserName()+"\\"+Integer.toString(level)+".txt"));
     }
 
     private void loadGame( boolean newGame , int level , Player player )
     {
-        this.level = level;
         try
         {
             if (newGame)
@@ -489,7 +485,7 @@ public class Controller
             }
             else
             {
-                path = "src\\Resources\\Saved Games\\"+player.getName()+"\\"+Integer.toString(level)+".txt";
+                path = "src\\Resources\\Saved Games\\"+player.getUserName()+"\\"+Integer.toString(level)+".txt";
                 loadGameHandler();
             }
         }
@@ -526,8 +522,9 @@ public class Controller
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        loadGame(false,level,player);
                         start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
+                        player.setLevelThatPlaysNow(level);
+                        loadGame(false,level,player);
                     }
                 });
                 noView.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -535,14 +532,18 @@ public class Controller
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        loadGame(true,level,player);
                         start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
+                        player.setLevelThatPlaysNow(level);
+                        loadGame(true,level,player);
                     }
                 });
                 start.getGroup().getChildren().addAll(rectangle,continueMessageView,yesView,noView);
             }
             else
-                loadGame(true,level,player);
+            {
+                player.setLevelThatPlaysNow(level);
+                loadGame(true, level, player);
+            }
         }
         catch ( Exception e ){ e.printStackTrace(); }
     }
@@ -782,7 +783,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 animationTimer.stop();
-                stage.setScene(sellPage.getScene());
+                stage.setScene(sellPage.getScene(stage,view,farm,loader.getItems(),loader.getRightTruck()
+                        ,loader.getFixedTruck(), animationTimer));
             }
         });
     }
@@ -1015,6 +1017,7 @@ public class Controller
         workshopsIcons();
         servicesIcons();
         helicopterIconHandler();
+        truckIconHandler();
         showGoals();
         loadGoals();
     }
@@ -1641,6 +1644,67 @@ public class Controller
         }
     }
 
+    private void checkTruck()
+    {
+        if (farm.getTruck().isMoving())
+        {
+            if( farm.getTruck().getCurrentTime() > 0 )
+            {
+                if ( farm.getTruck().getCurrentTime() > farm.getTruck().getWorkingTime() / 1.8 )
+                {
+                    loader.getRightTruck().setX(farm.getTruck().getPrevMovingX());
+                    loader.getRightTruck().setY(loader.getFixedTruck().getY());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 1,
+                            false, 3, 2, 6, 48, 48, 6);
+                    animationTimer.start();
+                    MoveTransition pathTransition = new MoveTransition(loader.getRightTruck(),
+                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY(),
+                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY(), 2000);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+                    farm.getTruck().setPrevMovingX(farm.getTruck().getNextMovingX());
+                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + Constants.movingScale);
+                }
+                else
+                {
+                    if( farm.getTruck().getCurrentTime() == farm.getTruck().getWorkingTime() / 2 )
+                    {
+                        view.getGroup().getChildren().remove(loader.getRightTruck());
+                        farm.getTruck().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                    }
+                    loader.getLeftHelicopter().setX(farm.getTruck().getPrevMovingX());
+                    loader.getLeftHelicopter().setY(loader.getFixedTruck().getY());
+                    if (!view.getGroup().getChildren().contains(loader.getLeftHelicopter()))
+                        view.getGroup().getChildren().add(loader.getLeftHelicopter());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(),2,
+                            false, 3, 2, 6, 48, 48, 6);
+                    animationTimer.start();
+                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
+                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY(),
+                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY(), 2000);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+                    farm.getTruck().setPrevMovingX(farm.getTruck().getNextMovingX());
+                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - Constants.movingScale);
+                }
+                farm.getTruck().decreaseCurrentTime(1);
+            }
+            else
+            {
+                farm.getTruck().setMoving(false);
+                loader.getFixedTruck().setFitHeight(200);
+                loader.getFixedTruck().setFitWidth(200);
+                loader.getFixedTruck().setY(0);
+                loader.getFixedTruck().setX(0);
+                view.getGroup().getChildren().removeAll(loader.getLeftTruck(), loader.getRightTruck());
+                view.getGroup().getChildren().add(loader.getFixedTruck());
+                farm.clearFromTruck();
+            }
+        }
+    }
+
     private void showMenu()
     {
         try
@@ -1857,7 +1921,7 @@ public class Controller
                         view.getGroup().getChildren().removeAll();
                         Thread.sleep(700);
                         farm.setTimer(0);
-                        path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
+                        path = "src\\Resources\\Levels\\Level" + Integer.toString(player.getLevelThatPlaysNow()) + ".txt";
                         runHandler();
                     }
                     catch ( Exception e ) { e.printStackTrace(); }
@@ -2380,11 +2444,12 @@ public class Controller
                             if( node instanceof Label )
                                 ((Label) node).setText("");
                         player = p;
-                        player.setUserName(p.getName() + Integer.toString(player.getId()));
                         player.setLastPlayer(true);
                         for( Player p1 : players )
                             if( p1.isLastPlayer() && p1 != p )
                                 p1.setLastPlayer(false);
+                        savePlayers(players);
+                        loadLevels();
                         insertPlayer();
                         choosePlayer.setPlayer(player);
                     }
@@ -2464,12 +2529,13 @@ public class Controller
                             public void handle(MouseEvent event)
                             {
                                 player = new Player(playerName.getText(),players.size() + 1);
-                                player.setUserName(playerName.getText() + Integer.toString(player.getId()));
                                 players.add(player);
                                 player.setLastPlayer(true);
                                 for( Player p1 : players )
                                     if( p1.isLastPlayer() && p1 != player )
                                         p1.setLastPlayer(false);
+                                savePlayers(players);
+                                loadLevels();
                                 choosePlayer.getGroup().getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
                                 writePlayers();
                                 for( Node node : choosePlayer.getGroup().getChildren() )
