@@ -250,6 +250,7 @@ public class Controller
                {
                    winHandler();
                    player.increaseLevel();
+                   player.increaseMoney(farm.getMoney());
                    start.getGroup().getChildren().removeAll(levels);
                    levels.clear();
                    loadLevels();

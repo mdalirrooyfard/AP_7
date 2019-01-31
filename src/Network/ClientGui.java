@@ -24,6 +24,8 @@ import javafx.stage.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Vector;
 
 public class ClientGui extends Application {
@@ -33,6 +35,7 @@ public class ClientGui extends Application {
     private Group root = new Group();
     private Scene scene;
     private boolean isOpen;
+    private VBox leaderBoard;
 
     public ClientGui(ClientSender clientSender, Player player) {
         this.clientSender = clientSender;
@@ -306,16 +309,46 @@ public class ClientGui extends Application {
             ImageView okView = new ImageView(ok);
             okView.setY(messageView.getY() + numberOfPeople * 50 + 50);
             okView.setX(450);
-            VBox leaderBoard = makeLeaderBoard(players, numberOfPeople);
+            leaderBoard = makeLeaderBoard(players, numberOfPeople);
             leaderBoard.relocate( 220,Constants.HEIGHT / 2 - numberOfPeople * 45);
+            Image levelSort = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelSortButton.png"),
+                    100, 39, false, true);
+            ImageView levelSortView = new ImageView(levelSort);
+            levelSortView.relocate(320,messageView.getY() + numberOfPeople * 50 + 50);
+
+            Image moneySort = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\moneySortButton.png"),
+                    100, 39, false, true);
+            ImageView moneySortView = new ImageView(moneySort);
+            moneySortView.relocate( 210,messageView.getY() + numberOfPeople * 50 + 50);
+
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    root.getChildren().removeAll(rectangle, messageView, okView, leaderBoard);
+                    root.getChildren().removeAll(rectangle, messageView, okView, leaderBoard, levelSortView);
                 }
             });
-            //todo sort ha :)
-            root.getChildren().addAll(rectangle, messageView, okView, leaderBoard);
+
+            levelSortView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Collections.sort(players);
+                    leaderBoard = makeLeaderBoard(players, numberOfPeople);
+                }
+            });
+
+            moneySortView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    players.sort(new Comparator<Player>() {
+                        @Override
+                        public int compare(Player o1, Player o2) {
+                            return o1.getMoney() - o2.getMoney();
+                        }
+                    });
+                    leaderBoard = makeLeaderBoard(players, numberOfPeople);
+                }
+            });
+            root.getChildren().addAll(rectangle, messageView, okView, leaderBoard, levelSortView);
 
         }catch (IOException e){
             e.printStackTrace();

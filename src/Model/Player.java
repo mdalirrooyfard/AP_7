@@ -20,6 +20,9 @@ public class Player implements Serializable,  Comparable<Player>
         money = 0;
     }
 
+    public void increaseMoney(int amount){
+        money += amount;
+    }
 
     public void setName(String name)
     {
