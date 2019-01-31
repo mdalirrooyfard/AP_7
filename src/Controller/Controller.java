@@ -2449,6 +2449,8 @@ public class Controller
                             if( p1.isLastPlayer() && p1 != p )
                                 p1.setLastPlayer(false);
                         savePlayers(players);
+                        start.getGroup().getChildren().removeAll(levels);
+                        levels.clear();
                         loadLevels();
                         insertPlayer();
                         choosePlayer.setPlayer(player);
@@ -2535,6 +2537,8 @@ public class Controller
                                     if( p1.isLastPlayer() && p1 != player )
                                         p1.setLastPlayer(false);
                                 savePlayers(players);
+                                start.getGroup().getChildren().removeAll(levels);
+                                levels.clear();
                                 loadLevels();
                                 choosePlayer.getGroup().getChildren().removeAll(newPlayerView,message,playerName,cancelView,addView,rectangle);
                                 writePlayers();
