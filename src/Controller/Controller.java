@@ -209,8 +209,8 @@ public class Controller
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
-
             sellPage = new SellPage(stage,view,farm,loader.getItems());
+            clientGui.setFarm(farm);
             turnHandler();
         }
         catch ( FileNotFoundException e )

@@ -90,4 +90,14 @@ public class ClientSender {
         }
     }
 
+    public void sendWildAnimal(String userName){
+        Command command = new Command(CommandTypes.SEND_WILD_ANIMAL, userName);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package Network;
 
 import Model.Constants;
+import Model.Farm;
 import Model.Player;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -36,6 +37,7 @@ public class ClientGui extends Application {
     private Scene scene;
     private boolean isOpen;
     private VBox leaderBoard;
+    private Farm farm;
 
     public ClientGui(ClientSender clientSender, Player player) {
         this.clientSender = clientSender;
@@ -55,6 +57,9 @@ public class ClientGui extends Application {
         return clientSender;
     }
 
+    public void setFarm(Farm farm){
+        this.farm = farm;
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         isOpen = true;
@@ -232,13 +237,35 @@ public class ClientGui extends Application {
                     100, 39, false, true);
             ImageView profileView = new ImageView(profile);
             profileView.setY(messageView.getY() + numberOfLines * 50 + 20);
-            profileView.setX(320);
+            profileView.setX(335);
+            Image sendWild = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\wildAnimalButton.png"),
+                    100, 39, false, true);
+            ImageView sendWildView = new ImageView(sendWild);
+            sendWildView.setY(messageView.getY() + numberOfLines * 50 + 20);
+            sendWildView.setX(220);
+
             profileView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     if (!someOne.getText().equals("")){
                         if (list.contains(someOne.getText())){
                             clientSender.sendViewProfileRequest(someOne.getText());
+                            someOne.setText("");
+                        }
+                        else{
+                            notSuchUserNameError(someOne.getText());
+                            someOne.setText("");
+                        }
+                    }
+                }
+            });
+
+            sendWildView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (!someOne.getText().equals("")){
+                        if (list.contains(someOne.getText())){
+                            clientSender.sendWildAnimal(someOne.getText());
                             someOne.setText("");
                         }
                         else{
@@ -255,10 +282,10 @@ public class ClientGui extends Application {
             okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    root.getChildren().removeAll(rectangle, messageView, names, okView, someOne, profileView);
+                    root.getChildren().removeAll(rectangle, messageView, names, okView, someOne, profileView, sendWildView);
                 }
             });
-            root.getChildren().addAll(rectangle, messageView, names, okView, someOne, profileView);
+            root.getChildren().addAll(rectangle, messageView, names, okView, someOne, profileView, sendWildView);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -388,4 +415,9 @@ public class ClientGui extends Application {
         VBox result = new VBox(rows);
         return result;
     }
+
+    public void sendWildAnimal(){
+        farm.sendExtraWildAnimal();
+    }
+
 }

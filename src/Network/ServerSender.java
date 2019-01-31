@@ -132,4 +132,15 @@ public class ServerSender {
             e.printStackTrace();
         }
     }
+
+    public void sendWildAnimal(String userName){
+        try{
+            Command command = new Command(CommandTypes.SEND_WILD_ANIMAL);
+            ObjectOutputStream receiver = outPutStreams.get(userNameAndSocket.get(userName));
+            receiver.writeObject(command);
+            receiver.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }

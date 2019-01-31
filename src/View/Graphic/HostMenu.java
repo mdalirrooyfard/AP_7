@@ -32,38 +32,54 @@ public class HostMenu
 
     public HostMenu(Server server)
     {
-        this.server = server;
-        Button leaderBoard = new Button("LeaderBoard");
-        Button chatRoom = new Button("Chat room");
-        group.getChildren().addAll(leaderBoard,chatRoom);
-        leaderBoard.relocate(200,200);
-        chatRoom.relocate(300,300);
-        chatRoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                try {
-                    if (!server.getServerGui().getOpen()) {
-                        Stage stage = new Stage();
-                        server.getServerGui().start(stage);
+        try {
+            this.server = server;
+            Image backGround = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\hostBackground.png"));
+            ImageView backGroundView = new ImageView(backGround);
+            backGroundView.setX(0);
+            backGroundView.setY(0);
+            backGroundView.setFitWidth(800);
+            backGroundView.setFitHeight(600);
+            Image leaderBoard = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\hostLeaderboard.png"));
+            ImageView leaderBoardView = new ImageView(leaderBoard);
+            leaderBoardView.setFitWidth(200);
+            leaderBoardView.setFitHeight(100);
+            Image chatRoom = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\privateChatButton.png"));
+            ImageView chatRoomView = new ImageView(chatRoom);
+            chatRoomView.setFitHeight(100);
+            chatRoomView.setFitWidth(200);
+            group.getChildren().addAll(backGroundView, leaderBoardView, chatRoomView);
+            leaderBoardView.relocate(100, 250);
+            chatRoomView.relocate(430, 250);
+            chatRoomView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    try {
+                        if (!server.getServerGui().getOpen()) {
+                            Stage stage = new Stage();
+                            server.getServerGui().start(stage);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        });
-        leaderBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Vector<Player> players = new Vector<>();
-                HashMap<String, Player> users = server.getServerSender().getUsenames();
-                int numberOfLines = 0;
-                for (String s : users.keySet()) {
-                    players.add(users.get(s));
-                    numberOfLines ++ ;
+            });
+            leaderBoardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Vector<Player> players = new Vector<>();
+                    HashMap<String, Player> users = server.getServerSender().getUsenames();
+                    int numberOfLines = 0;
+                    for (String s : users.keySet()) {
+                        players.add(users.get(s));
+                        numberOfLines++;
+                    }
+                    showLeaderBoard(players, numberOfLines);
                 }
-                showLeaderBoard(players, numberOfLines);
-            }
-        });
+            });
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void showLeaderBoard(Vector<Player> players, int numberOfLines){

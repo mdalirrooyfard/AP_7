@@ -37,8 +37,8 @@ public class Loader
     private ConcurrentHashMap<String, ImageView> fixedWorkShopsImageViews = new ConcurrentHashMap<>();
     private ImageView movingCakeBakery , movingCookieBakery , movingEggPowderPlant , movingSewingFactory , movingSpinnery ,
             movingWeavingFactory , movingCustomFactory , fixedWell , movingWell ,fixedHelicopter , leftHelicopter ,
-            rightHelicopter , fixedTruck , leftTruck , rightTruck , map , wareHouse , satiety;
-    private ImageView[] wildAnimals = new ImageView[2];
+            rightHelicopter , fixedTruck , leftTruck , rightTruck , map , wareHouse;
+    private ImageView[] wildAnimals = new ImageView[3];
     private Image cage;
     private Image upgradeButton;
     private Image[] grass = new Image[4];
