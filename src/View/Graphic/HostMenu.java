@@ -40,9 +40,9 @@ public class HostMenu
             backGroundView.setY(0);
             backGroundView.setFitWidth(800);
             backGroundView.setFitHeight(600);
-            Image leaderBoard = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\leaderBoardButton.png"));
+            Image leaderBoard = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\hostLeaderboard.png"));
             ImageView leaderBoardView = new ImageView(leaderBoard);
-            leaderBoardView.setFitWidth(100);
+            leaderBoardView.setFitWidth(200);
             leaderBoardView.setFitHeight(100);
             Image chatRoom = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\privateChatButton.png"));
             ImageView chatRoomView = new ImageView(chatRoom);

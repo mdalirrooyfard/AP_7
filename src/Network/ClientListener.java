@@ -1,5 +1,6 @@
 package Network;
 
+import Model.Farm;
 import Model.Player;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -16,7 +17,6 @@ public class ClientListener implements Runnable{
     private ClientGui clientGui;
     private ObjectInputStream objectInputStream;
     private HashMap<String, PrivateGui> privateReceivers = new HashMap<>();
-
     public ClientListener(Socket socket, ClientGui clientGui){
         this.socket = socket;
         this.clientGui = clientGui;
@@ -118,6 +118,9 @@ public class ClientListener implements Runnable{
                     case SELL_TO_MARKET:
                         break;
                     case BUY_FROM_MARKET:
+                        break;
+                    case SEND_WILD_ANIMAL:
+                        clientGui.sendWildAnimal();
                         break;
                     default:
                 }

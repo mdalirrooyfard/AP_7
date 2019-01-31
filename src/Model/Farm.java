@@ -487,6 +487,14 @@ public class Farm {
         }
     }
 
+    public void sendExtraWildAnimal(){
+        int i = (int) (Math.random() * 2);
+        if (i == 0)
+            stuffs.add(new Bear(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map));
+        else
+            stuffs.add(new Lion(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), map));
+    }
+
     public WareHouse getWareHouse(){
         return wareHouse;
     }

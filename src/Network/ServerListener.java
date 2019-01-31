@@ -57,6 +57,9 @@ public class ServerListener implements Runnable{
                     case SEND_LEADER_BOARD:
                         serverSender.sendLeaderBoard(socket);
                         break;
+                    case SEND_WILD_ANIMAL:
+                        serverSender.sendWildAnimal((String) command.getContent());
+                        break;
                     default:
                 }
             }

@@ -38,7 +38,7 @@ public class Loader
     private ImageView movingCakeBakery , movingCookieBakery , movingEggPowderPlant , movingSewingFactory , movingSpinnery ,
             movingWeavingFactory , movingCustomFactory , fixedWell , movingWell ,fixedHelicopter , leftHelicopter ,
             rightHelicopter , fixedTruck , leftTruck , rightTruck , map , wareHouse;
-    private ImageView[] wildAnimals = new ImageView[2];
+    private ImageView[] wildAnimals = new ImageView[3];
     private Image cage;
     private Image upgradeButton;
     private Image[] grass = new Image[4];
