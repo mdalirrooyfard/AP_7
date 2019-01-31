@@ -24,6 +24,7 @@ import javafx.stage.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Vector;
 
 public class ClientGui extends Application {
     private ClientSender clientSender;
@@ -288,5 +289,64 @@ public class ClientGui extends Application {
             e.printStackTrace();
         }
 
+    }
+
+    public void showLeaderBoard(Vector<Player> players, int numberOfPeople){
+        try{
+            Rectangle rectangle = new Rectangle(0, 0, 800, 600);
+            rectangle.setFill(Color.rgb(54, 16, 0));
+            rectangle.setOpacity(0.7);
+            Image message = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"),
+                    500, (numberOfPeople + 1) * 50, false, true);
+            ImageView messageView = new ImageView(message);
+            messageView.setX(150);
+            messageView.setY(Constants.HEIGHT / 2 - numberOfPeople * 45);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png"),
+                    100, 39, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(messageView.getY() + numberOfPeople * 50 + 50);
+            okView.setX(450);
+            VBox leaderBoard = makeLeaderBoard(players, numberOfPeople);
+            leaderBoard.relocate( 220,Constants.HEIGHT / 2 - numberOfPeople * 45);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    root.getChildren().removeAll(rectangle, messageView, okView, leaderBoard);
+                }
+            });
+            //todo sort ha :)
+            root.getChildren().addAll(rectangle, messageView, okView, leaderBoard);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private VBox makeLeaderBoard(Vector<Player> players, int numberOfPeople){
+        Label name = new Label("username");
+        Label levelTitle = new Label("level");
+        Label moneyTitle = new Label("money");
+        name.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        name.setTextFill(Color.rgb(54, 16, 0));
+        levelTitle.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        levelTitle.setTextFill(Color.rgb(54, 16, 0));
+        moneyTitle.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        moneyTitle.setTextFill(Color.rgb(54, 16, 0));
+        HBox[] rows = new HBox[numberOfPeople + 1];
+        rows[0] = new HBox(70, name, levelTitle, moneyTitle);
+        for (int i = 0; i < numberOfPeople; i++) {
+            Label userName = new Label(players.get(i).getUserName());
+            Label level = new Label(Integer.toString(players.get(i).getLastLevel()));
+            Label money = new Label(Integer.toString(players.get(i).getMoney()));
+            userName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            userName.setTextFill(Color.rgb(54, 16, 0));
+            level.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            level.setTextFill(Color.rgb(54, 16, 0));
+            money.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            money.setTextFill(Color.rgb(54, 16, 0));
+            rows[i + 1] = new HBox(100,userName, level, money);
+        }
+        VBox result = new VBox(rows);
+        return result;
     }
 }
