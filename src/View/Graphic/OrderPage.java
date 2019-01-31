@@ -22,9 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class OrderPage
 {
-    Group group = new Group();
-    Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
-    int height = 0 , itemNumber = 0 , width = 0;
+    private Group group = new Group();
+    private Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
+    private int height = 0 , itemNumber = 0 , width = 0;
 
     public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView leftHelicopter
             , ImageView fixedHelicopter, AnimationTimer aTimer)
@@ -48,7 +48,7 @@ public class OrderPage
         return scene;
     }
 
-    private void insertBack(Farm farm , Stage stage , View view , AnimationTimer animationTimer)
+    private void insertBack(Farm farm , Stage stage , View view,AnimationTimer animationTimer)
     {
         try
         {
@@ -62,9 +62,9 @@ public class OrderPage
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    animationTimer.start();
                     farm.clearHelicopterBeforeGo();
                     group.getChildren().clear();
+                    animationTimer.start();
                     stage.setScene(view.getScene());
                 }
             });

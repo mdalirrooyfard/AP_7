@@ -636,7 +636,8 @@ public class Farm {
     }
 
     //transportation methods
-    public boolean clearFromHelicopter() {
+    public boolean clearFromHelicopter()
+    {
         if (helicopter.isMoving())
             return false;
         helicopter.setMoving(false);
@@ -648,44 +649,52 @@ public class Farm {
         return true;
     }
 
-    public boolean clearFromTruck() {
+    public boolean clearFromTruck()
+    {
         if (truck.isMoving())
             return false;
         truck.setMoving(false);
         truck.getItems().clear();
         truck.getItems().clear();
-        increaseMoney(truck.getSpentMoney());
-        truck.setSpentMoney(0);
+        increaseMoney(truck.getGainedMoney());
+        truck.setGainedMoney(0);
         truck.setCurrentVolume(truck.getVolume());
         return true;
     }
 
-    public boolean clearTruckBeforeGo(){
+    public boolean clearTruckBeforeGo()
+    {
         if (truck.isMoving())
             return false;
         wareHouse.getCollectedItems().addAll(truck.getItems());
         wareHouse.decreaseCurrentVolume(truck.getVolume() - truck.getCurrentVolume());
-        truck.setSpentMoney(0);
+        truck.setGainedMoney(0);
         truck.setCurrentVolume(truck.getVolume());
         return true;
     }
 
-    public void clearOneItemFromTruck(String kind){
-        Vector<Item> items = truck.getItems();
-        for (Item item : items){
-            if (item.getKind().equals(kind)){
-                truck.decreaseSpentMoney(item.getBuyCost());
+    public void clearOneItemFromTruck(String kind)
+    {
+        for (Item item : truck.getItems())
+        {
+            if (item.getKind().equals(kind))
+            {
+                truck.decreaseGainedMoney(item.getBuyCost());
                 truck.increaseCurrentVolume(item.getVolume());
-                items.remove(item);
+                wareHouse.getCollectedItems().add(item);
+                wareHouse.setCurrentVolume(wareHouse.getCurrentVolume() - item.getVolume());
                 return;
             }
         }
     }
 
-    public void clearOneItemFromHelicopter(String kind){
+    public void clearOneItemFromHelicopter(String kind)
+    {
         Vector<Item> items = helicopter.getItems();
-        for (Item item : items){
-            if (item.getKind().equals(kind)){
+        for (Item item : items)
+        {
+            if (item.getKind().equals(kind))
+            {
                 increaseMoney(item.getBuyCost());
                 helicopter.decreaseSpentMoney(item.getBuyCost());
                 helicopter.increaseCurrentVolume(item.getVolume());
@@ -695,7 +704,8 @@ public class Farm {
         }
     }
 
-    public boolean clearHelicopterBeforeGo(){
+    public boolean clearHelicopterBeforeGo()
+    {
         if (helicopter.isMoving())
             return false;
         helicopter.getItems().clear();
@@ -705,36 +715,44 @@ public class Farm {
         return true;
     }
 
-    public int addToTruck(String itemName, int count) {
+    public int addToTruck(String itemName, int count)
+    {
         if (truck.isMoving())
             return -1;
         int result = 0;
         Vector<Item> collectedItems = wareHouse.getCollectedItems();
-        for (int j = 0; j < collectedItems.size() && result < count; j++) {
+        for (int j = 0; j < collectedItems.size() && result < count; j++)
+        {
             Item item = collectedItems.get(j);
-            if (item.getKind().equals(itemName)) {
-                if (item.getVolume() <= truck.getCurrentVolume()) {
+            if (item.getKind().equals(itemName))
+            {
+                if (item.getVolume() <= truck.getCurrentVolume())
+                {
                     truck.decreaseCurrentVolume(item.getVolume());
-                    truck.increaseSpentMoney(item.getSellCost());
+                    truck.increaseGainedMoney(item.getSellCost());
                     truck.add(item);
                     wareHouse.increaseCurrentVolume(item.getVolume());
                     collectedItems.remove(item);
                     result++;
-                } else
+                }
+                else
                     return result;
             }
         }
         return result;
     }
 
-    public int addToHelicopter(String itemName, int count) {
+    public int addToHelicopter(String itemName, int count)
+    {
         if (helicopter.isMoving())
             return -1;
         int result = 0;
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             Item item = new Item(makeRandomXAndY(mapWidth), makeRandomXAndY(mapLength), itemName);
             if (item.getVolume() <= helicopter.getCurrentVolume()
-                    && item.getBuyCost() <= money) {
+                    && item.getBuyCost() <= money)
+            {
                 decreaseMoney(item.getBuyCost());
                 helicopter.increaseSpentMoney(item.getBuyCost());
                 helicopter.decreaseCurrentVolume(item.getVolume());
@@ -746,13 +764,17 @@ public class Farm {
         return result;
     }
 
-    public boolean goTransportation(boolean vehicle) {
-        if (vehicle) {
+    public boolean goTransportation(boolean vehicle)
+    {
+        if (vehicle)
+        {
             if (truck.isMoving())
                 return false;
             truck.setCurrentTime(truck.getWorkingTime());
             truck.setMoving(true);
-        } else {
+        }
+        else
+        {
             if (helicopter.isMoving())
                 return false;
             helicopter.setCurrentTime(helicopter.getWorkingTime());
@@ -810,7 +832,7 @@ public class Farm {
         return workshop.getCount();
     }
 
-    public int availableInputCount(Vector<String> inputs, int initial)
+    private int availableInputCount(Vector<String> inputs, int initial)
     {
         int min = initial;
         for (String s : inputs)

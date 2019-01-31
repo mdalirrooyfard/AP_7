@@ -9,7 +9,7 @@ public class Transportations extends Entity
 {
     private Vector<Item> items = new Vector<>();
     private boolean isMoving = false ;
-    private int workingTime , currentTime , spentMoney = 0;
+    private int workingTime , currentTime;
     private double prevMovingX , nextMovingX;
 
     public double getPrevMovingX()
@@ -30,22 +30,6 @@ public class Transportations extends Entity
     public void setNextMovingX(double nextMovingX)
     {
         this.nextMovingX = nextMovingX;
-    }
-
-    public int getSpentMoney() {
-        return spentMoney;
-    }
-
-    public void setSpentMoney(int spentMoney) {
-        this.spentMoney = spentMoney;
-    }
-
-    public void increaseSpentMoney (int amount){
-        this.spentMoney += amount;
-    }
-
-    public void decreaseSpentMoney(int amount){
-        this.spentMoney -= amount;
     }
 
     @Override
