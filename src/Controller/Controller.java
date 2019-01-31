@@ -95,6 +95,8 @@ public class Controller
     private ImageView arrowViewWareHouse = new ImageView(arrow);
     private ConcurrentHashMap<Integer, Image> animalSatiety = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Image> wellFullness = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Image> workShopWorking = new ConcurrentHashMap<>();
+
 
     public Controller(Stage stage)
     {
@@ -127,17 +129,20 @@ public class Controller
             e.getStackTrace();
         }
     }
+
     private void loadWellFullnessImages(){
         try {
             Image image;
             for (int i = 0 ; i < 6 ; i++) {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Progress\\full" + i + ".png"));
                 wellFullness.put(i , image);
+                workShopWorking.put(i , image);
             }
         }catch (Exception e){
             e.getStackTrace();
         }
     }
+
     private void findLastPlayer()
     {
         if( players.size() > 0 )
@@ -801,10 +806,19 @@ public class Controller
         for (Workshop w : farm.getWorkshops())
             if (w != null && w.isWorking())
             {
+                ImageView workshopWorkingView = new ImageView(workShopWorking.get((w.getWorkingTime() - w.getCurrentTime())
+                        *5/w.getWorkingTime()));
+                workshopWorkingView.setX(w.getShowX() + 180);
+                workshopWorkingView.setY(w.getShowY() + 80);
+                workshopWorkingView.setFitWidth(20);
+                workshopWorkingView.setFitHeight(80);
+                view.getGroup().getChildren().add(workshopWorkingView);
+                loader.getCurrentEntities().add(workshopWorkingView);
                 if (w.getCurrentTime() > 0)
                     w.currentTimeDecrease(1);
                 else
                 {
+                    view.getGroup().getChildren().remove(workshopWorkingView);
                     farm.endWorkShop(w);
                     if (w instanceof CakeBakery)
                         view.getGroup().getChildren().remove(loader.getMovingCakeBakery());
