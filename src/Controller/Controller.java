@@ -2312,7 +2312,7 @@ public class Controller
                             if( node instanceof Label )
                                 ((Label) node).setText("");
                         player = p;
-                        player.setUserName(p.getName());
+                        player.setUserName(p.getName() + Integer.toString(player.getId()));
                         player.setLastPlayer(true);
                         for( Player p1 : players )
                             if( p1.isLastPlayer() && p1 != p )
@@ -2396,8 +2396,7 @@ public class Controller
                             public void handle(MouseEvent event)
                             {
                                 player = new Player(playerName.getText(),players.size() + 1);
-                                player.setUserName(playerName.getText());
-                                //todo change this!
+                                player.setUserName(playerName.getText() + Integer.toString(player.getId()));
                                 players.add(player);
                                 player.setLastPlayer(true);
                                 for( Player p1 : players )
