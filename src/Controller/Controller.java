@@ -1445,6 +1445,30 @@ public class Controller
         }
     }
 
+    private void flyingItemToWarehouse(Item item)
+    {
+        ImageView movingItem = new ImageView(loader.getItems().get(item.getKind()));
+        int counter = 0;
+        double startX = item.getShowX();
+        double startY = item.getShowY();
+        double displacement = 18;
+        movingItem.setX(startX);
+        movingItem.setY(startY + counter * displacement);
+        view.getGroup().getChildren().add(movingItem);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(3000) , movingItem);
+        translateTransition.setToX(- movingItem.getX() + farm.getWareHouse().getShowX() + 100);
+        translateTransition.setToY(- movingItem.getY() + farm.getWareHouse().getShowY() + 100);
+        translateTransition.play();
+        translateTransition.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                view.getGroup().getChildren().remove(movingItem);
+            }
+        });
+    }
+
     private void servicesIcons()
     {
         show(loader.getFixedTruck() , farm.getTruck());
@@ -1468,19 +1492,24 @@ public class Controller
                 for (Entity e : stuffs)
                 {
                     ImageView imageView = null;
-                    if(e instanceof Item && !e.isDead()) {
+                    if( e instanceof Item && !e.isDead() && !((Item) e).isReceivedByHelicopter() )
+                    {
                         imageView = new ImageView(loader.getItems().get(((Item) e).getKind()));
-                        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
                             @Override
-                            public void handle(MouseEvent event) {
-                                double x = e.getX();
-                                double y = e.getY();
-                                boolean result = farm.pickUp(x, y);
-                                if (!result){
+                            public void handle(MouseEvent event)
+                            {
+                                boolean result = farm.pickUp(e.getX(), e.getY());
+                                if (!result)
+                                {
                                     arrowTo(farm.getWareHouse().getShowX() + 180
                                             , farm.getWareHouse().getShowY() - 50 ,
                                             arrowViewWareHouse , false);
-                                }else{
+                                }
+                                else
+                                {
+                                    flyingItemToWarehouse((Item) e);
                                     flagWareHouse = 0;
                                     view.getGroup().getChildren().remove(arrowViewWareHouse);
                                 }
