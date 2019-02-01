@@ -12,15 +12,14 @@ public class Constants
     public static final double ANIMAL_DISPLACEMENT_X = Screen.getPrimary().getVisualBounds().getWidth() / 4;
     public static final int ANIMAL_SIZE = 90;
     public static final int scale = 3;
-    public static final int movingScale = 30;
     public static final int WELL_CAPACITY = 7;
     public static final int WAREHOUSE_VOLUME = 100;
     public static final int WELL_BASE_MONEY = 20;
     public static final int WELL_BASE_UPGRADE_COST = 100;
     public static final int WAREHOUSE_BASE_UPGRADE_COST = 100;
     public static final int CAT_BASE_UPGRADE_COST = 100;
-    public static final int HELICOPTER_WORKING_TIME = 30 ;
-    public static final int TRUCK_WORKING_TIME = 30 ;
+    public static final int HELICOPTER_WORKING_TIME = 20 ;
+    public static final int TRUCK_WORKING_TIME = 20 ;
     public static final int TRUCK_BASE_UPGRADE_COST = 100;
     public static final int HELICOPTER_BASE_UPGRADE_COST = 100;
     public static final String[] ITEM_NAMES = {"souvenir","egg","wool",

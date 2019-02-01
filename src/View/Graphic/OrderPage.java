@@ -100,10 +100,9 @@ public class OrderPage
                         if (clientSender != null)
                             clientSender.buyItemsFromMarket(farm.getHelicopter().getItems());
                         farm.goTransportation(false);
-                        farm.getHelicopter().setPrevMovingX(300);
-                        farm.getHelicopter().setNextMovingX(300 + farm.getHelicopter().getMovingScale());
+                        farm.getHelicopter().setPrevMovingX(350);
+                        farm.getHelicopter().setNextMovingX(350 + farm.getHelicopter().getMovingScale());
                         view.getGroup().getChildren().remove(fixedHelicopter);
-                        view.getGroup().getChildren().add(rightHelicopter);
                         animationTimer.start();
                         stage.setScene(view.getScene());
                     }

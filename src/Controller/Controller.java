@@ -800,17 +800,19 @@ public class Controller
             @Override
             public void handle(MouseEvent event)
             {
-                if (isMultiPlayer && player.isClient() == 2){
+                if (isMultiPlayer && player.isClient() == 2)
+                {
                     clientGui.setMarket(null);
                     clientSender.sendMarketRequest();
                     market = clientGui.getMarket();
-                    while (market == null){
+                    while (market == null)
+                    {
                         market = clientGui.getMarket();
                     }
                 }
                 animationTimer.stop();
                 stage.setScene(orderPage.getScene(stage,view,farm,isMultiPlayer,market.getItems(),loader.getItems(),
-                        loader.getLeftHelicopter(),loader.getFixedHelicopter(), animationTimer, clientSender));
+                        loader.getRightHelicopter(),loader.getFixedHelicopter(), animationTimer, clientSender));
             }
         });
     }
@@ -1667,44 +1669,46 @@ public class Controller
         {
             if( farm.getHelicopter().getCurrentTime() > 0 )
             {
-                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 1.8 )
+                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 2 )
                 {
-                    loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX() + 550);
-                    loader.getLeftHelicopter().setY(loader.getFixedHelicopter().getY());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(), 1,
+                    if (!view.getGroup().getChildren().contains(loader.getRightHelicopter()))
+                        view.getGroup().getChildren().add(loader.getRightHelicopter());
+                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getRightHelicopter().setY(10);
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(), 1,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
-                            farm.getHelicopter().getPrevMovingX()+550, loader.getFixedHelicopter().getY(),
-                            farm.getHelicopter().getNextMovingX()+550, loader.getFixedHelicopter().getY(), 2000);
+                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(),10, farm.getHelicopter().getNextMovingX(),
+                            10, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
-                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - Constants.movingScale);
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + farm.getHelicopter().getMovingScale());
                 }
                 else
                 {
                     if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
                     {
-                        view.getGroup().getChildren().remove(loader.getLeftHelicopter());
-                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                        view.getGroup().getChildren().remove(loader.getRightHelicopter());
+                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - farm.getHelicopter().getMovingScale());
                     }
-                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX() + 550);
-                    loader.getRightHelicopter().setY(loader.getFixedHelicopter().getY());
-                    if (!view.getGroup().getChildren().contains(loader.getRightHelicopter()))
-                        view.getGroup().getChildren().add(loader.getRightHelicopter());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(),2,
+                    loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getLeftHelicopter().setY(10);
+                    if (!view.getGroup().getChildren().contains(loader.getLeftHelicopter()))
+                        view.getGroup().getChildren().add(loader.getLeftHelicopter());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(),1,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
-                            farm.getHelicopter().getPrevMovingX()+550, loader.getFixedHelicopter().getY(),
-                            farm.getHelicopter().getNextMovingX()+550, loader.getFixedHelicopter().getY(), 2000);
+                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(),10, farm.getHelicopter().getNextMovingX(),
+                            10, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
-                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - farm.getHelicopter().getMovingScale());
                 }
                 farm.getHelicopter().decreaseCurrentTime(1);
             }
@@ -1715,7 +1719,7 @@ public class Controller
                 loader.getFixedHelicopter().setFitWidth(220);
                 loader.getFixedHelicopter().setY(0);
                 loader.getFixedHelicopter().setX(0);
-                view.getGroup().getChildren().removeAll(loader.getLeftHelicopter(), loader.getRightHelicopter());
+                view.getGroup().getChildren().removeAll(loader.getLeftHelicopter());
                 view.getGroup().getChildren().add(loader.getFixedHelicopter());
                 farm.clearFromHelicopter();
             }
@@ -1728,48 +1732,46 @@ public class Controller
         {
             if( farm.getTruck().getCurrentTime() > 0 )
             {
-                if ( farm.getTruck().getCurrentTime() > farm.getTruck().getWorkingTime() / 1.8 )
+                if ( farm.getTruck().getCurrentTime() > farm.getTruck().getWorkingTime() / 2 )
                 {
+                    if (!view.getGroup().getChildren().contains(loader.getRightTruck()))
+                        view.getGroup().getChildren().add(loader.getRightTruck());
                     loader.getRightTruck().setX(farm.getTruck().getPrevMovingX());
-                    loader.getRightTruck().setY(loader.getFixedTruck().getY() + 50);
-                    loader.getRightTruck().setFitWidth(48);
-                    loader.getRightTruck().setFitHeight(48);
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 2,
+                    loader.getRightTruck().setY(60);
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 1,
                             false, 2, 1, 2, 48, 48, 2);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getRightTruck(),
-                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY()+50,
-                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY()+50, 2000);
+                            farm.getTruck().getPrevMovingX(), 60,
+                            farm.getTruck().getNextMovingX(), 60, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getTruck().setPrevMovingX(farm.getTruck().getNextMovingX());
-                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + Constants.movingScale);
+                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + farm.getTruck().getMovingScale());
                 }
                 else
                 {
                     if( farm.getTruck().getCurrentTime() == farm.getTruck().getWorkingTime() / 2 )
                     {
                         view.getGroup().getChildren().remove(loader.getRightTruck());
-                        farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + Constants.movingScale);
+                        farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - farm.getTruck().getMovingScale());
                     }
                     loader.getLeftTruck().setX(farm.getTruck().getPrevMovingX());
-                    loader.getLeftTruck().setY(loader.getFixedTruck().getY() + 50);
-                    loader.getLeftTruck().setFitWidth(48);
-                    loader.getLeftTruck().setFitHeight(48);
+                    loader.getLeftTruck().setY(60);
                     if (!view.getGroup().getChildren().contains(loader.getLeftTruck()))
                         view.getGroup().getChildren().add(loader.getLeftTruck());
                     AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftTruck(),1,
                             false, 2, 1, 2, 48, 48, 2);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getLeftTruck(),
-                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY()+50,
-                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY()+50, 2000);
+                            farm.getTruck().getPrevMovingX(), 60, farm.getTruck().getNextMovingX(),
+                            60, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getTruck().setPrevMovingX(farm.getTruck().getNextMovingX());
-                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - Constants.movingScale);
+                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - farm.getTruck().getMovingScale());
                 }
                 farm.getTruck().decreaseCurrentTime(1);
             }
@@ -1780,7 +1782,7 @@ public class Controller
                 loader.getFixedTruck().setFitWidth(200);
                 loader.getFixedTruck().setY(0);
                 loader.getFixedTruck().setX(0);
-                view.getGroup().getChildren().removeAll(loader.getLeftTruck(), loader.getRightTruck());
+                view.getGroup().getChildren().removeAll(loader.getLeftTruck());
                 view.getGroup().getChildren().add(loader.getFixedTruck());
                 if (isMultiPlayer && player.isClient() == 2)
                 {
