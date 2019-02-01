@@ -3,7 +3,6 @@ package Model;
 
 import Model.Items.Item;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class WareHouse extends Entity{
@@ -52,8 +51,10 @@ public class WareHouse extends Entity{
     @Override
     public void upgrade() {
         super.upgrade();
-        this.setVolume( this.getVolume() * 2 );
-        this.setBuyCost( this.getBuyCost() * 2 );
-        this.setUpgradeCost(this.getUpgradeCost() + 50);
+        int itemsVolume = volume - currentVolume;
+        volume *= 2;
+        buyCost *= 2;
+        upgradeCost += 50;
+        currentVolume = volume - itemsVolume;
     }
 }

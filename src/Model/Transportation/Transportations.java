@@ -9,7 +9,7 @@ public class Transportations extends Entity
 {
     private Vector<Item> items = new Vector<>();
     private boolean isMoving = false ;
-    private int workingTime , currentTime;
+    private int workingTime , currentTime , movingScale = 3;
     private double prevMovingX , nextMovingX;
 
     public double getPrevMovingX()
@@ -30,6 +30,11 @@ public class Transportations extends Entity
     public void setNextMovingX(double nextMovingX)
     {
         this.nextMovingX = nextMovingX;
+    }
+
+    public int getMovingScale()
+    {
+        return movingScale;
     }
 
     @Override
@@ -90,9 +95,12 @@ public class Transportations extends Entity
     @Override
     public void upgrade() {
         super.upgrade();
-        this.setWorkingTime(this.workingTime * 2/3);
-        this.setVolume(this.volume * 2);
-        this.setUpgradeCost(this.upgradeCost  + 50);
+        this.workingTime *= 2 / 3;
+        int itemsVolume = this.volume - this.currentVolume;
+        this.volume *= 2;
+        this.currentVolume = this.volume - itemsVolume;
+        this.upgradeCost += 50;
+        this.movingScale *= 3 / 2;
     }
 
     public boolean isMoving() {

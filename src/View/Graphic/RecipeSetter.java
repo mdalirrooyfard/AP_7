@@ -224,10 +224,11 @@ public class RecipeSetter
                     {
                         view.getGroup().getChildren().removeAll(rectangle,outputBackView,okView,choose,choose2);
                         view.getGroup().getChildren().removeAll(items);
-                        if(farm.getWareHouse().getCollectedItems().contains(inputs)) {
-                            view.getGroup().getChildren().remove(loader.getFixedWorkShopsImageViews().get("customFactory"));
-                            int result = farm.startWorkShop("customFactory");
-                            animationTimer.start();
+                        view.getGroup().getChildren().remove(loader.getFixedWorkShopsImageViews().get("customFactory"));
+                        int result = farm.startWorkShop("customFactory");
+                        animationTimer.start();
+                        if( result > 0 )
+                        {
                             ImageView imageView = loader.getMovingCustomFactory();
                             imageView.setX(farm.getWorkshops()[6].getShowX());
                             imageView.setY(farm.getWorkshops()[6].getShowY());
