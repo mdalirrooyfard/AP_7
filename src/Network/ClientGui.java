@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class ClientGui extends Application {
+    private Market market = null;
     private ClientSender clientSender;
     private Player player;
     private ScrollPane chatArea = new ScrollPane();
@@ -53,6 +54,14 @@ public class ClientGui extends Application {
         area.layout();
         chatArea.setVvalue(1.0);
         this.chatArea.setContent(area);
+    }
+
+    public Market getMarket() {
+        return market;
+    }
+
+    public void setMarket(Market market) {
+        this.market = market;
     }
 
     public void addFriendRequest(String userName){

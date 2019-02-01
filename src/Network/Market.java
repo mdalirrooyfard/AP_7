@@ -2,9 +2,10 @@ package Network;
 
 import Model.Constants;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Market {
+public class Market implements Serializable {
     private HashMap<String, Integer> items = new HashMap<>();
 
     public Market(){

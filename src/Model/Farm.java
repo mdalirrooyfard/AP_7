@@ -310,7 +310,7 @@ public class Farm {
         Vector<Entity> cellRemainItems = new Vector<>();
         boolean isEveryThingPickedUp = true;
         for (Entity entity : cellItems) {
-            if (entity instanceof Item)
+            if (entity instanceof Item && !entity.isDead())
                 if (entity.getVolume() <= wareHouse.getCurrentVolume()) {
                     wareHouse.decreaseCurrentVolume(entity.getVolume());
                     wareHouse.add((Item)entity);
@@ -381,72 +381,38 @@ public class Farm {
     }
 
     public void checkCollision() {
-        if (!map.isThereWild())
-            return;
-        for (int i = 0; i < mapLength; i++)
-            for (int j = 0; j < mapWidth; j++) {
-                Vector<Integer[]> places = new Vector<>();
-                places.add(new Integer[]{i,j});
-                if (i - 1 >= 0)
-                    places.add(new Integer[]{j, i - 1}); //up
-                if (i + 1 <= mapLength - 1)
-                    places.add(new Integer[]{j, i + 1});   //down
-                if (j - 1 >= 0) {
-                    places.add(new Integer[]{j - 1, i});   //left
-                    if (i - 1 >= 0)
-                        places.add(new Integer[]{j - 1, i - 1}); //up left
-                    if (i + 1 <= mapLength - 1)
-                        places.add(new Integer[]{j - 1, i + 1}); //down left
-                }
-                if (j + 1 <= mapWidth - 1) {
-                    places.add(new Integer[]{j + 1, i}); //right
-                    if (i - 1 >= 0)
-                        places.add(new Integer[]{j + 1, i - 1}); //up right
-                    if (i + 1 <= mapLength - 1)
-                        places.add(new Integer[]{j + 1, i + 1}); //down right
-                }
-                Cell cell = map.getCells()[i][j];
-                if (cell.status()[0]) {
-                    if (cell.status()[4]) {
-                        killDogAndWild(places);
-                    }
-                    else if (cell.status()[1] || cell.status()[2]) {
-                        killDomesticAndItems(places);
-                    }
-                }
-            }
-    }
-
-    public void killDogAndWild(Vector<Integer[]> places) {
         for (Entity entity : stuffs){
-            if ( !entity.isDead() && (entity instanceof Wild || entity instanceof Dog)){
-                Integer[] animalPlace = new Integer[]{(int)entity.getY(), (int)entity.getX()};
-                if (vectorContains(places, animalPlace)) {
-                    entity.setDead(true);
-                    System.out.println("mord as dog");
-                }
-            }
+            if (entity instanceof Dog && !entity.isDead())
+                killDogAndWild(entity.getShowX(), entity.getShowY(),(Dog)entity);
+            else if (entity instanceof Wild && !entity.isDead())
+                killDomesticAndItems(entity.getShowX(), entity.getShowY());
         }
     }
 
-    public void killDomesticAndItems(Vector<Integer[]> places) {
+    public void killDogAndWild(double mapX, double mapY, Dog dog) {
+        boolean isThereWild = false;
         for (Entity entity : stuffs){
-            if ( !entity.isDead() && (entity instanceof Domestic || entity instanceof Item)){
-                Integer[] animalPlace = new Integer[]{(int)entity.getY(), (int)entity.getX()};
-                if (vectorContains(places, animalPlace)) {
+            if (entity instanceof Wild && !entity.isDead()){
+                if ((Math.pow(entity.getShowX() - mapX, 2) +
+                    Math.pow(entity.getShowY() - mapY, 2)) < 400) {
                     entity.setDead(true);
-                    System.out.println("mord as wild");
+                    isThereWild = true;
                 }
             }
         }
+        if (isThereWild)
+            dog.setDead(true);
     }
 
-    public boolean vectorContains(Vector<Integer[]> places, Integer[] place){
-        for (Integer[] i : places){
-            if (i[0].equals(place[0]) && i[1].equals(place[1]))
-                return true;
+    public void killDomesticAndItems(double mapX, double mapY) {
+        for (Entity entity : stuffs){
+            if ((entity instanceof Domestic || entity instanceof Item) && !entity.isDead()){
+                if ((Math.pow(entity.getShowX() - mapX, 2) +
+                        Math.pow(entity.getShowY() - mapY, 2)) < 400) {
+                    entity.setDead(true);
+                }
+            }
         }
-        return false;
     }
 
     public boolean turn()

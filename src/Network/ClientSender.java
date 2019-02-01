@@ -161,4 +161,24 @@ public class ClientSender {
         }
     }
 
+    public void buyItemsFromMarket(Vector<Item> items){
+        Command command = new Command(CommandTypes.BUY_FROM_MARKET, items);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMarketRequest(){
+        Command command = new Command(CommandTypes.SEND_MARKET);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

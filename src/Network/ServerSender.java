@@ -43,9 +43,14 @@ public class ServerSender {
         userNameAndSocket.put(player.getUserName(), socket);
     }
 
-    public void updateMarket(Vector<Item> items){
+    public void updateMarketAdd(Vector<Item> items){
         for (Item item : items)
             market.add(item.getKind());
+    }
+
+    public void updateMarketRemove(Vector<Item> items){
+        for (Item item : items)
+            market.remove(item.getKind());
     }
 
     public void updateLevel(String username, int level){
@@ -156,6 +161,17 @@ public class ServerSender {
             ObjectOutputStream receiver = outPutStreams.get(userNameAndSocket.get(userName));
             receiver.writeObject(command);
             receiver.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMarket(Socket socket){
+        Command command = new Command(CommandTypes.SEND_MARKET, market);
+        try{
+            ObjectOutputStream objectOutputStream = outPutStreams.get(socket);
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
         }catch (IOException e){
             e.printStackTrace();
         }

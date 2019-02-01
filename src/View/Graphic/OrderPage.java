@@ -2,6 +2,7 @@ package View.Graphic;
 
 import Model.Constants;
 import Model.Farm;
+import Network.ClientSender;
 import View.View;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -28,7 +29,7 @@ public class OrderPage
     private int height = 0 , itemNumber = 0 , width = 0;
 
     public Scene getScene(Stage stage, View view, Farm farm, boolean isMultiplayer , HashMap<String , Integer> market,
-    ConcurrentHashMap<String ,Image> items, ImageView rightHelicopter, ImageView fixedHelicopter, AnimationTimer aTimer)
+                          ConcurrentHashMap<String ,Image> items, ImageView rightHelicopter, ImageView fixedHelicopter, AnimationTimer aTimer, ClientSender clientSender)
     {
         height = 0;
         itemNumber = 0;
@@ -42,7 +43,7 @@ public class OrderPage
             orderView.setY(0);
             group.getChildren().addAll(orderView);
             insertBack(farm,stage,view , aTimer);
-            insertOk(farm,stage,view,rightHelicopter,fixedHelicopter,aTimer);
+            insertOk(farm,stage,view,rightHelicopter,fixedHelicopter,aTimer, clientSender);
             insertItems(farm,items,isMultiplayer,market);
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -75,7 +76,7 @@ public class OrderPage
     }
 
     private void insertOk(Farm farm,Stage stage,View view,ImageView rightHelicopter, ImageView fixedHelicopter
-            ,AnimationTimer animationTimer)
+            ,AnimationTimer animationTimer, ClientSender clientSender)
     {
         try
         {
@@ -91,6 +92,8 @@ public class OrderPage
                 {
                     if( farm.getHelicopter().getSpentMoney() > 0 )
                     {
+                        if (clientSender != null)
+                            clientSender.buyItemsFromMarket(farm.getHelicopter().getItems());
                         farm.goTransportation(false);
                         farm.getHelicopter().setPrevMovingX(300);
                         farm.getHelicopter().setNextMovingX(300 + farm.getHelicopter().getMovingScale());

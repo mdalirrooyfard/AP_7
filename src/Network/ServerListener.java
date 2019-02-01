@@ -65,8 +65,17 @@ public class ServerListener implements Runnable{
                     case SELL_TO_MARKET:
                         serverSender.sendGroup(command);
                         break;
-                    case UPDATE_MARKET:
-                        serverSender.updateMarket((Vector<Item>) command.getContent());
+                    case BUY_FROM_MARKET:
+                        serverSender.sendGroup(command);
+                        break;
+                    case UPDATE_MARKET_ADD:
+                        serverSender.updateMarketAdd((Vector<Item>) command.getContent());
+                        break;
+                    case UPDATE_MARKET_REMOVE:
+                        serverSender.updateMarketRemove((Vector<Item>) command.getContent());
+                        break;
+                    case SEND_MARKET:
+                        serverSender.sendMarket(socket);
                         break;
                     case SEND_LEADER_BOARD:
                         serverSender.sendLeaderBoard(socket);
