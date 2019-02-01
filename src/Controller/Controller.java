@@ -2306,26 +2306,26 @@ public class Controller
             clientPort.setText("8060");
             clientPort.setStyle("-fx-text-fill : gray");
             clientPort.setAlignment(Pos.CENTER);
-            clientPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            clientPort.setLayoutX(Constants.WIDTH / 2 - 50);
             clientPort.setLayoutY(Constants.HEIGHT / 2 - 220);
             clientPort.setPrefSize(150,40);
             clientPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
 
-            Label clientIPAddress = new Label("Client IP : "+Inet4Address.getLocalHost().getHostAddress());
+            Label clientIPAddress = new Label("Client IP :      "+Inet4Address.getLocalHost().getHostAddress());
             clientIPAddress.setTextFill(Color.rgb(54,16,0));
             clientIPAddress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 210);
+            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 200);
             clientIPAddress.setLayoutY(Constants.HEIGHT / 2 - 140);
 
             Label serverPortLabel = new Label("Server Port: ");
             serverPortLabel.setTextFill(Color.rgb(54,16,0));
             serverPortLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 210);
+            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 200);
             serverPortLabel.setLayoutY(Constants.HEIGHT / 2 - 60);
 
             TextField serverPort = new TextField();
             serverPort.setAlignment(Pos.CENTER);
-            serverPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            serverPort.setLayoutX(Constants.WIDTH / 2 - 50);
             serverPort.setLayoutY(Constants.HEIGHT / 2 - 60);
             serverPort.setPrefSize(150,40);
             serverPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
@@ -2338,7 +2338,7 @@ public class Controller
 
             TextField serverIP = new TextField();
             serverIP.setAlignment(Pos.CENTER);
-            serverIP.setLayoutX(Constants.WIDTH / 2 - 120);
+            serverIP.setLayoutX(Constants.WIDTH / 2 - 50);
             serverIP.setLayoutY(Constants.HEIGHT / 2);
             serverIP.setPrefSize(150,40);
             serverIP.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
