@@ -18,6 +18,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class OrderPage
@@ -26,8 +27,8 @@ public class OrderPage
     private Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
     private int height = 0 , itemNumber = 0 , width = 0;
 
-    public Scene getScene(Stage stage, View view, Farm farm, ConcurrentHashMap<String ,Image> items, ImageView rightHelicopter
-            , ImageView fixedHelicopter, AnimationTimer aTimer)
+    public Scene getScene(Stage stage, View view, Farm farm, boolean isMultiplayer , HashMap<String , Integer> market,
+    ConcurrentHashMap<String ,Image> items, ImageView rightHelicopter, ImageView fixedHelicopter, AnimationTimer aTimer)
     {
         height = 0;
         itemNumber = 0;
@@ -42,7 +43,7 @@ public class OrderPage
             group.getChildren().addAll(orderView);
             insertBack(farm,stage,view , aTimer);
             insertOk(farm,stage,view,rightHelicopter,fixedHelicopter,aTimer);
-            insertItems(farm,items);
+            insertItems(farm,items,isMultiplayer,market);
         }
         catch ( Exception e ) { e.printStackTrace(); }
         return scene;
@@ -105,7 +106,7 @@ public class OrderPage
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void insertItems(Farm farm,ConcurrentHashMap<String,Image> items)
+    private void insertItems(Farm farm,ConcurrentHashMap<String,Image> items,boolean isMultiplayer,HashMap<String , Integer> market)
     {
         try
         {
@@ -113,7 +114,6 @@ public class OrderPage
             double scale = ( Constants.HEIGHT - 80 ) / 18;
             for( String item : Constants.ITEM_NAMES )
             {
-                height++;
                 if( height > 17 )
                 {
                     height = 1;
@@ -125,18 +125,37 @@ public class OrderPage
                 itemView.setY(scale * ( height - 1 ) + 85);
                 itemView.setFitHeight(scale);
                 itemView.setFitWidth(scale);
+                Label numberOfItems = new Label(Integer.toString(market.get(item)));
                 ImageView plusView = new ImageView(
                         new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\plusButton.png")
                                 , scale, scale, false, true));
                 ImageView minusView = new ImageView(
                         new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\minusButton.png")
                                 , scale, scale, false, true));
-                plusView.setX(50 + width * ( 3 * scale + 100) + scale);
-                plusView.setY(scale * ( height - 1 ) + 80);
-                minusView.setX(2 * scale + 60 + width * ( 3 * scale + 100));
-                minusView.setY(scale * ( height - 1 ) + 80);
-                group.getChildren().addAll(itemView,plusView,minusView);
-
+                if( isMultiplayer )
+                {
+                    if( market.get(item) > 0 )
+                    {
+                        height++;
+                        numberOfItems.setTextFill(Color.rgb(54, 16, 0));
+                        numberOfItems.relocate(45 + scale + width * (4 * scale + 100), scale * (height - 1) + 80);
+                        numberOfItems.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 14));
+                        plusView.setX(60 + width * ( 4 * scale + 100) + 2 * scale);
+                        plusView.setY(scale * ( height - 1 ) + 80);
+                        minusView.setX(3 * scale + 75 + width * ( 4 * scale + 100));
+                        minusView.setY(scale * ( height - 1 ) + 80);
+                        group.getChildren().addAll(itemView,numberOfItems,plusView,minusView);
+                    }
+                }
+                else
+                {
+                    height++;
+                    plusView.setX(50 + width * (3 * scale + 100) + scale);
+                    plusView.setY(scale * (height - 1) + 80);
+                    minusView.setX(2 * scale + 60 + width * (3 * scale + 100));
+                    minusView.setY(scale * (height - 1) + 80);
+                    group.getChildren().addAll(itemView,plusView,minusView);
+                }
                 ImageView itemView1 = new ImageView(items.get(item));
                 Label number = new Label("");
                 itemView1.setX(500 + width * ( 3 * scale + 100));

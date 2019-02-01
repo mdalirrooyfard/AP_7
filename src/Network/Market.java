@@ -1,7 +1,6 @@
 package Network;
 
 import Model.Constants;
-import Model.Items.Item;
 
 import java.util.HashMap;
 
@@ -11,6 +10,10 @@ public class Market {
     public Market(){
         for (String kind : Constants.ITEM_NAMES)
             items.put(kind, 10);
+    }
+
+    public HashMap<String, Integer> getItems() {
+        return items;
     }
 
     public void add(String kind){

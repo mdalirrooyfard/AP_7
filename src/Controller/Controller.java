@@ -6,10 +6,7 @@ import Model.Animals.Wild.Wild;
 import Model.*;
 import Model.Items.Item;
 import Model.Workshops.*;
-import Network.ClientGui;
-import Network.ClientListener;
-import Network.ClientSender;
-import Network.Server;
+import Network.*;
 import View.Graphic.*;
 import View.ImageViewSprite;
 import View.MoveTransition;
@@ -26,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -63,6 +59,7 @@ public class Controller
     private Menu menu;
     private Stage stage;
     private Start start;
+    private Market market = new Market();
     private ChoosePlayer choosePlayer;
     private Multiplayer multiplayer = new Multiplayer();
     private AnimationTimer animationTimer;
@@ -802,8 +799,8 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 animationTimer.stop();
-                stage.setScene(orderPage.getScene(stage,view,farm,loader.getItems(),loader.getLeftHelicopter()
-                        ,loader.getFixedHelicopter(), animationTimer));
+                stage.setScene(orderPage.getScene(stage,view,farm,isMultiPlayer,market.getItems(),loader.getItems(),
+                        loader.getLeftHelicopter(),loader.getFixedHelicopter(), animationTimer));
             }
         });
     }

@@ -110,7 +110,7 @@ public class SellPage
     {
         try
         {
-            height = 0;
+            height = 1;
             double scale = ( Constants.HEIGHT - 80 ) / 18;
             for( String item : Constants.ITEM_NAMES )
             {
@@ -169,6 +169,8 @@ public class SellPage
                                 number.setText(Integer.toString(itemNumber));
                                 numberOfItems.setText(Integer.toString(numberOfItem(farm,item)));
                                 group.getChildren().addAll(itemView1,number,numberOfItems);
+                                if( numberOfItem(farm,item) == 0 )
+                                    group.getChildren().removeAll(itemView,numberOfItems,plusView,minusView);
                             }
                             else if( itemNumber > 0 )
                                 group.getChildren().addAll(itemView1,number,numberOfItems);
