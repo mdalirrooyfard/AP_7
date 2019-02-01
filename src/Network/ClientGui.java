@@ -3,11 +3,11 @@ package Network;
 import Model.Constants;
 import Model.Farm;
 import Model.Player;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -24,6 +24,8 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,8 +54,8 @@ public class ClientGui extends Application {
         this.player = player;
         this.isOpen = false;
         area.layout();
-        chatArea.setVvalue(1.0);
-        this.chatArea.setContent(area);
+        chatArea.setVvalue(1D);
+        chatArea.setContent(area);
     }
 
     public Market getMarket() {
@@ -89,17 +91,26 @@ public class ClientGui extends Application {
         primaryStage.setTitle(player.getName() + " in chatRoom");
         primaryStage.setResizable(false);
         TextField textField = new TextField();
-        Button send = new Button("send");
-        Button list = new Button("list");
-        Button leaderBoard = new Button("Leader Board");
+        Image send = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\sendButton.png"));
+        ImageView sendView = new ImageView(send);
+        sendView.setFitWidth(70);
+        sendView.setFitHeight(40);
+        Image list = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\listButton.png"));
+        ImageView listView = new ImageView(list);
+        listView.setFitWidth(70);
+        listView.setFitHeight(40);
+        Image leaderBoard = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\leaderBoardButton.png"));
+        ImageView leaderBoardView = new ImageView(leaderBoard);
+        leaderBoardView.setFitWidth(70);
+        leaderBoardView.setFitHeight(40);
         HBox hBox = new HBox(20, chatArea);
-        HBox hBox1 = new HBox(20, textField, send, list, leaderBoard);
+        HBox hBox1 = new HBox(20, textField, sendView, listView, leaderBoardView);
         VBox vBox = new VBox(20, hBox1, hBox);
-        chatArea.setMinHeight(560);
-        chatArea.setMinWidth(600);
+        chatArea.setPrefHeight(560);
+        chatArea.setPrefWidth(800);
         root.getChildren().add(vBox);
-        scene = new Scene(root, 600, 600);
-        send.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        scene = new Scene(root, 800, 600);
+        sendView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String data = textField.getText();
@@ -109,13 +120,13 @@ public class ClientGui extends Application {
                 textField.setText("");
             }
         });
-        list.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 clientSender.sendListRequest();
             }
         });
-        leaderBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        leaderBoardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 clientSender.sendLeaderBoardRequest();
@@ -256,21 +267,37 @@ public class ClientGui extends Application {
 
     public void putInCharArea(String message) {
         Label label = new Label();
+        Rectangle rectangle;
         label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        TranslateTransition translateTransition , translateTransition1;
         if(message.startsWith(player.getName())){
             String[] strings = message.split(":" , 2);
             message = strings[1].trim();
-            label.setLayoutX(600 - (message.length()+1)*8);
-            label.setLayoutY(y);
+            rectangle = new Rectangle((message.length()+1)*8,25);
+            label.setTranslateX(800 - (message.length()+1)*8);
+            translateTransition = new TranslateTransition(Duration.millis(2000) , label);
+            translateTransition.setToY(y);
+            rectangle.setTranslateX(800 - (message.length()+1)*8);
+            translateTransition1 = new TranslateTransition((Duration.millis(2000)) , rectangle);
+            translateTransition1.setToY(y);
             label.setText(message);
         }
         else{
-            label.setLayoutX(10);
-            label.setLayoutY(y);
+            label.setTranslateX(10);
+            translateTransition = new TranslateTransition(Duration.millis(2000) , label);
+            translateTransition.setToY(y);
+            rectangle = new Rectangle((message.length()+1)*8,25);
+            rectangle.setTranslateX(10);
+            translateTransition1 = new TranslateTransition((Duration.millis(2000)) , rectangle);
+            translateTransition1.setToY(y);
             label.setText(message);
         }
-        area.getChildren().addAll(label);
-        y += 100;
+        rectangle.setFill(Color.SANDYBROWN);
+        rectangle.setOpacity(0.8);
+        translateTransition1.play();
+        translateTransition.play();
+        area.getChildren().addAll(rectangle , label);
+        y += 35;
     }
 
     public void playerJoinedMessage(String userName) {
