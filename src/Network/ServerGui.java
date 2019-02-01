@@ -87,14 +87,28 @@ public class ServerGui extends Application {
         Rectangle rectangle;
         messageView.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
         TranslateTransition translateTransition , translateTransition1;
-        messageView.setTranslateX(10);
-        translateTransition = new TranslateTransition(Duration.millis(2000) , messageView);
-        translateTransition.setToY(y);
-        rectangle = new Rectangle((message.length()+1)*8,25);
-        rectangle.setTranslateX(10);
-        translateTransition1 = new TranslateTransition((Duration.millis(2000)) , rectangle);
-        translateTransition1.setToY(y);
-        messageView.setText(message);
+        if(message.startsWith("server")){
+            String[] strings = message.split(":" , 2);
+            message = strings[1].trim();
+            rectangle = new Rectangle((message.length()+1)*8,25);
+            messageView.setTranslateX(800 - (message.length()+1)*8);
+            translateTransition = new TranslateTransition(Duration.millis(2000) , messageView);
+            translateTransition.setToY(y);
+            rectangle.setTranslateX(800 - (message.length()+1)*8);
+            translateTransition1 = new TranslateTransition((Duration.millis(2000)) , rectangle);
+            translateTransition1.setToY(y);
+            messageView.setText(message);
+        }
+        else{
+            messageView.setTranslateX(10);
+            translateTransition = new TranslateTransition(Duration.millis(2000) , messageView);
+            translateTransition.setToY(y);
+            rectangle = new Rectangle((message.length()+1)*8,25);
+            rectangle.setTranslateX(10);
+            translateTransition1 = new TranslateTransition((Duration.millis(2000)) , rectangle);
+            translateTransition1.setToY(y);
+            messageView.setText(message);
+        }
         rectangle.setFill(Color.ROSYBROWN);
         rectangle.setOpacity(0.8);
         translateTransition1.play();
