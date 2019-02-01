@@ -39,7 +39,6 @@ import java.io.*;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Formatter;
@@ -2341,9 +2340,9 @@ public class Controller
                             errorForNotEnteringInfo();
                     }
                     else if( player.isClient() == 2 )
-                        errorForAleadyBeingClient();
+                        errorForAlreadyBeingClient();
                     else
-                        errorForAleadyBeingHost();
+                        errorForAlreadyBeingHost();
                 }
             });
 
@@ -2479,12 +2478,11 @@ public class Controller
                                 errorForNotEnteringInfo();
                         }
                         else if( player.isClient() == 2 )
-                            errorForAleadyBeingClient();
+                            errorForAlreadyBeingClient();
                         else
-                            errorForAleadyBeingHost();
+                            errorForAlreadyBeingHost();
                     }
-                    catch (UnknownHostException e) { e.printStackTrace(); }
-                    catch (IOException e) { e.printStackTrace(); }
+                    catch (Exception e) { e.printStackTrace(); }
                 }
             });
 
@@ -2516,7 +2514,7 @@ public class Controller
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void errorForAleadyBeingClient()
+    private void errorForAlreadyBeingClient()
     {
         try
         {
@@ -2546,7 +2544,7 @@ public class Controller
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void errorForAleadyBeingHost()
+    private void errorForAlreadyBeingHost()
     {
         try
         {
