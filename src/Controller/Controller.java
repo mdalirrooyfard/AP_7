@@ -281,6 +281,10 @@ public class Controller
                    player.increaseLevel();
                    player.increaseMoney(farm.getMoney());
                    savePlayers(players);
+                   if (isMultiPlayer && player.isClient()){
+                       clientSender.sendMoney(player.getMoney(), player.getUserName());
+                       clientSender.sendLevel(player.getLastLevel(), player.getUserName());
+                   }
                    start.getGroup().getChildren().removeAll(levels);
                    levels.clear();
                    loadLevels();

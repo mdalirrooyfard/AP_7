@@ -40,6 +40,35 @@ public class ClientSender {
         }
     }
 
+    public void sendLevel(int level, String sender){
+        Command command = new Command(CommandTypes.SEND_LEVEL, level, sender);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMoney(int money, String sender){
+        Command command = new Command(CommandTypes.SEND_MONEY, money, sender);
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCommand(Command command){
+        try {
+            objectOutputStream.writeObject(command);
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendViewProfileRequest(String username){
         Command command = new Command(CommandTypes.VIEW_PROFILE, username);
         try {

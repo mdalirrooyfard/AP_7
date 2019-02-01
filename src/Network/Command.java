@@ -31,6 +31,15 @@ public class Command implements Serializable {
         this.receiver = receiver;
     }
 
+    public Command(CommandTypes type, Object content, String sender){
+        this(type, content);
+        this.sender = sender;
+    }
+
+    public void setType(CommandTypes type) {
+        this.type = type;
+    }
+
     public int getNumberOfLines(){
         return numberOfLines;
     }

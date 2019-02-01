@@ -136,6 +136,14 @@ public class ClientListener implements Runnable{
                     case APPROVE_REQUEST:
                         clientGui.getPlayer().addFriend(command.getSender());
                         break;
+                    case SEND_MONEY:
+                        command.setType(CommandTypes.UPDATE_MONEY);
+                        clientGui.getClientSender().sendCommand(command);
+                        break;
+                    case SEND_LEVEL:
+                        command.setType(CommandTypes.UPDATE_LEVEL);
+                        clientGui.getClientSender().sendCommand(command);
+                        break;
                     default:
                 }
             }
