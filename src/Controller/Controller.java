@@ -800,12 +800,12 @@ public class Controller
             public void handle(MouseEvent event)
             {
                 if (isMultiPlayer && player.isClient()){
+                    clientGui.setMarket(null);
                     clientSender.sendMarketRequest();
                     market = clientGui.getMarket();
                     while (market == null){
                         market = clientGui.getMarket();
                     }
-                    clientGui.setMarket(null);
                 }
                 animationTimer.stop();
                 stage.setScene(orderPage.getScene(stage,view,farm,isMultiPlayer,market.getItems(),loader.getItems(),

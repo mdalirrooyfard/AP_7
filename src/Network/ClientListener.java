@@ -116,14 +116,6 @@ public class ClientListener implements Runnable{
                             }
                         });
                         break;
-                    case SELL_TO_MARKET:
-                        command.setType(CommandTypes.UPDATE_MARKET_ADD);
-                        clientGui.getClientSender().sendCommand(command);
-                        break;
-                    case BUY_FROM_MARKET:
-                        command.setType(CommandTypes.UPDATE_MARKET_REMOVE);
-                        clientGui.getClientSender().sendCommand(command);
-                        break;
                     case SEND_WILD_ANIMAL:
                         clientGui.sendWildAnimal();
                         break;
