@@ -9,6 +9,7 @@ public class Map
 {
     private int length , width;
     private Cell[][] cells;
+
     public Map( int length , int width )
     {
         this.length = length;
@@ -58,70 +59,10 @@ public class Map
     {
         if( isThereItem() && !cellStatus(x,y)[1] )
         {
-            boolean isItemFound = false;
-            int level = 0 , Item_x = -1 , Item_y = -1;
-            while( !isItemFound )
-            {
-                level++;
-                Out:
-                for( int i = -level ; i <= level && !isItemFound ; i++ )
-                {
-                    if( x + i > -1 && x + i < width )
-                    {
-                        if( Math.abs(i) == level )
-                        {
-                            for( int j = -level ; j <= level ; j++ )
-                                if( y + j < length && y + j > -1 )
-                                    for( Entity e : cells[y + j][x + i].getStuffs() )
-                                    {
-                                        if( e instanceof Item )
-                                        {
-                                            isItemFound = true;
-                                            Item_y = y + j;
-                                        }
-                                    }
-                        }
-                        else
-                        {
-                            if (y - level > -1)
-                                for (Entity e : cells[y - level][x + i].getStuffs())
-                                {
-                                    if (e instanceof Item)
-                                    {
-                                        isItemFound = true;
-                                        Item_y = y - level;
-                                    }
-                                }
-                            if (y + level < length)
-                                for (Entity e : cells[y + level][x + i].getStuffs())
-                                {
-                                    if (e instanceof Item)
-                                    {
-                                        isItemFound = true;
-                                        Item_y = y + level;
-                                    }
-                                }
-                        }
-                        if( isItemFound )
-                            Item_x = x + i;
-                    }
-                }
-            }
-            return getDirection( x, y , Item_x , Item_y );
-        }
-        return DIRECTION.NONE;
-    }
-
-    public DIRECTION findNearestGrass( int x , int y )
-    {
-        if( isThereGrass() && !cellStatus(x,y)[3] )
-        {
-            //boolean isGrassFound = false;
-            int level = 0 , Grass_x = -1 , Grass_y = -1;
+            int level = 0;
             while( true )
             {
                 level++;
-                Out:
                 for( int i = -level ; i <= level ; i++ )
                 {
                     if( x + i > -1 && x + i < width )
@@ -131,59 +72,36 @@ public class Map
                             for( int j = -level ; j <= level ; j++ )
                                 if( y + j < length && y + j > -1 )
                                     for( Entity e : cells[y + j][x + i].getStuffs() )
-                                    {
-                                        if( e instanceof Grass )
-                                        {
-                                            /*isGrassFound = true;
-                                            Grass_y = y + j;*/
+                                        if( e instanceof Item && !e.isDead() )
                                             return getDirection(x,y,x+i,y+j);
-                                        }
-                                    }
                         }
                         else
                         {
                             if (y - level > -1)
                                 for (Entity e : cells[y - level][x + i].getStuffs())
-                                {
-                                    if (e instanceof Grass)
-                                    {
-                                        /*isGrassFound = true;
-                                        Grass_y = y - level;*/
+                                    if( e instanceof Item && !e.isDead() )
                                         return getDirection(x,y,x+i,y-level);
-                                    }
-                                }
                             if (y + level < length)
                                 for (Entity e : cells[y + level][x + i].getStuffs())
-                                {
-                                    if (e instanceof Grass)
-                                    {
-                                        /*isGrassFound = true;
-                                        Grass_y = y + level;*/
+                                    if( e instanceof Item && !e.isDead() )
                                         return getDirection(x,y,x+i,y+level);
-                                    }
-                                }
                         }
-                        /*if( isGrassFound )
-                            Grass_x = x + i;*/
                     }
                 }
             }
-            //return getDirection( x, y , Grass_x , Grass_y );
         }
         return DIRECTION.NONE;
     }
 
-    public DIRECTION findNearestWild( int x , int y )
+    public DIRECTION findNearestGrass( int x , int y )
     {
-        if( isThereWild() && !cellStatus(x,y)[0] )
+        if( isThereGrass() && !cellStatus(x,y)[3] )
         {
-            boolean isWildFound = false;
-            int level = 0 , Wild_x = -1 , Wild_y = -1;
-            while( !isWildFound )
+            int level = 0;
+            while( true )
             {
                 level++;
-                Out:
-                for( int i = -level ; i <= level && !isWildFound ; i++ )
+                for( int i = -level ; i <= level ; i++ )
                 {
                     if( x + i > -1 && x + i < width )
                     {
@@ -192,41 +110,61 @@ public class Map
                             for( int j = -level ; j <= level ; j++ )
                                 if( y + j < length && y + j > -1 )
                                     for( Entity e : cells[y + j][x + i].getStuffs() )
-                                    {
-                                        if( e instanceof Wild )
-                                        {
-                                            isWildFound = true;
-                                            Wild_y = y + j;
-                                        }
-                                    }
+                                        if( e instanceof Grass && !e.isDead() )
+                                            return getDirection(x,y,x+i,y+j);
                         }
                         else
                         {
                             if (y - level > -1)
                                 for (Entity e : cells[y - level][x + i].getStuffs())
-                                {
-                                    if (e instanceof Wild)
-                                    {
-                                        isWildFound = true;
-                                        Wild_y = y - level;
-                                    }
-                                }
+                                    if( e instanceof Grass && !e.isDead() )
+                                        return getDirection(x,y,x+i,y-level);
                             if (y + level < length)
                                 for (Entity e : cells[y + level][x + i].getStuffs())
-                                {
-                                    if (e instanceof Wild)
-                                    {
-                                        isWildFound = true;
-                                        Wild_y = y + level;
-                                    }
-                                }
+                                    if( e instanceof Grass && !e.isDead() )
+                                        return getDirection(x,y,x+i,y+level);
                         }
-                        if( isWildFound )
-                            Wild_x = x + i;
                     }
                 }
             }
-            return getDirection( x, y , Wild_x , Wild_y );
+        }
+        return DIRECTION.NONE;
+    }
+
+    public DIRECTION findNearestWild( int x , int y )
+    {
+        if( isThereWild() && !cellStatus(x,y)[0] )
+        {
+            int level = 0;
+            while( true )
+            {
+                level++;
+                for( int i = -level ; i <= level ; i++ )
+                {
+                    if( x + i > -1 && x + i < width )
+                    {
+                        if( Math.abs(i) == level )
+                        {
+                            for( int j = -level ; j <= level ; j++ )
+                                if( y + j < length && y + j > -1 )
+                                    for( Entity e : cells[y + j][x + i].getStuffs() )
+                                        if( e instanceof Wild && !e.isDead() )
+                                            return getDirection(x,y,x+i,y+j);
+                        }
+                        else
+                        {
+                            if (y - level > -1)
+                                for (Entity e : cells[y - level][x + i].getStuffs())
+                                    if( e instanceof Wild && !e.isDead() )
+                                        return getDirection(x,y,x+i,y-level);
+                            if (y + level < length)
+                                for (Entity e : cells[y + level][x + i].getStuffs())
+                                    if( e instanceof Wild && !e.isDead() )
+                                        return getDirection(x,y,x+i,y+level);
+                        }
+                    }
+                }
+            }
         }
         return DIRECTION.NONE;
     }
