@@ -136,7 +136,6 @@ public class OrderPage
                 {
                     if( market.get(item) > 0 )
                     {
-                        height++;
                         numberOfItems.setTextFill(Color.rgb(54, 16, 0));
                         numberOfItems.relocate(45 + scale + width * (4 * scale + 100), scale * (height - 1) + 80);
                         numberOfItems.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 14));
@@ -149,7 +148,6 @@ public class OrderPage
                 }
                 else
                 {
-                    height++;
                     plusView.setX(50 + width * (3 * scale + 100) + scale);
                     plusView.setY(scale * (height - 1) + 80);
                     minusView.setX(2 * scale + 60 + width * (3 * scale + 100));
@@ -165,6 +163,7 @@ public class OrderPage
                 number.setTextFill(Color.rgb(54,16,0));
                 number.relocate(520 + scale + width * ( 3 * scale + 100) ,scale * ( height - 1 ) + 80);
                 number.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,14));
+                height++;
                 plusView.setOnMouseClicked(new EventHandler<MouseEvent>()
                 {
                     @Override
