@@ -1708,6 +1708,9 @@ public class Controller
                 loader.getFixedTruck().setX(0);
                 view.getGroup().getChildren().removeAll(loader.getLeftTruck(), loader.getRightTruck());
                 view.getGroup().getChildren().add(loader.getFixedTruck());
+                if (isMultiPlayer && player.isClient()){
+                    clientSender.sendItemsToMarket(farm.getTruck().getItems());
+                }
                 farm.clearFromTruck();
             }
         }

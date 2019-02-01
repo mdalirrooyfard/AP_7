@@ -1,10 +1,12 @@
 package Network;
 
+import Model.Items.Item;
 import Model.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.Vector;
 
 public class ServerListener implements Runnable{
     private Socket socket;
@@ -27,8 +29,6 @@ public class ServerListener implements Runnable{
                 Command command = (Command) objectInputStream.readObject();
                 //todo fill the switch
                 switch (command.getType()) {
-                    case BUY_FROM_MARKET:
-                        break;
                     case SEND_MASSAGE:
                         serverSender.sendGroup(command);
                         break;
@@ -59,12 +59,14 @@ public class ServerListener implements Runnable{
                     case SEND_INDIVIDUAL_MESSAGE:
                         serverSender.sendIndividual(socket, command);
                         break;
-                    case SELL_TO_MARKET:
-                        break;
                     case SEND_LIST:
                         serverSender.sendList(socket);
                         break;
+                    case SELL_TO_MARKET:
+                        serverSender.sendGroup(command);
+                        break;
                     case UPDATE_MARKET:
+                        serverSender.updateMarket((Vector<Item>) command.getContent());
                         break;
                     case SEND_LEADER_BOARD:
                         serverSender.sendLeaderBoard(socket);

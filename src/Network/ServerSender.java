@@ -1,5 +1,6 @@
 package Network;
 
+import Model.Items.Item;
 import Model.Player;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ public class ServerSender {
     private HashMap<Socket, ObjectOutputStream> outPutStreams = new HashMap<>();
     private HashMap<String, Player> usernames = new HashMap<>();
     private HashMap<String, Socket> userNameAndSocket = new HashMap<>();
+    private Market market = new Market();
     private ServerGui serverGui;
 
     public HashMap<String, Player> getUsernames() {
@@ -39,6 +41,11 @@ public class ServerSender {
         peopleAndSockets.replace(socket, player);
         usernames.put(player.getUserName(), player);
         userNameAndSocket.put(player.getUserName(), socket);
+    }
+
+    public void updateMarket(Vector<Item> items){
+        for (Item item : items)
+            market.add(item.getKind());
     }
 
     public void updateLevel(String username, int level){

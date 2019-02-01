@@ -113,9 +113,9 @@ public class ClientListener implements Runnable{
                             }
                         });
                         break;
-                    case UPDATE_MARKET:
-                        break;
                     case SELL_TO_MARKET:
+                        command.setType(CommandTypes.UPDATE_MARKET);
+                        clientGui.getClientSender().sendCommand(command);
                         break;
                     case BUY_FROM_MARKET:
                         break;
@@ -144,6 +144,7 @@ public class ClientListener implements Runnable{
                         command.setType(CommandTypes.UPDATE_LEVEL);
                         clientGui.getClientSender().sendCommand(command);
                         break;
+
                     default:
                 }
             }
