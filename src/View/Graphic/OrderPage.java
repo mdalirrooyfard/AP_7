@@ -27,6 +27,7 @@ public class OrderPage
     private Group group = new Group();
     private Scene scene = new Scene(group, Constants.WIDTH,Constants.HEIGHT);
     private int height = 0 , itemNumber = 0 , width = 0;
+    private HashMap<String,Integer> firstMarket = new HashMap<>();
 
     public Scene getScene(Stage stage, View view, Farm farm, boolean isMultiplayer , HashMap<String , Integer> market,
                           ConcurrentHashMap<String ,Image> items, ImageView rightHelicopter, ImageView fixedHelicopter, AnimationTimer aTimer, ClientSender clientSender)
@@ -34,6 +35,8 @@ public class OrderPage
         height = 0;
         itemNumber = 0;
         width = 0;
+        for( String s : market.keySet() )
+            firstMarket.put(s,market.get(s));
         try
         {
             Image order = new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\order"
@@ -109,11 +112,11 @@ public class OrderPage
         catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void insertItems(Farm farm,ConcurrentHashMap<String,Image> items,boolean isMultiplayer,HashMap<String , Integer> market)
+    private void insertItems(Farm farm,ConcurrentHashMap<String,Image> items,boolean isMultiplayer, HashMap<String , Integer> market)
     {
         try
         {
-            height = 0;
+            height = 1;
             double scale = ( Constants.HEIGHT - 80 ) / 18;
             for( String item : Constants.ITEM_NAMES )
             {
@@ -140,11 +143,11 @@ public class OrderPage
                     if( market.get(item) > 0 )
                     {
                         numberOfItems.setTextFill(Color.rgb(54, 16, 0));
-                        numberOfItems.relocate(45 + scale + width * (4 * scale + 100), scale * (height - 1) + 80);
+                        numberOfItems.relocate(45 + scale + width * (4 * scale + 80), scale * (height - 1) + 80);
                         numberOfItems.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 14));
-                        plusView.setX(60 + width * ( 4 * scale + 100) + 2 * scale);
+                        plusView.setX(60 + width * ( 4 * scale + 80) + 2 * scale);
                         plusView.setY(scale * ( height - 1 ) + 80);
-                        minusView.setX(3 * scale + 75 + width * ( 4 * scale + 100));
+                        minusView.setX(3 * scale + 75 + width * ( 4 * scale + 80));
                         minusView.setY(scale * ( height - 1 ) + 80);
                         group.getChildren().addAll(itemView,numberOfItems,plusView,minusView);
                     }
@@ -172,19 +175,31 @@ public class OrderPage
                     @Override
                     public void handle(MouseEvent event)
                     {
-                        if( !farm.getHelicopter().contains(item) )
-                            itemNumber = 0;
-                        if( farm.getHelicopter().getCurrentVolume() > 0 )
+                        boolean canBuy = false;
+                        if( market.get(item) > 0 || !isMultiplayer )
                         {
-                            group.getChildren().removeAll(itemView1,number);
-                            if( farm.addToHelicopter(item,1) == 1 )
+                            if( !farm.getHelicopter().contains(item) )
+                                itemNumber = 0;
+                            if( farm.getHelicopter().getCurrentVolume() > 0 )
                             {
-                                itemNumber++;
-                                number.setText(Integer.toString(itemNumber));
-                                group.getChildren().addAll(itemView1,number);
+                                group.getChildren().removeAll(itemView1,number);
+                                if( farm.addToHelicopter(item,1) == 1 )
+                                {
+                                    itemNumber++;
+                                    number.setText(Integer.toString(itemNumber));
+                                    group.getChildren().addAll(itemView1,number);
+                                    canBuy = true;
+                                }
+                                else if( itemNumber > 0 )
+                                    group.getChildren().addAll(itemView1,number);
                             }
-                            else if( itemNumber > 0 )
-                                group.getChildren().addAll(itemView1,number);
+                            if( isMultiplayer && canBuy )
+                            {
+                                group.getChildren().remove(numberOfItems);
+                                market.replace(item,market.get(item) - 1);
+                                numberOfItems.setText(Integer.toString(market.get(item)));
+                                group.getChildren().add(numberOfItems);
+                            }
                         }
                     }
                 });
@@ -193,6 +208,16 @@ public class OrderPage
                     @Override
                     public void handle(MouseEvent event)
                     {
+                        if( isMultiplayer )
+                        {
+                            if( market.get(item) < firstMarket.get(item) )
+                            {
+                                group.getChildren().remove(numberOfItems);
+                                market.replace(item,market.get(item) + 1);
+                                numberOfItems.setText(Integer.toString(market.get(item)));
+                                group.getChildren().add(numberOfItems);
+                            }
+                        }
                         if( itemNumber > 1 )
                         {
                             group.getChildren().removeAll(itemView1,number);

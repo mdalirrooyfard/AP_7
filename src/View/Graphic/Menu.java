@@ -109,8 +109,6 @@ public class Menu
     public Menu(Stage stage , Vector<Player> players , ChoosePlayer choosePlayer, Start startScene
             , Multiplayer multiplayer , Player player1 )
     {
-        String style = this.getClass().getResource("graphic.css").toExternalForm();
-        scene.getStylesheets().add(style);
         this.stage = stage;
         this.players = players;
         this.startScene = startScene;
