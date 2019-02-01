@@ -439,9 +439,9 @@ public class Loader
             fixedTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"fixed"
                     +farm.getTruck().getLevel() +".png"), 200, 200, false, true));
             leftTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"left"
-                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png")));
             rightTruck = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\"+"right"
-                    +farm.getTruck().getLevel() +".png"), 50, 50, false, true));
+                    +farm.getTruck().getLevel() +".png")));
             fixedHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"fixed"
                     +farm.getTruck().getLevel() +".png"), 220, 220, false, true));
             leftHelicopter = new ImageView(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\"+"left"

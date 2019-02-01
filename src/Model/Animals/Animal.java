@@ -124,24 +124,28 @@ public abstract class Animal extends Entity {
                 previousX = x;
                 previousY = y;
                 this.y -= Constants.scale ;
+                this.direction = DIRECTION.UP;
                 break;
 
             case DOWN:
                 previousX = x;
                 previousY = y;
                 this.y += Constants.scale ;
+                this.direction = DIRECTION.DOWN;
                 break;
 
             case RIGHT:
                 previousX = x;
                 previousY = y;
                 this.x += Constants.scale;
+                this.direction = DIRECTION.RIGHT;
                 break;
 
             case LEFT:
                 previousX = x;
                 previousY = y;
                 this.x -= Constants.scale;
+                this.direction = DIRECTION.LEFT;
                 break;
 
             case UP_LEFT:
@@ -149,6 +153,7 @@ public abstract class Animal extends Entity {
                 previousY = y;
                 this.x -= Constants.scale;
                 this.y -= Constants.scale;
+                this.direction = DIRECTION.UP_LEFT;
                 break;
 
             case DOWN_LEFT:
@@ -156,18 +161,21 @@ public abstract class Animal extends Entity {
                 previousY = y;
                 this.x -= Constants.scale;
                 this.y += Constants.scale;
+                this.direction = DIRECTION.DOWN_LEFT;
                 break;
             case UP_RIGHT:
                 previousX = x;
                 previousY = y;
                 this.x += Constants.scale;
                 this.y -= Constants.scale;
+                this.direction = DIRECTION.UP_RIGHT;
                 break;
             case DOWN_RIGHT:
                 previousX = x;
                 previousY = y;
                 this.x += Constants.scale;
                 this.y += Constants.scale;
+                this.direction = DIRECTION.DOWN_RIGHT;
                 break;
             case NONE:
                 this.move();

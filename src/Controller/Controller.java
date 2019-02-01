@@ -1657,13 +1657,15 @@ public class Controller
                 if ( farm.getTruck().getCurrentTime() > farm.getTruck().getWorkingTime() / 1.8 )
                 {
                     loader.getRightTruck().setX(farm.getTruck().getPrevMovingX());
-                    loader.getRightTruck().setY(loader.getFixedTruck().getY());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 1,
-                            false, 3, 2, 6, 48, 48, 6);
+                    loader.getRightTruck().setY(loader.getFixedTruck().getY() + 50);
+                    loader.getRightTruck().setFitWidth(48);
+                    loader.getRightTruck().setFitHeight(48);
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 2,
+                            false, 2, 1, 2, 48, 48, 2);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getRightTruck(),
-                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY(),
-                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY(), 2000);
+                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY()+50,
+                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY()+50, 2000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -1675,18 +1677,20 @@ public class Controller
                     if( farm.getTruck().getCurrentTime() == farm.getTruck().getWorkingTime() / 2 )
                     {
                         view.getGroup().getChildren().remove(loader.getRightTruck());
-                        farm.getTruck().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                        farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + Constants.movingScale);
                     }
-                    loader.getLeftHelicopter().setX(farm.getTruck().getPrevMovingX());
-                    loader.getLeftHelicopter().setY(loader.getFixedTruck().getY());
-                    if (!view.getGroup().getChildren().contains(loader.getLeftHelicopter()))
-                        view.getGroup().getChildren().add(loader.getLeftHelicopter());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(),2,
-                            false, 3, 2, 6, 48, 48, 6);
+                    loader.getLeftTruck().setX(farm.getTruck().getPrevMovingX());
+                    loader.getLeftTruck().setY(loader.getFixedTruck().getY() + 50);
+                    loader.getLeftTruck().setFitWidth(48);
+                    loader.getLeftTruck().setFitHeight(48);
+                    if (!view.getGroup().getChildren().contains(loader.getLeftTruck()))
+                        view.getGroup().getChildren().add(loader.getLeftTruck());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftTruck(),1,
+                            false, 2, 1, 2, 48, 48, 2);
                     animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
-                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY(),
-                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY(), 2000);
+                    MoveTransition pathTransition = new MoveTransition(loader.getLeftTruck(),
+                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY()+50,
+                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY()+50, 2000);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
@@ -2306,26 +2310,26 @@ public class Controller
             clientPort.setText("8060");
             clientPort.setStyle("-fx-text-fill : gray");
             clientPort.setAlignment(Pos.CENTER);
-            clientPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            clientPort.setLayoutX(Constants.WIDTH / 2 - 50);
             clientPort.setLayoutY(Constants.HEIGHT / 2 - 220);
             clientPort.setPrefSize(150,40);
             clientPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
 
-            Label clientIPAddress = new Label("Client IP : "+Inet4Address.getLocalHost().getHostAddress());
+            Label clientIPAddress = new Label("Client IP :      "+Inet4Address.getLocalHost().getHostAddress());
             clientIPAddress.setTextFill(Color.rgb(54,16,0));
             clientIPAddress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 210);
+            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 200);
             clientIPAddress.setLayoutY(Constants.HEIGHT / 2 - 140);
 
             Label serverPortLabel = new Label("Server Port: ");
             serverPortLabel.setTextFill(Color.rgb(54,16,0));
             serverPortLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 210);
+            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 200);
             serverPortLabel.setLayoutY(Constants.HEIGHT / 2 - 60);
 
             TextField serverPort = new TextField();
             serverPort.setAlignment(Pos.CENTER);
-            serverPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            serverPort.setLayoutX(Constants.WIDTH / 2 - 50);
             serverPort.setLayoutY(Constants.HEIGHT / 2 - 60);
             serverPort.setPrefSize(150,40);
             serverPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
@@ -2338,7 +2342,7 @@ public class Controller
 
             TextField serverIP = new TextField();
             serverIP.setAlignment(Pos.CENTER);
-            serverIP.setLayoutX(Constants.WIDTH / 2 - 120);
+            serverIP.setLayoutX(Constants.WIDTH / 2 - 50);
             serverIP.setLayoutY(Constants.HEIGHT / 2);
             serverIP.setPrefSize(150,40);
             serverIP.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
