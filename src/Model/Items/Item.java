@@ -2,7 +2,9 @@ package Model.Items;
 import Model.Constants;
 import Model.Entity;
 
-public class Item extends Entity {
+import java.io.Serializable;
+
+public class Item extends Entity implements Serializable {
     private String kind ;
     private boolean isTakenByCat = false;
     @Override

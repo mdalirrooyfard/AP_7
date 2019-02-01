@@ -53,11 +53,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import static Model.Constants.HEIGHT;
 import static Model.Constants.WIDTH;
 
-public class Controller {
+public class Controller
+{
     private View view;
     private Farm farm = new Farm();
     private String path = null;
-    private Player player = new Player("", 0);
+    private Player player = new Player("",0);
     private Vector<Player> players;
     private Menu menu;
     private Stage stage;
@@ -77,20 +78,18 @@ public class Controller {
     private ClientSender clientSender;
     private Thread clientListener;
     private ClientGui clientGui;
-    private int flagWell = 0, flagWareHouse = 0;
-    private Image moneyIcon, arrow;
+    private  int flagWell = 0 , flagWareHouse = 0;
+    private Image moneyIcon ,  arrow;
     private RecipeSetter recipeSetter = new RecipeSetter();
     private Socket socket;
-
     {
-        try {
+        try
+        {
             moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
             arrow = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\arrow.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+        catch (FileNotFoundException e) { e.printStackTrace(); }
     }
-
     private ImageView moneyView = new ImageView(moneyIcon);
     private ImageView arrowViewWell = new ImageView(arrow);
     private ImageView arrowViewWareHouse = new ImageView(arrow);
@@ -99,7 +98,8 @@ public class Controller {
     private ConcurrentHashMap<Integer, Image> workShopWorking = new ConcurrentHashMap<>();
 
 
-    public Controller(Stage stage) {
+    public Controller(Stage stage)
+    {
         makeMultiplayerScene();
         loader.loadSize();
         players = loader.loadPlayers();
@@ -110,49 +110,52 @@ public class Controller {
         loadLevels();
         writePlayers();
         insertNewPlayer();
-        this.menu = new Menu(stage, players, choosePlayer, start, multiplayer, player);
+        this.menu = new Menu(stage,players,choosePlayer,start,multiplayer,player);
         this.start.setMenu(menu);
         this.choosePlayer.setMenu(menu);
         view = new View();
         menu.setMenu(menu);
-        menu.passMenuInstance(menu, player);
+        menu.passMenuInstance(menu,player);
     }
 
-    private void loadSatietyImages() {
+    private void loadSatietyImages(){
         try {
             Image image;
-            for (int i = 1; i < 9; i++) {
+            for (int i = 1; i < 9 ; i++) {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Progress\\progress" + i + ".png"));
-                animalSatiety.put(i - 1, image);
+                animalSatiety.put(i-1 , image);
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             e.getStackTrace();
         }
     }
 
-    private void loadWellFullnessImages() {
+    private void loadWellFullnessImages(){
         try {
             Image image;
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0 ; i < 6 ; i++) {
                 image = new Image(new FileInputStream("src\\Resources\\Graphic\\Progress\\full" + i + ".png"));
-                wellFullness.put(i, image);
-                workShopWorking.put(i, image);
+                wellFullness.put(i , image);
+                workShopWorking.put(i , image);
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             e.getStackTrace();
         }
     }
 
-    private void findLastPlayer() {
-        if (players.size() > 0)
-            for (Player p : players)
-                if (p.isLastPlayer())
+    private void findLastPlayer()
+    {
+        if( players.size() > 0 )
+            for( Player p : players )
+                if( p.isLastPlayer() )
                     player = p;
     }
 
-    private void zoom() {
+    private void zoom()
+    {
         Zoom zoom = new Zoom();
-        loader.getMap().setOnScroll(new EventHandler<ScrollEvent>() {
+        loader.getMap().setOnScroll(new EventHandler<ScrollEvent>()
+        {
             @Override
             public void handle(ScrollEvent event) {
                 zoom.zoomStarter(view.getGroup());
@@ -160,28 +163,22 @@ public class Controller {
         });
     }
 
-    private void runHandler() throws Exception {
-        try (InputStream inputStream = new FileInputStream(path)) {
+    private void runHandler() throws Exception
+    {
+        try(InputStream inputStream = new FileInputStream(path))
+        {
             Scanner scanner = new Scanner(inputStream);
             farm = new Farm();
             String string = scanner.next();
-            while (!string.equals("endOfMap")) {
-                switch (string) {
-                    case "well":
-                        farm.makeWell(scanner.nextInt());
-                        break;
-                    case "wareHouse":
-                        farm.makeWareHouse(scanner.nextInt());
-                        break;
-                    case "truck":
-                        farm.makeTruck(scanner.nextInt());
-                        break;
-                    case "helicopter":
-                        farm.makeHelicopter(scanner.nextInt());
-                        break;
-                    case "money":
-                        farm.increaseMoney(scanner.nextInt());
-                        break;
+            while(!string.equals("endOfMap"))
+            {
+                switch (string)
+                {
+                    case "well":farm.makeWell(scanner.nextInt());break;
+                    case "wareHouse":farm.makeWareHouse(scanner.nextInt());break;
+                    case "truck":farm.makeTruck(scanner.nextInt());break;
+                    case "helicopter":farm.makeHelicopter(scanner.nextInt());break;
+                    case "money":farm.increaseMoney(scanner.nextInt());break;
                     case "hen":
                         int count = scanner.nextInt();
                         for (int i = 0; i < count; i++)
@@ -214,9 +211,10 @@ public class Controller {
             farm.updateMap();
             scanner.nextLine();
             scanner.nextLine();
-            while (true) {
+            while(true)
+            {
                 String name = scanner.next();
-                if (name.equals("endOfGoals"))
+                if( name.equals("endOfGoals") )
                     break;
                 int count = scanner.nextInt();
                 farm.getGoals().put(name, count);
@@ -230,32 +228,40 @@ public class Controller {
             if (isMultiPlayer && player.isClient())
                 clientGui.setFarm(farm);
             turnHandler();
-        } catch (FileNotFoundException e) {
+        }
+        catch ( FileNotFoundException e )
+        {
             throw new Exception("No such directory exists!");
         }
     }
 
-    private void turnHandler() {
+    private void turnHandler()
+    {
         zoom();
-        animationTimer = new AnimationTimer() {
+        animationTimer = new AnimationTimer()
+        {
             private long time = 0;
             private long lastTime = 0;
             private long second = 1000000000;
             private boolean finish = false;
 
             @Override
-            public void handle(long now) {
+            public void handle(long now)
+            {
                 timer();
                 if (lastTime == 0)
                     lastTime = now;
-                if (now > lastTime + second) {
+                if (now > lastTime + second )
+                {
                     time++;
                     farm.increaseTimer();
                     lastTime = now;
                 }
-                if (time % 3 == 0) {
+                if (time % 3 == 0)
+                {
                     finish = farm.turn();
-                    synchronized (farm.getStuffs()) {
+                    synchronized (farm.getStuffs())
+                    {
                         showMap();
                         showMovingAnimals();
                         showMovingWildAnimals();
@@ -270,25 +276,32 @@ public class Controller {
                     time = 31;
                     lastTime = 0;
                 }
-                if (finish) {
-                    winHandler();
-                    player.increaseLevel();
-                    player.increaseMoney(farm.getMoney());
-                    savePlayers(players);
-                    start.getGroup().getChildren().removeAll(levels);
-                    levels.clear();
-                    loadLevels();
-                    this.stop();
-                }
+               if (finish)
+               {
+                   winHandler();
+                   player.increaseLevel();
+                   player.increaseMoney(farm.getMoney());
+                   savePlayers(players);
+                   if (isMultiPlayer && player.isClient()){
+                       clientSender.sendMoney(player.getMoney(), player.getUserName());
+                       clientSender.sendLevel(player.getLastLevel(), player.getUserName());
+                   }
+                   start.getGroup().getChildren().removeAll(levels);
+                   levels.clear();
+                   loadLevels();
+                   this.stop();
+               }
             }
         };
         animationTimer.start();
     }
 
-    private void loadGoals() {
+    private void loadGoals()
+    {
         ConcurrentHashMap<String, Integer> farmGoals = farm.getGoals();
         int i = 0;
-        for (String s : farmGoals.keySet()) {
+        for (String s : farmGoals.keySet())
+        {
             goals.add(new String[]{s, Integer.toString(farm.getGoals().get(s))});
             Image image;
             if (s.equals("hen") || s.equals("sheep") || s.equals("cow"))
@@ -300,30 +313,33 @@ public class Controller {
             imageView.setFitWidth(40);
             imageView.setY(HEIGHT - 100);
             imageView.setX(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50 - 20);
-            Label fixed = new Label(Integer.toString(farm.getGoals().get(s)));
+            Label fixed = new Label(Integer.toString(farm.getGoals().get(s))) ;
             Label variable = new Label(Integer.toString(farm.getAchievements().get(s)));
             Label of = new Label("of");
             achievements.put(s, variable);
-            fixed.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 11));
+            fixed.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
             fixed.relocate(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50, HEIGHT - 50);
-            of.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 11));
+            of.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
             of.relocate(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50, HEIGHT - 60);
-            variable.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 11));
+            variable.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,11));
             variable.relocate(WIDTH - farm.getGoals().keySet().size() * 50 + i * 50, HEIGHT - 70);
             view.getGroup().getChildren().addAll(imageView, fixed, variable, of);
             i++;
         }
     }
 
-    private void updateAchievement() {
+    private void updateAchievement()
+    {
         ConcurrentHashMap<String, Integer> hashMap = farm.getAchievements();
         for (String s : hashMap.keySet())
             achievements.get(s).setText(Integer.toString(farm.getAchievements().get(s)));
     }
 
-    private void showGoals() {
-        try {
-            Image box = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"));
+    private void showGoals()
+    {
+        try
+        {
+            Image box = new Image (new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png"));
             ImageView boxView = new ImageView(box);
             boxView.setFitWidth(farm.getGoals().keySet().size() * 50);
             boxView.setFitHeight(80);
@@ -331,15 +347,15 @@ public class Controller {
             boxView.setY(HEIGHT - 100);
             view.getGroup().getChildren().add(boxView);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private void winHandler() {
-        try {
-            Rectangle rectangle = new Rectangle(0, 0, Menu.WIDTH, Menu.HEIGHT);
-            rectangle.setFill(Color.rgb(54, 16, 0));
+    private void winHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
 
             Image winningMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\winningMessage.png")
@@ -353,121 +369,143 @@ public class Controller {
             ImageView okView = new ImageView(ok);
             okView.setY(Menu.HEIGHT / 2 + 150);
             okView.setX(Menu.WIDTH / 2 - 100);
-            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event)
+                {
                     stage.setScene(start.getScene());
                 }
             });
 
-            view.getGroup().getChildren().addAll(rectangle, winningMessageView, okView);
-        } catch (Exception e) {
-            e.printStackTrace();
+            view.getGroup().getChildren().addAll(rectangle,winningMessageView,okView);
         }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void saveGameHandler() throws Exception {
-        if (!Files.exists(Paths.get("src\\Resources\\Saved Games\\" + player.getUserName())))
-            Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\" + player.getUserName()));
-        try (OutputStream outputStream = new FileOutputStream(
-                "src\\Resources\\Saved Games\\" + player.getUserName() + "\\" + Integer.toString(player.getLevelThatPlaysNow()) + ".txt")) {
+    private void saveGameHandler() throws Exception
+    {
+        if( !Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getUserName())) )
+            Files.createDirectory(Paths.get("src\\Resources\\Saved Games\\"+player.getUserName()));
+        try(OutputStream outputStream = new FileOutputStream(
+                "src\\Resources\\Saved Games\\"+player.getUserName()+"\\"+Integer.toString(player.getLevelThatPlaysNow())+".txt"))
+        {
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
             String savedFarm = yaGson.toJson(farm);
             formatter.format(savedFarm);
             formatter.flush();
             formatter.close();
-        } catch (IOException e) {
+        }
+        catch ( IOException e )
+        {
             throw new Exception("No such directory exists!");
         }
 
     }
 
-    private void loadGameHandler() throws Exception {
-        try (InputStream inputStream = new FileInputStream(path)) {
+    private void loadGameHandler() throws Exception
+    {
+        try(InputStream inputStream = new FileInputStream(path))
+        {
             Scanner scanner = new Scanner(inputStream);
             farm = new Farm();
             YaGson yaGson = new YaGson();
             String savedFarm = scanner.nextLine();
-            farm = yaGson.fromJson(savedFarm, Farm.class);
+            farm = yaGson.fromJson(savedFarm,Farm.class);
             view.getGroup().getChildren().clear();
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
             turnHandler();
-        } catch (IOException e) {
+        }
+        catch ( IOException e )
+        {
             throw new Exception("No such directory exsits!");
         }
     }
 
-    public static void savePlayers(Vector<Player> players) {
-        try (OutputStream outputStream = new FileOutputStream("src\\Resources\\Players.txt")) {
+    public static void savePlayers( Vector<Player> players )
+    {
+        try( OutputStream outputStream = new FileOutputStream("src\\Resources\\Players.txt"))
+        {
             Formatter formatter = new Formatter(outputStream);
             YaGson yaGson = new YaGson();
             String savedPlayers = yaGson.toJson(players);
             formatter.format(savedPlayers);
             formatter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        catch ( IOException e ){ e.printStackTrace(); }
     }
 
-    private void loadLevels() {
-        try {
-            for (int i = 0; i < 10; i++) {
-                String levelName = "Level" + Integer.toString(i);
-                Image openLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\" + levelName + "Open.png")
+    private void loadLevels()
+    {
+        try
+        {
+            for( int i = 0 ; i < 10 ; i++ )
+            {
+                String levelName = "Level"+Integer.toString(i);
+                Image openLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName+"Open.png")
                         , 200, 79, false, true);
-                Image closeLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\" + levelName + "Close.png")
+                Image closeLevel = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\"+levelName+"Close.png")
                         , 200, 79, false, true);
                 ImageView levelView;
-                if (i + 1 <= player.getLastLevel())
+                if( i + 1 <= player.getLastLevel() )
                     levelView = new ImageView(openLevel);
                 else
                     levelView = new ImageView(closeLevel);
                 levels.add(levelView);
-                levelView.setX((Menu.WIDTH - 500) * ((i + 1) % 2) + (Menu.WIDTH - 250) * (i % 2));
-                levelView.setY(Menu.HEIGHT * (i / 2 + 1) / 7);
+                levelView.setX((Menu.WIDTH - 500) * ( (i + 1) % 2 ) + (Menu.WIDTH - 250) * ( i % 2));
+                levelView.setY(Menu.HEIGHT * ( i / 2  + 1) / 7);
                 start.getGroup().getChildren().addAll(levels.get(i));
-                levelView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                levelView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
-                        if (levels.indexOf(levelView) < player.getLastLevel())
-                            chooseOpenLevelHandler(levelName);
+                    public void handle(MouseEvent event)
+                    {
+                        if( levels.indexOf(levelView) < player.getLastLevel() )
+                            chooseOpenLevelHandler( levelName );
                         else
                             chooseCloseLevelHandler();
                     }
                 });
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        catch ( IOException e ){ e.printStackTrace(); }
     }
 
-    private boolean wasThisLevelPlayedBefore(int level) {
-        return Files.exists(Paths.get("src\\Resources\\Saved Games\\" + player.getUserName() + "\\" + Integer.toString(level) + ".txt"));
+    private boolean wasThisLevelPlayedBefore(int level)
+    {
+        return Files.exists(Paths.get("src\\Resources\\Saved Games\\"+player.getUserName()+"\\"+Integer.toString(level)+".txt"));
     }
 
-    private void loadGame(boolean newGame, int level, Player player) {
-        try {
-            if (newGame) {
+    private void loadGame( boolean newGame , int level , Player player )
+    {
+        try
+        {
+            if (newGame)
+            {
                 path = "src\\Resources\\Levels\\Level" + Integer.toString(level) + ".txt";
                 runHandler();
-            } else {
-                path = "src\\Resources\\Saved Games\\" + player.getUserName() + "\\" + Integer.toString(level) + ".txt";
+            }
+            else
+            {
+                path = "src\\Resources\\Saved Games\\"+player.getUserName()+"\\"+Integer.toString(level)+".txt";
                 loadGameHandler();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void chooseOpenLevelHandler(String levelName) {
-        int level = Integer.parseInt(Character.toString(levelName.toCharArray()[levelName.length() - 1])) + 1;
-        try {
-            if (wasThisLevelPlayedBefore(level)) {
-                Rectangle rectangle = new Rectangle(0, 0, Menu.WIDTH, Menu.HEIGHT);
-                rectangle.setFill(Color.rgb(54, 16, 0));
+    private void chooseOpenLevelHandler( String levelName )
+    {
+        int level = Integer.parseInt(Character.toString(levelName.toCharArray()[levelName.length()-1]))+1;
+        try
+        {
+            if( wasThisLevelPlayedBefore(level) )
+            {
+                Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+                rectangle.setFill(Color.rgb(54,16,0));
                 rectangle.setOpacity(0.7);
                 Image continueMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\continueMessageBox.png")
                         , 800, 300, false, true);
@@ -482,38 +520,45 @@ public class Controller {
                 Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
                         , 153, 146, false, true);
                 ImageView noView = new ImageView(no);
-                noView.setY(Menu.HEIGHT / 2 + 150);
+                noView.setY(Menu.HEIGHT / 2 + 150 );
                 noView.setX(Menu.WIDTH / 2 + 47);
-                yesView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
-                        start.getGroup().getChildren().removeAll(rectangle, continueMessageView, yesView, noView);
+                    public void handle(MouseEvent event)
+                    {
+                        start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
                         player.setLevelThatPlaysNow(level);
-                        loadGame(false, level, player);
+                        loadGame(false,level,player);
                     }
                 });
-                noView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                noView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
-                        start.getGroup().getChildren().removeAll(rectangle, continueMessageView, yesView, noView);
+                    public void handle(MouseEvent event)
+                    {
+                        start.getGroup().getChildren().removeAll(rectangle,continueMessageView,yesView,noView);
                         player.setLevelThatPlaysNow(level);
-                        loadGame(true, level, player);
+                        loadGame(true,level,player);
                     }
                 });
-                start.getGroup().getChildren().addAll(rectangle, continueMessageView, yesView, noView);
-            } else {
+                start.getGroup().getChildren().addAll(rectangle,continueMessageView,yesView,noView);
+            }
+            else
+            {
                 player.setLevelThatPlaysNow(level);
                 loadGame(true, level, player);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void chooseCloseLevelHandler() {
-        try {
-            Rectangle rectangle = new Rectangle(0, 0, Menu.WIDTH, Menu.HEIGHT);
-            rectangle.setFill(Color.rgb(54, 16, 0));
+    private void chooseCloseLevelHandler()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
             Image playerHasNotBeenChosenMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\levelErrorMessagebox.png")
                     , 800, 300, false, true);
@@ -525,20 +570,23 @@ public class Controller {
             ImageView okView = new ImageView(ok);
             okView.setY(Menu.HEIGHT / 2 + 150);
             okView.setX(Menu.WIDTH / 2 - 100);
-            okView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    start.getGroup().getChildren().removeAll(rectangle, playerHasNotBeenChosenMessageView, okView);
+                public void handle(MouseEvent event)
+                {
+                    start.getGroup().getChildren().removeAll(rectangle,playerHasNotBeenChosenMessageView,okView);
                 }
             });
-            start.getGroup().getChildren().addAll(rectangle, playerHasNotBeenChosenMessageView, okView);
-        } catch (Exception e) {
-            e.printStackTrace();
+            start.getGroup().getChildren().addAll(rectangle,playerHasNotBeenChosenMessageView,okView);
         }
+        catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void timer() {
-        try {
+    private void timer()
+    {
+        try
+        {
             Image timer = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\timer.png"),
                     120, 60, false, true);
             ImageView timerView = new ImageView(timer);
@@ -546,38 +594,40 @@ public class Controller {
             timerView.setY(HEIGHT - 95);
             Label timeLabel = new Label("");
             timeLabel.relocate(135, HEIGHT - 80);
-            timeLabel.setTextFill(Color.rgb(54, 16, 0));
-            timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 12.5));
-            if (farm.getTimer() / 3600 < 10)
-                timeLabel.setText(timeLabel.getText() + "0");
-            timeLabel.setText(timeLabel.getText() + Long.toString(farm.getTimer() / 3600) + ":");
-            if (farm.getTimer() % 3600 / 60 < 10)
-                timeLabel.setText(timeLabel.getText() + "0");
-            timeLabel.setText(timeLabel.getText() + Long.toString(farm.getTimer() % 3600 / 60) + ":");
-            if (farm.getTimer() % 60 < 10)
-                timeLabel.setText(timeLabel.getText() + "0");
-            timeLabel.setText(timeLabel.getText() + Long.toString(farm.getTimer() % 60));
+            timeLabel.setTextFill(Color.rgb(54,16,0));
+            timeLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,12.5));
+            if( farm.getTimer() / 3600 < 10 )
+                timeLabel.setText(timeLabel.getText()+"0");
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() / 3600)+":");
+            if( farm.getTimer() % 3600 / 60 < 10 )
+                timeLabel.setText(timeLabel.getText()+"0");
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() % 3600 / 60)+":");
+            if( farm.getTimer() % 60 < 10 )
+                timeLabel.setText(timeLabel.getText()+"0");
+            timeLabel.setText(timeLabel.getText()+Long.toString(farm.getTimer() % 60));
 
-            view.getGroup().getChildren().addAll(timerView, timeLabel);
-        } catch (Exception e) {
-            e.printStackTrace();
+            view.getGroup().getChildren().addAll(timerView,timeLabel);
         }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void danceTheMoney() {
-        KeyValue kvHieght = new KeyValue(moneyView.fitHeightProperty(), moneyView.getFitHeight() - 10);
-        KeyValue kvWidth = new KeyValue(moneyView.fitWidthProperty(), moneyView.getFitWidth() - 25);
-        KeyValue kvX = new KeyValue(moneyView.xProperty(), moneyView.getX() + 12.5);
-        KeyValue kvY = new KeyValue(moneyView.yProperty(), moneyView.getY() + 5);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(500), kvHieght, kvWidth, kvX, kvY);
+    private void danceTheMoney()
+    {
+        KeyValue kvHieght = new KeyValue(moneyView.fitHeightProperty() , moneyView.getFitHeight() - 10);
+        KeyValue kvWidth = new KeyValue(moneyView.fitWidthProperty() , moneyView.getFitWidth() - 25);
+        KeyValue kvX = new KeyValue(moneyView.xProperty() , moneyView.getX() + 12.5);
+        KeyValue kvY = new KeyValue(moneyView.yProperty() , moneyView.getY() +5);
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(500), kvHieght , kvWidth , kvX , kvY);
         Timeline timeline = new Timeline(keyFrame);
         timeline.setAutoReverse(true);
         timeline.setCycleCount(6);
         timeline.play();
     }
 
-    private void buyIcons() {
-        try {
+    private void buyIcons()
+    {
+        try
+        {
             Image henIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\buyGuineaHenButton.png"),
                     60, 60, false, true);
             ImageView henIconView = new ImageView(henIcon);
@@ -603,140 +653,168 @@ public class Controller {
             ImageView catIconView = new ImageView(catIcon);
             catIconView.setX(275);
             catIconView.setY(10);
-            if (!farm.isAreCatsUpgraded()) {
+            if (!farm.isAreCatsUpgraded())
+            {
                 ImageView upgradeCat = new ImageView(loader.getUpgradeButton());
                 upgradeCat.setFitWidth(50);
                 upgradeCat.setFitHeight(30);
                 upgradeCat.setX(280);
                 upgradeCat.setY(75);
                 Label label = new Label(Integer.toString(Constants.CAT_BASE_UPGRADE_COST));
-                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 10));
+                label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,10));
                 label.relocate(300, 80);
                 view.getGroup().getChildren().addAll(upgradeCat, label);
-                upgradeCat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                upgradeCat.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
-                        int result = farm.upgrade("cat");
-                        if (result == 1)
-                            danceTheMoney();
-                        if (result == 0)
-                            view.getGroup().getChildren().removeAll(upgradeCat, label);
+                    public void handle(MouseEvent event)
+                    {
+                         int result = farm.upgrade("cat");
+                         if(result == 1)
+                             danceTheMoney();
+                         if (result == 0)
+                             view.getGroup().getChildren().removeAll(upgradeCat, label);
                     }
                 });
             }
-            cowIconView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            cowIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    try {
-                        if (!farm.addCow(true)) {
+                public void handle(MouseEvent event)
+                {
+                    try
+                    {
+                        if(!farm.addCow(true))
+                        {
                             danceTheMoney();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch ( Exception e ) { e.printStackTrace(); }
                 }
             });
-            henIconView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            henIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    try {
-                        if (!farm.addHen(true)) {
+                public void handle(MouseEvent event)
+                {
+                    try
+                    {
+                        if(!farm.addHen(true))
+                        {
                             danceTheMoney();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch ( Exception e ) { e.printStackTrace(); }
                 }
             });
-            catIconView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            catIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    try {
-                        if (!farm.addCat(true)) {
+                public void handle(MouseEvent event)
+                {
+                    try
+                    {
+                        if(!farm.addCat(true))
+                        {
                             danceTheMoney();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch ( Exception e ) { e.printStackTrace(); }
                 }
             });
-            sheepIconView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            sheepIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    try {
-                        if (!farm.addSheep(true)) {
+                public void handle(MouseEvent event)
+                {
+                    try
+                    {
+                        if(!farm.addSheep(true))
+                        {
                             danceTheMoney();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch ( Exception e ) { e.printStackTrace(); }
                 }
             });
-            dogIconView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            dogIconView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    try {
-                        if (!farm.addDog(true)) {
+                public void handle(MouseEvent event)
+                {
+                    try
+                    {
+                        if(!farm.addDog(true))
+                        {
                             danceTheMoney();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch ( Exception e ) { e.printStackTrace(); }
                 }
             });
-            view.getGroup().getChildren().addAll(henIconView, cowIconView, sheepIconView, dogIconView, catIconView);
-        } catch (Exception e) {
-            e.printStackTrace();
+            view.getGroup().getChildren().addAll(henIconView,cowIconView,sheepIconView,dogIconView,catIconView);
         }
+        catch ( Exception e ) { e.printStackTrace(); }
     }
 
-    private void menuIcon() {
-        try {
+    private void menuIcon()
+    {
+        try
+        {
             Image menuIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuButton.png"),
                     77, 73, false, true);
             ImageView menuView = new ImageView(menuIcon);
             menuView.setX(5);
             menuView.setY(HEIGHT - 100);
-            menuView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            menuView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event)
+                {
                     animationTimer.stop();
                     showMenu();
                 }
             });
             view.getGroup().getChildren().addAll(menuView);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch ( Exception e ){ e.printStackTrace(); }
     }
 
-    private void truckIconHandler() {
-        loader.getFixedTruck().setOnMouseClicked(new EventHandler<MouseEvent>() {
+    private void truckIconHandler()
+    {
+        loader.getFixedTruck().setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 animationTimer.stop();
-                stage.setScene(sellPage.getScene(stage, view, farm, loader.getItems(), loader.getRightTruck()
-                        , loader.getFixedTruck(), animationTimer));
+                stage.setScene(sellPage.getScene(stage,view,farm,loader.getItems(),loader.getRightTruck()
+                        ,loader.getFixedTruck(), animationTimer));
             }
         });
     }
 
-    private void helicopterIconHandler() {
-        loader.getFixedHelicopter().setOnMouseClicked(new EventHandler<MouseEvent>() {
+    private void helicopterIconHandler()
+    {
+        loader.getFixedHelicopter().setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 animationTimer.stop();
-                stage.setScene(orderPage.getScene(stage, view, farm, loader.getItems(), loader.getLeftHelicopter()
-                        , loader.getFixedHelicopter(), animationTimer));
+                stage.setScene(orderPage.getScene(stage,view,farm,loader.getItems(),loader.getLeftHelicopter()
+                        ,loader.getFixedHelicopter(), animationTimer));
             }
         });
     }
 
-    private void checkWorkShops() {
+    private void checkWorkShops()
+    {
         for (Workshop w : farm.getWorkshops())
-            if (w != null && w.isWorking()) {
+            if (w != null && w.isWorking())
+            {
                 ImageView workshopWorkingView = new ImageView(workShopWorking.get((w.getWorkingTime() - w.getCurrentTime())
-                        * 5 / w.getWorkingTime()));
+                        *5/w.getWorkingTime()));
                 workshopWorkingView.setX(w.getShowX() + 180);
                 workshopWorkingView.setY(w.getShowY() + 80);
                 workshopWorkingView.setFitWidth(20);
@@ -745,7 +823,8 @@ public class Controller {
                 loader.getCurrentEntities().add(workshopWorkingView);
                 if (w.getCurrentTime() > 0)
                     w.currentTimeDecrease(1);
-                else {
+                else
+                {
                     view.getGroup().getChildren().remove(workshopWorkingView);
                     farm.endWorkShop(w);
                     if (w instanceof CakeBakery)
@@ -756,7 +835,7 @@ public class Controller {
                         view.getGroup().getChildren().remove(loader.getMovingCustomFactory());
                     else if (w instanceof EggPowderPlant)
                         view.getGroup().getChildren().remove(loader.getMovingEggPowderPlant());
-                    else if (w instanceof SewingFactory)
+                    else if(w instanceof SewingFactory)
                         view.getGroup().getChildren().remove(loader.getMovingSewingFactory());
                     else if (w instanceof Spinnery)
                         view.getGroup().getChildren().remove(loader.getMovingSpinnery());
@@ -767,17 +846,20 @@ public class Controller {
             }
     }
 
-    private void checkWareHouse() {
+    private void checkWareHouse()
+    {
         int i = 0;
         double firstShow_X = WIDTH / 2 - 70;
         double firstShow_y = HEIGHT - 50;
-        double disPlaceMent = 18;
-        for (Item item : farm.getWareHouse().getCollectedItems()) {
-            ImageView imageView = new ImageView(loader.getWareHouseItems().get(item.getKind()));
-            imageView.setX(firstShow_X + i * disPlaceMent);
-            imageView.setLayoutY(firstShow_y);
+        double disPlaceMent= 18;
+        for ( Item item : farm.getWareHouse().getCollectedItems() )
+        {
+            ImageView imageView = new ImageView( loader.getWareHouseItems().get( item.getKind() ) );
+            imageView.setX( firstShow_X + i * disPlaceMent );
+            imageView.setLayoutY( firstShow_y );
             i++;
-            if (i == 9) {
+            if ( i == 9 )
+            {
                 i = 0;
                 firstShow_y -= disPlaceMent;
             }
@@ -786,25 +868,29 @@ public class Controller {
         }
     }
 
-    private void wellIcon() {
+    private void wellIcon()
+    {
         ImageView upgrade = new ImageView(loader.getUpgradeButton());
         upgrade.setFitHeight(39);
         upgrade.setFitWidth(100);
         Label label = new Label(Integer.toString(farm.getWell().getUpgradeCost()));
-        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
         label.relocate(farm.getWell().getShowX() - 55, farm.getWell().getShowY() + 110);
         upgrade.setX(farm.getWell().getShowX() - 90);
         upgrade.setY(farm.getWell().getShowY() + 110);
         view.getGroup().getChildren().addAll(upgrade, label);
         loader.getFixedWell().setX(0);
         loader.getFixedWell().setY(10);
-        loader.getFixedWell().setOnMouseClicked(new EventHandler<MouseEvent>() {
+        loader.getFixedWell().setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 int result = farm.fullWell();
                 if (result == -1)
                     danceTheMoney();
-                if (result == 1) {
+                if (result == 1)
+                {
                     flagWell = 0;
                     view.getGroup().getChildren().remove(arrowViewWell);
                     view.getGroup().getChildren().remove(loader.getFixedWell());
@@ -814,19 +900,23 @@ public class Controller {
                     flagWell = 0;
                     view.getGroup().getChildren().remove(arrowViewWell);
                     AnimationTimer imageViewSprite = new ImageViewSprite(loader.getMovingWell(),
-                            20, false, 4, 4, 16, 200, 200, 16);
+                            20,false ,4, 4, 16, 200, 200, 16);
                     imageViewSprite.start();
                 }
             }
         });
-        upgrade.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        upgrade.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 int result = farm.upgrade("well");
                 if (result == 1)
                     danceTheMoney();
-                if (result == 0) {
-                    try {
+                if (result == 0)
+                {
+                    try
+                    {
                         flagWell = 0;
                         view.getGroup().getChildren().remove(arrowViewWell);
                         label.setText(Integer.toString(farm.getWell().getUpgradeCost()));
@@ -836,27 +926,30 @@ public class Controller {
                                 + farm.getWell().getLevel() + ".png"), 800, 800, false, true));
                         if (farm.getWell().getLevel() == 4)
                             view.getGroup().getChildren().removeAll(label, upgrade);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch ( Exception e ) { e.printStackTrace(); }
                 }
             }
         });
     }
 
-    private void checkWell() {
-        ImageView wellFullnessView = new ImageView(wellFullness.get(farm.getWell().getCurrentVolume() * 5 / farm.getWell().getVolume()));
+    private void checkWell()
+    {
+        ImageView wellFullnessView = new ImageView(wellFullness.get(farm.getWell().getCurrentVolume()*5/farm.getWell().getVolume()));
         wellFullnessView.setX(farm.getWell().getShowX() + 180);
         wellFullnessView.setY(farm.getWell().getShowY() + 80);
         wellFullnessView.setFitWidth(20);
         wellFullnessView.setFitHeight(80);
         view.getGroup().getChildren().add(wellFullnessView);
         loader.getCurrentEntities().add(wellFullnessView);
-        if (farm.getWell().isWorking()) {
+        if (farm.getWell().isWorking())
+        {
             if (farm.getWell().getCurrentVolume() < farm.getWell().getVolume()) {
                 farm.getWell().increase(1);
                 view.getGroup().getChildren().remove(arrowViewWell);
-            } else {
+            }
+            else
+            {
                 farm.getWell().setWorking(false);
                 view.getGroup().getChildren().remove(loader.getMovingWell());
                 view.getGroup().getChildren().add(loader.getFixedWell());
@@ -864,49 +957,60 @@ public class Controller {
         }
     }
 
-    private void showBackground() {
+    private void showBackground()
+    {
         loader.getMap().setX(0);
         loader.getMap().setY(0);
         view.getGroup().getChildren().addAll(loader.getMap());
-        loader.getMap().setOnMouseClicked(new EventHandler<MouseEvent>() {
+        loader.getMap().setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 double x = event.getX() - Constants.GRASS_DISPLACEMENT_X;
                 double y = event.getY() - Constants.GRASS_DISPLACEMENT_Y;
-                if (x >= 0 && x <= farm.getMapWidth() * Constants.ANIMAL_SHOW_SCALE &&
-                        y >= 0 && y <= farm.getMapLength() * Constants.ANIMAL_SHOW_SCALE) {
-                    boolean result = farm.plantGrass(x / Constants.ANIMAL_SHOW_SCALE, y / Constants.ANIMAL_SHOW_SCALE);
-                    if (!result) {
-                        arrowTo(farm.getWell().getShowX() + loader.getFixedWell().getFitWidth() + 150,
-                                farm.getWell().getShowY() + loader.getFixedWell().getFitHeight() + 20,
-                                arrowViewWell, true);
+                if (x >= 0 && x <= farm.getMapWidth()*Constants.ANIMAL_SHOW_SCALE &&
+                    y >= 0 && y <= farm.getMapLength()*Constants.ANIMAL_SHOW_SCALE)
+                {
+                    boolean result = farm.plantGrass(x/Constants.ANIMAL_SHOW_SCALE, y/Constants.ANIMAL_SHOW_SCALE);
+                    if(!result){
+                        arrowTo(farm.getWell().getShowX() + loader.getFixedWell().getFitWidth() + 150 ,
+                                farm.getWell().getShowY() + loader.getFixedWell().getFitHeight() + 20 ,
+                                arrowViewWell , true);
                     }
                 }
             }
         });
     }
 
-    private void arrowTo(double x, double y, ImageView arrowView, boolean kind) {
+    private void arrowTo(double x , double y , ImageView arrowView , boolean kind)
+    {
         arrowView.setX(x);
         arrowView.setY(y);
-        if (!view.getGroup().getChildren().contains(arrowView))
+        if(!view.getGroup().getChildren().contains(arrowView))
             view.getGroup().getChildren().add(arrowView);
-        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView, 10, false, 4, 2, 8,
-                52, 52, 8);
-        if (kind) {
-            if (flagWell == 0 && !farm.getWell().isWorking()) {
+        ImageViewSprite imageViewSprite = new ImageViewSprite(arrowView , 10 , false , 4 , 2 , 8 ,
+                52 , 52 , 8);
+        if(kind)
+        {
+            if(flagWell == 0 && !farm.getWell().isWorking())
+            {
                 flagWell = 1;
                 imageViewSprite.start();
             }
-        } else {
-            if (flagWareHouse == 0) {
+        }
+        else
+        {
+            if(flagWareHouse == 0)
+            {
                 flagWareHouse = 1;
                 imageViewSprite.start();
             }
         }
     }
 
-    private void makeScene() {
+    private void makeScene()
+    {
         showBackground();
         buyIcons();
         menuIcon();
@@ -923,83 +1027,96 @@ public class Controller {
         loadGoals();
     }
 
-    private void showChatRoomIcon() {
-        if (isMultiPlayer) {
-            try {
-                Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\chatButton.png"),
+    private void showChatRoomIcon()
+    {
+        if (isMultiPlayer)
+        {
+            try
+            {
+                Image image  = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\chatButton.png"),
                         77, 73, false, true);
                 ImageView chatView = new ImageView(image);
                 chatView.setX(5);
                 chatView.setY(Constants.HEIGHT - 200);
                 view.getGroup().getChildren().add(chatView);
-                chatView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                chatView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent event) {
-                        try {
+                    public void handle(MouseEvent event)
+                    {
+                        try
+                        {
                             if (!clientGui.getOpen()) {
                                 Stage chatStage = new Stage();
                                 clientGui.start(chatStage);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        catch (Exception e) { e.printStackTrace(); }
                     }
                 });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
+            catch (FileNotFoundException e) { e.printStackTrace(); }
         }
     }
 
-    private void showUpgradeTruck() {
+    private void showUpgradeTruck()
+    {
         ImageView upgradeTruck = new ImageView(loader.getUpgradeButton());
         upgradeTruck.setX(farm.getTruck().getShowX() - 10);
         upgradeTruck.setY(farm.getTruck().getShowY() + 140);
         upgradeTruck.setFitHeight(30);
         upgradeTruck.setFitWidth(90);
         Label label = new Label(Integer.toString(farm.getTruck().getUpgradeCost()));
-        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,15));
         label.relocate(farm.getTruck().getShowX() + 25, farm.getTruck().getShowY() + 140);
         view.getGroup().getChildren().addAll(upgradeTruck, label);
-        upgradeTruck.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        upgradeTruck.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 int result = farm.upgrade("truck");
                 if (result == 1)
                     danceTheMoney();
-                if (result == 0) {
-                    try {
+                if (result == 0)
+                {
+                    try
+                    {
                         label.setText(Integer.toString(farm.getTruck().getUpgradeCost()));
                         loader.getFixedTruck().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Truck\\" + "fixed"
                                 + farm.getTruck().getLevel() + ".png"), 200, 200, false, true));
                         if (farm.getTruck().getLevel() == 4)
                             view.getGroup().getChildren().removeAll(label, upgradeTruck);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                    catch (IOException e){ e.printStackTrace(); }
                 }
             }
         });
     }
 
-    private void showUpgradeHelicopter() {
+    private void showUpgradeHelicopter()
+    {
         ImageView upgradeHelicopter = new ImageView(loader.getUpgradeButton());
         upgradeHelicopter.setX(farm.getHelicopter().getShowX() - 30);
         upgradeHelicopter.setY(farm.getHelicopter().getShowY() + 160);
         upgradeHelicopter.setFitHeight(30);
         upgradeHelicopter.setFitWidth(90);
         Label label = new Label(Integer.toString(farm.getHelicopter().getUpgradeCost()));
-        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,15));
         label.relocate(farm.getHelicopter().getShowX() + 5, farm.getHelicopter().getShowY() + 160);
         view.getGroup().getChildren().addAll(upgradeHelicopter, label);
-        upgradeHelicopter.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        upgradeHelicopter.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
             @Override
-            public void handle(MouseEvent event) {
+            public void handle(MouseEvent event)
+            {
                 int result = farm.upgrade("helicopter");
                 if (result == 1)
                     danceTheMoney();
-                if (result == 0) {
-                    try {
+                if (result == 0)
+                {
+                    try
+                    {
                         label.setText(Integer.toString(farm.getHelicopter().getUpgradeCost()));
                         loader.getFixedHelicopter().setImage(new Image(new FileInputStream("src\\Resources\\Graphic\\Service\\Helicopter\\" + "fixed"
                                 + farm.getHelicopter().getLevel() + ".png"), 200, 200, false, true));
@@ -1009,71 +1126,76 @@ public class Controller {
                                 + farm.getHelicopter().getLevel() + ".png"), 144, 96, false, true));
                         if (farm.getHelicopter().getLevel() == 4)
                             view.getGroup().getChildren().removeAll(label, upgradeHelicopter);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                    catch (IOException e) { e.printStackTrace(); }
                 }
             }
         });
 
     }
 
-    private void showMoneyIcon() {
+    private void showMoneyIcon()
+    {
         moneyView.setFitWidth(150);
         moneyView.setFitHeight(50);
         moneyView.setX(WIDTH - 150);
         moneyView.setY(10);
-        moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        moneyLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
         moneyLabel.relocate(WIDTH - 95, 15);
-        view.getGroup().getChildren().addAll(moneyView, moneyLabel);
+        view.getGroup().getChildren().addAll(moneyView , moneyLabel);
     }
 
-    private void updateMoney() {
+    private void updateMoney()
+    {
         moneyLabel.setText(Integer.toString(farm.getMoney()));
     }
 
-    private void workshopsIcons() {
-        for (Workshop w : farm.getWorkshops()) {
+    private void workshopsIcons()
+    {
+        for (Workshop w : farm.getWorkshops())
+        {
             ImageView imageView = new ImageView(loader.getFixedWorkshops().get(w.getWorkShopName()));
             loader.getFixedWorkShopsImageViews().put(w.getWorkShopName(), imageView);
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    if (event.getButton().equals(MouseButton.PRIMARY)) {
-                        if (w instanceof CustomFactory) {
-                            animationTimer.stop();
-                            recipeSetter.makeScene(view, farm, loader.getItems(), animationTimer, loader);
-                        } else {
-                            int result = farm.startWorkShop(w.getWorkShopName());
-                            if (result > 0) {
-                                view.getGroup().getChildren().remove(imageView);
-                                flagWareHouse = 0;
-                                view.getGroup().getChildren().remove(arrowViewWareHouse);
-                                ImageView imageView1;
-                                if (w instanceof CakeBakery)
-                                    imageView1 = loader.getMovingCakeBakery();
-                                else if (w instanceof CookieBakery)
-                                    imageView1 = loader.getMovingCookieBakery();
-                                else if (w instanceof EggPowderPlant)
-                                    imageView1 = loader.getMovingEggPowderPlant();
-                                else if (w instanceof SewingFactory)
-                                    imageView1 = loader.getMovingSewingFactory();
-                                else if (w instanceof Spinnery)
-                                    imageView1 = loader.getMovingSpinnery();
-                                else
-                                    imageView1 = loader.getMovingWeavingFactory();
-                                imageView1.setX(w.getShowX());
-                                imageView1.setY(w.getShowY());
-                                view.getGroup().getChildren().add(imageView1);
-                                AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
-                                        4, 4, 16, 200, 200, 16);
-                                flyingItems(w.getInputs(), result, w);
-                                imageViewSprite.start();
-                            }
-                        }
+                public void handle(MouseEvent event)
+                {
+                    if (w instanceof CustomFactory)
+                    {
+                        animationTimer.stop();
+                        recipeSetter.makeScene(view, farm, loader.getItems(), animationTimer, loader);
                     }
                     else
-                        workshopInfo(w);
+                    {
+                        int result = farm.startWorkShop(w.getWorkShopName());
+                        if (result > 0)
+                        {
+                            view.getGroup().getChildren().remove(imageView);
+                            flagWareHouse = 0;
+                            view.getGroup().getChildren().remove(arrowViewWareHouse);
+                            ImageView imageView1;
+                            if (w instanceof CakeBakery)
+                                imageView1 = loader.getMovingCakeBakery();
+                            else if (w instanceof CookieBakery)
+                                imageView1 = loader.getMovingCookieBakery();
+                            else if (w instanceof EggPowderPlant)
+                                imageView1 = loader.getMovingEggPowderPlant();
+                            else if (w instanceof SewingFactory)
+                                imageView1 = loader.getMovingSewingFactory();
+                            else if (w instanceof Spinnery)
+                                imageView1 = loader.getMovingSpinnery();
+                            else
+                                imageView1 = loader.getMovingWeavingFactory();
+                            imageView1.setX(w.getShowX());
+                            imageView1.setY(w.getShowY());
+                            view.getGroup().getChildren().add(imageView1);
+                            AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
+                                    4, 4, 16, 200, 200, 16);
+                            flyingItems(w.getInputs(), result, w);
+                            imageViewSprite.start();
+                        }
+                    }
                 }
             });
             ImageView upgrade = new ImageView(loader.getUpgradeButton());
@@ -1082,23 +1204,30 @@ public class Controller {
             Label label = new Label(Integer.toString(w.getUpgradeCost()));
             label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
             show(imageView, w);
-            if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof CakeBakery) {
+            if (w instanceof EggPowderPlant || w instanceof CookieBakery || w instanceof CakeBakery)
+            {
                 label.relocate(w.getShowX() + 5, w.getShowY() + 40);
                 upgrade.setX(w.getShowX() - 30);
                 upgrade.setY(w.getShowY() + 40);
-            } else {
+            }
+            else
+            {
                 label.relocate(w.getShowX() + 235, w.getShowY() + 70);
                 upgrade.setX(w.getShowX() + 200);
                 upgrade.setY(w.getShowY() + 70);
             }
-            upgrade.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            upgrade.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event)
+                {
                     int result = farm.upgrade(w.getWorkShopName());
                     if (result == 1)
                         danceTheMoney();
-                    if (result == 0) {
-                        try {
+                    if (result == 0)
+                    {
+                        try
+                        {
                             label.setText(Integer.toString(w.getUpgradeCost()));
                             Image image = new Image(new FileInputStream("src\\Resources\\Graphic\\Workshops\\" + w.getWorkShopName() + "\\" + "fixed"
                                     + Integer.toString(w.getLevel()) + ".png"),
@@ -1110,19 +1239,26 @@ public class Controller {
                                     800, 800, false, true);
                             loader.getMovingWorkshops().replace(w.getWorkShopName(), image);
                             boolean isUpgradeFinished = false;
-                            if (w instanceof CakeBakery) {
+                            if (w instanceof CakeBakery)
+                            {
                                 loader.setMovingCakeBakery(new ImageView(loader.getMovingWorkshops().get("cakeBakery")));
                                 if (farm.getWorkshops()[0].getLevel() == 4)
                                     isUpgradeFinished = true;
-                            } else if (w instanceof CookieBakery) {
+                            }
+                            else if (w instanceof CookieBakery)
+                            {
                                 loader.setMovingCookieBakery(new ImageView(loader.getMovingWorkshops().get("cookieBakery")));
                                 if (farm.getWorkshops()[1].getLevel() == 4)
                                     isUpgradeFinished = true;
-                            } else if (w instanceof EggPowderPlant) {
+                            }
+                            else if (w instanceof EggPowderPlant)
+                            {
                                 loader.setMovingEggPowderPlant(new ImageView(loader.getMovingWorkshops().get("eggPowderPlant")));
                                 if (farm.getWorkshops()[2].getLevel() == 4)
                                     isUpgradeFinished = true;
-                            } else if (w instanceof SewingFactory) {
+                            }
+                            else if (w instanceof SewingFactory)
+                            {
                                 loader.setMovingSewingFactory(new ImageView(loader.getMovingWorkshops().get("sewingFactory")));
                                 if (farm.getWorkshops()[3].getLevel() == 4)
                                     isUpgradeFinished = true;
@@ -1130,89 +1266,27 @@ public class Controller {
                                 loader.setMovingSpinnery(new ImageView(loader.getMovingWorkshops().get("spinnery")));
                                 if (farm.getWorkshops()[5].getLevel() == 4)
                                     isUpgradeFinished = true;
-                            } else if (w instanceof WeavingFactory) {
+                            }
+                            else if (w instanceof WeavingFactory)
+                            {
                                 loader.setMovingWeavingFactory(new ImageView(loader.getMovingWorkshops().get("weavingFactory")));
                                 if (farm.getWorkshops()[4].getLevel() == 4)
                                     isUpgradeFinished = true;
-                            } else if (w instanceof CustomFactory) {
+                            }
+                            else if (w instanceof CustomFactory)
+                            {
                                 loader.setMovingCustomFactory(new ImageView(loader.getMovingWorkshops().get("customFactory")));
                                 if (farm.getWorkshops()[6].getLevel() == 4)
                                     isUpgradeFinished = true;
                             }
                             if (isUpgradeFinished)
                                 view.getGroup().getChildren().removeAll(label, upgrade);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        catch (Exception e) { e.printStackTrace(); }
                     }
                 }
             });
             view.getGroup().getChildren().addAll(upgrade, label);
-        }
-    }
-
-    private void workshopInfo(Workshop workshop)
-    {
-        if( workshop.getInputs().size() > 0 )
-        {
-            animationTimer.stop();
-            ImageView[] inputs = new ImageView[workshop.getInputs().size()];
-            ImageView output = new ImageView(loader.getItems().get(workshop.getOutput()));
-            for( int i = 0 ; i < workshop.getInputs().size() ; i++ )
-                inputs[i] = new ImageView(loader.getItems().get(workshop.getInputs().get(i)));
-            try
-            {
-                Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
-                rectangle.setFill(Color.rgb(54,16,0));
-                rectangle.setOpacity(0.7);
-
-                Image recipesBack = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png")
-                        , 500, 506, false, true);
-                ImageView recipesBackView = new ImageView(recipesBack);
-                recipesBackView.setY(Constants.HEIGHT / 2 - 253);
-                recipesBackView.setX(Constants.WIDTH / 2 - 250);
-
-                Label label1 = new Label("Inputs: ");
-                label1.setTextFill(Color.rgb(54,16,0));
-                label1.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
-                label1.setLayoutX(Constants.WIDTH / 2 - 200);
-                label1.setLayoutY(Constants.HEIGHT / 2 - 200);
-
-                for( int i = 0 ; i < workshop.getInputs().size() ; i++ )
-                {
-                    inputs[i].setFitWidth(56);
-                    inputs[i].setFitHeight(56);
-                    inputs[i].setX(Constants.WIDTH / 2 - 180 + (i % 5) * 76);
-                    inputs[i].setY(Constants.HEIGHT / 2 - 150 + (i / 5) * 76);
-                }
-
-                Label label2 = new Label("Output: ");
-                label2.setTextFill(Color.rgb(54,16,0));
-                label2.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
-                label2.setLayoutX(Constants.WIDTH / 2 - 200);
-                label2.setLayoutY(Constants.HEIGHT / 2);
-
-                output.setFitWidth(56);
-                output.setFitHeight(56);
-                output.setX(Constants.WIDTH / 2 - 200);
-                output.setY(Constants.HEIGHT / 2 + 50);
-
-                rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
-                {
-                    @Override
-                    public void handle(MouseEvent event)
-                    {
-                        view.getGroup().getChildren().removeAll(recipesBackView,label1,label2,output,rectangle);
-                        view.getGroup().getChildren().removeAll(inputs);
-                        animationTimer.start();
-                    }
-                });
-
-                view.getGroup().getChildren().addAll(rectangle,recipesBackView,label1,label2,output);
-                view.getGroup().getChildren().addAll(inputs);
-
-            }
-            catch ( Exception e ) { e.printStackTrace(); }
         }
     }
 
@@ -1522,32 +1596,9 @@ public class Controller {
             {
                 if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 1.8 )
                 {
-                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX());
-                    loader.getRightHelicopter().setY(loader.getFixedHelicopter().getY());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(), 1,
-                            false, 3, 2, 6, 48, 48, 6);
-                    animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
-                            farm.getHelicopter().getPrevMovingX(), loader.getFixedHelicopter().getY(),
-                            farm.getHelicopter().getNextMovingX(), loader.getFixedHelicopter().getY(), 2000);
-                    pathTransition.setAutoReverse(false);
-                    pathTransition.setCycleCount(1);
-                    pathTransition.play();
-                    farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
-                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + farm.getHelicopter().getMovingScale());
-                }
-                else
-                {
-                    if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 1.8 )
-                    {
-                        view.getGroup().getChildren().remove(loader.getLeftHelicopter());
-                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + farm.getHelicopter().getMovingScale());
-                    }
                     loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX());
                     loader.getLeftHelicopter().setY(loader.getFixedHelicopter().getY());
-                    if (!view.getGroup().getChildren().contains(loader.getLeftHelicopter()))
-                        view.getGroup().getChildren().add(loader.getLeftHelicopter());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(),2,
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(), 1,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
@@ -1557,7 +1608,30 @@ public class Controller {
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
-                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - farm.getHelicopter().getMovingScale());
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - Constants.movingScale);
+                }
+                else
+                {
+                    if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
+                    {
+                        view.getGroup().getChildren().remove(loader.getLeftHelicopter());
+                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                    }
+                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getRightHelicopter().setY(loader.getFixedHelicopter().getY());
+                    if (!view.getGroup().getChildren().contains(loader.getRightHelicopter()))
+                        view.getGroup().getChildren().add(loader.getRightHelicopter());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(),2,
+                            false, 3, 2, 6, 48, 48, 6);
+                    animationTimer.start();
+                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(), loader.getFixedHelicopter().getY(),
+                            farm.getHelicopter().getNextMovingX(), loader.getFixedHelicopter().getY(), 2000);
+                    pathTransition.setAutoReverse(false);
+                    pathTransition.setCycleCount(1);
+                    pathTransition.play();
+                    farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
                 }
                 farm.getHelicopter().decreaseCurrentTime(1);
             }
@@ -1635,6 +1709,9 @@ public class Controller {
                 loader.getFixedTruck().setX(0);
                 view.getGroup().getChildren().removeAll(loader.getLeftTruck(), loader.getRightTruck());
                 view.getGroup().getChildren().add(loader.getFixedTruck());
+                if (isMultiPlayer && player.isClient()){
+                    clientSender.sendItemsToMarket(farm.getTruck().getItems());
+                }
                 farm.clearFromTruck();
             }
         }
@@ -2237,26 +2314,26 @@ public class Controller {
             clientPort.setText("8060");
             clientPort.setStyle("-fx-text-fill : gray");
             clientPort.setAlignment(Pos.CENTER);
-            clientPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            clientPort.setLayoutX(Constants.WIDTH / 2 - 50);
             clientPort.setLayoutY(Constants.HEIGHT / 2 - 220);
             clientPort.setPrefSize(150,40);
             clientPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
 
-            Label clientIPAddress = new Label("Client IP : "+Inet4Address.getLocalHost().getHostAddress());
+            Label clientIPAddress = new Label("Client IP :      "+Inet4Address.getLocalHost().getHostAddress());
             clientIPAddress.setTextFill(Color.rgb(54,16,0));
             clientIPAddress.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 210);
+            clientIPAddress.setLayoutX(Constants.WIDTH / 2 - 200);
             clientIPAddress.setLayoutY(Constants.HEIGHT / 2 - 140);
 
             Label serverPortLabel = new Label("Server Port: ");
             serverPortLabel.setTextFill(Color.rgb(54,16,0));
             serverPortLabel.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
-            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 210);
+            serverPortLabel.setLayoutX(Constants.WIDTH / 2 - 200);
             serverPortLabel.setLayoutY(Constants.HEIGHT / 2 - 60);
 
             TextField serverPort = new TextField();
             serverPort.setAlignment(Pos.CENTER);
-            serverPort.setLayoutX(Constants.WIDTH / 2 - 100);
+            serverPort.setLayoutX(Constants.WIDTH / 2 - 50);
             serverPort.setLayoutY(Constants.HEIGHT / 2 - 60);
             serverPort.setPrefSize(150,40);
             serverPort.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));
@@ -2269,7 +2346,7 @@ public class Controller {
 
             TextField serverIP = new TextField();
             serverIP.setAlignment(Pos.CENTER);
-            serverIP.setLayoutX(Constants.WIDTH / 2 - 120);
+            serverIP.setLayoutX(Constants.WIDTH / 2 - 50);
             serverIP.setLayoutY(Constants.HEIGHT / 2);
             serverIP.setPrefSize(150,40);
             serverIP.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,20));

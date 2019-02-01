@@ -33,7 +33,8 @@ import java.util.Vector;
 public class ClientGui extends Application {
     private ClientSender clientSender;
     private Player player;
-    private TextArea chatArea = new TextArea();
+    private ScrollPane chatArea = new ScrollPane();
+    private Pane area = new Pane();
     private Group root = new Group();
     private Scene scene;
     private boolean isOpen;
@@ -47,6 +48,7 @@ public class ClientGui extends Application {
         this.clientSender = clientSender;
         this.player = player;
         this.isOpen = false;
+        this.chatArea.setContent(area);
     }
 
     public void addFriendRequest(String userName){
@@ -80,8 +82,6 @@ public class ClientGui extends Application {
         HBox hBox = new HBox(20, chatArea);
         HBox hBox1 = new HBox(20, textField, send, list, leaderBoard);
         VBox vBox = new VBox(20, hBox1, hBox);
-        chatArea.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        chatArea.setWrapText(true);
         chatArea.setMinHeight(560);
         root.getChildren().add(vBox);
         scene = new Scene(root, 800, 600);
@@ -241,7 +241,7 @@ public class ClientGui extends Application {
     }
 
     public void putInCharArea(String message) {
-        chatArea.appendText(message + "\n");
+        //todo fereshte
     }
 
     public void playerJoinedMessage(String userName) {

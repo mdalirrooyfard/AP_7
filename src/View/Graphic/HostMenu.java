@@ -7,7 +7,6 @@ import Network.Server;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -68,7 +67,7 @@ public class HostMenu
                 @Override
                 public void handle(MouseEvent event) {
                     Vector<Player> players = new Vector<>();
-                    HashMap<String, Player> users = server.getServerSender().getUsenames();
+                    HashMap<String, Player> users = server.getServerSender().getUsernames();
                     int numberOfLines = 0;
                     for (String s : users.keySet()) {
                         players.add(users.get(s));

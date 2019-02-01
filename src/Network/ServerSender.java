@@ -1,5 +1,6 @@
 package Network;
 
+import Model.Items.Item;
 import Model.Player;
 
 import java.io.IOException;
@@ -11,12 +12,13 @@ import java.util.Vector;
 public class ServerSender {
     private HashMap<Socket, Player> peopleAndSockets = new HashMap<>();
     private HashMap<Socket, ObjectOutputStream> outPutStreams = new HashMap<>();
-    private HashMap<String, Player> usenames = new HashMap<>();
+    private HashMap<String, Player> usernames = new HashMap<>();
     private HashMap<String, Socket> userNameAndSocket = new HashMap<>();
+    private Market market = new Market();
     private ServerGui serverGui;
 
-    public HashMap<String, Player> getUsenames() {
-        return usenames;
+    public HashMap<String, Player> getUsernames() {
+        return usernames;
     }
 
     public ServerSender(ServerGui serverGui){
@@ -35,10 +37,25 @@ public class ServerSender {
         }
     }
 
-    public void setPlayer(Socket socket, Player player){
+    public void setNewPlayer(Socket socket, Player player){
         peopleAndSockets.replace(socket, player);
-        usenames.put(player.getUserName(), player);
+        usernames.put(player.getUserName(), player);
         userNameAndSocket.put(player.getUserName(), socket);
+    }
+
+    public void updateMarket(Vector<Item> items){
+        for (Item item : items)
+            market.add(item.getKind());
+    }
+
+    public void updateLevel(String username, int level){
+        usernames.get(username).setLastLevel(level);
+        peopleAndSockets.get(userNameAndSocket.get(username)).setLastLevel(level);
+    }
+
+    public void updateMoney(String username, int money){
+        usernames.get(username).setMoney(money);
+        peopleAndSockets.get(userNameAndSocket.get(username)).setMoney(money);
     }
 
     public synchronized void sendGroup(Command command){
@@ -71,7 +88,7 @@ public class ServerSender {
     public void sendProfile(Socket socket, String username){
         try{
             ObjectOutputStream objectOutputStream = outPutStreams.get(socket);
-            Player player = usenames.get(username);
+            Player player = usernames.get(username);
             Command command = new Command(CommandTypes.VIEW_PROFILE, player);
             objectOutputStream.writeObject(command);
             objectOutputStream.flush();
@@ -156,8 +173,8 @@ public class ServerSender {
 
     public void sendApproveRequest(Command command){
         try{
-            usenames.get(command.getSender()).addFriend(command.getReceiver());
-            usenames.get(command.getReceiver()).addFriend(command.getSender());
+            usernames.get(command.getSender()).addFriend(command.getReceiver());
+            usernames.get(command.getReceiver()).addFriend(command.getSender());
             ObjectOutputStream objectOutputStream = outPutStreams.get(userNameAndSocket.get(command.getReceiver()));
             objectOutputStream.writeObject(command);
             objectOutputStream.flush();
