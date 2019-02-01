@@ -56,7 +56,6 @@ public class ServerGui extends Application {
         HBox hBox = new HBox(20, chatArea);
         HBox hBox1 = new HBox(20, textField, sendView);
         VBox vBox = new VBox(20, hBox1, hBox);
-        chatArea.setMinHeight(560);
         scene = new Scene(vBox, 800, 600);
         sendView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
