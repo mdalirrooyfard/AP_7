@@ -45,7 +45,7 @@ public class OrderPage
             orderView.setX(0);
             orderView.setY(0);
             group.getChildren().addAll(orderView);
-            insertBack(farm,stage,view , aTimer);
+            insertBack(farm,stage,view , aTimer,market);
             insertOk(farm,stage,view,rightHelicopter,fixedHelicopter,aTimer, clientSender);
             insertItems(farm,items,isMultiplayer,market);
         }
@@ -53,7 +53,7 @@ public class OrderPage
         return scene;
     }
 
-    private void insertBack(Farm farm , Stage stage , View view,AnimationTimer animationTimer)
+    private void insertBack(Farm farm , Stage stage , View view,AnimationTimer animationTimer,HashMap<String , Integer> market)
     {
         try
         {
@@ -69,6 +69,8 @@ public class OrderPage
                 {
                     farm.clearHelicopterBeforeGo();
                     group.getChildren().clear();
+                    for( String s : firstMarket.keySet() )
+                        market.put(s,firstMarket.get(s));
                     animationTimer.start();
                     stage.setScene(view.getScene());
                 }
