@@ -383,9 +383,9 @@ public class Farm {
     public void checkCollision() {
         for (Entity entity : stuffs){
             if (entity instanceof Dog && !entity.isDead())
-                killDogAndWild(entity.getShowX(), entity.getShowY(),(Dog)entity);
+                killDogAndWild(entity.getX(), entity.getY(),(Dog)entity);
             else if (entity instanceof Wild && !entity.isDead())
-                killDomesticAndItems(entity.getShowX(), entity.getShowY());
+                killDomesticAndItems(entity.getX(), entity.getY());
         }
     }
 
@@ -393,8 +393,8 @@ public class Farm {
         boolean isThereWild = false;
         for (Entity entity : stuffs){
             if (entity instanceof Wild && !entity.isDead()){
-                if ((Math.pow(entity.getShowX() - mapX, 2) +
-                    Math.pow(entity.getShowY() - mapY, 2)) < 400) {
+                if (Math.pow(entity.getX() - mapX, 2) +
+                    Math.pow(entity.getY() - mapY, 2) <  1.5) {
                     entity.setDead(true);
                     isThereWild = true;
                 }
@@ -407,8 +407,8 @@ public class Farm {
     public void killDomesticAndItems(double mapX, double mapY) {
         for (Entity entity : stuffs){
             if ((entity instanceof Domestic || entity instanceof Item) && !entity.isDead()){
-                if ((Math.pow(entity.getShowX() - mapX, 2) +
-                        Math.pow(entity.getShowY() - mapY, 2)) < 400) {
+                if (Math.pow(entity.getX() - mapX, 2) +
+                        Math.pow(entity.getY() - mapY, 2) <  1.5) {
                     entity.setDead(true);
                 }
             }
@@ -481,17 +481,20 @@ public class Farm {
     }
 
     public boolean catCollect(double y, double x) {
-        int X = (int) x;
-        int Y = (int) y;
         boolean result = false;
-        Vector<Entity> entities = map.getCells()[Y][X].getStuffs();
-        for (Entity entity : entities)
-            if (entity instanceof Item && entity.getVolume() <= wareHouse.getCurrentVolume() && !((Item) entity).isTakenByCat()) {
-                wareHouse.decreaseCurrentVolume(entity.getVolume());
-                ((Item) entity).setTakenByCat(true);
-                wareHouse.add((Item) entity);
-                result = true;
+        for (Entity entity : stuffs){
+            if (entity instanceof Item && !entity.isDead() && !((Item) entity).isTakenByCat()){
+                if (Math.pow(entity.getX() - x, 2)+ Math.pow(entity.getY() - y, 2) < 2){
+                    if (entity.getVolume() <= wareHouse.getCurrentVolume()){
+                        wareHouse.decreaseCurrentVolume(entity.getVolume());
+                        ((Item) entity).setTakenByCat(true);
+                        wareHouse.add((Item) entity);
+                        entity.setDead(true);
+                        result = true;
+                    }
+                }
             }
+        }
         return result;
     }
 
