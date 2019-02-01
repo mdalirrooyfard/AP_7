@@ -3,6 +3,7 @@ package Network;
 import Model.Constants;
 import Model.Farm;
 import Model.Player;
+import View.Graphic.Menu;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -402,9 +403,8 @@ public class ClientGui extends Application {
                 public void handle(MouseEvent event) {
                     if (!player.getFriends().contains(otherPlayer.getUserName()))
                         clientSender.sendFriendRequest(player.getUserName(), otherPlayer.getUserName());
-                    else {
-                        //todo already friend hast
-                    }
+                    else
+                        errorForAleadyBeingFriend();
                 }
             });
 
@@ -634,4 +634,33 @@ public class ClientGui extends Application {
         farm.sendExtraWildAnimal();
     }
 
+    private void errorForAleadyBeingFriend()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0, Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error1 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error4.png")
+                    , 800, 300, false, true);
+            ImageView error1View = new ImageView(error1);
+            error1View.setY(Menu.HEIGHT / 2 - 150);
+            error1View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    root.getChildren().removeAll(rectangle,error1View,okView);
+                }
+            });
+            root.getChildren().addAll(rectangle,error1View,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
 }

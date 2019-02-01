@@ -223,7 +223,7 @@ public class Controller
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
-            if (isMultiPlayer && player.isClient())
+            if (isMultiPlayer && player.isClient() == 2)
                 clientGui.setFarm(farm);
             turnHandler();
         }
@@ -280,7 +280,8 @@ public class Controller
                    player.increaseLevel();
                    player.increaseMoney(farm.getMoney());
                    savePlayers(players);
-                   if (isMultiPlayer && player.isClient()){
+                   if (isMultiPlayer && player.isClient() == 2 )
+                   {
                        clientSender.sendMoney(player.getMoney(), player.getUserName());
                        clientSender.sendLevel(player.getLastLevel(), player.getUserName());
                    }
@@ -799,7 +800,7 @@ public class Controller
             @Override
             public void handle(MouseEvent event)
             {
-                if (isMultiPlayer && player.isClient()){
+                if (isMultiPlayer && player.isClient() == 2){
                     clientGui.setMarket(null);
                     clientSender.sendMarketRequest();
                     market = clientGui.getMarket();
@@ -1781,7 +1782,8 @@ public class Controller
                 loader.getFixedTruck().setX(0);
                 view.getGroup().getChildren().removeAll(loader.getLeftTruck(), loader.getRightTruck());
                 view.getGroup().getChildren().add(loader.getFixedTruck());
-                if (isMultiPlayer && player.isClient()){
+                if (isMultiPlayer && player.isClient() == 2)
+                {
                     clientSender.sendItemsToMarket(farm.getTruck().getItems());
                 }
                 farm.clearFromTruck();
@@ -2318,16 +2320,28 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    try {
-                        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port.getText()));
-                        Server server = new Server(serverSocket, Integer.parseInt(port.getText()));
-                        server.start();
-                        hostMenu = new HostMenu(server);
-                        stage.setScene(hostMenu.getScene());
-                        player.setClient(false);
-                    }catch (IOException e){
-                        e.printStackTrace();
+                    if( player.isClient() == 0 )
+                    {
+                        if( !port.getText().equals("") )
+                        {
+                            try
+                            {
+                                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port.getText()));
+                                Server server = new Server(serverSocket, Integer.parseInt(port.getText()));
+                                server.start();
+                                hostMenu = new HostMenu(stage,player,menu,players,server);
+                                stage.setScene(hostMenu.getScene());
+                                player.setClient(1);
+                            }
+                            catch (IOException e){ e.printStackTrace(); }
+                        }
+                        else
+                            errorForNotEnteringInfo();
                     }
+                    else if( player.isClient() == 2 )
+                        errorForAleadyBeingClient();
+                    else
+                        errorForAleadyBeingHost();
                 }
             });
 
@@ -2443,26 +2457,32 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    try {
-                        if (!serverIP.getText().equals("") && !serverPort.getText().equals("")) {
-                            socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
-                            clientSender = new ClientSender(socket);
-                            clientGui = new ClientGui(clientSender, player);
-                            clientListener = new Thread(new ClientListener(socket, clientGui));
-                            clientListener.start();
-                            clientSender.sendPlayer(player);
-                            isMultiPlayer = true;
-                            stage.setScene(menu.getScene());
-                            player.setClient(true);
-                        } else {
-                            //todo error haye zahra!:D
+                    try
+                    {
+                        if( player.isClient() == 0 )
+                        {
+                            if (!clientPort.getText().equals("") && !serverIP.getText().equals("") && !serverPort.getText().equals(""))
+                            {
+                                socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
+                                clientSender = new ClientSender(socket);
+                                clientGui = new ClientGui(clientSender, player);
+                                clientListener = new Thread(new ClientListener(socket, clientGui));
+                                clientListener.start();
+                                clientSender.sendPlayer(player);
+                                isMultiPlayer = true;
+                                stage.setScene(menu.getScene());
+                                player.setClient(2);
+                            }
+                            else
+                                errorForNotEnteringInfo();
                         }
-                        //if( clientPort.getText().equals("") )
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        else if( player.isClient() == 2 )
+                            errorForAleadyBeingClient();
+                        else
+                            errorForAleadyBeingHost();
                     }
+                    catch (UnknownHostException e) { e.printStackTrace(); }
+                    catch (IOException e) { e.printStackTrace(); }
                 }
             });
 
@@ -2490,6 +2510,96 @@ public class Controller
 
             multiplayer.getGroup().getChildren().addAll(rectangle,clientInfoView,exitView,clientPortLabel,clientPort,
                     clientIPAddress,serverIPAddress,serverPort,okView,serverIP,serverPortLabel);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void errorForAleadyBeingClient()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error1 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error1.png")
+                    , 800, 300, false, true);
+            ImageView error1View = new ImageView(error1);
+            error1View.setY(Menu.HEIGHT / 2 - 150);
+            error1View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    view.getGroup().getChildren().removeAll(rectangle,error1View,okView);
+                }
+            });
+            view.getGroup().getChildren().addAll(rectangle,error1View,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void errorForAleadyBeingHost()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error2 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error2.png")
+                    , 800, 300, false, true);
+            ImageView error2View = new ImageView(error2);
+            error2View.setY(Menu.HEIGHT / 2 - 150);
+            error2View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    view.getGroup().getChildren().removeAll(rectangle,error2View,okView);
+                }
+            });
+            view.getGroup().getChildren().addAll(rectangle,error2View,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void errorForNotEnteringInfo()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error2 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error3.png")
+                    , 800, 300, false, true);
+            ImageView error2View = new ImageView(error2);
+            error2View.setY(Menu.HEIGHT / 2 - 150);
+            error2View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    view.getGroup().getChildren().removeAll(rectangle,error2View,okView);
+                }
+            });
+            view.getGroup().getChildren().addAll(rectangle,error2View,okView);
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }

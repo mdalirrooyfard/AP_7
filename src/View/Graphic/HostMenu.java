@@ -13,13 +13,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -32,21 +30,22 @@ import java.util.Vector;
 public class HostMenu
 {
     Stage stage;
-    public static final double WIDTH = Screen.getPrimary().getVisualBounds().getWidth();
-    public static final double HEIGHT = Screen.getPrimary().getVisualBounds().getHeight();
-    private Options optionsScene;
     private Group group = new Group();
-    private Scene scene = new Scene(group, WIDTH, HEIGHT);
-    private Player player = new Player("",0);
+    private Scene scene = new Scene(group, Constants.WIDTH, Constants.HEIGHT);
+    private Player player;
     private Vector<Player> players;
-    private boolean muteMusic = false , muteSound = false , fullScreen = true;
-    private MediaPlayer mediaPlayer;
-    private Menu menu;
+    private boolean muteMusic , muteSound , isFullScreen;
     private Server server;
     private VBox leaderBoardBox;
 
-    public HostMenu(Server server)
+    public HostMenu( Stage stage , Player player , Menu menu , Vector<Player> players , Server server)
     {
+        this.stage = stage;
+        this.player = player;
+        muteMusic = menu.isMusicMuted();
+        isFullScreen = menu.isFullScreen();
+        muteSound = menu.isSoundMuted();
+        this.players = players;
         try
         {
             this.server = server;
@@ -71,13 +70,16 @@ public class HostMenu
             ImageView optionsView = insertOptions();
             ImageView exitView = insertExit();
 
-            leaderBoardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            leaderBoardView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event)
+                {
                     Vector<Player> players = new Vector<>();
                     HashMap<String, Player> users = server.getServerSender().getUsernames();
                     int numberOfLines = 0;
-                    for (String s : users.keySet()) {
+                    for (String s : users.keySet())
+                    {
                         players.add(users.get(s));
                         numberOfLines++;
                     }
@@ -85,17 +87,20 @@ public class HostMenu
                 }
             });
 
-            chatRoomView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            chatRoomView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
-                    try {
-                        if (!server.getServerGui().getOpen()) {
+                public void handle(MouseEvent event)
+                {
+                    try
+                    {
+                        if (!server.getServerGui().getOpen())
+                        {
                             Stage stage = new Stage();
                             server.getServerGui().start(stage);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                    catch (Exception e) { e.printStackTrace(); }
                 }
             });
 
@@ -104,7 +109,7 @@ public class HostMenu
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    stage.setScene(optionsScene.getScene());
+                    optionsHandler(menu);
                 }
             });
 
@@ -211,8 +216,8 @@ public class HostMenu
             Image leaderBoard = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\leaderBoardButton.png")
                     ,250,81,false,true);
             ImageView leaderBoardView = new ImageView(leaderBoard);
-            leaderBoardView.setY(HEIGHT / 3);
-            leaderBoardView.setX(WIDTH - 400);
+            leaderBoardView.setY(Constants.HEIGHT / 3);
+            leaderBoardView.setX(Constants.WIDTH - 400);
             return leaderBoardView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -226,8 +231,8 @@ public class HostMenu
             Image chatRoom = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\chatRoomButton.png")
                     ,250,81,false,true);
             ImageView chatRoomView = new ImageView(chatRoom);
-            chatRoomView.setY(HEIGHT / 2);
-            chatRoomView.setX(WIDTH - 400);
+            chatRoomView.setY(Constants.HEIGHT / 2);
+            chatRoomView.setX(Constants.WIDTH - 400);
             return chatRoomView;
         }
         catch ( Exception e ) { e.printStackTrace(); }
@@ -241,11 +246,11 @@ public class HostMenu
             Image options = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\optionsButton.png")
                     , 250, 81, false, true);
             ImageView optionsView = new ImageView(options);
-            optionsView.setY(HEIGHT * 2 / 3);
-            optionsView.setX(WIDTH - 400);
+            optionsView.setY(Constants.HEIGHT * 2 / 3);
+            optionsView.setX(Constants.WIDTH - 400);
             return optionsView;
         }
-        catch ( Exception e ){}
+        catch ( Exception e ){ e.printStackTrace(); }
         return null;
     }
 
@@ -256,11 +261,211 @@ public class HostMenu
             Image exit = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\exitButton.png")
                     , 250, 81, false, true);
             ImageView exitView = new ImageView(exit);
-            exitView.setY(HEIGHT * 5 / 6);
-            exitView.setX(WIDTH - 400);
+            exitView.setY(Constants.HEIGHT * 5 / 6);
+            exitView.setX(Constants.WIDTH - 400);
             return exitView;
         }
-        catch ( Exception e ){}
+        catch ( Exception e ){ e.printStackTrace(); }
+        return null;
+    }
+
+    private void optionsHandler(Menu menu)
+    {
+        try
+        {
+            Image menuBackground = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\menuBackground.png")
+                    , 550, Menu.HEIGHT, false, true);
+            ImageView menuBackgroundView = new ImageView(menuBackground);
+            menuBackgroundView.setY(0);
+            menuBackgroundView.setX(Menu.WIDTH - 550);
+
+            Image soundIconMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\muteSoundButton.png")
+                    , 102, 98, false, true);
+            Image soundIconUnMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\soundButton.png")
+                    , 102, 98, false, true);
+
+            Image musicIconMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\musicMuteButton.png")
+                    , 102, 98, false, true);
+            Image musicIconUnMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\musicButton.png")
+                    , 102, 98, false, true);
+
+            Image uncheckedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxFalse.png")
+                    , 25, 25, false, true);
+            Image checkedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxTrue.png")
+                    , 25, 25, false, true);
+
+            Label sound = new Label("Sound On/Off : ");
+            sound.setLayoutY(Menu.HEIGHT / 4);
+            sound.setLayoutX(Menu.WIDTH - 400);
+            sound.setTextFill(Color.rgb(54,16,0));
+            sound.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,25));
+
+            Label music = new Label("Music On/Off : ");
+            music.setLayoutY(Menu.HEIGHT / 2);
+            music.setLayoutX(Menu.WIDTH - 400);
+            music.setTextFill(Color.rgb(54,16,0));
+            music.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,25));
+
+            Label fullScreen = new Label("Full Screen On/Off : ");
+            fullScreen.setLayoutY(Menu.HEIGHT * 3 / 4);
+            fullScreen.setLayoutX(Menu.WIDTH - 400);
+            fullScreen.setTextFill(Color.rgb(54,16,0));
+            fullScreen.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,25));
+
+            ImageView soundView = insertSoundOption();
+            ImageView musicView = insertMusicOption();
+            ImageView fullScreenView = insertFullScreenOption();
+            ImageView backView = insertBack();
+
+            soundView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    //TODO really mute sound!
+                    if( muteSound )
+                    {
+                        muteSound = false;
+                        soundView.setImage(soundIconUnMute);
+                    }
+                    else
+                    {
+                        muteSound = true;
+                        soundView.setImage(soundIconMute);
+                    }
+                }
+            });
+
+            musicView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    if( muteMusic )
+                    {
+                        musicView.setImage(musicIconUnMute);
+                        menu.getMediaPlayer().play();
+                        muteMusic = false;
+                    }
+                    else
+                    {
+                        musicView.setImage(musicIconMute);
+                        menu.getMediaPlayer().stop();
+                        muteMusic = true;
+                    }
+                }
+            });
+
+            fullScreenView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    if( isFullScreen )
+                    {
+                        fullScreenView.setImage(uncheckedCheckBox);
+                        stage.setFullScreen(false);
+                        isFullScreen = false;
+                    }
+                    else
+                    {
+                        fullScreenView.setImage(checkedCheckBox);
+                        stage.setFullScreen(true);
+                        isFullScreen = true;
+                    }
+                }
+            });
+
+            backView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    group.getChildren().removeAll(soundView,sound,fullScreen,music,menuBackgroundView,musicView,fullScreenView,backView);
+                }
+            });
+            group.getChildren().addAll(menuBackgroundView,soundView,sound,fullScreen,music,musicView,fullScreenView,backView);
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+    }
+
+    private ImageView insertBack()
+    {
+        try
+        {
+            Image back = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\backButton.png")
+                    , 84, 79, false, true);
+            ImageView backView = new ImageView(back);
+            backView.setY(0);
+            backView.setY(Menu.HEIGHT - 150);
+            backView.setX(Menu.WIDTH - 500);
+            return backView;
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+        return null;
+    }
+
+    private ImageView insertSoundOption()
+    {
+        try
+        {
+            Image soundIconMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\muteSoundButton.png")
+                    , 102, 98, false, true);
+            Image soundIconUnMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\soundButton.png")
+                    , 102, 98, false, true);
+            ImageView soundIconView;
+            if( muteSound )
+                soundIconView = new ImageView(soundIconMute);
+            else
+                soundIconView = new ImageView(soundIconUnMute);
+            soundIconView.setY(Menu.HEIGHT / 4);
+            soundIconView.setX(Menu.WIDTH - 198);
+            return soundIconView;
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+        return null;
+    }
+
+    private ImageView insertMusicOption()
+    {
+        try
+        {
+            Image musicIconMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\musicMuteButton.png")
+                    , 102, 98, false, true);
+            Image musicIconUnMute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\musicButton.png")
+                    , 102, 98, false, true);
+            ImageView musicIconView;
+            if( muteMusic )
+                musicIconView = new ImageView(musicIconMute);
+            else
+                musicIconView = new ImageView(musicIconUnMute);
+            musicIconView.setY(Menu.HEIGHT / 2);
+            musicIconView.setX(Menu.WIDTH - 198);
+            return  musicIconView;
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
+        return null;
+    }
+
+    private ImageView insertFullScreenOption()
+    {
+        //TODO fullScreen still has problem!
+        try
+        {
+            Image uncheckedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxFalse.png")
+                    , 25, 25, false, true);
+            Image checkedCheckBox = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\checkBoxTrue.png")
+                    , 25, 25, false, true);
+            ImageView fullScreenView;
+            if( isFullScreen )
+                fullScreenView = new ImageView(checkedCheckBox);
+            else
+                fullScreenView = new ImageView(uncheckedCheckBox);
+            fullScreenView.setY(Menu.HEIGHT * 3 / 4 + 10);
+            fullScreenView.setX(Menu.WIDTH - 135);
+            return fullScreenView;
+        }
+        catch ( Exception e ){ e.printStackTrace(); }
         return null;
     }
 
@@ -268,28 +473,27 @@ public class HostMenu
     {
         try
         {
-            Rectangle rectangle = new Rectangle(0,0,WIDTH,HEIGHT);
+            Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
             rectangle.setFill(Color.rgb(54,16,0));
             rectangle.setOpacity(0.7);
 
             Image exitMessage = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\exitMessageBox.png")
                     , 800, 300, false, true);
             ImageView exitMessageView = new ImageView(exitMessage);
-            exitMessageView.setY(HEIGHT / 2 - 150);
-            exitMessageView.setX(WIDTH / 2 - 400);
+            exitMessageView.setY(Constants.HEIGHT / 2 - 150);
+            exitMessageView.setX(Constants.WIDTH / 2 - 400);
 
             Image yes = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\YesButton.png")
                     , 153, 145, false, true);
             ImageView yesView = new ImageView(yes);
-            yesView.setY(HEIGHT / 2 + 150);
-            yesView.setX(WIDTH / 2 - 200);
+            yesView.setY(Constants.HEIGHT / 2 + 150);
+            yesView.setX(Constants.WIDTH / 2 - 200);
             yesView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    if( player != null )
-                        player.setLastPlayer(true);
+                    player.setLastPlayer(true);
                     for( Player p : players )
                         if( p.isLastPlayer() && p != player )
                             p.setLastPlayer(false);
@@ -301,8 +505,8 @@ public class HostMenu
             Image no = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\NoButton.png")
                     , 153, 146, false, true);
             ImageView noView = new ImageView(no);
-            noView.setY(HEIGHT / 2 + 150 );
-            noView.setX(WIDTH / 2 + 47);
+            noView.setY(Constants.HEIGHT / 2 + 150 );
+            noView.setX(Constants.WIDTH / 2 + 47);
             noView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -321,12 +525,12 @@ public class HostMenu
             });
             group.getChildren().addAll(rectangle,exitMessageView,yesView,noView);
         }
-        catch ( Exception e ){}
+        catch ( Exception e ){ e.printStackTrace(); }
     }
 
     private Label insertPlayer()
     {
-        Label playerName = new Label(player.getName());
+        Label playerName = new Label("Player: " + player.getName());
         playerName.setTextFill(Color.rgb(54,16,0));
         playerName.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
         playerName.setLayoutX(Menu.WIDTH - 470);
