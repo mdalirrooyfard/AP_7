@@ -1,13 +1,11 @@
 package Network;
 
-import Model.Farm;
 import Model.Player;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Vector;
@@ -43,7 +41,12 @@ public class ClientListener implements Runnable{
                 //todo fill this switch
                 switch (command.getType()) {
                     case SEND_MASSAGE:
-                        clientGui.putInCharArea((String) command.getContent());
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                clientGui.putInCharArea((String) command.getContent());
+                            }
+                        });
                         break;
                     case PLAYER_JOINED:
                         Platform.runLater(new Runnable() {

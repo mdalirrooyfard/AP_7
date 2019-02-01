@@ -7,7 +7,10 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +24,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,12 +44,14 @@ public class ClientGui extends Application {
     private Farm farm;
     private HashMap<String, Boolean> friendRequests = new HashMap<>();
     private int first = 0;
-
+    private int y = 30;
 
     public ClientGui(ClientSender clientSender, Player player) {
         this.clientSender = clientSender;
         this.player = player;
         this.isOpen = false;
+        area.layout();
+        chatArea.setVvalue(1.0);
         this.chatArea.setContent(area);
     }
 
@@ -83,8 +87,9 @@ public class ClientGui extends Application {
         HBox hBox1 = new HBox(20, textField, send, list, leaderBoard);
         VBox vBox = new VBox(20, hBox1, hBox);
         chatArea.setMinHeight(560);
+        chatArea.setMinWidth(600);
         root.getChildren().add(vBox);
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 600, 600);
         send.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -241,7 +246,22 @@ public class ClientGui extends Application {
     }
 
     public void putInCharArea(String message) {
-        //todo fereshte
+        Label label = new Label();
+        label.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        if(message.startsWith(player.getName())){
+            String[] strings = message.split(":" , 2);
+            message = strings[1].trim();
+            label.setLayoutX(600 - (message.length()+1)*8);
+            label.setLayoutY(y);
+            label.setText(message);
+        }
+        else{
+            label.setLayoutX(10);
+            label.setLayoutY(y);
+            label.setText(message);
+        }
+        area.getChildren().addAll(label);
+        y += 100;
     }
 
     public void playerJoinedMessage(String userName) {
