@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -1158,41 +1159,46 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    if (w instanceof CustomFactory)
+                    if( event.getButton().equals(MouseButton.PRIMARY) )
                     {
-                        animationTimer.stop();
-                        recipeSetter.makeScene(view, farm, loader.getItems(), animationTimer, loader);
-                    }
-                    else
-                    {
-                        int result = farm.startWorkShop(w.getWorkShopName());
-                        if (result > 0)
+                        if (w instanceof CustomFactory)
                         {
-                            view.getGroup().getChildren().remove(imageView);
-                            flagWareHouse = 0;
-                            view.getGroup().getChildren().remove(arrowViewWareHouse);
-                            ImageView imageView1;
-                            if (w instanceof CakeBakery)
-                                imageView1 = loader.getMovingCakeBakery();
-                            else if (w instanceof CookieBakery)
-                                imageView1 = loader.getMovingCookieBakery();
-                            else if (w instanceof EggPowderPlant)
-                                imageView1 = loader.getMovingEggPowderPlant();
-                            else if (w instanceof SewingFactory)
-                                imageView1 = loader.getMovingSewingFactory();
-                            else if (w instanceof Spinnery)
-                                imageView1 = loader.getMovingSpinnery();
-                            else
-                                imageView1 = loader.getMovingWeavingFactory();
-                            imageView1.setX(w.getShowX());
-                            imageView1.setY(w.getShowY());
-                            view.getGroup().getChildren().add(imageView1);
-                            AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
-                                    4, 4, 16, 200, 200, 16);
-                            flyingItems(w.getInputs(), result, w);
-                            imageViewSprite.start();
+                            animationTimer.stop();
+                            recipeSetter.makeScene(view, farm, loader.getItems(), animationTimer, loader);
+                        }
+                        else
+                        {
+                            int result = farm.startWorkShop(w.getWorkShopName());
+                            if (result > 0)
+                            {
+                                view.getGroup().getChildren().remove(imageView);
+                                flagWareHouse = 0;
+                                view.getGroup().getChildren().remove(arrowViewWareHouse);
+                                ImageView imageView1;
+                                if (w instanceof CakeBakery)
+                                    imageView1 = loader.getMovingCakeBakery();
+                                else if (w instanceof CookieBakery)
+                                    imageView1 = loader.getMovingCookieBakery();
+                                else if (w instanceof EggPowderPlant)
+                                    imageView1 = loader.getMovingEggPowderPlant();
+                                else if (w instanceof SewingFactory)
+                                    imageView1 = loader.getMovingSewingFactory();
+                                else if (w instanceof Spinnery)
+                                    imageView1 = loader.getMovingSpinnery();
+                                else
+                                    imageView1 = loader.getMovingWeavingFactory();
+                                imageView1.setX(w.getShowX());
+                                imageView1.setY(w.getShowY());
+                                view.getGroup().getChildren().add(imageView1);
+                                AnimationTimer imageViewSprite = new ImageViewSprite(imageView1, 1, false,
+                                        4, 4, 16, 200, 200, 16);
+                                flyingItems(w.getInputs(), result, w);
+                                imageViewSprite.start();
+                            }
                         }
                     }
+                    else
+                        workshopInfo(w);
                 }
             });
             ImageView upgrade = new ImageView(loader.getUpgradeButton());
@@ -1284,6 +1290,67 @@ public class Controller
                 }
             });
             view.getGroup().getChildren().addAll(upgrade, label);
+        }
+    }
+
+    private void workshopInfo( Workshop workshop )
+    {
+        if( workshop.getInputs().size() > 0 )
+        {
+            try
+            {
+                animationTimer.stop();
+                Rectangle rectangle = new Rectangle(0,0,Constants.WIDTH,Constants.HEIGHT);
+                rectangle.setFill(Color.rgb(54,16,0));
+                rectangle.setOpacity(0.7);
+
+                Image infoBack = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\messageBox.png")
+                        , 500, 506, false, true);
+                ImageView infoBackView = new ImageView(infoBack);
+                infoBackView.setY(Constants.HEIGHT / 2 - 253);
+                infoBackView.setX(Constants.WIDTH / 2 - 250);
+
+                Label label1 = new Label("Inputs:");
+                label1.setTextFill(Color.rgb(54,16,0));
+                label1.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+                label1.setLayoutX(Menu.WIDTH / 2 - 200);
+                label1.setLayoutY(Menu.HEIGHT / 2 - 230);
+
+                Label label2 = new Label("Output:");
+                label2.setTextFill(Color.rgb(54,16,0));
+                label2.setFont(Font.font("Segoe Print", FontWeight.BOLD, FontPosture.REGULAR,30));
+                label2.setLayoutX(Menu.WIDTH / 2 - 200);
+                label2.setLayoutY(Menu.HEIGHT / 2);
+
+                ImageView[] inputs = new ImageView[workshop.getInputs().size()];
+                ImageView output = new ImageView(loader.getItems().get(workshop.getOutput()));
+                output.setFitHeight(56);
+                output.setFitWidth(56);
+                output.setY(Constants.HEIGHT / 2 + 60);
+                output.setX(Constants.WIDTH / 2 - 180);
+                for( int i = 0 ; i < workshop.getInputs().size() ; i++ )
+                {
+                    inputs[i] = new ImageView(loader.getItems().get(workshop.getInputs().get(i)));
+                    inputs[i].setFitHeight(56);
+                    inputs[i].setFitWidth(56);
+                    inputs[i].setY(Constants.HEIGHT / 2 - 170 + ( i / 5 ) * 76);
+                    inputs[i].setX(Constants.WIDTH / 2 - 190 + ( i % 5 ) * 76);
+                }
+                rectangle.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
+                    @Override
+                    public void handle(MouseEvent event)
+                    {
+                        view.getGroup().getChildren().removeAll(rectangle,infoBackView,label1,label2,output);
+                        view.getGroup().getChildren().removeAll(inputs);
+                        animationTimer.start();
+                    }
+                });
+
+                view.getGroup().getChildren().addAll(rectangle,infoBackView,label1,label2,output);
+                view.getGroup().getChildren().addAll(inputs);
+            }
+            catch ( Exception e ) { e.printStackTrace(); }
         }
     }
 
