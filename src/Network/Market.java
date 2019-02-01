@@ -1,5 +1,6 @@
 package Network;
 
+import Model.Constants;
 import Model.Items.Item;
 
 import java.util.HashMap;
@@ -8,8 +9,8 @@ public class Market {
     private HashMap<String, Integer> items = new HashMap<>();
 
     public Market(){
-        items.put("cagedGrizzly", 3);
-        //todo fill this
+        for (String kind : Constants.ITEM_NAMES)
+            items.put(kind, 10);
     }
 
     public void add(String kind){
