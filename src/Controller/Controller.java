@@ -76,7 +76,7 @@ public class Controller
     private Thread clientListener;
     private ClientGui clientGui;
     private  int flagWell = 0 , flagWareHouse = 0;
-    private Image moneyIcon ,  arrow;
+    private Image moneyIcon ,  arrow , parachute;
     private RecipeSetter recipeSetter = new RecipeSetter();
     private Socket socket;
     {
@@ -84,6 +84,7 @@ public class Controller
         {
             moneyIcon = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\money.png"));
             arrow = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\arrow.png"));
+            parachute = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\parachute.png"));
         }
         catch (FileNotFoundException e) { e.printStackTrace(); }
     }
@@ -1492,7 +1493,7 @@ public class Controller
                 for (Entity e : stuffs)
                 {
                     ImageView imageView = null;
-                    if( e instanceof Item && !e.isDead() && !((Item) e).isReceivedByHelicopter() )
+                    if( e instanceof Item && !e.isDead() )
                     {
                         imageView = new ImageView(loader.getItems().get(((Item) e).getKind()));
                         imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -1502,11 +1503,8 @@ public class Controller
                             {
                                 boolean result = farm.pickUp(e.getX(), e.getY());
                                 if (!result)
-                                {
-                                    arrowTo(farm.getWareHouse().getShowX() + 180
-                                            , farm.getWareHouse().getShowY() - 50 ,
+                                    arrowTo(farm.getWareHouse().getShowX() + 180, farm.getWareHouse().getShowY() - 50 ,
                                             arrowViewWareHouse , false);
-                                }
                                 else
                                 {
                                     flyingItemToWarehouse((Item) e);

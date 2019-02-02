@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Item extends Entity implements Serializable
 {
     private String kind ;
-    private boolean isTakenByCat = false , isReceivedByHelicopter;
+    private boolean isTakenByCat = false;
 
     public Item(double x , double  y , String kind)
     {
@@ -29,16 +29,6 @@ public class Item extends Entity implements Serializable
 
     public String getKind() {
         return kind;
-    }
-
-    public boolean isReceivedByHelicopter()
-    {
-        return isReceivedByHelicopter;
-    }
-
-    public void setReceivedByHelicopter(boolean receivedByHelicopter)
-    {
-        isReceivedByHelicopter = receivedByHelicopter;
     }
 
     public boolean isTakenByCat() {
