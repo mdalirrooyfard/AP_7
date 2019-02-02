@@ -9,7 +9,8 @@ public class Transportations extends Entity
 {
     private Vector<Item> items = new Vector<>();
     private boolean isMoving = false ;
-    private int workingTime , currentTime , movingScale = 3;
+    private int workingTime , currentTime;
+    private double movingScale = 3;
     private double prevMovingX , nextMovingX;
 
     public double getPrevMovingX()
@@ -32,7 +33,7 @@ public class Transportations extends Entity
         this.nextMovingX = nextMovingX;
     }
 
-    public int getMovingScale()
+    public double getMovingScale()
     {
         return movingScale;
     }

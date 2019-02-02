@@ -38,7 +38,6 @@ public class ClientListener implements Runnable{
         try {
             while(true) {
                 Command command = (Command) objectInputStream.readObject();
-                //todo fill this switch
                 switch (command.getType()) {
                     case SEND_MASSAGE:
                         Platform.runLater(new Runnable() {

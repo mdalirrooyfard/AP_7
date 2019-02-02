@@ -39,7 +39,6 @@ import java.io.*;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Formatter;
@@ -223,7 +222,7 @@ public class Controller
             stage.setScene(view.getScene());
             loader.loadImages(farm);
             makeScene();
-            if (isMultiPlayer && player.isClient())
+            if (isMultiPlayer && player.isClient() == 2)
                 clientGui.setFarm(farm);
             turnHandler();
         }
@@ -280,7 +279,8 @@ public class Controller
                    player.increaseLevel();
                    player.increaseMoney(farm.getMoney());
                    savePlayers(players);
-                   if (isMultiPlayer && player.isClient()){
+                   if (isMultiPlayer && player.isClient() == 2 )
+                   {
                        clientSender.sendMoney(player.getMoney(), player.getUserName());
                        clientSender.sendLevel(player.getLastLevel(), player.getUserName());
                    }
@@ -799,17 +799,19 @@ public class Controller
             @Override
             public void handle(MouseEvent event)
             {
-                if (isMultiPlayer && player.isClient()){
+                if (isMultiPlayer && player.isClient() == 2)
+                {
                     clientGui.setMarket(null);
                     clientSender.sendMarketRequest();
                     market = clientGui.getMarket();
-                    while (market == null){
+                    while (market == null)
+                    {
                         market = clientGui.getMarket();
                     }
                 }
                 animationTimer.stop();
                 stage.setScene(orderPage.getScene(stage,view,farm,isMultiPlayer,market.getItems(),loader.getItems(),
-                        loader.getLeftHelicopter(),loader.getFixedHelicopter(), animationTimer, clientSender));
+                        loader.getRightHelicopter(),loader.getFixedHelicopter(), animationTimer, clientSender));
             }
         });
     }
@@ -1443,6 +1445,30 @@ public class Controller
         }
     }
 
+    private void flyingItemToWarehouse(Item item)
+    {
+        ImageView movingItem = new ImageView(loader.getItems().get(item.getKind()));
+        int counter = 0;
+        double startX = item.getShowX();
+        double startY = item.getShowY();
+        double displacement = 18;
+        movingItem.setX(startX);
+        movingItem.setY(startY + counter * displacement);
+        view.getGroup().getChildren().add(movingItem);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(3000) , movingItem);
+        translateTransition.setToX(- movingItem.getX() + farm.getWareHouse().getShowX() + 100);
+        translateTransition.setToY(- movingItem.getY() + farm.getWareHouse().getShowY() + 100);
+        translateTransition.play();
+        translateTransition.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                view.getGroup().getChildren().remove(movingItem);
+            }
+        });
+    }
+
     private void servicesIcons()
     {
         show(loader.getFixedTruck() , farm.getTruck());
@@ -1466,19 +1492,24 @@ public class Controller
                 for (Entity e : stuffs)
                 {
                     ImageView imageView = null;
-                    if(e instanceof Item && !e.isDead()) {
+                    if( e instanceof Item && !e.isDead() && !((Item) e).isReceivedByHelicopter() )
+                    {
                         imageView = new ImageView(loader.getItems().get(((Item) e).getKind()));
-                        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
                             @Override
-                            public void handle(MouseEvent event) {
-                                double x = e.getX();
-                                double y = e.getY();
-                                boolean result = farm.pickUp(x, y);
-                                if (!result){
+                            public void handle(MouseEvent event)
+                            {
+                                boolean result = farm.pickUp(e.getX(), e.getY());
+                                if (!result)
+                                {
                                     arrowTo(farm.getWareHouse().getShowX() + 180
                                             , farm.getWareHouse().getShowY() - 50 ,
                                             arrowViewWareHouse , false);
-                                }else{
+                                }
+                                else
+                                {
+                                    flyingItemToWarehouse((Item) e);
                                     flagWareHouse = 0;
                                     view.getGroup().getChildren().remove(arrowViewWareHouse);
                                 }
@@ -1666,44 +1697,46 @@ public class Controller
         {
             if( farm.getHelicopter().getCurrentTime() > 0 )
             {
-                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 1.8 )
+                if ( farm.getHelicopter().getCurrentTime() > farm.getHelicopter().getWorkingTime() / 2 )
                 {
-                    loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX() + 550);
-                    loader.getLeftHelicopter().setY(loader.getFixedHelicopter().getY());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(), 1,
+                    if (!view.getGroup().getChildren().contains(loader.getRightHelicopter()))
+                        view.getGroup().getChildren().add(loader.getRightHelicopter());
+                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getRightHelicopter().setY(10);
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(), 1,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
-                            farm.getHelicopter().getPrevMovingX()+550, loader.getFixedHelicopter().getY(),
-                            farm.getHelicopter().getNextMovingX()+550, loader.getFixedHelicopter().getY(), 2000);
+                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(),10, farm.getHelicopter().getNextMovingX(),
+                            10, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
-                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - Constants.movingScale);
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + farm.getHelicopter().getMovingScale());
                 }
                 else
                 {
                     if( farm.getHelicopter().getCurrentTime() == farm.getHelicopter().getWorkingTime() / 2 )
                     {
-                        view.getGroup().getChildren().remove(loader.getLeftHelicopter());
-                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                        view.getGroup().getChildren().remove(loader.getRightHelicopter());
+                        farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - farm.getHelicopter().getMovingScale());
                     }
-                    loader.getRightHelicopter().setX(farm.getHelicopter().getPrevMovingX() + 550);
-                    loader.getRightHelicopter().setY(loader.getFixedHelicopter().getY());
-                    if (!view.getGroup().getChildren().contains(loader.getRightHelicopter()))
-                        view.getGroup().getChildren().add(loader.getRightHelicopter());
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightHelicopter(),2,
+                    loader.getLeftHelicopter().setX(farm.getHelicopter().getPrevMovingX());
+                    loader.getLeftHelicopter().setY(10);
+                    if (!view.getGroup().getChildren().contains(loader.getLeftHelicopter()))
+                        view.getGroup().getChildren().add(loader.getLeftHelicopter());
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftHelicopter(),1,
                             false, 3, 2, 6, 48, 48, 6);
                     animationTimer.start();
-                    MoveTransition pathTransition = new MoveTransition(loader.getRightHelicopter(),
-                            farm.getHelicopter().getPrevMovingX()+550, loader.getFixedHelicopter().getY(),
-                            farm.getHelicopter().getNextMovingX()+550, loader.getFixedHelicopter().getY(), 2000);
+                    MoveTransition pathTransition = new MoveTransition(loader.getLeftHelicopter(),
+                            farm.getHelicopter().getPrevMovingX(),10, farm.getHelicopter().getNextMovingX(),
+                            10, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getHelicopter().setPrevMovingX(farm.getHelicopter().getNextMovingX());
-                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() + Constants.movingScale);
+                    farm.getHelicopter().setNextMovingX(farm.getHelicopter().getNextMovingX() - farm.getHelicopter().getMovingScale());
                 }
                 farm.getHelicopter().decreaseCurrentTime(1);
             }
@@ -1714,7 +1747,7 @@ public class Controller
                 loader.getFixedHelicopter().setFitWidth(220);
                 loader.getFixedHelicopter().setY(0);
                 loader.getFixedHelicopter().setX(0);
-                view.getGroup().getChildren().removeAll(loader.getLeftHelicopter(), loader.getRightHelicopter());
+                view.getGroup().getChildren().removeAll(loader.getLeftHelicopter());
                 view.getGroup().getChildren().add(loader.getFixedHelicopter());
                 farm.clearFromHelicopter();
             }
@@ -1727,48 +1760,46 @@ public class Controller
         {
             if( farm.getTruck().getCurrentTime() > 0 )
             {
-                if ( farm.getTruck().getCurrentTime() > farm.getTruck().getWorkingTime() / 1.8 )
+                if ( farm.getTruck().getCurrentTime() > farm.getTruck().getWorkingTime() / 2 )
                 {
+                    if (!view.getGroup().getChildren().contains(loader.getRightTruck()))
+                        view.getGroup().getChildren().add(loader.getRightTruck());
                     loader.getRightTruck().setX(farm.getTruck().getPrevMovingX());
-                    loader.getRightTruck().setY(loader.getFixedTruck().getY() + 50);
-                    loader.getRightTruck().setFitWidth(48);
-                    loader.getRightTruck().setFitHeight(48);
-                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 2,
+                    loader.getRightTruck().setY(60);
+                    AnimationTimer animationTimer = new ImageViewSprite(loader.getRightTruck(), 1,
                             false, 2, 1, 2, 48, 48, 2);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getRightTruck(),
-                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY()+50,
-                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY()+50, 2000);
+                            farm.getTruck().getPrevMovingX(), 60,
+                            farm.getTruck().getNextMovingX(), 60, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getTruck().setPrevMovingX(farm.getTruck().getNextMovingX());
-                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + Constants.movingScale);
+                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + farm.getTruck().getMovingScale());
                 }
                 else
                 {
                     if( farm.getTruck().getCurrentTime() == farm.getTruck().getWorkingTime() / 2 )
                     {
                         view.getGroup().getChildren().remove(loader.getRightTruck());
-                        farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() + Constants.movingScale);
+                        farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - farm.getTruck().getMovingScale());
                     }
                     loader.getLeftTruck().setX(farm.getTruck().getPrevMovingX());
-                    loader.getLeftTruck().setY(loader.getFixedTruck().getY() + 50);
-                    loader.getLeftTruck().setFitWidth(48);
-                    loader.getLeftTruck().setFitHeight(48);
+                    loader.getLeftTruck().setY(60);
                     if (!view.getGroup().getChildren().contains(loader.getLeftTruck()))
                         view.getGroup().getChildren().add(loader.getLeftTruck());
                     AnimationTimer animationTimer = new ImageViewSprite(loader.getLeftTruck(),1,
                             false, 2, 1, 2, 48, 48, 2);
                     animationTimer.start();
                     MoveTransition pathTransition = new MoveTransition(loader.getLeftTruck(),
-                            farm.getTruck().getPrevMovingX(), loader.getFixedTruck().getY()+50,
-                            farm.getTruck().getNextMovingX(), loader.getFixedTruck().getY()+50, 2000);
+                            farm.getTruck().getPrevMovingX(), 60, farm.getTruck().getNextMovingX(),
+                            60, 1500);
                     pathTransition.setAutoReverse(false);
                     pathTransition.setCycleCount(1);
                     pathTransition.play();
                     farm.getTruck().setPrevMovingX(farm.getTruck().getNextMovingX());
-                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - Constants.movingScale);
+                    farm.getTruck().setNextMovingX(farm.getTruck().getNextMovingX() - farm.getTruck().getMovingScale());
                 }
                 farm.getTruck().decreaseCurrentTime(1);
             }
@@ -1779,9 +1810,10 @@ public class Controller
                 loader.getFixedTruck().setFitWidth(200);
                 loader.getFixedTruck().setY(0);
                 loader.getFixedTruck().setX(0);
-                view.getGroup().getChildren().removeAll(loader.getLeftTruck(), loader.getRightTruck());
+                view.getGroup().getChildren().removeAll(loader.getLeftTruck());
                 view.getGroup().getChildren().add(loader.getFixedTruck());
-                if (isMultiPlayer && player.isClient()){
+                if (isMultiPlayer && player.isClient() == 2)
+                {
                     clientSender.sendItemsToMarket(farm.getTruck().getItems());
                 }
                 farm.clearFromTruck();
@@ -2318,16 +2350,28 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    try {
-                        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port.getText()));
-                        Server server = new Server(serverSocket, Integer.parseInt(port.getText()));
-                        server.start();
-                        hostMenu = new HostMenu(server);
-                        stage.setScene(hostMenu.getScene());
-                        player.setClient(false);
-                    }catch (IOException e){
-                        e.printStackTrace();
+                    if( player.isClient() == 0 )
+                    {
+                        if( !port.getText().equals("") )
+                        {
+                            try
+                            {
+                                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port.getText()));
+                                Server server = new Server(serverSocket, Integer.parseInt(port.getText()));
+                                server.start();
+                                hostMenu = new HostMenu(stage,player,menu,players,server);
+                                stage.setScene(hostMenu.getScene());
+                                player.setClient(1);
+                            }
+                            catch (IOException e){ e.printStackTrace(); }
+                        }
+                        else
+                            errorForNotEnteringInfo();
                     }
+                    else if( player.isClient() == 2 )
+                        errorForAlreadyBeingClient();
+                    else
+                        errorForAlreadyBeingHost();
                 }
             });
 
@@ -2443,26 +2487,31 @@ public class Controller
                 @Override
                 public void handle(MouseEvent event)
                 {
-                    try {
-                        if (!serverIP.getText().equals("") && !serverPort.getText().equals("")) {
-                            socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
-                            clientSender = new ClientSender(socket);
-                            clientGui = new ClientGui(clientSender, player);
-                            clientListener = new Thread(new ClientListener(socket, clientGui));
-                            clientListener.start();
-                            clientSender.sendPlayer(player);
-                            isMultiPlayer = true;
-                            stage.setScene(menu.getScene());
-                            player.setClient(true);
-                        } else {
-                            //todo error haye zahra!:D
+                    try
+                    {
+                        if( player.isClient() == 0 )
+                        {
+                            if (!clientPort.getText().equals("") && !serverIP.getText().equals("") && !serverPort.getText().equals(""))
+                            {
+                                socket = new Socket(serverIP.getText(), Integer.parseInt(serverPort.getText()));
+                                clientSender = new ClientSender(socket);
+                                clientGui = new ClientGui(clientSender, player);
+                                clientListener = new Thread(new ClientListener(socket, clientGui));
+                                clientListener.start();
+                                clientSender.sendPlayer(player);
+                                isMultiPlayer = true;
+                                stage.setScene(menu.getScene());
+                                player.setClient(2);
+                            }
+                            else
+                                errorForNotEnteringInfo();
                         }
-                        //if( clientPort.getText().equals("") )
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        else if( player.isClient() == 2 )
+                            errorForAlreadyBeingClient();
+                        else
+                            errorForAlreadyBeingHost();
                     }
+                    catch (Exception e) { e.printStackTrace(); }
                 }
             });
 
@@ -2490,6 +2539,96 @@ public class Controller
 
             multiplayer.getGroup().getChildren().addAll(rectangle,clientInfoView,exitView,clientPortLabel,clientPort,
                     clientIPAddress,serverIPAddress,serverPort,okView,serverIP,serverPortLabel);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void errorForAlreadyBeingClient()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error1 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error1.png")
+                    , 800, 300, false, true);
+            ImageView error1View = new ImageView(error1);
+            error1View.setY(Menu.HEIGHT / 2 - 150);
+            error1View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    view.getGroup().getChildren().removeAll(rectangle,error1View,okView);
+                }
+            });
+            view.getGroup().getChildren().addAll(rectangle,error1View,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void errorForAlreadyBeingHost()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error2 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error2.png")
+                    , 800, 300, false, true);
+            ImageView error2View = new ImageView(error2);
+            error2View.setY(Menu.HEIGHT / 2 - 150);
+            error2View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    view.getGroup().getChildren().removeAll(rectangle,error2View,okView);
+                }
+            });
+            view.getGroup().getChildren().addAll(rectangle,error2View,okView);
+        }
+        catch ( Exception e ) { e.printStackTrace(); }
+    }
+
+    private void errorForNotEnteringInfo()
+    {
+        try
+        {
+            Rectangle rectangle = new Rectangle(0,0,Menu.WIDTH,Menu.HEIGHT);
+            rectangle.setFill(Color.rgb(54,16,0));
+            rectangle.setOpacity(0.7);
+            Image error2 = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\error3.png")
+                    , 800, 300, false, true);
+            ImageView error2View = new ImageView(error2);
+            error2View.setY(Menu.HEIGHT / 2 - 150);
+            error2View.setX(Menu.WIDTH / 2 - 400);
+            Image ok = new Image(new FileInputStream("src\\Resources\\Graphic\\Game UI\\okButton.png")
+                    , 200, 79, false, true);
+            ImageView okView = new ImageView(ok);
+            okView.setY(Menu.HEIGHT / 2 + 150);
+            okView.setX(Menu.WIDTH / 2 - 100);
+            okView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    view.getGroup().getChildren().removeAll(rectangle,error2View,okView);
+                }
+            });
+            view.getGroup().getChildren().addAll(rectangle,error2View,okView);
         }
         catch ( Exception e ) { e.printStackTrace(); }
     }

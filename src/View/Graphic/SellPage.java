@@ -92,8 +92,8 @@ public class SellPage
                     if( farm.getTruck().getGainedMoney() > 0 )
                     {
                         farm.goTransportation(true);
-                        farm.getTruck().setPrevMovingX(300 * Constants.WIDTH / 800);
-                        farm.getTruck().setNextMovingX(300 * Constants.WIDTH / 800 + Constants.movingScale);
+                        farm.getTruck().setPrevMovingX(350);
+                        farm.getTruck().setNextMovingX(350 + farm.getTruck().getMovingScale());
                         view.getGroup().getChildren().remove(fixedTruck);
                         view.getGroup().getChildren().add(rightTruck);
                         animationTimer.start();

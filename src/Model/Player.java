@@ -6,8 +6,8 @@ import java.util.HashSet;
 public class Player implements Serializable,  Comparable<Player>
 {
     private String name,userName;
-    private int lastLevel , id , money , levelThatPlaysNow;
-    private boolean isLastPlayer , isClient;
+    private int lastLevel , id , money , levelThatPlaysNow , isClient;
+    private boolean isLastPlayer;
     private HashSet<String> friends = new HashSet<>();
 
     public Player( String name, int id)
@@ -16,6 +16,7 @@ public class Player implements Serializable,  Comparable<Player>
         this.id = id;
         lastLevel = 1;
         money = 0;
+        isClient = 0;
         this.userName = name + id;
     }
 
@@ -30,6 +31,7 @@ public class Player implements Serializable,  Comparable<Player>
     public HashSet<String> getFriends() {
         return friends;
     }
+
     public int getLevelThatPlaysNow()
     {
         return levelThatPlaysNow;
@@ -65,12 +67,12 @@ public class Player implements Serializable,  Comparable<Player>
         this.money = money;
     }
 
-    public boolean isClient()
+    public int isClient()
     {
         return isClient;
     }
 
-    public void setClient(boolean client)
+    public void setClient(int client)
     {
         isClient = client;
     }

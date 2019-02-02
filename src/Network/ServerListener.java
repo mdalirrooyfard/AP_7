@@ -27,7 +27,6 @@ public class ServerListener implements Runnable{
         try {
             while (true) {
                 Command command = (Command) objectInputStream.readObject();
-                //todo fill the switch
                 switch (command.getType()) {
                     case SEND_MASSAGE:
                         serverSender.sendGroup(command);
