@@ -1,4 +1,4 @@
-# AP_7
-# Mahsa Dalirrooyfard
-# Zahra Fazel
-# Freshteh Forghani
+# Advanced Programming Course
+  * Mahsa Dalirrooyfard
+  * Zahra Fazel
+  * Fereshteh Forghani
